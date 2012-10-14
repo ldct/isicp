@@ -8,7 +8,7 @@
 <link rel="stylesheet" type="text/css" href="codemirror.css" />
 <link rel="stylesheet" type="text/css" href="isicp.css" />
 
-<title>fSICP</title>
+<title>fpSICP</title>
 </head>
 <body>
 
@@ -40,6 +40,22 @@
 <div id="scheme-minus-output" class="output"> </div>
 <script> createPrompt("#scheme-minus"); </script>
 
+<p>
+
+<div class='excercise'>
+
+Use scheme to find the value of 784 + 264
+
+<p>
+
+<div id="scheme-plus-ex">
+&ltyour-answer-here&gt
+</div>
+<div id="scheme-plus-ex-output" class="output"> </div>
+<script> createPrompt("#scheme-plus-ex", "1048");</script>
+
+</div>
+
 <p> The convention of placing the operator to the left of the operands is known as prefix notation, and it may be somewhat confusing at first because it departs significantly from the customary mathematical convention. Prefix notation has several advantages, however. One of them is that it can accommodate procedures that may take an arbitrary number of arguments, as in the following examples:
 
 <div id="scheme-plus-multiple">
@@ -47,6 +63,8 @@
 </div>
 <div id="scheme-plus-multiple-output" class="output"> </div>
 <script> createPrompt("#scheme-plus-multiple"); </script>
+
+<p> 
 
 <div id="scheme-times-multiple">
 (* 25 4 12)

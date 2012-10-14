@@ -7,6 +7,21 @@
   padding: 0pt 4pt;
 }
 
+.excercise{
+  background-color: #DAFFD4;
+  padding: 10pt;
+}
+
+.wrong-answer {
+  padding: 0pt 4pt;
+  color: red;
+}
+
+.correct-answer {
+  padding: 0pt 4pt;
+  color: green;
+}
+
 #sidebar {
   position:fixed;
   left:63%;
