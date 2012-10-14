@@ -1,0 +1,47 @@
+.scheme:hover {
+  background-color:#f8f8f8;
+}
+
+.output {
+  font-family: monospace;
+  padding: 0pt 4pt;
+}
+
+#sidebar {
+  position:fixed;
+  left:63%;
+  width: 37%;
+  height: 100%;
+  float: right;
+  padding: 2px;
+}
+
+#main {
+  width: 60%;
+  float: left;
+  border: 1px solid gray;
+  padding: 10px;
+}
+
+.CodeMirror:hover {
+  background: #f8f8f8;
+}
+
+.CodeMirror-focused {
+  background: #D2ECF7;
+}
+
+.CodeMirror-scroll {
+  height: auto;
+  width: auto;
+  overflow-y: hidden;
+  overflow-x: auto;
+}
+
+.CodeMirror-matchingbracket {
+  background: lightblue;
+}
+
+div.CodeMirror span.CodeMirror-matchingbracket {
+    color: #869CEB; /*why can't we use .CodeMirror-matchingbracket? */
+}
