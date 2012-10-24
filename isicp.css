@@ -34,7 +34,7 @@
 #main {
   width: 60%;
   float: left;
-  border: 1px solid gray;
+  border-top: 1px solid gray;
   padding: 10px;
 }
 
