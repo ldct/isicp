@@ -7,7 +7,7 @@ function getCodeInDiv(target) { //look for an editor
 }
 
 function cleanCode(code) {
-  return code.replace(/^\n/, "").replace(/\n*$/, "").replace(/\s*\n/g, "\n");
+  return code.replace(/^\n/, "").replace(/\n*$/, "").replace(/\s*\n/g, "\n").replace(/\s*$/, "");
 }
 
 function createPrompt(target_string, answer) {
