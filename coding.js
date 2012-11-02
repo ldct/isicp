@@ -22,7 +22,6 @@ function createPrompt(target_string, answer) {
   
   function update() {
     var str = editor.getValue();
-    $target.find(".output").empty();
     result = biwascheme.evaluate(str);
     $output.empty().append($("<span>" + result + "</span>"));
     
