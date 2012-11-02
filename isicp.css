@@ -1,6 +1,3 @@
-.scheme:hover {
-  background-color:#f8f8f8;
-}
 
 .output {
   font-family: monospace;
@@ -8,7 +5,7 @@
 }
 
 .excercise{
-  background-color: #DAFFD4;
+  background-color: #f8f8ff;
   padding: 10pt;
 }
 
@@ -43,7 +40,7 @@
 }
 
 .CodeMirror-focused {
-  background: #D2ECF7;
+  background: #E2FCF7;
 }
 
 .CodeMirror-scroll {
@@ -51,6 +48,14 @@
   width: auto;
   overflow-y: hidden;
   overflow-x: auto;
+}
+
+.excercise .CodeMirror:hover {
+  background-color: #f1f1fa;
+}
+
+.excercise .CodeMirror-focused {
+  background: #D2ECF7;
 }
 
 .CodeMirror-matchingbracket {
