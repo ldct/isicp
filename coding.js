@@ -22,7 +22,10 @@ function createPrompt(target_string, answer) {
   var $form = $("<textarea>", {text: code});
   $target.empty().append($form);
   var $output = $("#" + target_string + "-output")
-  
+  if (!$output[0]) {
+    $output = $("<div />", {id: target_string + "-output", 'class':'output'});
+    $target.after($output);
+  }
   if (answer) {
     var $grade = $("<div />", {id: target_string + "-grade", text: 'hi'});
     $output.after($grade);

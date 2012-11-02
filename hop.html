@@ -2,7 +2,8 @@
 <meta charset="UTF-8">
 <script src="biwascheme.js"> </script>
 <script src="codemirror-compressed.js"></script>
-<script src="http://ajax.googleapis.com/ajax/libs/jquery/1.8.2/jquery.min.js"></script>
+<!--<script src="http://ajax.googleapis.com/ajax/libs/jquery/1.8.2/jquery.min.js"></script>-->
+<script src="jquery.min.js"></script>
 <script src="coding.js"> </script>
 <link rel="stylesheet" type="text/css" href="codemirror.css" />
 <link rel="stylesheet" type="text/css" href="isicp.css" />
@@ -52,7 +53,6 @@
       0
       (+ a (sum-integers (+ a 1) b))))
 </div>
-<div id="scheme-sum-integers-output" class="output"> </div>
 <script> createPrompt("scheme-sum-integers"); </script>
 
 <p> The second computes the sum of the cubes of the integers in the given range:
@@ -63,7 +63,6 @@
       0
       (+ (cube a) (sum-cubes (+ a 1) b))))
 </div>
-<div id="scheme-sum-cubes-output" class="output"> </div>
 <script> createPrompt("scheme-sum-cubes"); </script>
 
 <p> The third computes the sum of a sequence of terms in the series
@@ -78,7 +77,6 @@
       0
       (+ (/ 1.0 (* a (+ a 2))) (pi-sum (+ a 4) b))))
 </div>
-<div id="scheme-pi-sum-output" class="output"> </div>
 <script> createPrompt("scheme-pi-sum"); </script>
 
 <p> These three procedures clearly share a common underlying pattern. They are for the most part identical, differing only in the name of the procedure, the function of a used to compute the term to be added, and the function that provides the next value of a. We could generate each of the procedures by filling in slots in the same template:

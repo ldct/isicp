@@ -29,7 +29,6 @@
 <div id="scheme-plus">
 (+ 1 2)
 </div>
-<div id="scheme-plus-output" class="output"> </div>
 <script> createPrompt("scheme-plus"); </script>
 
 <p>
@@ -37,22 +36,20 @@
 <div id="scheme-minus">
 (* 2 3)
 </div>
-<div id="scheme-minus-output" class="output"> </div>
 <script> createPrompt("scheme-minus"); </script>
 
 <p>
 
 <div class='excercise'>
 
-Use scheme to find the value of 784 + 264
+  Use scheme to find the value of 784 + 264
 
-<p>
+  <p>
 
-<div id="scheme-plus-ex">
+  <div id="scheme-plus-ex">
 &ltyour-answer-here&gt
-</div>
-<div id="scheme-plus-ex-output" class="output"> </div>
-<script> createPrompt("scheme-plus-ex", "1048");</script>
+  </div>
+  <script> createPrompt("scheme-plus-ex", "1048");</script>
 
 </div>
 
@@ -61,7 +58,6 @@ Use scheme to find the value of 784 + 264
 <div id="scheme-plus-multiple">
 (+ 21 35 12 7)
 </div>
-<div id="scheme-plus-multiple-output" class="output"> </div>
 <script> createPrompt("scheme-plus-multiple"); </script>
 
 <p> 
@@ -69,7 +65,6 @@ Use scheme to find the value of 784 + 264
 <div id="scheme-times-multiple">
 (* 25 4 12)
 </div>
-<div id="scheme-times-multiple-output" class="output"> </div>
 <script> createPrompt("scheme-times-multiple"); </script>
 
 <p> No ambiguity can arise, because the operator is always the leftmost element and the entire combination is delimited by the parentheses.
@@ -79,7 +74,6 @@ Use scheme to find the value of 784 + 264
 <div id="scheme-plus-times">
 (+ (* 3 5) (- 10 6))
 </div>
-<div id="scheme-plus-times-output" class="output"> </div>
 <script> createPrompt("scheme-plus-times"); </script>
 
 <p> There is no limit (in principle) to the depth of such nesting and to the overall complexity of the expressions that the Lisp interpreter can evaluate. It is we humans who get confused by still relatively simple expressions such as
@@ -87,7 +81,6 @@ Use scheme to find the value of 784 + 264
 <div id="scheme-long-tree">
 (+ (* 3 (+ (* 2 4) (+ 3 5))) (+ (- 10 7) 6))
 </div>
-<div id="scheme-long-tree-output" class="output"> </div>
 <script> createPrompt("scheme-long-tree"); </script>
 
 which the interpreter would readily evaluate to be 57. We can help ourselves by writing such an expression in the form
@@ -99,7 +92,6 @@ which the interpreter would readily evaluate to be 57. We can help ourselves by 
    (+ (- 10 7)
       6))
 </div>
-<div id="scheme-long-tree-pp-output" class="output"> </div>
 <script> createPrompt("scheme-long-tree-pp"); </script>
 
 <p> following a formatting convention known as pretty-printing, in which each long combination is written so that the operands are aligned vertically. The resulting indentations display clearly the structure of the expression.
@@ -112,7 +104,6 @@ which the interpreter would readily evaluate to be 57. We can help ourselves by 
 <div id="scheme-function-syntax">
 (op arg1 arg2 ...)
 </div>
-<div id="scheme-function-syntax-output" class="output"> </div>
 <script> createPrompt("scheme-function-syntax"); </script>
 
 <p> Where op is one of +, *, - etc, and arg1, arg2 ... are the arguments to the function.
