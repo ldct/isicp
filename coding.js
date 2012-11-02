@@ -41,12 +41,3 @@ function createPrompt(target_string, answer) {
   });
   update();
 }
-
-function attachGrading(target_string, answer) {
-
-
-  $("#" + target_string).change(function() {
-    alert("change!")
-
-  });
-}

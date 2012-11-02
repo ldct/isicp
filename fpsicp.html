@@ -15,7 +15,7 @@
 <h1>Functional SICP</h1>
 
 <div id="sidebar">
-<div id="scheme-scratch"></div> <script> createPrompt("#scheme-scratch"); </script>
+<div id="scheme-scratch"></div> <script> createPrompt("scheme-scratch"); </script>
 <div id="bs-console"></div>
 </div>
 
@@ -29,7 +29,7 @@
 (+ 1 2)
 </div>
 <div id="scheme-plus-output" class="output"> </div>
-<script> createPrompt("#scheme-plus"); </script>
+<script> createPrompt("scheme-plus"); </script>
 
 <p>
 
@@ -37,7 +37,7 @@
 (* 2 3)
 </div>
 <div id="scheme-minus-output" class="output"> </div>
-<script> createPrompt("#scheme-minus"); </script>
+<script> createPrompt("scheme-minus"); </script>
 
 <p>
 
@@ -51,7 +51,7 @@ Use scheme to find the value of 784 + 264
 &ltyour-answer-here&gt
 </div>
 <div id="scheme-plus-ex-output" class="output"> </div>
-<script> createPrompt("#scheme-plus-ex", "1048");</script>
+<script> createPrompt("scheme-plus-ex", "1048");</script>
 
 </div>
 
@@ -61,7 +61,7 @@ Use scheme to find the value of 784 + 264
 (+ 21 35 12 7)
 </div>
 <div id="scheme-plus-multiple-output" class="output"> </div>
-<script> createPrompt("#scheme-plus-multiple"); </script>
+<script> createPrompt("scheme-plus-multiple"); </script>
 
 <p> 
 
@@ -69,7 +69,7 @@ Use scheme to find the value of 784 + 264
 (* 25 4 12)
 </div>
 <div id="scheme-times-multiple-output" class="output"> </div>
-<script> createPrompt("#scheme-times-multiple"); </script>
+<script> createPrompt("scheme-times-multiple"); </script>
 
 <p> No ambiguity can arise, because the operator is always the leftmost element and the entire combination is delimited by the parentheses.
 
@@ -79,7 +79,7 @@ Use scheme to find the value of 784 + 264
 (+ (* 3 5) (- 10 6))
 </div>
 <div id="scheme-plus-times-output" class="output"> </div>
-<script> createPrompt("#scheme-plus-times"); </script>
+<script> createPrompt("scheme-plus-times"); </script>
 
 <p> There is no limit (in principle) to the depth of such nesting and to the overall complexity of the expressions that the Lisp interpreter can evaluate. It is we humans who get confused by still relatively simple expressions such as
 
@@ -87,7 +87,7 @@ Use scheme to find the value of 784 + 264
 (+ (* 3 (+ (* 2 4) (+ 3 5))) (+ (- 10 7) 6))
 </div>
 <div id="scheme-long-tree-output" class="output"> </div>
-<script> createPrompt("#scheme-long-tree"); </script>
+<script> createPrompt("scheme-long-tree"); </script>
 
 which the interpreter would readily evaluate to be 57. We can help ourselves by writing such an expression in the form
 
@@ -99,7 +99,7 @@ which the interpreter would readily evaluate to be 57. We can help ourselves by 
       6))
 </div>
 <div id="scheme-long-tree-pp-output" class="output"> </div>
-<script> createPrompt("#scheme-long-tree-pp"); </script>
+<script> createPrompt("scheme-long-tree-pp"); </script>
 
 <p> following a formatting convention known as pretty-printing, in which each long combination is written so that the operands are aligned vertically. The resulting indentations display clearly the structure of the expression.
 
@@ -112,7 +112,7 @@ which the interpreter would readily evaluate to be 57. We can help ourselves by 
 (op arg1 arg2 ...)
 </div>
 <div id="scheme-function-syntax-output" class="output"> </div>
-<script> createPrompt("#scheme-functon-syntax"); </script>
+<script> createPrompt("scheme-functon-syntax"); </script>
 
 <p> Where op is one of +, *, - etc, and arg1, arg2 ... are the arguments to the function.
 
@@ -129,7 +129,7 @@ which the interpreter would readily evaluate to be 57. We can help ourselves by 
 <p> the interpreter will respond by printing
 
 <div id="scheme-number-output" class="output"> </div>
-<script> createPrompt("#scheme-number"); </script>
+<script> createPrompt("scheme-number"); </script>
 
 <p> Expressions such as these, formed by delimiting a list of expressions within parentheses in order to denote procedure application, are called combinations. The leftmost element in the list is called the operator, and the other elements are called operands. The value of a combination is obtained by applying the procedure specified by the operator to the arguments that are the values of the operands.
 
@@ -142,7 +142,7 @@ which the interpreter would readily evaluate to be 57. We can help ourselves by 
 <div id="scheme-define">
 (define size 2)
 </div>
-<script> createPrompt("#scheme-define"); </script>
+<script> createPrompt("scheme-define"); </script>
 
 <p> causes the interpreter to associate the value 2 with the name size.8 Once the name size has been associated with the number 2, we can refer to the value 2 by name:
 
@@ -150,13 +150,13 @@ which the interpreter would readily evaluate to be 57. We can help ourselves by 
 size
 </div>
 <div id="scheme-size-output" class="output"> </div>
-<script> createPrompt("#scheme-size"); </script>
+<script> createPrompt("scheme-size"); </script>
 
 <div id="scheme-times-size">
 (* 5 size)
 </div>
 <div id="scheme-times-size-output" class="output"> </div>
-<script> createPrompt("#scheme-times-size"); </script>
+<script> createPrompt("scheme-times-size"); </script>
 
 <p> Here are further examples of the use of define:
 
@@ -166,7 +166,7 @@ size
 (* pi (* radius radius))
 </div>
 <div id="scheme-radius-output" class="output"> </div>
-<script> createPrompt("#scheme-radius"); </script>
+<script> createPrompt("scheme-radius"); </script>
 
 <p>
 
@@ -175,7 +175,7 @@ size
 circumference
 </div>
 <div id="scheme-circumference-output" class="output"> </div>
-<script> createPrompt("#scheme-circumference"); </script>
+<script> createPrompt("scheme-circumference"); </script>
 
 <p> Define is our language's simplest means of abstraction, for it allows us to use simple names to refer to the results of compound operations, such as the circumference computed above. In general, computational objects may have very complex structures, and it would be extremely inconvenient to have to remember and repeat their details each time we want to use them. Indeed, complex programs are constructed by building, step by step, computational objects of increasing complexity. The interpreter makes this step-by-step program construction particularly convenient because name-object associations can be created incrementally in successive interactions. This feature encourages the incremental development and testing of programs and is largely responsible for the fact that a Lisp program usually consists of a large number of relatively simple procedures.
 
@@ -202,7 +202,7 @@ circumference
    (+ 3 5 7))
 </div>
 <div id="scheme-tree-eg-output" class="output"> </div>
-<script> createPrompt("#scheme-tree-eg"); </script>
+<script> createPrompt("scheme-tree-eg"); </script>
 
 <p> requires that the evaluation rule be applied to four different combinations. We can obtain a picture of this process by representing the combination in the form of a tree, as shown in figure 1.1.
 
@@ -246,7 +246,7 @@ circumference
 <div id="scheme-define-square">
 (define (square x) (* x x))
 </div>
-<script> createPrompt("#scheme-define-square"); </script>
+<script> createPrompt("scheme-define-square"); </script>
 
 <p> We can understand this in the following way:
 
@@ -263,7 +263,7 @@ circumference
 (define (&ltname&gt &ltformal parameters&gt) &ltbody&gt)
 </div>
 <script> 
-createPrompt("#scheme-define-syntax"); 
+createPrompt("scheme-define-syntax"); 
 </script>
 
 <p> The name is a symbol to be associated with the procedure definition in the environment.The formal parameters are the names used within the body of the procedure to refer to the corresponding arguments of the procedure. The body is an expression that will yield the value of the procedure application when the formal parameters are replaced by the actual arguments to which the procedure is applied.14 The name and the formal parameters are grouped within parentheses, just as they would be in an actual call to the procedure being defined.
@@ -274,19 +274,19 @@ createPrompt("#scheme-define-syntax");
 (square 21)
 </div>
 <div id="scheme-square-number-output" class="output"> </div>
-<script> createPrompt("#scheme-square-number"); </script>
+<script> createPrompt("scheme-square-number"); </script>
 
 <div id="scheme-square-sum">
 (square (+ 2 5))
 </div>
 <div id="scheme-square-sum-output" class="output"> </div>
-<script> createPrompt("#scheme-square-sum"); </script>
+<script> createPrompt("scheme-square-sum"); </script>
 
 <div id="scheme-square-square">
 (square (square 3))
 </div>
 <div id="scheme-square-square-output" class="output"> </div>
-<script> createPrompt("#scheme-square-square"); </script>
+<script> createPrompt("scheme-square-square"); </script>
 
 
 <p> We can also use square as a building block in defining other procedures. For example, x<sup>2</sup> + y<sup>2</sup> can be expressed as
@@ -294,7 +294,7 @@ createPrompt("#scheme-define-syntax");
 <div id="scheme-sum-square-eg">
 (+ (square x) (square y))
 </div>
-<script> createPrompt("#scheme-sum-square-eg"); </script>
+<script> createPrompt("scheme-sum-square-eg"); </script>
 
 <p> We can easily define a procedure sum-of-squares that, given any two numbers as arguments, produces the sum of their squares:
 
@@ -304,7 +304,7 @@ createPrompt("#scheme-define-syntax");
 (sum-of-squares 3 4)
 </div>
 <div id="scheme-sum-square-output" class="output"> </div>
-<script> createPrompt("#scheme-sum-square"); </script>
+<script> createPrompt("scheme-sum-square"); </script>
 
 <p> Now we can use sum-of-squares as a building block in constructing further procedures:
 
@@ -314,7 +314,7 @@ createPrompt("#scheme-define-syntax");
 (f 5)
 </div>
 <div id="scheme-f-output" class="output"> </div>
-<script> createPrompt("#scheme-f"); </script>
+<script> createPrompt("scheme-f"); </script>
 
 <p> Compound procedures are used in exactly the same way as primitive procedures. Indeed, one could not tell by looking at the definition of sum-of-squares given above whether square was built into the interpreter, like + and *, or defined as a compound procedure.
 
@@ -332,49 +332,49 @@ createPrompt("#scheme-define-syntax");
 (f 5)
 </div>
 <div id="scheme-f-1-output" class="output"> </div>
-<script> createPrompt("#scheme-f-1"); </script>
+<script> createPrompt("scheme-f-1"); </script>
 
 where f is the procedure defined in section 1.1.4. We begin by retrieving the body of f:
 
 <div id="scheme-f-2">
 (sum-of-squares (+ a 1) (* a 2))
 </div>
-<script> createPrompt("#scheme-f-2"); </script>
+<script> createPrompt("scheme-f-2"); </script>
 
 Then we replace the formal parameter a by the argument 5:
 
 <div id="scheme-f-3">
 (sum-of-squares (+ 5 1) (* 5 2))
 </div>
-<script> createPrompt("#scheme-f-3"); </script>
+<script> createPrompt("scheme-f-3"); </script>
 
 <p> Thus the problem reduces to the evaluation of a combination with two operands and an operator sum-of-squares. Evaluating this combination involves three subproblems. We must evaluate the operator to get the procedure to be applied, and we must evaluate the operands to get the arguments. Now (+ 5 1) produces 6 and (* 5 2) produces 10, so we must apply the sum-of-squares procedure to 6 and 10. These values are substituted for the formal parameters x and y in the body of sum-of-squares, reducing the expression to
 
 <div id="scheme-f-4">
 (+ (square 6) (square 10))
 </div>
-<script> createPrompt("#scheme-f-4"); </script>
+<script> createPrompt("scheme-f-4"); </script>
 
 <p> If we use the definition of square, this reduces to
 
 <div id="scheme-f-5">
 (+ (* 6 6) (* 10 10))
 </div>
-<script> createPrompt("#scheme-f-5"); </script>
+<script> createPrompt("scheme-f-5"); </script>
 
 <p> which reduces by multiplication to
 
 <div id="scheme-f-6">
 (+ 36 100)
 </div>
-<script> createPrompt("#scheme-f-6"); </script>
+<script> createPrompt("scheme-f-6"); </script>
 
 <p> and finally to
 
 <div id="scheme-f-7">
 136
 </div>
-<script> createPrompt("#scheme-f-7"); </script>
+<script> createPrompt("scheme-f-7"); </script>
 
 <p> The process we have just described is called the substitution model for procedure application. It can be taken as a model that determines the ``meaning'' of procedure application, insofar as the procedures in this chapter are concerned. However, there are two points that should be stressed:
 
@@ -401,7 +401,7 @@ Then we replace the formal parameter a by the argument 5:
 
 (+    (* (+ 5 1) (+ 5 1))   (* (* 5 2) (* 5 2)))
 </div>
-<script> createPrompt("#scheme-f-normal-1"); </script>
+<script> createPrompt("scheme-f-normal-1"); </script>
 
 followed by the reductions
 
@@ -410,14 +410,14 @@ followed by the reductions
 (+           36                   100)
                     136
 </div>
-<script> createPrompt("#scheme-f-normal-2"); </script>
+<script> createPrompt("scheme-f-normal-2"); </script>
 
 <p> This gives the same answer as our previous evaluation model, but the process is different. In particular, the evaluations of (+ 5 1) and (* 5 2) are each performed twice here, corresponding to the reduction of the expression
 
 <div id="scheme-x">
 (* x x)
 </div>
-<script> createPrompt("#scheme-x"); </script>
+<script> createPrompt("scheme-x"); </script>
 
 <p> with x replaced respectively by (+ 5 1) and (* 5 2).
 
@@ -439,7 +439,7 @@ followed by the reductions
         ((= x 0) 0)
         ((< x 0) (- x))))
 </div>
-<script> createPrompt("#scheme-cond"); </script>
+<script> createPrompt("scheme-cond"); </script>
 
 <p> The general form of a conditional expression is
 
@@ -450,7 +450,7 @@ followed by the reductions
       (&ltpn&gt &lten&gt))
 
 </div>
-<script> createPrompt("#scheme-cond-syntax"); </script>
+<script> createPrompt("scheme-cond-syntax"); </script>
 
 <p> consisting of the symbol cond followed by parenthesized pairs of expressions (<p> <e>) called clauses. The first expression in each pair is a predicate -- that is, an expression whose value is interpreted as either true or false.
 
@@ -465,7 +465,7 @@ followed by the reductions
   (cond ((< x 0) (- x))
         (else x)))
 </div>
-<script> createPrompt("#scheme-abs"); </script>
+<script> createPrompt("scheme-abs"); </script>
 
 <p> which could be expressed in English as ``If x is less than zero return - x; otherwise return x.'' Else is a special symbol that can be used in place of the <p> in the final clause of a cond. This causes the cond to return as its value the value of the corresponding <e> whenever all previous clauses have been bypassed. In fact, any expression that always evaluates to a true value could be used as the <p> here.
 
@@ -478,14 +478,14 @@ followed by the reductions
       x))
 </div>
 <div id="scheme-abs-output" class="output"> </div>
-<script> createPrompt("#scheme-abs-if"); </script>
+<script> createPrompt("scheme-abs-if"); </script>
 
 <p> This uses the special form if, a restricted type of conditional that can be used when there are precisely two cases in the case analysis. The general form of an if expression is
 
 <div id="scheme-if-syntax">
 (if &ltpredicate&gt &ltconsequent&gt &ltalternative&gt)
 </div>
-<script> createPrompt("#scheme-if-syntax"); </script>
+<script> createPrompt("scheme-if-syntax"); </script>
 
 To evaluate an if expression, the interpreter starts by evaluating the <predicate> part of the expression. If the <predicate> evaluates to a true value, the interpreter then evaluates the <consequent> and returns its value. Otherwise it evaluates the <alternative> and returns its value.19
 
@@ -516,7 +516,7 @@ As an example of how these are used, the condition that a number x be in the ran
 <div id="scheme-between">
 (and (> x 5) (< x 10))
 </div>
-<script> createPrompt("#scheme-between"); </script>
+<script> createPrompt("scheme-between"); </script>
 
 <p> As another example, we can define a predicate to test whether one number is greater than or equal to another as
 
@@ -524,7 +524,7 @@ As an example of how these are used, the condition that a number x be in the ran
 (define (>= x y)
   (or (> x y) (= x y)))
 </div>
-<script> createPrompt("#scheme-le"); </script>
+<script> createPrompt("scheme-le"); </script>
 
 <p> or alternatively as
 
@@ -532,7 +532,7 @@ As an example of how these are used, the condition that a number x be in the ran
 (define (>= x y)
   (not (< x y)))
 </div>
-<script> createPrompt("#scheme-le-2"); </script>
+<script> createPrompt("scheme-le-2"); </script>
 
 </div>
 
