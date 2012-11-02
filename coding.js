@@ -8,6 +8,10 @@ function cleanCode(code) {
 
 function createPrompt(target_string, answer) {
   var $target = $("#" + target_string);
+  if (!$target[0]) {
+    console.error("$" + target_string + " did not match anything");
+    return;
+  }
   var code = cleanCode($target.text());
   $target.empty();
   var $form = $("<textarea>", {text: code});
