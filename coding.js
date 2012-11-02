@@ -2,10 +2,6 @@ var biwascheme = new BiwaScheme.Interpreter( function(e){
   console.log(e.message);
 });
 
-function getCodeInDiv(target) { //look for an editor
-  return;
-}
-
 function cleanCode(code) {
   return code.replace(/^\n/, "").replace(/\n*$/, "").replace(/\s*\n/g, "\n").replace(/\s*$/, "");
 }
