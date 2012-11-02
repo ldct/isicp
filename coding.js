@@ -1,6 +1,12 @@
-var biwascheme = new BiwaScheme.Interpreter( function(e){
-  console.log(e.message);
-});
+function resetTopEnv() {
+  BiwaScheme.TopEnv = {};
+  BiwaScheme.TopEnv["define"] = new BiwaScheme.Syntax("define");
+  BiwaScheme.TopEnv["begin"] = new BiwaScheme.Syntax("begin");
+  BiwaScheme.TopEnv["quote"] = new BiwaScheme.Syntax("quote");
+  BiwaScheme.TopEnv["lambda"] = new BiwaScheme.Syntax("lambda");
+  BiwaScheme.TopEnv["if"] = new BiwaScheme.Syntax("if");
+  BiwaScheme.TopEnv["set!"] = new BiwaScheme.Syntax("set!");
+}
 
 function cleanCode(code) {
   return code.replace(/^\n/, "").replace(/\n*$/, "").replace(/\s*\n/g, "\n").replace(/\s*$/, "");
@@ -13,17 +19,21 @@ function createPrompt(target_string, answer) {
     return;
   }
   var code = cleanCode($target.text());
-  $target.empty();
   var $form = $("<textarea>", {text: code});
-  $target.append($form);
+  $target.empty().append($form);
   var $output = $("#" + target_string + "-output")
-  
   
   if (answer) {
     var $grade = $("<div />", {id: target_string + "-grade", text: 'hi'});
     $output.after($grade);
   }
   
+  var biwascheme = new BiwaScheme.Interpreter( function(e){
+    console.log(e.message);
+  });
+  
+  console.log(target_string, biwascheme);
+
   function update() {
     var str = editor.getValue();
     result = biwascheme.evaluate(str);
@@ -36,6 +46,7 @@ function createPrompt(target_string, answer) {
         $grade.attr({'class': 'wrong-answer'}).text('\u2717');
       }
     }
+    console.log(biwascheme);
   }
   
   var editor = CodeMirror.fromTextArea($form[0],
