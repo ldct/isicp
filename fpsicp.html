@@ -1,8 +1,9 @@
-<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.1//EN" "http://www.w3.org/TR/xhtml11/DTD/xhtml11.dtd">
-<html xmlns="http://www.w3.org/1999/xhtml" xml:lang="ja">
 <head>
+<meta charset="UTF-8">
 <script src="biwascheme.js"> </script>
-<script src="codemirror-compressed.js"></script>
+<script src="codemirror/lib/codemirror.js"></script>
+<script src="codemirror/mode/scheme/scheme.js"></script>
+<!--<script src="codemirror-compressed.js"></script>-->
 <script src="http://ajax.googleapis.com/ajax/libs/jquery/1.8.2/jquery.min.js"></script>
 <script src="coding.js"> </script>
 <link rel="stylesheet" type="text/css" href="codemirror.css" />
@@ -112,7 +113,7 @@ which the interpreter would readily evaluate to be 57. We can help ourselves by 
 (op arg1 arg2 ...)
 </div>
 <div id="scheme-function-syntax-output" class="output"> </div>
-<script> createPrompt("scheme-functon-syntax"); </script>
+<script> createPrompt("scheme-function-syntax"); </script>
 
 <p> Where op is one of +, *, - etc, and arg1, arg2 ... are the arguments to the function.
 
