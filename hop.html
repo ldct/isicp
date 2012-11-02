@@ -1,6 +1,5 @@
-<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.1//EN" "http://www.w3.org/TR/xhtml11/DTD/xhtml11.dtd">
-<html xmlns="http://www.w3.org/1999/xhtml" xml:lang="ja">
 <head>
+<meta charset="UTF-8">
 <script src="biwascheme.js"> </script>
 <script src="codemirror-compressed.js"></script>
 <script src="http://ajax.googleapis.com/ajax/libs/jquery/1.8.2/jquery.min.js"></script>
@@ -15,7 +14,7 @@
 <h1> Higher-Order Procedures</h1>
 
 <div id="sidebar">
-<div id="scheme-scratch"></div> <script> createPrompt("#scheme-scratch"); </script>
+<div id="scheme-scratch"></div> <script> createPrompt("scheme-scratch"); </script>
 <div id="bs-console"></div>
 </div>
 
@@ -28,7 +27,7 @@
 <div id="scheme-cube">
 (define (cube x) (* x x x))
 </div>
-<script> createPrompt("#scheme-cube"); </script>
+<script> createPrompt("scheme-cube"); </script>
 
 <p> we are not talking about the cube of a particular number, but rather about a method for obtaining the cube of any number. Of course we could get along without ever defining this procedure, by always writing expressions such as
 
@@ -37,7 +36,7 @@
 (* x x x)
 (* y y y)
 </div>
-<script> createPrompt("#scheme-cube-examples"); </script>
+<script> createPrompt("scheme-cube-examples"); </script>
 
 <p> and never mentioning cube explicitly. This would place us at a serious disadvantage, forcing us to work always at the level of the particular operations that happen to be primitives in the language (multiplication, in this case) rather than in terms of higher-level operations. Our programs would be able to compute cubes, but our language would lack the ability to express the concept of cubing. One of the things we should demand from a powerful programming language is the ability to build abstractions by assigning names to common patterns and then to work in terms of the abstractions directly. Procedures provide this ability. This is why all but the most primitive programming languages include mechanisms for defining procedures.
 
@@ -54,7 +53,7 @@
       (+ a (sum-integers (+ a 1) b))))
 </div>
 <div id="scheme-sum-integers-output" class="output"> </div>
-<script> createPrompt("#scheme-sum-integers"); </script>
+<script> createPrompt("scheme-sum-integers"); </script>
 
 <p> The second computes the sum of the cubes of the integers in the given range:
 
@@ -65,7 +64,7 @@
       (+ (cube a) (sum-cubes (+ a 1) b))))
 </div>
 <div id="scheme-sum-cubes-output" class="output"> </div>
-<script> createPrompt("#scheme-sum-cubes"); </script>
+<script> createPrompt("scheme-sum-cubes"); </script>
 
 <p> The third computes the sum of a sequence of terms in the series
 
@@ -80,7 +79,7 @@
       (+ (/ 1.0 (* a (+ a 2))) (pi-sum (+ a 4) b))))
 </div>
 <div id="scheme-pi-sum-output" class="output"> </div>
-<script> createPrompt("#scheme-pi-sum"); </script>
+<script> createPrompt("scheme-pi-sum"); </script>
 
 <p> These three procedures clearly share a common underlying pattern. They are for the most part identical, differing only in the name of the procedure, the function of a used to compute the term to be added, and the function that provides the next value of a. We could generate each of the procedures by filling in slots in the same template:
 
@@ -91,7 +90,7 @@
       (+ (&ltterm&gt a)
          (&ltname&gt (&ltnext&gt a) b))))
 </div>
-<script> createPrompt("#scheme-sum-template"); </script>
+<script> createPrompt("scheme-sum-template"); </script>
 
 <p> The presence of such a common pattern is strong evidence that there is a useful abstraction waiting to be brought to the surface. Indeed, mathematicians long ago identified the abstraction of summation of a series and invented "sigma notation," for example
 
@@ -109,7 +108,7 @@
          (sum term (next a) next b))))
 </div>
 <div id="scheme-sum-output" class="output"> </div>
-<script> createPrompt("#scheme-sum"); </script>
+<script> createPrompt("scheme-sum"); </script>
 
 <p> Notice that sum takes as its arguments the lower and upper bounds a and b together with the procedures term and next. We can use sum just as we would any procedure. For example, we can use it (along with a procedure inc that increments its argument by 1) to define sum-cubes:
 
@@ -119,7 +118,7 @@
   (sum cube a inc b))
 </div>
 <div id="scheme-sum-cubes-2-output" class="output"> </div>
-<script> createPrompt("#scheme-sum-cubes-2"); </script>
+<script> createPrompt("scheme-sum-cubes-2"); </script>
 
 <p> Using this, we can compute the sum of the cubes of the integers from 1 to 10:
 
@@ -127,7 +126,7 @@
 (sum-cubes 1 10)
 </div>
 <div id="scheme-sum-cubes-example-output" class="output"> </div>
-<script> createPrompt("#scheme-sum-cubes-example"); </script>
+<script> createPrompt("scheme-sum-cubes-example"); </script>
 
 <p> With the aid of an identity procedure to compute the term, we can define sum-integers in terms of sum:
 
@@ -138,7 +137,7 @@
   (sum identity a inc b))
 </div>
 <div id="scheme-sum-integers-2-output" class="output"> </div>
-<script> createPrompt("#scheme-sum-integers-2"); </script>
+<script> createPrompt("scheme-sum-integers-2"); </script>
 
 <p> Then we can add up the integers from 1 to 10:
 
@@ -146,7 +145,7 @@
 (sum-integers 1 10)
 </div>
 <div id="scheme-sum-integers-example-output" class="output"> </div>
-<script> createPrompt("#scheme-sum-integers-example"); </script>
+<script> createPrompt("scheme-sum-integers-example"); </script>
 
 <p> We can also define pi-sum in the same way
 
@@ -159,7 +158,7 @@
   (sum pi-term a pi-next b))
 </div>
 <div id="scheme-pi-sum-2-output" class="output"> </div>
-<script> createPrompt("#scheme-pi-sum-2"); </script>
+<script> createPrompt("scheme-pi-sum-2"); </script>
 
 <p> Using these procedures, we can compute an approximation to &pi;:
 
@@ -167,7 +166,7 @@
 (* 8 (pi-sum 1 1000))
 </div>
 <div id="scheme-pi-output" class="output"> </div>
-<script> createPrompt("#scheme-pi"); </script>
+<script> createPrompt("scheme-pi"); </script>
 
 <p> Once we have sum, we can use it as a building block in formulating further concepts. For instance, the definite integral of a function f between the limits a and b can be approximated numerically using the formula
 
@@ -183,7 +182,7 @@
 (integral cube 0 1 0.01)
 </div>
 <div id="scheme-integral-output" class="output"> </div>
-<script> createPrompt("#scheme-integral"); </script>
+<script> createPrompt("scheme-integral"); </script>
 
 <p> (The exact value of the integral of cube between 0 and 1 is 1/4.)
 
