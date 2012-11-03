@@ -5,7 +5,7 @@
 }
 
 .excercise{
-  background-color: #f8f8ff;
+  background-color: #D8E5E8;
   padding: 10pt;
 }
 
@@ -51,11 +51,11 @@
 }
 
 .excercise .CodeMirror:hover {
-  background-color: #f1f1fa;
+  background-color: #B4CFDB;
 }
 
 .excercise .CodeMirror-focused {
-  background: #D2ECF7;
+  background: #DCEFF7;
 }
 
 .CodeMirror-matchingbracket {
