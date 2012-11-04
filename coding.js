@@ -12,8 +12,17 @@ function cleanCode(code) {
   return code.replace(/^\n/, "").replace(/\n*$/, "").replace(/\s*\n/g, "\n").replace(/\s*$/, "");
 }
 
-var domOf = {};
-var answerOf = {};
+var sOf = {};
+
+function S($target, $output, editor) {
+  this.$target = $target;
+  this.$output = $output;
+  this.editor = editor;
+}
+
+var biwascheme = new BiwaScheme.Interpreter( function(e){
+  console.log(e.message);
+});
 
 function init(target_string) {
 
@@ -35,45 +44,44 @@ function init(target_string) {
     $target.after($output);
   }
   
-  domOf[target_string] = {'$target': $target, '$form': $form, '$output': $output};
+  var editor = CodeMirror.fromTextArea($form[0],
+  {
+    "matchBrackets": true, 
+    "onBlur": function() {update(target_string);}
+  });
+  
+  sOf[target_string] = new S($target, $output, editor);
 }
 
 function attachAnswer(target_string, answer) {
-  answerOf[target_string] = answer;
+  sOf[target_string].answer = answer;
   var $grade = $("<div />", {id: target_string + "-grade", text: 'hi'});
-  domOf[target_string]['$output'].after($grade);
-  domOf[target_string]['$grade'] = $grade;
+
+  sOf[target_string].$output.after($grade);
   $grade.attr({'class': 'wrong-answer'}).text('\u2717');
+  
+  sOf[target_string].$grade = $grade;
+}
+
+function update(target_string) {
+  resetTopEnv();
+  result = biwascheme.evaluate(sOf[target_string].editor.getValue());
+  sOf[target_string].$output.empty().append($("<span>" + result + "</span>"));
+  
+  if (answer = sOf[target_string].answer) {
+    var $grade = sOf[target_string].$grade;
+    if (answer == result) {
+      $grade.attr({'class': 'correct-answer'}).text('\u2713');
+    } else {
+      $grade.attr({'class': 'wrong-answer'}).text('\u2717');
+    }
+  }
 }
 
 function createPrompt(target_string) {
   
   init(target_string);
-  
-  var biwascheme = new BiwaScheme.Interpreter( function(e){
-    console.log(e.message);
-  });
-
-  function update() {
-    result = biwascheme.evaluate(editor.getValue());
-    domOf[target_string]["$output"].empty().append($("<span>" + result + "</span>"));
-    
-    if (answer = answerOf[target_string]) {
-      var $grade = domOf[target_string]['$grade'];
-      if (answer == result) {
-        $grade.attr({'class': 'correct-answer'}).text('\u2713');
-      } else {
-        $grade.attr({'class': 'wrong-answer'}).text('\u2717');
-      }
-    }
-  }
-  
-  var editor = CodeMirror.fromTextArea(domOf[target_string]['$form'][0],
-  {
-    "matchBrackets": true, 
-    "onBlur": update
-  });
-  update();
+  update(target_string);
 }
 
-console.log(domOf);
+console.log(sOf);
