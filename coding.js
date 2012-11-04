@@ -20,14 +20,18 @@ function S($target, $output, editor) {
   this.editor = editor;
 }
 
+S.prototype.getCode = function() {
+  return this.editor.getValue();
+}
+
 var biwascheme = new BiwaScheme.Interpreter( function(e){
   console.log(e.message);
 });
 
-function init(target_string) {
+function setup(target_string) {
 
 // check that $target exists, turn it into a $form, attach an $output
-// and add $target, $form, and $output to global scope
+// and add $target, $output and editor to sOf
 
   var $target = $("#" + target_string);
   if (!$target[0]) {
@@ -53,19 +57,14 @@ function init(target_string) {
   sOf[target_string] = new S($target, $output, editor);
 }
 
-function attachAnswer(target_string, answer) {
-  sOf[target_string].answer = answer;
-  var $grade = $("<div />", {id: target_string + "-grade", text: 'hi'});
-
-  sOf[target_string].$output.after($grade);
-  $grade.attr({'class': 'wrong-answer'}).text('\u2717');
-  
-  sOf[target_string].$grade = $grade;
-}
-
 function update(target_string) {
   resetTopEnv();
-  result = biwascheme.evaluate(sOf[target_string].editor.getValue());
+  if (deps = sOf[target_string].deps) {
+    for (var i = 0; i < deps.length; i++) {
+      biwascheme.evaluate(sOf[deps[i]].getCode());
+    }
+  }
+  result = biwascheme.evaluate(sOf[target_string].getCode());
   sOf[target_string].$output.empty().append($("<span>" + result + "</span>"));
   
   if (answer = sOf[target_string].answer) {
@@ -78,9 +77,25 @@ function update(target_string) {
   }
 }
 
+//public methods
+
 function createPrompt(target_string) {
+  setup(target_string);
+  update(target_string);
+}
+
+function attachAnswer(target_string, answer) {
+  var $grade = $("<div />", {id: target_string + "-grade", text: 'hi'});
+
+  sOf[target_string].$output.after($grade);
+  $grade.attr({'class': 'wrong-answer'}).text('\u2717');
   
-  init(target_string);
+  sOf[target_string].answer = answer;
+  sOf[target_string].$grade = $grade;
+}
+
+function attachDeps(target_string, deps) {
+  sOf[target_string].deps = deps;
   update(target_string);
 }
 

@@ -142,14 +142,18 @@ which the interpreter would readily evaluate to be 57. We can help ourselves by 
 <div id="scheme-size">
 size
 </div>
-<div id="scheme-size-output" class="output"> </div>
-<script> createPrompt("scheme-size"); </script>
+<script> 
+createPrompt("scheme-size"); 
+attachDeps("scheme-size", ["scheme-define"]);
+</script>
 
 <div id="scheme-times-size">
 (* 5 size)
 </div>
-<div id="scheme-times-size-output" class="output"> </div>
-<script> createPrompt("scheme-times-size"); </script>
+<script> 
+createPrompt("scheme-times-size"); 
+attachDeps("scheme-times-size", ["scheme-define"]);
+</script>
 
 <p> Here are further examples of the use of define:
 
