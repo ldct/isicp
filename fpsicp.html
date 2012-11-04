@@ -84,7 +84,7 @@
 </div>
 <script> createPrompt("scheme-long-tree"); </script>
 
-which the interpreter would readily evaluate to be 57. We can help ourselves by writing such an expression in the form
+<p> which the interpreter would readily evaluate to be 57. We can help ourselves by writing such an expression in the form
 
 <div id="scheme-long-tree-pp">
 (+ (* 3
@@ -135,9 +135,12 @@ which the interpreter would readily evaluate to be 57. We can help ourselves by 
 <div id="scheme-define">
 (define size 2)
 </div>
-<script> createPrompt("scheme-define"); </script>
+<script> 
+createPrompt("scheme-define");
+attachPushes("scheme-define", ["scheme-size", "scheme-times-size"]);
+</script>
 
-<p> causes the interpreter to associate the value 2 with the name size.8 Once the name size has been associated with the number 2, we can refer to the value 2 by name:
+<p> causes the interpreter to associate the value 2 with the name size. Once the name size has been associated with the number 2, we can refer to the value 2 by name:
 
 <div id="scheme-size">
 size

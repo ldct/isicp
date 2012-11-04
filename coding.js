@@ -59,20 +59,26 @@ function setup(target_string) {
 
 function update(target_string) {
   resetTopEnv();
-  if (deps = sOf[target_string].deps) {
-    for (var i = 0; i < deps.length; i++) {
-      biwascheme.evaluate(sOf[deps[i]].getCode());
+  var s = sOf[target_string];
+  if (s.deps) {
+    for (var i = 0; i < s.deps.length; i++) {
+      biwascheme.evaluate(sOf[s.deps[i]].getCode());
     }
   }
   result = biwascheme.evaluate(sOf[target_string].getCode());
-  sOf[target_string].$output.empty().append($("<span>" + result + "</span>"));
+  s.$output.empty().append($("<span>" + result + "</span>"));
   
-  if (answer = sOf[target_string].answer) {
-    var $grade = sOf[target_string].$grade;
-    if (answer == result) {
-      $grade.attr({'class': 'correct-answer'}).text('\u2713');
+  if (s.answer) {
+    if (s.answer == result) {
+      s.$grade.attr({'class': 'correct-answer'}).text('\u2713');
     } else {
-      $grade.attr({'class': 'wrong-answer'}).text('\u2717');
+      s.$grade.attr({'class': 'wrong-answer'}).text('\u2717');
+    }
+  }
+
+  if (s.pushes) {
+    for (var i = 0; i < s.pushes.length; i++) {
+      update(s.pushes[i]); //no cyclic dependencies allowed
     }
   }
 }
@@ -96,6 +102,11 @@ function attachAnswer(target_string, answer) {
 
 function attachDeps(target_string, deps) {
   sOf[target_string].deps = deps;
+  update(target_string);
+}
+
+function attachPushes(target_string, pushes) {
+  sOf[target_string].pushes = pushes;
   update(target_string);
 }
 
