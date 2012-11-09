@@ -57,6 +57,14 @@ function setup(target_string) {
   sOf[target_string] = new S($target, $output, editor);
 }
 
+function check(result) {
+  console.log(result);
+  if (result == undefined) {
+    return false;
+  }
+  return true;
+}
+
 function update(target_string) {
   resetTopEnv();
   var s = sOf[target_string];
@@ -66,7 +74,12 @@ function update(target_string) {
     }
   }
   result = biwascheme.evaluate(sOf[target_string].getCode());
-  s.$output.empty().append($("<span>" + result + "</span>"));
+  
+  s.$output.empty();
+  
+  if (check(result)) {
+    s.$output.append($("<span>" + result + "</span>"));
+  }
   
   if (s.answer) {
     if (s.answer == result) {
