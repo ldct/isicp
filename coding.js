@@ -1,3 +1,44 @@
+function cleanCode(code) {
+  return code.replace(/^\n/, "").replace(/\n*$/, "").replace(/\s*\n/g, "\n").replace(/\s*$/, "");
+}
+
+function check(result) {
+  //console.log(typeof(result), result);
+  if (result == undefined) {
+    return false;
+  }
+  if (typeof(result) == "object" && result.toString && result.toString() == "#<undef>") {
+    return false;
+  }
+  return true;
+}
+
+//The S class represents a scheme editor fragment and associated DOMs
+
+var sOf = {};
+
+function S($target, $output) {
+  this.$target = $target;
+  this.$output = $output;
+}
+
+S.prototype.getCode = function() {
+  if (this.editor) {
+    return this.editor.getValue();
+  }
+  if (this.code) {
+    return this.code;
+  }
+  console.error(S);
+  throw "getCode couldn't find anything!";
+}
+
+//Biwascheme
+
+var biwascheme = new BiwaScheme.Interpreter( function(e){
+  console.log(e.message);
+});
+
 function resetTopEnv() {
   BiwaScheme.TopEnv = {};
   BiwaScheme.TopEnv["define"] = new BiwaScheme.Syntax("define");
@@ -8,30 +49,10 @@ function resetTopEnv() {
   BiwaScheme.TopEnv["set!"] = new BiwaScheme.Syntax("set!");
 }
 
-function cleanCode(code) {
-  return code.replace(/^\n/, "").replace(/\n*$/, "").replace(/\s*\n/g, "\n").replace(/\s*$/, "");
-}
-
-var sOf = {};
-
-function S($target, $output, editor) {
-  this.$target = $target;
-  this.$output = $output;
-  this.editor = editor;
-}
-
-S.prototype.getCode = function() {
-  return this.editor.getValue();
-}
-
-var biwascheme = new BiwaScheme.Interpreter( function(e){
-  console.log(e.message);
-});
-
-function setup(target_string) {
-
 // check that $target exists, turn it into a $form, attach an $output
 // and add $target, $output and editor to sOf
+
+function setup(target_string) {
 
   var $target = $("#" + target_string);
   if (!$target[0]) {
@@ -54,19 +75,29 @@ function setup(target_string) {
     "onBlur": function() {update(target_string);}
   });
   
-  sOf[target_string] = new S($target, $output, editor);
+  sOf[target_string] = new S($target, $output);
+  sOf[target_string].editor = editor;
 }
 
-function check(result) {
-  console.log(typeof(result), result);
-  if (result == undefined) {
-    return false;
-  }
-  if (typeof(result) == "object" && result.toString && result.toString() == "#<undef>") {
-    return false;
+function setup_static(target_string) {
+
+  var $target = $("#" + target_string);
+  if (!$target[0]) {
+    throw "$" + target_string + " did not match anything";
   }
   
-  return true;
+  var code = cleanCode($target.text());
+  
+  //TODO: decorate target
+  
+  var $output = $("#" + target_string + "-output")
+  if (!$output[0]) {
+    $output = $("<div />", {id: target_string + "-output", 'class':'output'});
+    $target.after($output);
+  }
+  
+  sOf[target_string] = new S($target, $output);
+  sOf[target_string].code = code;
 }
 
 function update(target_string) {
@@ -104,7 +135,10 @@ function update(target_string) {
 
 function createPrompt(target_string) {
   setup(target_string);
-  update(target_string);
+}
+
+function createStaticPrompt(target_string) {
+  setup_static(target_string);
 }
 
 function attachAnswer(target_string, answer) {
@@ -118,12 +152,14 @@ function attachAnswer(target_string, answer) {
 
 function attachDeps(target_string, deps) {
   sOf[target_string].deps = deps;
-  update(target_string);
 }
 
 function attachPushes(target_string, pushes) {
   sOf[target_string].pushes = pushes;
-  update(target_string);
 }
 
-console.log(sOf);
+function updateAll() {
+  for (ts in sOf) {
+    update(ts);
+  } 
+}
