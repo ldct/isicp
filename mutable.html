@@ -71,7 +71,7 @@
 
 <div class='excercise'>
 
-<p style='margin-top: 0'> Exercise 3.12.  The following procedure for appending lists was introduced in section 2.2.1:
+<p style='margin-top: 0'> <b>Exercise 3.12.</b>  The following procedure for appending lists was introduced in section 2.2.1:
 
 <div id="scheme-append">
 (define (append x y)
@@ -130,11 +130,116 @@ w
 </div>
 <script> createPrompt("scheme-response-2"); attachAnswer("scheme-response-2", "42") </script>
 
-Draw box-and-pointer diagrams to explain your answer. 
+<p> Draw box-and-pointer diagrams to explain your answer. 
 
 </div>
 
+<p>
+
+<div class='excercise'>
+
+<p style='margin-top: 0'> <b> Exercise 3.13. </b>  Consider the following make-cycle procedure, which uses the last-pair procedure defined in exercise 3.12:
+
+<div id="scheme-make-cycle">
+(define (make-cycle x)
+  (set-cdr! (last-pair x) x)
+  x)
 </div>
+<script> createPrompt("scheme-make-cycle");</script>
+
+<p> Draw a box-and-pointer diagram that shows the structure z created by
+
+<div id="scheme-cycle">
+(define z (make-cycle (list 'a 'b 'c)))
+</div>
+<script> createPrompt("scheme-cycle");</script>
+
+<p> What happens if we try to compute <tt> (last-pair z) </tt>?
+
+</div>
+
+<p>
+
+<div class='excercise'>
+
+<p style='margin-top: 0'> <b> Exercise 3.14. </b>  The following procedure is quite useful, although obscure:
+
+<div id="scheme-mystery">
+(define (mystery x)
+  (define (loop x y)
+    (if (null? x)
+        y
+        (let ((temp (cdr x)))
+          (set-cdr! x y)
+          (loop temp x))))
+  (loop x '()))
+</div>
+<script> createPrompt("scheme-mystery");</script>
+
+<p> Loop uses the "temporary" variable <tt> temp </tt> to hold the old value of the cdr of x, since the set-cdr! on the next line destroys the cdr. Explain what mystery does in general. Suppose v is defined by <tt> (define v (list 'a 'b 'c 'd)) </tt>. Draw the box-and-pointer diagram that represents the list to which v is bound. Suppose that we now evaluate <tt> (define w (mystery v)) </tt>. Draw box-and-pointer diagrams that show the structures v and w after evaluating this expression. What would be printed as the values of v and w ? 
+
+TODO: create static field
+
+</div>
+
+<h4> Sharing and identity </h4>
+
+<p> We mentioned in section 3.1.3 the theoretical issues of "sameness" and "change" raised by the introduction of assignment. These issues arise in practice when individual pairs are shared among different data objects. For example, consider the structure formed by
+
+<div id="scheme-share-cons">
+(define x (list 'a 'b))
+(define z1 (cons x x))
+</div>
+<script> createPrompt("scheme-share-cons");</script>
+
+<p> As shown in figure 3.16, z1 is a pair whose car and cdr both point to the same pair x. This sharing of x by the car and cdr of z1 is a consequence of the straightforward way in which cons is implemented. In general, using cons to construct lists will result in an interlinked structure of pairs in which many individual pairs are shared by many different structures.
+
+<p> <img src='http://mitpress.mit.edu/sicp/full-text/book/ch3-Z-G-17.gif' />
+
+<p> Figure 3.16:  The list z1 formed by (cons x x).
+
+<p> <img src='http://mitpress.mit.edu/sicp/full-text/book/ch3-Z-G-18.gif' />
+
+<p> Figure 3.17:  The list z2 formed by (cons (list 'a 'b) (list 'a 'b)).
+
+<p> In contrast to figure 3.16, figure 3.17 shows the structure created by
+
+<div id="scheme-same-cons">
+(define z2 (cons (list 'a 'b) (list 'a 'b)))
+</div>
+<script> createPrompt("scheme-same-cons");</script>
+
+<p> In this structure, the pairs in the two (a b) lists are distinct, although the actual symbols are shared.19
+
+<p> When thought of as a list, z1 and z2 both represent ``the same'' list, ((a b) a b). In general, sharing is completely undetectable if we operate on lists using only cons, car, and cdr. However, if we allow mutators on list structure, sharing becomes significant. As an example of the difference that sharing can make, consider the following procedure, which modifies the car of the structure to which it is applied:
+
+<div id="scheme-set-to-wow">
+(define (set-to-wow! x)
+  (set-car! (car x) 'wow)
+  x)
+</div>
+<script> createPrompt("scheme-set-to-wow");</script>
+
+<p> Even though z1 and z2 are ``the same'' structure, applying set-to-wow! to them yields different results. With z1, altering the car also changes the cdr, because in z1 the car and the cdr are the same pair. With z2, the car and cdr are distinct, so set-to-wow! modifies only the car:
+
+<div id="scheme-TODO">
+z1
+((a b) a b)
+
+(set-to-wow! z1)
+((wow b) wow b)
+
+z2
+((a b) a b)
+
+(set-to-wow! z2)
+((wow b) a b)
+</div>
+<script> createPrompt("scheme-TODO");</script>
+
+<p> One way to detect sharing in list structures is to use the predicate eq?, which we introduced in section 2.3.1 as a way to test whether two symbols are equal. More generally, (eq? x y) tests whether x and y are the same object (that is, whether x and y are equal as pointers). Thus, with z1 and z2 as defined in figures 3.16 and 3.17, (eq? (car z1) (cdr z1)) is true and (eq? (car z2) (cdr z2)) is false.
+
+<p> As will be seen in the following sections, we can exploit sharing to greatly extend the repertoire of data structures that can be represented by pairs. On the other hand, sharing can also be dangerous, since modifications made to structures will also affect other structures that happen to share the modified parts. The mutation operations set-car! and set-cdr! should be used with care; unless we have a good understanding of how our data objects are shared, mutation can have unanticipated results.20
 
 </body>
 </html>
