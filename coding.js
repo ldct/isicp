@@ -65,6 +65,7 @@ function check(result) {
   if (typeof(result) == "object" && result.toString && result.toString() == "#<undef>") {
     return false;
   }
+  
   return true;
 }
 
