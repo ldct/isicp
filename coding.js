@@ -58,8 +58,11 @@ function setup(target_string) {
 }
 
 function check(result) {
-  console.log(result);
+  console.log(typeof(result), result);
   if (result == undefined) {
+    return false;
+  }
+  if (typeof(result) == "object" && result.toString && result.toString() == "#<undef>") {
     return false;
   }
   return true;
