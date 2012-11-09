@@ -2,6 +2,7 @@ p {
   font-family:Georgia;
   color:#2E2E2E;
   line-height:1.5em;
+  text-align: justify;
 }
 
 .output {
