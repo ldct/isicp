@@ -91,10 +91,9 @@ function createPrompt(target_string) {
 }
 
 function attachAnswer(target_string, answer) {
-  var $grade = $("<div />", {id: target_string + "-grade", text: 'hi'});
+  var $grade = $("<div />", {id: target_string + "-grade", 'class':'wrong-answer', text: '\u2717'});
 
   sOf[target_string].$output.after($grade);
-  $grade.attr({'class': 'wrong-answer'}).text('\u2717');
   
   sOf[target_string].answer = answer;
   sOf[target_string].$grade = $grade;
