@@ -1,0 +1,140 @@
+<head>
+<meta charset="UTF-8">
+<script src="biwascheme.js"> </script>
+<script src="codemirror/lib/codemirror.js"></script>
+<script src="codemirror/mode/scheme/scheme.js"></script>
+<!--<script src="codemirror-compressed.js"></script>-->
+<!--<script src="http://ajax.googleapis.com/ajax/libs/jquery/1.8.2/jquery.min.js"></script>-->
+<script src="jquery.min.js"></script>
+<script src="coding.js"> </script>
+<link rel="stylesheet" type="text/css" href="codemirror.css" />
+<link rel="stylesheet" type="text/css" href="isicp.css" />
+
+<title>mutable</title>
+</head>
+<body>
+
+<h1>Functional SICP</h1>
+
+<div id="sidebar">
+<div id="scheme-scratch"></div> <script> createPrompt("scheme-scratch"); </script>
+<div id="bs-console"></div>
+</div>
+
+<div id="main">
+
+<h2> 3.3  Modeling with Mutable Data </h2>
+
+<p> Chapter 2 dealt with compound data as a means for constructing computational objects that have several parts, in order to model real-world objects that have several aspects. In that chapter we introduced the discipline of data abstraction, according to which data structures are specified in terms of constructors, which create data objects, and selectors, which access the parts of compound data objects. But we now know that there is another aspect of data that chapter 2 did not address. The desire to model systems composed of objects that have changing state leads us to the need to modify compound data objects, as well as to construct and select from them. In order to model compound objects with changing state, we will design data abstractions to include, in addition to selectors and constructors, operations called mutators, which modify data objects. For instance, modeling a banking system requires us to change account balances. Thus, a data structure for representing bank accounts might admit an operation
+
+<div id="scheme-set-balance">
+(set-balance! &lt;account&gt; &lt;new-value&gt;)
+</div>
+<script> createPrompt("scheme-set-balance"); </script>
+
+<p> that changes the balance of the designated account to the designated new value. Data objects for which mutators are defined are known as mutable data objects.
+
+<p> Chapter 2 introduced pairs as a general-purpose ``glue'' for synthesizing compound data. We begin this section by defining basic mutators for pairs, so that pairs can serve as building blocks for constructing mutable data objects. These mutators greatly enhance the representational power of pairs, enabling us to build data structures other than the sequences and trees that we worked with in section 2.2. We also present some examples of simulations in which complex systems are modeled as collections of objects with local state.
+
+<h3> 3.3.1  Mutable List Structure </h3>
+
+<p> The basic operations on pairs -- cons, car, and cdr -- can be used to construct list structure and to select parts from list structure, but they are incapable of modifying list structure. The same is true of the list operations we have used so far, such as append and list, since these can be defined in terms of cons, car, and cdr. To modify list structures we need new operations.
+
+<p> <img src='http://mitpress.mit.edu/sicp/full-text/book/ch3-Z-G-13.gif' /> <p> Figure 3.12:  Lists <tt> x: ((a b) c d) </tt> and <tt> y: (e f) </tt>.
+
+<p> <img src='http://mitpress.mit.edu/sicp/full-text/book/ch3-Z-G-14.gif' /> <p> Figure 3.13:  Effect of <tt> (set-car! x y) </tt> on the lists in figure 3.12.
+
+<p> <img src='http://mitpress.mit.edu/sicp/full-text/book/ch3-Z-G-15.gif' /> <p> Figure 3.14:  Effect of <tt> (define z (cons y (cdr x))) </tt> on the lists in figure 3.12.
+
+<p> <img src='http://mitpress.mit.edu/sicp/full-text/book/ch3-Z-G-16.gif' /> <p> Figure 3.15:  Effect of <tt> (set-cdr! x y) </tt> on the lists in figure 3.12.
+
+<p> The primitive mutators for pairs are set-car! and set-cdr!. Set-car! takes two arguments, the first of which must be a pair. It modifies this pair, replacing the car pointer by a pointer to the second argument of set-car!.16
+
+<p> As an example, suppose that x is bound to the list ((a b) c d) and y to the list (e f) as illustrated in figure 3.12. Evaluating the expression (set-car! x y) modifies the pair to which x is bound, replacing its car by the value of y. The result of the operation is shown in figure 3.13. The structure x has been modified and would now be printed as ((e f) c d). The pairs representing the list (a b), identified by the pointer that was replaced, are now detached from the original structure.17
+
+<p> Compare figure 3.13 with figure 3.14, which illustrates the result of executing (define z (cons y (cdr x))) with x and y bound to the original lists of figure 3.12. The variable z is now bound to a new pair created by the cons operation; the list to which x is bound is unchanged.
+
+<p> The set-cdr! operation is similar to set-car!. The only difference is that the cdr pointer of the pair, rather than the car pointer, is replaced. The effect of executing (set-cdr! x y) on the lists of figure 3.12 is shown in figure 3.15. Here the cdr pointer of x has been replaced by the pointer to (e f). Also, the list (c d), which used to be the cdr of x, is now detached from the structure.
+
+<p> Cons builds new list structure by creating new pairs, while set-car! and set-cdr! modify existing pairs. Indeed, we could implement cons in terms of the two mutators, together with a procedure get-new-pair, which returns a new pair that is not part of any existing list structure. We obtain the new pair, set its car and cdr pointers to the designated objects, and return the new pair as the result of the cons.18
+
+<div id="scheme-cons-gnp">
+(define (cons x y)
+  (let ((new (get-new-pair)))
+    (set-car! new x)
+    (set-cdr! new y)
+    new))
+</div>
+<script> createPrompt("scheme-cons-gnp"); </script>
+
+<p>
+
+<div class='excercise'>
+
+<p style='margin-top: 0'> Exercise 3.12.  The following procedure for appending lists was introduced in section 2.2.1:
+
+<div id="scheme-append">
+(define (append x y)
+  (if (null? x)
+      y
+      (cons (car x) (append (cdr x) y))))
+</div>
+<script> createPrompt("scheme-append"); </script>
+
+<p> Append forms a new list by successively consing the elements of x onto y. The procedure append! is similar to append, but it is a mutator rather than a constructor. It appends the lists by splicing them together, modifying the final pair of x so that its cdr is now y. (It is an error to call append! with an empty x.)
+
+<div id="scheme-append-b">
+(define (append! x y)
+  (set-cdr! (last-pair x) y)
+  x)
+</div>
+<script> createPrompt("scheme-append-b"); </script>
+
+<p> Here last-pair is a procedure that returns the last pair in its argument:
+
+<div id="scheme-last-pair">
+(define (last-pair x)
+  (if (null? (cdr x))
+      x
+      (last-pair (cdr x))))
+</div>
+<script> createPrompt("scheme-last-pair"); </script>
+
+<p> Consider the interaction
+
+<div id="scheme-interaction">
+(define x (list 'a 'b))
+(define y (list 'c 'd))
+(define z (append x y))
+z
+(a b c d)
+(cdr x)
+&lt;response&gt;
+(define w (append! x y))
+w
+(a b c d)
+(cdr x)
+&lt;response&gt;
+</div>
+<script> createPrompt("scheme-interaction"); </script>
+
+<p> What are the missing &lt;response&gt;s? 
+
+<div id="scheme-response-1">
+&lt;response for first (cdr x)&gt;
+</div>
+<script> createPrompt("scheme-response-1"); attachAnswer("scheme-response-1", "42") </script>
+
+<div id="scheme-response-2">
+&lt;response for second (cdr x)&gt;
+</div>
+<script> createPrompt("scheme-response-2"); attachAnswer("scheme-response-2", "42") </script>
+
+Draw box-and-pointer diagrams to explain your answer. 
+
+</div>
+
+</div>
+
+</body>
+</html>
