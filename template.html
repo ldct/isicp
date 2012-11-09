@@ -1,0 +1,53 @@
+<head>
+<meta charset="UTF-8">
+<script src="biwascheme.js"> </script>
+<script src="codemirror/lib/codemirror.js"></script>
+<script src="codemirror/mode/scheme/scheme.js"></script>
+<!--<script src="codemirror-compressed.js"></script>-->
+<!--<script src="http://ajax.googleapis.com/ajax/libs/jquery/1.8.2/jquery.min.js"></script>-->
+<script src="jquery.min.js"></script>
+<script src="coding.js"> </script>
+<link rel="stylesheet" type="text/css" href="codemirror.css" />
+<link rel="stylesheet" type="text/css" href="isicp.css" />
+
+<title>fpSICP</title>
+</head>
+<body>
+
+<h1>Functional SICP</h1>
+
+<div id="sidebar">
+<div id="scheme-scratch"></div> <script> createPrompt("scheme-scratch"); </script>
+<div id="bs-console"></div>
+</div>
+
+<div id="main">
+
+<h3>Calculator</h3>
+
+<p> We'll start our introduction to scheme by using it as a pocket calculator.
+
+<div id="scheme-plus">
+(+ 1 2)
+</div>
+<script> createPrompt("scheme-plus"); </script>
+
+<p>
+
+<div class='excercise'>
+
+  Use scheme to find the value of 784 + 264
+
+  <p>
+
+  <div id="scheme-plus-ex">
+&lt;your-answer-here&gt;
+  </div>
+  <script> createPrompt("scheme-plus-ex"); attachAnswer("scheme-plus-ex", "1048");</script>
+
+</div>
+
+</div>
+
+</body>
+</html>
