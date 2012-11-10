@@ -16,11 +16,22 @@
 
 <h1>Functional SICP</h1>
 
-<div id="sidebar">
-<div id="scheme-scratch"></div> <script> createPrompt("scheme-scratch"); </script>
-<div id="bs-console"></div>
+<div id="sidebox">
+  <div class="tab"></div>
+  <div class="content">
+    <div id="scheme-scratch">(+ 1 2)</div> 
+    <script> createPrompt("scheme-scratch"); 
+    </script>
+    </div>
 </div>
 
+<script> 
+$('#sidebox .tab').toggle(function(){
+    $('#sidebox').animate({'right':0});
+}, function(){
+    $('#sidebox').animate({'right':'-30%'});
+});
+</script>
 <div id="main">
 
 <h2> 3.3  Modeling with Mutable Data </h2>

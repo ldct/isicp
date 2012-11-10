@@ -26,14 +26,39 @@ p {
   color: green;
 }
 
-#sidebar {
-  position:fixed;
-  left:63%;
-  width: 37%;
+#sidebar-old {
   height: 100%;
   float: right;
   padding: 2px;
 }
+
+#sidebox {
+    position:fixed;
+    right:-30%;
+    top:10px;
+    width:35%;
+    height:100%;
+}
+
+#sidebox .tab,
+#sidebox .content {
+    background:#bada55;
+}
+
+#sidebox .content {
+    float:right;
+    width:95%;
+    height:100%;
+}
+
+#sidebox .tab {
+    cursor:pointer;
+    float:left;
+    width:5%;
+    height:100%;
+}
+
+
 
 #main {
   width: 60%;
