@@ -17,9 +17,10 @@ function check(result) {
 
 var sOf = {};
 
-function S($target, $output) {
+function S($target, $output, editor) {
   this.$target = $target;
   this.$output = $output;
+  this.editor = editor;
 }
 
 S.prototype.getCode = function() {
@@ -75,29 +76,7 @@ function setup(target_string) {
     "onBlur": function() {update(target_string);}
   });
   
-  sOf[target_string] = new S($target, $output);
-  sOf[target_string].editor = editor;
-}
-
-function setup_static(target_string) {
-
-  var $target = $("#" + target_string);
-  if (!$target[0]) {
-    throw "$" + target_string + " did not match anything";
-  }
-  
-  var code = cleanCode($target.text());
-  
-  //TODO: decorate target
-  
-  var $output = $("#" + target_string + "-output")
-  if (!$output[0]) {
-    $output = $("<div />", {id: target_string + "-output", 'class':'output'});
-    $target.after($output);
-  }
-  
-  sOf[target_string] = new S($target, $output);
-  sOf[target_string].code = code;
+  sOf[target_string] = new S($target, $output, editor);
 }
 
 function update(target_string) {
@@ -138,7 +117,8 @@ function createPrompt(target_string) {
 }
 
 function createStaticPrompt(target_string) {
-  setup_static(target_string);
+  setup(target_string);
+  sOf[target_string].editor.setOption("readOnly", true);
 }
 
 function attachAnswer(target_string, answer) {
