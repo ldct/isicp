@@ -87,7 +87,12 @@ function evaluate(target_string) {
       evaluate(s.deps[i]);
     }
   }
-  return biwascheme.evaluate(sOf[target_string].getCode());
+  try {
+    return biwascheme.evaluate(sOf[target_string].getCode());
+  }
+  catch (e) {
+    return;
+  }
 }
 
 function update(target_string) {
