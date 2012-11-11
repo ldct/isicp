@@ -1,5 +1,8 @@
+//^ start
+//$ end
+
 function cleanCode(code) {
-  return code.replace(/^\n/, "").replace(/\n*$/, "").replace(/\s*\n/g, "\n").replace(/\s*$/, "");
+  return code.replace(/^\n/, "").replace(/\n*$/, "").replace(/[ \t]*\n/g, "\n");//.replace(/\s*$/, "");
 }
 
 function check(result) {
