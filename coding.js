@@ -113,6 +113,21 @@ function update(target_string) {
   }
 }
 
+function update_noeval(target_string) {
+
+  var s = sOf[target_string];
+
+  result = sOf[target_string].getCode();
+  
+  if (s.answer) {
+    if (s.answer == result) {
+      s.$grade.attr({'class': 'correct-answer'}).text('\u2713');
+    } else {
+      s.$grade.attr({'class': 'wrong-answer'}).text('\u2717');
+    }
+  }
+}
+
 //public methods
 
 function createPrompt(target_string) {
@@ -152,6 +167,15 @@ function createStaticDisplay(target_string) {
   
   S.editor.setOption("readOnly", true);
   S.editor.setOption("onBlur", function() {});
+  S.$output.hide();
+}
+
+function createNoeval(target_string) {
+  setup(target_string);
+  
+  var S = sOf[target_string];
+  
+  S.editor.setOption("onBlur", function() {update_noeval(target_string)});
   S.$output.hide();
 }
 
