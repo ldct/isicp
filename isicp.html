@@ -15,10 +15,22 @@
 
 <h1>Interactive SICP</h1>
 
-<div id="sidebar">
-<div id="scheme-scratch"></div> <script> createPrompt("scheme-scratch"); </script>
-<div id="bs-console"></div>
+<div id="sidebox">
+  <div class="tab"></div>
+  <div class="content">
+    <div id="scheme-scratch">(+ 1 2)</div> 
+    <script> createPrompt("scheme-scratch"); 
+    </script>
+    </div>
 </div>
+
+<script> 
+$('#sidebox .tab').toggle(function(){
+    $('#sidebox').animate({'right':0});
+}, function(){
+    $('#sidebox').animate({'right':'-30%'});
+});
+</script>
 
 <div id="main">
 
@@ -137,6 +149,63 @@
 
 <p> Even with complex expressions, the interpreter always operates in the same basic cycle: It reads an expression from the terminal, evaluates the expression, and prints the result. This mode of operation is often expressed by saying that the interpreter runs in a read-eval-print loop. Observe in particular that it is not necessary to explicitly instruct the interpreter to print the value of the expression.
 
+
+
+<div class='excercise'>
+
+<p style="margin-top:0"> <b> Exercise 1.1.1. </b>  Below is a sequence of expressions. What is the result printed by the interpreter in response to each expression? Assume that the sequence is to be evaluated in the order in which it is presented.
+
+<div id="scheme-ex-111-10">
+10
+</div>
+<div style="font-style: italic" id="scheme-ex-111-10-input">
+&lt;your answer here&gt;
+</div>
+<script> 
+createStaticDisplay("scheme-ex-111-10");
+createNoeval("scheme-ex-111-10-input");
+attachAnswer("scheme-ex-111-10-input", "10");
+</script>
+
+<p>
+
+<div id="scheme-ex-111-plus">
+(+ 5 3 4)
+</div>
+<div style="font-style: italic" id="scheme-ex-111-plus-input">
+&lt;your answer here&gt;
+</div>
+<script> 
+createStaticDisplay("scheme-ex-111-plus");
+createNoeval("scheme-ex-111-plus-input");
+attachAnswer("scheme-ex-111-plus-input", "12");
+</script>
+
+<p>
+
+<div id="scheme-ex-111-minus">
+(- 9 1)
+</div>
+<div style="font-style: italic" id="scheme-ex-111-minus-input">
+&lt;your answer here&gt;
+</div>
+<script> 
+createStaticDisplay("scheme-ex-111-minus");
+createNoeval("scheme-ex-111-minus-input");
+attachAnswer("scheme-ex-111-minus-input", "8");
+</script>
+
+<p>
+
+<div id="scheme-ex-111">
+(/ 6 2)
+(+ (* 2 4) (- 4 6))
+</div>
+<script> 
+createStaticDisplay("scheme-ex-111"); 
+</script>
+</div>
+
 <h3> 1.1.2  Naming and the Environment </h3>
 
 <p> A critical aspect of a programming language is the means it provides for using names to refer to computational objects. We say that the name identifies a variable whose value is the object.
@@ -198,6 +267,21 @@ attachDeps("scheme-circumference", ["scheme-define-radius"]);
 
 <p> It should be clear that the possibility of associating values with symbols and later retrieving them means that the interpreter must maintain some sort of memory that keeps track of the name-object pairs. This memory is called the environment (more precisely the global environment, since we will see later that a computation may involve a number of different environments).
 
+<div class='excercise'>
+
+<p style="margin-top:0"> <b> Exercise 1.1.2. </b>  Below is a sequence of expressions. What is the result printed by the interpreter in response to each expression? Assume that the sequence is to be evaluated in the order in which it is presented.
+
+<div id="scheme-ex-112">
+(define a 3)
+(define b (+ a 1))
+(+ a b (* a b))
+(= a b)
+</div>
+<script> 
+createStaticDisplay("scheme-ex-112"); 
+</script>
+</div>
+
 <h3> 1.1.3  Evaluating Combinations </h3>
 
 <p> One of our goals in this chapter is to isolate issues about thinking procedurally. As a case in point, let us consider that, in evaluating combinations, the interpreter is itself following a procedure.
@@ -223,8 +307,8 @@ attachDeps("scheme-circumference", ["scheme-define-radius"]);
 
 <p> requires that the evaluation rule be applied to four different combinations. We can obtain a picture of this process by representing the combination in the form of a tree, as shown in figure 1.1.
 
-<img src="http://mitpress.mit.edu/sicp/full-text/book/ch1-Z-G-1.gif"> </img> <br>
-<b> Figure 1.1 </b>:  Tree representation, showing the value of each subcombination.
+<p> <img style="display:block; margin-left:auto; margin-right:auto;" src="http://mitpress.mit.edu/sicp/full-text/book/ch1-Z-G-1.gif"> </img> <br>
+<p style="text-align:center"> <b> Figure 1.1 </b>:  Tree representation, showing the value of each subcombination.
 
 <p> Each combination is represented by a node with branches corresponding to the operator and the operands of the combination stemming from it. The terminal nodes (that is, nodes with no branches stemming from them) represent either operators or numbers. Viewing evaluation in terms of the tree, we can imagine that the values of the operands percolate upward, starting from the terminal nodes and then combining at higher and higher levels. In general, we shall see that recursion is a very powerful technique for dealing with hierarchical, treelike objects. In fact, the "percolate values upward" form of the evaluation rule is an example of a general kind of process known as tree accumulation.
 
@@ -238,7 +322,7 @@ attachDeps("scheme-circumference", ["scheme-define-radius"]);
 <li> the values of other names are the objects associated with those names in the environment. 
 </ul>
 
-<p> We may regard the second rule as a special case of the third one by stipulating that symbols such as + and * are also included in the global environment, and are associated with the sequences of machine instructions that are their ``values.'' The key point to notice is the role of the environment in determining the meaning of the symbols in expressions. In an interactive language such as Lisp, it is meaningless to speak of the value of an expression such as (+ x 1) without specifying any information about the environment that would provide a meaning for the symbol x (or even for the symbol +). As we shall see in chapter 3, the general notion of the environment as providing a context in which evaluation takes place will play an important role in our understanding of program execution.
+<p> We may regard the second rule as a special case of the third one by stipulating that symbols such as + and * are also included in the global environment, and are associated with the sequences of machine instructions that are their "values." The key point to notice is the role of the environment in determining the meaning of the symbols in expressions. In an interactive language such as Lisp, it is meaningless to speak of the value of an expression such as (+ x 1) without specifying any information about the environment that would provide a meaning for the symbol x (or even for the symbol +). As we shall see in chapter 3, the general notion of the environment as providing a context in which evaluation takes place will play an important role in our understanding of program execution.
 
 <p> Notice that the evaluation rule given above does not handle definitions. For instance, evaluating (define x 3) does not apply define to two arguments, one of which is the value of the symbol x and the other of which is 3, since the purpose of the define is precisely to associate x with a value. (That is, (define x 3) is not a combination.)
 
@@ -258,7 +342,7 @@ attachDeps("scheme-circumference", ["scheme-define-radius"]);
 
 <p> Now we will learn about procedure definitions, a much more powerful abstraction technique by which a compound operation can be given a name and then referred to as a unit.
 
-<p> We begin by examining how to express the idea of ``squaring.'' We might say, ``To square something, multiply it by itself.'' This is expressed in our language as
+<p> We begin by examining how to express the idea of "squaring." We might say, "To square something, multiply it by itself." This is expressed in our language as
 
 <div id="scheme-define-square">
 (define (square x) (* x x))
@@ -438,9 +522,9 @@ hideOutput("scheme-f-7");
 
 <ul>
 
-<li> The purpose of the substitution is to help us think about procedure application, not to provide a description of how the interpreter really works. Typical interpreters do not evaluate procedure applications by manipulating the text of a procedure to substitute values for the formal parameters. In practice, the ``substitution'' is accomplished by using a local environment for the formal parameters. We will discuss this more fully in chapters 3 and 4 when we examine the implementation of an interpreter in detail.
+<li> The purpose of the substitution is to help us think about procedure application, not to provide a description of how the interpreter really works. Typical interpreters do not evaluate procedure applications by manipulating the text of a procedure to substitute values for the formal parameters. In practice, the "substitution" is accomplished by using a local environment for the formal parameters. We will discuss this more fully in chapters 3 and 4 when we examine the implementation of an interpreter in detail.
 
-<li> Over the course of this book, we will present a sequence of increasingly elaborate models of how interpreters work, culminating with a complete implementation of an interpreter and compiler in chapter 5. The substitution model is only the first of these models -- a way to get started thinking formally about the evaluation process. In general, when modeling phenomena in science and engineering, we begin with simplified, incomplete models. As we examine things in greater detail, these simple models become inadequate and must be replaced by more refined models. The substitution model is no exception. In particular, when we address in chapter 3 the use of procedures with ``mutable data,'' we will see that the substitution model breaks down and must be replaced by a more complicated model of procedure application.15 
+<li> Over the course of this book, we will present a sequence of increasingly elaborate models of how interpreters work, culminating with a complete implementation of an interpreter and compiler in chapter 5. The substitution model is only the first of these models -- a way to get started thinking formally about the evaluation process. In general, when modeling phenomena in science and engineering, we begin with simplified, incomplete models. As we examine things in greater detail, these simple models become inadequate and must be replaced by more refined models. The substitution model is no exception. In particular, when we address in chapter 3 the use of procedures with "mutable data," we will see that the substitution model breaks down and must be replaced by a more complicated model of procedure application.15 
 
 </ul>
 
@@ -452,8 +536,7 @@ hideOutput("scheme-f-7");
 (f 5)
 </div>
 <script> 
-createPrompt("scheme-f-1-n"); 
-hideOutput("scheme-f-1-n");
+createStaticDisplay("scheme-f-1-n"); 
 </script>
 
 <p> would proceed according to the sequence of expansions
@@ -462,39 +545,66 @@ hideOutput("scheme-f-1-n");
 (sum-of-squares (+ 5 1) (* 5 2))
 </div>
 <script> 
-createPrompt("scheme-f-2-n"); 
-hideOutput("scheme-f-2-n");
+createStaticDisplay("scheme-f-2-n");
 </script>
 
-<div id="scheme-f-normal-1">
+<p>
 
+<div id="scheme-f-3-n">
 (+    (square (+ 5 1))      (square (* 5 2))  )
+</div>
+<script> 
+createStaticDisplay("scheme-f-3-n");
+</script>
 
+<p>
+
+<div id="scheme-f-4-n">
 (+    (* (+ 5 1) (+ 5 1))   (* (* 5 2) (* 5 2)))
 </div>
-<script> createPrompt("scheme-f-normal-1"); </script>
+<script> 
+createStaticDisplay("scheme-f-4-n");
+</script>
 
-followed by the reductions
+<p> followed by the reductions
 
-<div id="scheme-f-normal-2">
+<div id="scheme-f-5-n">
 (+         (* 6 6)             (* 10 10))
+</div>
+<script> 
+createStaticDisplay("scheme-f-5-n");
+</script>
+
+<p>
+
+<div id="scheme-f-6-n">
 (+           36                   100)
+</div>
+<script> 
+createStaticDisplay("scheme-f-6-n");
+</script>
+
+<p>
+
+<div id="scheme-f-7-n">
                     136
 </div>
-<script> createPrompt("scheme-f-normal-2"); </script>
+<script> 
+createStaticDisplay("scheme-f-7-n");
+</script>
 
-<p> This gives the same answer as our previous evaluation model, but the process is different. In particular, the evaluations of (+ 5 1) and (* 5 2) are each performed twice here, corresponding to the reduction of the expression
+<p> This gives the same answer as our previous evaluation model, but the process is different. In particular, the evaluations of <tt> (+ 5 1) </tt> and <tt> (* 5 2) </tt> are each performed twice here, corresponding to the reduction of the expression
 
 <div id="scheme-x">
 (* x x)
 </div>
 <script> createPrompt("scheme-x"); </script>
 
-<p> with x replaced respectively by (+ 5 1) and (* 5 2).
+<p> with <tt> x </tt> replaced respectively by <tt> (+ 5 1) </tt> and <tt> (* 5 2) </tt>.
 
-<p> This alternative "fully expand and then reduce" evaluation method is known as normal-order evaluation, in contrast to the "evaluate the arguments and then apply" method that the interpreter actually uses, which is called applicative-order evaluation. It can be shown that, for procedure applications that can be modeled using substitution (including all the procedures in the first two chapters of this book) and that yield legitimate values, normal-order and applicative-order evaluation produce the same value. (See exercise 1.5 for an instance of an ``illegitimate'' value where normal-order and applicative-order evaluation do not give the same result.)
+<p> This alternative "fully expand and then reduce" evaluation method is known as normal-order evaluation, in contrast to the "evaluate the arguments and then apply" method that the interpreter actually uses, which is called applicative-order evaluation. It can be shown that, for procedure applications that can be modeled using substitution (including all the procedures in the first two chapters of this book) and that yield legitimate values, normal-order and applicative-order evaluation produce the same value. (See exercise 1.5 for an instance of an "illegitimate" value where normal-order and applicative-order evaluation do not give the same result.)
 
-<p> Lisp uses applicative-order evaluation, partly because of the additional efficiency obtained from avoiding multiple evaluations of expressions such as those illustrated with (+ 5 1) and (* 5 2) above and, more significantly, because normal-order evaluation becomes much more complicated to deal with when we leave the realm of procedures that can be modeled by substitution. On the other hand, normal-order evaluation can be an extremely valuable tool, and we will investigate some of its implications in chapters 3 and 4.16
+<p> Lisp uses applicative-order evaluation, partly because of the additional efficiency obtained from avoiding multiple evaluations of expressions such as those illustrated with <tt> (+ 5 1) </tt> and <tt> (* 5 2) </tt> above and, more significantly, because normal-order evaluation becomes much more complicated to deal with when we leave the realm of procedures that can be modeled by substitution. On the other hand, normal-order evaluation can be an extremely valuable tool, and we will investigate some of its implications in chapters 3 and 4.16
 
 <h3>1.1.6  Conditional Expressions and Predicates</h3>
 
@@ -521,13 +631,13 @@ followed by the reductions
       (&ltpn&gt &lten&gt))
 
 </div>
-<script> createPrompt("scheme-cond-syntax"); </script>
+<script> createStaticDisplay("scheme-cond-syntax"); </script>
 
-<p> consisting of the symbol cond followed by parenthesized pairs of expressions (<p> <e>) called clauses. The first expression in each pair is a predicate -- that is, an expression whose value is interpreted as either true or false.
+<p> consisting of the symbol cond followed by parenthesized pairs of expressions <tt> (&lt;p&gt; &lt;e&gt;) </tt> called clauses. The first expression in each pair is a predicate -- that is, an expression whose value is interpreted as either true or false.
 
-<p> Conditional expressions are evaluated as follows. The predicate p1&gt is evaluated first. If its value is false, then &ltp2&gt is evaluated. If &ltp2&gt's value is also false, then &ltp3&gt is evaluated. This process continues until a predicate is found whose value is true, in which case the interpreter returns the value of the corresponding consequent expression &lte&gt of the clause as the value of the conditional expression. If none of the &ltp&gt's is found to be true, the value of the cond is undefined.
+<p> Conditional expressions are evaluated as follows. The predicate <tt> &lt;p1&gt; </tt>; is evaluated first. If its value is false, then <tt> &lt;p2&gt; </tt> is evaluated. If <tt> &lt;p2&gt; </tt>'s value is also false, then <tt> &lt;p3&gt; </tt> is evaluated. This process continues until a predicate is found whose value is true, in which case the interpreter returns the value of the corresponding consequent expression <tt> &lt;e&gt; </tt> of the clause as the value of the conditional expression. If none of the <tt> &lt;p&gt; </tt>'s is found to be true, the value of the cond is undefined.
 
-<p> The word predicate is used for procedures that return true or false, as well as for expressions that evaluate to true or false. The absolute-value procedure abs makes use of the primitive predicates >, <, and =.18 These take two numbers as arguments and test whether the first number is, respectively, greater than, less than, or equal to the second number, returning true or false accordingly.
+<p> The word predicate is used for procedures that return true or false, as well as for expressions that evaluate to true or false. The absolute-value procedure abs makes use of the primitive predicates <tt> &lt;, &gt;, </tt> and <tt> =. </tt> These take two numbers as arguments and test whether the first number is, respectively, greater than, less than, or equal to the second number, returning true or false accordingly.
 
 <p> Another way to write the absolute-value procedure is
 
@@ -538,8 +648,7 @@ followed by the reductions
 </div>
 <script> createPrompt("scheme-abs"); </script>
 
-<p> which could be expressed in English as ``If x is less than zero return - x; otherwise return x.'' Else is a special symbol that can be used in place of the <p> in the final clause of a cond. This causes the cond to return as its value the value of the corresponding <e> whenever all previous clauses have been bypassed. In fact, any expression that always evaluates to a true value could be used as the <p> here.
-
+<p> which could be expressed in English as "If x is less than zero return - x; otherwise return x." Else is a special symbol that can be used in place of the <tt> &lt;p&gt; </tt> in the final clause of a cond. This causes the cond to return as its value the value of the corresponding <tt> &lt;e&gt; </tt> whenever all previous clauses have been bypassed. In fact, any expression that always evaluates to a true value could be used as the <tt> &lt;p&gt; </tt> here.
 <p> Here is yet another way to write the absolute-value procedure:
 
 <div id="scheme-abs-if">
@@ -558,23 +667,27 @@ followed by the reductions
 </div>
 <script> createPrompt("scheme-if-syntax"); </script>
 
-To evaluate an if expression, the interpreter starts by evaluating the <predicate> part of the expression. If the <predicate> evaluates to a true value, the interpreter then evaluates the <consequent> and returns its value. Otherwise it evaluates the <alternative> and returns its value.19
+<p> To evaluate an if expression, the interpreter starts by evaluating the <tt> &lt;predicate&gt;</tt> part of the expression. If the <tt> &lt;predicate&gt;</tt> evaluates to a true value, the interpreter then evaluates the <tt> &lt;consequent&gt;</tt> and returns its value. Otherwise it evaluates the <tt> &lt;alternative&gt;</tt> and returns its value.
 
-<p> In addition to primitive predicates such as &lt, =, and &gt, there are logical composition operations, which enable us to construct compound predicates. The three most frequently used are these:
+<p> In addition to primitive predicates such as <tt> &lt;, = </tt> and <tt> &gt;, </tt> there are logical composition operations, which enable us to construct compound predicates. The three most frequently used are these:
 
 <ul>
 
 <li>
     
-(and &lte1&gt ... &lten&gt)
+<tt> (and &lt;e1&gt; ... &lt;en&gt;) </tt>
 
-<p> The interpreter evaluates the expressions &lte&gt one at a time, in left-to-right order. If any &lte&gt evaluates to false, the value of the and expression is false, and the rest of the &lte&gt's are not evaluated. If all &lte&gt's evaluate to true values, the value of the and expression is the value of the last one.
+<p> The interpreter evaluates the expressions <tt> &lt;e&gt; </tt> one at a time, in left-to-right order. If any <tt> &lt;e&gt; </tt> evaluates to false, the value of the and expression is false, and the rest of the <tt> &lt;e&gt; </tt>'s are not evaluated. If all <tt> &lt;e&gt; </tt>'s evaluate to true values, the value of the and expression is the value of the last one.
 
-<li> (or &lte1&gt ... &lten&gt)
+<li> 
 
-<p> The interpreter evaluates the expressions &lte&gt one at a time, in left-to-right order. If any &lte&gt evaluates to a true value, that value is returned as the value of the or expression, and the rest of the &lte&gt's are not evaluated. If all &lte&gt's evaluate to false, the value of the or expression is false.
+<tt> (or &lt;e1&gt; ... &lt;en&gt;) </tt>
 
-<li> (not &lte&gt)
+<p> The interpreter evaluates the expressions <tt> &lt;e&gt; </tt> one at a time, in left-to-right order. If any <tt> &lt;e&gt; </tt> evaluates to a true value, that value is returned as the value of the or expression, and the rest of the &lte&gt's are not evaluated. If all &lte&gt's evaluate to false, the value of the or expression is false.
+
+<li> 
+
+<tt> (not &lte&gt) </tt>
 
 <p> The value of a not expression is true when the expression &lte&gt evaluates to false, and false otherwise. 
 
