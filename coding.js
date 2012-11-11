@@ -147,8 +147,12 @@ function hideOutput(target_string) {
 
 function createStaticDisplay(target_string) {
   setup(target_string);
-  sOf[target_string].editor.setOption("readOnly", true);
-  sOf[target_string].$output.hide();
+  
+  var S = sOf[target_string];
+  
+  S.editor.setOption("readOnly", true);
+  S.editor.setOption("onBlur", function() {});
+  S.$output.hide();
 }
 
 function updateAll() {
