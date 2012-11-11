@@ -245,6 +245,7 @@ attachDeps("scheme-times-size", ["scheme-define-size"]);
 <div id="scheme-define-radius">
 (define pi 3.14159)
 (define radius 10)
+
 (* pi (* radius radius))
 </div>
 <script> 
@@ -256,6 +257,7 @@ attachPushes("scheme-define-radius", ["scheme-circumference"]);
 
 <div id="scheme-circumference">
 (define circumference (* 2 pi radius))
+
 circumference
 </div>
 <script> 
@@ -711,9 +713,52 @@ As an example of how these are used, the condition that a number x be in the ran
 </div>
 <script> createPrompt("scheme-le-2"); </script>
 
+<h3> 1.1.7  Example: Square Roots by Newton's Method </h3>
+
+<p> Procedures, as introduced above, are much like ordinary mathematical functions. They specify a value that is determined by one or more parameters. But there is an important difference between mathematical functions and computer procedures. Procedures must be effective.
+
+<p> As a case in point, consider the problem of computing square roots. We can define the square-root function as
+
+<p> <img src='http://mitpress.mit.edu/sicp/full-text/book/ch1-Z-G-4.gif' />
+
+<p>  This describes a perfectly legitimate mathematical function. We could use it to recognize whether one number is the square root of another, or to derive facts about square roots in general. On the other hand, the definition does not describe a procedure. Indeed, it tells us almost nothing about how to actually find the square root of a given number. It will not help matters to rephrase this definition in pseudo-Lisp:
+              
+<div id="scheme-pseudo-sqrt">
+(define (sqrt x)
+  (the y (and (>= y 0)
+              (= (square y) x))))
 </div>
+<script> createPrompt("scheme-pseudo-sqrt"); </script>
+
+<p> This only begs the question.
+
+<p> The contrast between function and procedure is a reflection of the general distinction between describing properties of things and describing how to do things, or, as it is sometimes referred to, the distinction between declarative knowledge and imperative knowledge. In mathematics we are usually concerned with declarative (what is) descriptions, whereas in computer science we are usually concerned with imperative (how to) descriptions.20
+
+<p> How does one compute square roots?  The most common way is to use Newton's method of successive approximations, which says that whenever we have a guess <em>y</em> for the value of the square root of a number <em>x</em>, we can perform a simple manipulation to get a better guess (one closer to the actual square root) by averaging <em>y</em> with
+<em>x</em>/<em>y</em>. For example, we can compute the square root of 2 as follows.  Suppose our initial guess is&nbsp;1:<p>
+
+<table><tr><td valign=top >Guess </td><td valign=top >Quotient </td><td valign=top >Average</td></tr>
+<tr><td valign=top >&nbsp;&nbsp;</td></tr>
+<tr><td valign=top >1      </td><td valign=top > (2/1)  =  2        </td><td valign=top >
+((2 + 1)/2)  =  1.5 </td></tr>
+<tr><td valign=top >&nbsp;&nbsp;</td></tr>
+<tr><td valign=top >1.5    </td><td valign=top > (2/1.5)  =  1.3333 </td><td valign=top >
+((1.3333 + 1.5)/2)  =  1.4167 </td></tr>
+<tr><td valign=top >&nbsp;&nbsp;</td></tr>
+<tr><td valign=top >1.4167 </td><td valign=top > (2/1.4167)  =  1.4118 </td><td valign=top >
+((1.4167 + 1.4118)/2)  =  1.4142 </td></tr>
+<tr><td valign=top >&nbsp;&nbsp;</td></tr>
+<tr><td valign=top >1.4142 </td><td valign=top ><tt>...</tt></td><td valign=top ><tt>...</tt></td></tr>
+<tr><td valign=top ></td></tr></table><p>
+
+<p> Continuing this process, we obtain better and better approximations to the square root.
+
+<p> Now let's formalize the process in terms of procedures. We start with a value for the radicand (the number whose square root we are trying to compute) and a value for the guess. If the guess is good enough for our purposes, we are done; if not, we must repeat the process with an improved guess. We write this basic strategy as a procedure:
+
 
 <script> updateAll() </script>
+
+</div>
 
 </body>
 </html>
