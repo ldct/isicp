@@ -5,6 +5,10 @@ p, ul, ol, blockquote {
   text-align: justify;
 }
 
+.excercise p:first-child {
+  margin-top:0;
+}
+
 .output {
   font-family: monospace;
   font-style: italic;

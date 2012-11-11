@@ -153,7 +153,7 @@ $('#sidebox .tab').toggle(function(){
 
 <div class='excercise'>
 
-<p style="margin-top:0"> <b> Exercise 1.1.1. </b>  Below is a sequence of expressions. What is the result printed by the interpreter in response to each expression? Assume that the sequence is to be evaluated in the order in which it is presented.
+<p> <b> Exercise 1.1.1. </b>  Below is a sequence of expressions. What is the result printed by the interpreter in response to each expression? Assume that the sequence is to be evaluated in the order in which it is presented.
 
 <div id="scheme-ex-111-10">
 10
@@ -269,7 +269,7 @@ attachDeps("scheme-circumference", ["scheme-define-radius"]);
 
 <div class='excercise'>
 
-<p style="margin-top:0"> <b> Exercise 1.1.2. </b>  Below is a sequence of expressions. What is the result printed by the interpreter in response to each expression? Assume that the sequence is to be evaluated in the order in which it is presented.
+<p> <b> Exercise 1.1.2. </b>  Below is a sequence of expressions. What is the result printed by the interpreter in response to each expression? Assume that the sequence is to be evaluated in the order in which it is presented.
 
 <div id="scheme-ex-112">
 (define a 3)
@@ -454,8 +454,7 @@ attachDeps("scheme-f", ["scheme-define-sum-of-squares"]);
 (f 5)
 </div>
 <script> 
-createPrompt("scheme-f-1"); 
-hideOutput("scheme-f-1");
+createStaticDisplay("scheme-f-1"); 
 </script>
 
 <p> where f is the procedure defined in section 1.1.4. We begin by retrieving the body of f:
@@ -464,8 +463,7 @@ hideOutput("scheme-f-1");
 (sum-of-squares (+ a 1) (* a 2))
 </div>
 <script> 
-createPrompt("scheme-f-2"); 
-hideOutput("scheme-f-2");
+createStaticDisplay("scheme-f-2"); 
 </script>
 
 <p> Then we replace the formal parameter a by the argument 5:
@@ -474,8 +472,7 @@ hideOutput("scheme-f-2");
 (sum-of-squares (+ 5 1) (* 5 2))
 </div>
 <script> 
-createPrompt("scheme-f-3"); 
-hideOutput("scheme-f-3");
+createStaticDisplay("scheme-f-3"); 
 </script>
 
 <p> Thus the problem reduces to the evaluation of a combination with two operands and an operator sum-of-squares. Evaluating this combination involves three subproblems. We must evaluate the operator to get the procedure to be applied, and we must evaluate the operands to get the arguments. Now (+ 5 1) produces 6 and (* 5 2) produces 10, so we must apply the sum-of-squares procedure to 6 and 10. These values are substituted for the formal parameters x and y in the body of sum-of-squares, reducing the expression to
@@ -484,8 +481,7 @@ hideOutput("scheme-f-3");
 (+ (square 6) (square 10))
 </div>
 <script> 
-createPrompt("scheme-f-4"); 
-hideOutput("scheme-f-4");
+createStaticDisplay("scheme-f-4"); 
 </script>
 
 <p> If we use the definition of square, this reduces to
@@ -494,8 +490,7 @@ hideOutput("scheme-f-4");
 (+ (* 6 6) (* 10 10))
 </div>
 <script> 
-createPrompt("scheme-f-5"); 
-hideOutput("scheme-f-5");
+createStaticDisplay("scheme-f-5"); 
 </script>
 
 <p> which reduces by multiplication to
@@ -504,8 +499,7 @@ hideOutput("scheme-f-5");
 (+ 36 100)
 </div>
 <script> 
-createPrompt("scheme-f-6"); 
-hideOutput("scheme-f-6");
+createStaticDisplay("scheme-f-6"); 
 </script>
 
 <p> and finally to
@@ -514,8 +508,7 @@ hideOutput("scheme-f-6");
 136
 </div>
 <script> 
-createPrompt("scheme-f-7"); 
-hideOutput("scheme-f-7");
+createStaticDisplay("scheme-f-7"); 
 </script>
 
 <p> The process we have just described is called the substitution model for procedure application. It can be taken as a model that determines the "meaning" of procedure application, insofar as the procedures in this chapter are concerned. However, there are two points that should be stressed:

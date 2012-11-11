@@ -1,8 +1,5 @@
-//^ start
-//$ end
-
 function cleanCode(code) {
-  return code.replace(/^\n/, "").replace(/\n*$/, "").replace(/[ \t]*\n/g, "\n");//.replace(/\s*$/, "");
+  return code.replace(/^\n/, "").replace(/\n*$/, "").replace(/[ \t]*\n/g, "\n").replace(/\s*$/, "");
 }
 
 function check(result) {
@@ -140,24 +137,15 @@ function createStaticPrompt(target_string) {
 }
 
 function attachAnswer(target_string, answer) {
+  
+  //creates and attaches the DOM for output
+  
   var $grade = $("<div />", {id: target_string + "-grade", 'class':'wrong-answer', text: '\u2717'});
 
   sOf[target_string].$output.after($grade);
   
   sOf[target_string].answer = answer;
   sOf[target_string].$grade = $grade;
-}
-
-function attachDeps(target_string, deps) {
-  sOf[target_string].deps = deps;
-}
-
-function attachPushes(target_string, pushes) {
-  sOf[target_string].pushes = pushes;
-}
-
-function hideOutput(target_string) {
-  sOf[target_string].$output.hide();
 }
 
 function createStaticDisplay(target_string) {
@@ -177,6 +165,14 @@ function createNoeval(target_string) {
   
   S.editor.setOption("onBlur", function() {update_noeval(target_string)});
   S.$output.hide();
+}
+
+function attachDeps(target_string, deps) {
+  sOf[target_string].deps = deps;
+}
+
+function attachPushes(target_string, pushes) {
+  sOf[target_string].pushes = pushes;
 }
 
 function updateAll() {
