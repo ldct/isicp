@@ -755,10 +755,106 @@ As an example of how these are used, the condition that a number x be in the ran
 
 <p> Now let's formalize the process in terms of procedures. We start with a value for the radicand (the number whose square root we are trying to compute) and a value for the guess. If the guess is good enough for our purposes, we are done; if not, we must repeat the process with an improved guess. We write this basic strategy as a procedure:
 
+<div id="scheme-define-sqrt-iter">
+(define (sqrt-iter guess x)
+  (if (good-enough? guess x)
+      guess
+      (sqrt-iter (improve guess x)
+                 x)))
+</div>
+<script> 
+createPrompt("scheme-define-sqrt-iter"); 
+attachDeps("scheme-define-sqrt-iter", ["scheme-define-good-enough", "scheme-define-improve"]);
+</script>
 
-<script> updateAll() </script>
+<p> A guess is improved by averaging it with the quotient of the radicand and the old guess:
+
+<div id="scheme-define-improve">
+(define (improve guess x)
+  (average guess (/ x guess)))
+</div>
+<script> 
+createPrompt("scheme-define-improve"); 
+attachDeps("scheme-define-improve", ["scheme-define-average"]);
+</script>
+
+<p> where
+
+<div id="scheme-define-average">
+(define (average x y)
+  (/ (+ x y) 2))
+</div>
+<script> 
+createPrompt("scheme-define-average"); 
+</script>
+
+<p> We also have to say what we mean by "good enough." The following will do for illustration, but it is not really a very good test. (See exercise 1.7.) The idea is to improve the answer until it is close enough so that its square differs from the radicand by less than a predetermined tolerance (here 0.001):22
+
+<div id="scheme-define-good-enough">
+(define (good-enough? guess x)
+  (< (abs (- (square guess) x)) 0.001))
+</div>
+<script> 
+createPrompt("scheme-define-good-enough");
+attachDeps("scheme-define-good-enough", ["scheme-define-square"]); 
+</script>
+
+<p> Finally, we need a way to get started. For instance, we can always guess that the square root of any number is 1:
+
+<div id="scheme-define-sqrt">
+(define (sqrt x)
+  (sqrt-iter 1.0 x))
+</div>
+<script> 
+createPrompt("scheme-define-sqrt");
+attachDeps("scheme-define-sqrt", ["scheme-define-sqrt-iter"]); 
+</script>
+
+<p> If we type these definitions to the interpreter, we can use sqrt just as we can use any procedure:
+
+<div id="scheme-sqrt-9">
+(sqrt 9)
+</div>
+<script> 
+createPrompt("scheme-sqrt-9");
+attachDeps("scheme-sqrt-9", ["scheme-define-sqrt"]); 
+</script>
+
+<p>
+
+<div id="scheme-sqrt-plus">
+(sqrt (+ 100 37))
+</div>
+<script> 
+createPrompt("scheme-sqrt-plus");
+attachDeps("scheme-sqrt-plus", ["scheme-define-sqrt"]); 
+</script>
+
+<p>
+
+<div id="scheme-sqrt-sqrt">
+(sqrt (+ (sqrt 2) (sqrt 3)))
+</div>
+<script> 
+createPrompt("scheme-sqrt-sqrt");
+attachDeps("scheme-sqrt-sqrt", ["scheme-define-sqrt"]); 
+</script>
+
+<p>
+
+<div id="scheme-square-sqrt">
+(square (sqrt 1000))
+</div>
+<script> 
+createPrompt("scheme-square-sqrt");
+attachDeps("scheme-square-sqrt", ["scheme-define-square", "scheme-define-sqrt"]); 
+</script>
+
+<p> The sqrt program also illustrates that the simple procedural language we have introduced so far is sufficient for writing any purely numerical program that one could write in, say, C or Pascal. This might seem surprising, since we have not included in our language any iterative (looping) constructs that direct the computer to do something over and over again. Sqrt-iter, on the other hand, demonstrates how iteration can be accomplished using no special construct other than the ordinary ability to call a procedure.24 
 
 </div>
+
+<script> updateAll() </script>
 
 </body>
 </html>
