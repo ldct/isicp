@@ -145,6 +145,12 @@ function hideOutput(target_string) {
   sOf[target_string].$output.hide();
 }
 
+function createStaticDisplay(target_string) {
+  setup(target_string);
+  sOf[target_string].editor.setOption("readOnly", true);
+  sOf[target_string].$output.hide();
+}
+
 function updateAll() {
   for (ts in sOf) {
     update(ts);

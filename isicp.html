@@ -434,7 +434,7 @@ createPrompt("scheme-f-7");
 hideOutput("scheme-f-7");
 </script>
 
-<p> The process we have just described is called the substitution model for procedure application. It can be taken as a model that determines the ``meaning'' of procedure application, insofar as the procedures in this chapter are concerned. However, there are two points that should be stressed:
+<p> The process we have just described is called the substitution model for procedure application. It can be taken as a model that determines the "meaning" of procedure application, insofar as the procedures in this chapter are concerned. However, there are two points that should be stressed:
 
 <ul>
 
@@ -448,12 +448,25 @@ hideOutput("scheme-f-7");
 
 <p> According to the description of evaluation given in section 1.1.3, the interpreter first evaluates the operator and operands and then applies the resulting procedure to the resulting arguments. This is not the only way to perform evaluation. An alternative evaluation model would not evaluate the operands until their values were needed. Instead it would first substitute operand expressions for parameters until it obtained an expression involving only primitive operators, and would then perform the evaluation. If we used this method, the evaluation of
 
+<div id="scheme-f-1-n">
 (f 5)
+</div>
+<script> 
+createPrompt("scheme-f-1-n"); 
+hideOutput("scheme-f-1-n");
+</script>
 
 <p> would proceed according to the sequence of expansions
 
-<div id="scheme-f-normal-1">
+<div id="scheme-f-2-n">
 (sum-of-squares (+ 5 1) (* 5 2))
+</div>
+<script> 
+createPrompt("scheme-f-2-n"); 
+hideOutput("scheme-f-2-n");
+</script>
+
+<div id="scheme-f-normal-1">
 
 (+    (square (+ 5 1))      (square (* 5 2))  )
 
