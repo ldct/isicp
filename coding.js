@@ -79,15 +79,22 @@ function setup(target_string) {
   sOf[target_string] = new S($target, $output, editor);
 }
 
-function update(target_string) {
-  resetTopEnv();
+function evaluate(target_string) {
+  
   var s = sOf[target_string];
   if (s.deps) {
     for (var i = 0; i < s.deps.length; i++) {
-      biwascheme.evaluate(sOf[s.deps[i]].getCode());
+      evaluate(s.deps[i]);
     }
   }
-  result = biwascheme.evaluate(sOf[target_string].getCode());
+  return biwascheme.evaluate(sOf[target_string].getCode());
+}
+
+function update(target_string) {
+
+  result = evaluate(target_string);
+
+  var s = sOf[target_string];
   
   s.$output.empty();
   
