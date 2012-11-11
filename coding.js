@@ -141,6 +141,10 @@ function attachPushes(target_string, pushes) {
   sOf[target_string].pushes = pushes;
 }
 
+function hideOutput(target_string) {
+  sOf[target_string].$output.hide();
+}
+
 function updateAll() {
   for (ts in sOf) {
     update(ts);

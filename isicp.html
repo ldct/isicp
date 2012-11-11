@@ -143,34 +143,45 @@
 
 <p> In the Scheme dialect of Lisp, we name things with define. Typing
 
-<div id="scheme-define">
+<div id="scheme-define-size">
 (define size 2)
 </div>
-<script> createPrompt("scheme-define"); </script>
+<script> 
+createPrompt("scheme-define-size"); 
+attachPushes("scheme-define-size", ["scheme-size", "scheme-times-size"]);
+</script>
 
-<p> causes the interpreter to associate the value 2 with the name size.8 Once the name size has been associated with the number 2, we can refer to the value 2 by name:
+<p> causes the interpreter to associate the value 2 with the name size. Once the name size has been associated with the number 2, we can refer to the value 2 by name:
 
 <div id="scheme-size">
 size
 </div>
-<div id="scheme-size-output" class="output"> </div>
-<script> createPrompt("scheme-size"); </script>
+<script> 
+createPrompt("scheme-size"); 
+attachDeps("scheme-size", ["scheme-define-size"]);
+</script>
+
+<p>
 
 <div id="scheme-times-size">
 (* 5 size)
 </div>
-<div id="scheme-times-size-output" class="output"> </div>
-<script> createPrompt("scheme-times-size"); </script>
+<script> 
+createPrompt("scheme-times-size");
+attachDeps("scheme-times-size", ["scheme-define-size"]);
+</script>
 
 <p> Here are further examples of the use of define:
 
-<div id="scheme-radius">
+<div id="scheme-define-radius">
 (define pi 3.14159)
 (define radius 10)
 (* pi (* radius radius))
 </div>
-<div id="scheme-radius-output" class="output"> </div>
-<script> createPrompt("scheme-radius"); </script>
+<script> 
+createPrompt("scheme-define-radius"); 
+attachPushes("scheme-define-radius", ["scheme-circumference"]);
+</script>
 
 <p>
 
@@ -178,8 +189,10 @@ size
 (define circumference (* 2 pi radius))
 circumference
 </div>
-<div id="scheme-circumference-output" class="output"> </div>
-<script> createPrompt("scheme-circumference"); </script>
+<script> 
+createPrompt("scheme-circumference"); 
+attachDeps("scheme-circumference", ["scheme-define-radius"]);
+</script>
 
 <p> Define is our language's simplest means of abstraction, for it allows us to use simple names to refer to the results of compound operations, such as the circumference computed above. In general, computational objects may have very complex structures, and it would be extremely inconvenient to have to remember and repeat their details each time we want to use them. Indeed, complex programs are constructed by building, step by step, computational objects of increasing complexity. The interpreter makes this step-by-step program construction particularly convenient because name-object associations can be created incrementally in successive interactions. This feature encourages the incremental development and testing of programs and is largely responsible for the fact that a Lisp program usually consists of a large number of relatively simple procedures.
 
@@ -250,7 +263,10 @@ circumference
 <div id="scheme-define-square">
 (define (square x) (* x x))
 </div>
-<script> createPrompt("scheme-define-square"); </script>
+<script> 
+createPrompt("scheme-define-square"); 
+attachPushes("scheme-define-square", ["scheme-square-number", "scheme-square-sum", "scheme-square-square"]);
+</script>
 
 <p> We can understand this in the following way:
 
@@ -277,20 +293,30 @@ createPrompt("scheme-define-syntax");
 <div id="scheme-square-number">
 (square 21)
 </div>
-<div id="scheme-square-number-output" class="output"> </div>
-<script> createPrompt("scheme-square-number"); </script>
+<script> 
+createPrompt("scheme-square-number"); 
+attachDeps("scheme-square-number", ["scheme-define-square"]);
+</script>
+
+<p>
 
 <div id="scheme-square-sum">
 (square (+ 2 5))
 </div>
-<div id="scheme-square-sum-output" class="output"> </div>
-<script> createPrompt("scheme-square-sum"); </script>
+<script> 
+createPrompt("scheme-square-sum"); 
+attachDeps("scheme-square-sum", ["scheme-define-square"]);
+</script>
+
+<p>
 
 <div id="scheme-square-square">
 (square (square 3))
 </div>
-<div id="scheme-square-square-output" class="output"> </div>
-<script> createPrompt("scheme-square-square"); </script>
+<script> 
+createPrompt("scheme-square-square"); 
+attachDeps("scheme-square-square", ["scheme-define-square"]);
+</script>
 
 
 <p> We can also use square as a building block in defining other procedures. For example, x<sup>2</sup> + y<sup>2</sup> can be expressed as
@@ -298,27 +324,35 @@ createPrompt("scheme-define-syntax");
 <div id="scheme-sum-square-eg">
 (+ (square x) (square y))
 </div>
-<script> createPrompt("scheme-sum-square-eg"); </script>
+<script> 
+createPrompt("scheme-sum-square-eg"); 
+</script>
 
 <p> We can easily define a procedure sum-of-squares that, given any two numbers as arguments, produces the sum of their squares:
 
-<div id="scheme-sum-square">
+<div id="scheme-define-sum-of-squares">
 (define (sum-of-squares x y)
   (+ (square x) (square y)))
+
 (sum-of-squares 3 4)
 </div>
-<div id="scheme-sum-square-output" class="output"> </div>
-<script> createPrompt("scheme-sum-square"); </script>
+<script> 
+createPrompt("scheme-define-sum-of-squares"); 
+attachDeps("scheme-define-sum-of-squares", ["scheme-define-square"]);
+</script>
 
 <p> Now we can use sum-of-squares as a building block in constructing further procedures:
 
 <div id="scheme-f">
 (define (f a)
   (sum-of-squares (+ a 1) (* a 2)))
+
 (f 5)
 </div>
-<div id="scheme-f-output" class="output"> </div>
-<script> createPrompt("scheme-f"); </script>
+<script> 
+createPrompt("scheme-f"); 
+attachDeps("scheme-f", ["scheme-define-sum-of-squares"]);
+</script>
 
 <p> Compound procedures are used in exactly the same way as primitive procedures. Indeed, one could not tell by looking at the definition of sum-of-squares given above whether square was built into the interpreter, like + and *, or defined as a compound procedure.
 
@@ -335,50 +369,70 @@ createPrompt("scheme-define-syntax");
 <div id="scheme-f-1">
 (f 5)
 </div>
-<div id="scheme-f-1-output" class="output"> </div>
-<script> createPrompt("scheme-f-1"); </script>
+<script> 
+createPrompt("scheme-f-1"); 
+hideOutput("scheme-f-1");
+</script>
 
-where f is the procedure defined in section 1.1.4. We begin by retrieving the body of f:
+<p> where f is the procedure defined in section 1.1.4. We begin by retrieving the body of f:
 
 <div id="scheme-f-2">
 (sum-of-squares (+ a 1) (* a 2))
 </div>
-<script> createPrompt("scheme-f-2"); </script>
+<script> 
+createPrompt("scheme-f-2"); 
+hideOutput("scheme-f-2");
+</script>
 
-Then we replace the formal parameter a by the argument 5:
+<p> Then we replace the formal parameter a by the argument 5:
 
 <div id="scheme-f-3">
 (sum-of-squares (+ 5 1) (* 5 2))
 </div>
-<script> createPrompt("scheme-f-3"); </script>
+<script> 
+createPrompt("scheme-f-3"); 
+hideOutput("scheme-f-3");
+</script>
 
 <p> Thus the problem reduces to the evaluation of a combination with two operands and an operator sum-of-squares. Evaluating this combination involves three subproblems. We must evaluate the operator to get the procedure to be applied, and we must evaluate the operands to get the arguments. Now (+ 5 1) produces 6 and (* 5 2) produces 10, so we must apply the sum-of-squares procedure to 6 and 10. These values are substituted for the formal parameters x and y in the body of sum-of-squares, reducing the expression to
 
 <div id="scheme-f-4">
 (+ (square 6) (square 10))
 </div>
-<script> createPrompt("scheme-f-4"); </script>
+<script> 
+createPrompt("scheme-f-4"); 
+hideOutput("scheme-f-4");
+</script>
 
 <p> If we use the definition of square, this reduces to
 
 <div id="scheme-f-5">
 (+ (* 6 6) (* 10 10))
 </div>
-<script> createPrompt("scheme-f-5"); </script>
+<script> 
+createPrompt("scheme-f-5"); 
+hideOutput("scheme-f-5");
+</script>
 
 <p> which reduces by multiplication to
 
 <div id="scheme-f-6">
 (+ 36 100)
 </div>
-<script> createPrompt("scheme-f-6"); </script>
+<script> 
+createPrompt("scheme-f-6"); 
+hideOutput("scheme-f-6");
+</script>
 
 <p> and finally to
 
 <div id="scheme-f-7">
 136
 </div>
-<script> createPrompt("scheme-f-7"); </script>
+<script> 
+createPrompt("scheme-f-7"); 
+hideOutput("scheme-f-7");
+</script>
 
 <p> The process we have just described is called the substitution model for procedure application. It can be taken as a model that determines the ``meaning'' of procedure application, insofar as the procedures in this chapter are concerned. However, there are two points that should be stressed:
 
