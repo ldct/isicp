@@ -1,3 +1,6 @@
+function focus_callback() {
+}
+
 function cleanCode(code) {
   return code.replace(/^\n/, "").replace(/\n*$/, "").replace(/[ \t]*\n/g, "\n").replace(/\s*$/, "");
 }
@@ -73,7 +76,8 @@ function setup(target_string) {
   var editor = CodeMirror.fromTextArea($form[0],
   {
     "matchBrackets": true, 
-    "onBlur": function() {update(target_string);}
+    "onBlur": function() {update(target_string)},
+    "onFocus": function() {focus_callback(target_string)}
   });
   
   sOf[target_string] = new S($target, $output, editor);

@@ -19,10 +19,15 @@
 <div id="sidebox">
   <div class="tab"></div>
   <div class="content">
+    
     <div id="scheme-scratch">(+ 1 2)</div> 
-    <script> createPrompt("scheme-scratch"); 
+    <script> 
+    createPrompt("scheme-scratch"); 
     </script>
-    </div>
+  
+    <div id="currently-editing"> </div>
+  
+  </div>
 </div>
 
 <script> 
@@ -31,6 +36,24 @@ $('#sidebox .tab').toggle(function(){
 }, function(){
     $('#sidebox').animate({'right':'-30%'});
 });
+
+focus_callback = function(target_string) {
+  var ts = "";
+  var S = sOf[target_string];
+  if (S.deps) {
+    for (var i = 0; i < S.deps.length; i++) {
+      ts += "<br>" + S.deps[i];
+    }
+  }
+  ts += "<br> <b>"+ target_string + "</b>";
+  if (S.pushes) {
+    for (var i = 0; i < S.pushes.length; i++) {
+      ts += "<br>" + S.pushes[i];
+    }
+  }
+  $("#currently-editing").html("<tt>" + ts + "</tt>");
+};
+
 </script>
 
 <div id="main">
