@@ -3,8 +3,9 @@
 <head>
 <meta charset="UTF-8">
 <script src="biwascheme.js"> </script>
-<script src="codemirror-compressed.js"></script>
-<script src="http://ajax.googleapis.com/ajax/libs/jquery/1.8.2/jquery.min.js"></script>
+<script src="codemirror/lib/codemirror.js"></script>
+<script src="codemirror/mode/scheme/scheme.js"></script>
+<script src="jquery.min.js"></script>
 <script src="coding.js"> </script>
 <link rel="stylesheet" type="text/css" href="codemirror.css" />
 <link rel="stylesheet" type="text/css" href="isicp.css" />
@@ -75,11 +76,15 @@ $('#sidebox .tab').toggle(function(){
 <div id="scheme-plus-1-output" class="output"> </div>
 <script> createPrompt("scheme-plus-1"); </script>
 
+<p>
+
 <div id="scheme-minus">
 (- 1000 334)
 </div>
 <div id="scheme-minus-output" class="output"> </div>
 <script> createPrompt("scheme-minus"); </script>
+
+<p>
 
 <div id="scheme-times">
 (* 5 99)
@@ -87,11 +92,15 @@ $('#sidebox .tab').toggle(function(){
 <div id="scheme-times-output" class="output"> </div>
 <script> createPrompt("scheme-times"); </script>
 
+<p>
+
 <div id="scheme-divide">
 (/ 10 5)
 </div>
 <div id="scheme-divide-output" class="output"> </div>
 <script> createPrompt("scheme-divide"); </script>
+
+<p>
 
 <div id="scheme-plus-float">
 (+ 2.7 10)
@@ -108,6 +117,8 @@ $('#sidebox .tab').toggle(function(){
 </div>
 <div id="scheme-plus-multiple-output" class="output"> </div>
 <script> createPrompt("scheme-plus-multiple"); </script>
+
+<p>
 
 <div id="scheme-times-multiple">
 (* 25 4 12)
