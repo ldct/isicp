@@ -192,7 +192,7 @@ focus_callback = function(target_string) {
 <div id="scheme-ex-111-10">
 10
 </div>
-<div style="font-style: italic" id="scheme-ex-111-10-input">
+<div class="input" id="scheme-ex-111-10-input">
 </div>
 <script> 
 createStaticDisplay("scheme-ex-111-10");
@@ -205,7 +205,7 @@ attachAnswer("scheme-ex-111-10-input", "10");
 <div id="scheme-ex-111-plus">
 (+ 5 3 4)
 </div>
-<div style="font-style: italic" id="scheme-ex-111-plus-input">
+<div class="input" id="scheme-ex-111-plus-input">
 </div>
 <script> 
 createStaticDisplay("scheme-ex-111-plus");
@@ -218,7 +218,7 @@ attachAnswer("scheme-ex-111-plus-input", "12");
 <div id="scheme-ex-111-minus">
 (- 9 1)
 </div>
-<div style="font-style: italic" id="scheme-ex-111-minus-input">
+<div class="input" id="scheme-ex-111-minus-input">
 </div>
 <script> 
 createStaticDisplay("scheme-ex-111-minus");
@@ -228,12 +228,28 @@ attachAnswer("scheme-ex-111-minus-input", "8");
 
 <p>
 
-<div id="scheme-ex-111">
+<div id="scheme-ex-111-div">
 (/ 6 2)
-(+ (* 2 4) (- 4 6))
+</div>
+<div class="input" id="scheme-ex-111-div-input">
 </div>
 <script> 
-createStaticDisplay("scheme-ex-111"); 
+createStaticDisplay("scheme-ex-111-div");
+createNoeval("scheme-ex-111-div-input");
+attachAnswer("scheme-ex-111-div-input", "3");
+</script>
+
+<p>
+
+<div id="scheme-ex-111-nested">
+(+ (* 2 4) (- 4 6))
+</div>
+<div class="input" id="scheme-ex-111-nested-input">
+</div>
+<script> 
+createStaticDisplay("scheme-ex-111-nested");
+createNoeval("scheme-ex-111-nested-input");
+attachAnswer("scheme-ex-111-nested-input", "6");
 </script>
 </div>
 

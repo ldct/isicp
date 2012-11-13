@@ -1,3 +1,4 @@
+/*english text, meant for reading*/
 p, ul, ol, blockquote, table {
   font-family:Georgia;
   color:#2E2E2E;
@@ -5,6 +6,7 @@ p, ul, ol, blockquote, table {
   text-align: justify;
 }
 
+/*Suppress line break when beginning excercise*/
 .excercise p:first-child {
   margin-top:0;
 }
@@ -15,10 +17,16 @@ p, ul, ol, blockquote, table {
   padding: 0pt 4pt;
 }
 
+.input {
+  font-style: italic;
+}
+
 .excercise{
   background-color: #D8E5E8;
   padding: 10pt;
 }
+
+/*ticks and crosses*/
 
 .wrong-answer {
   padding: 0pt 4pt;
@@ -30,11 +38,7 @@ p, ul, ol, blockquote, table {
   color: green;
 }
 
-#sidebar-old {
-  height: 100%;
-  float: right;
-  padding: 2px;
-}
+/*the tab that comes out on click*/
 
 #sidebox {
     position:fixed;
@@ -44,7 +48,6 @@ p, ul, ol, blockquote, table {
     height:100%;
 }
 
-#sidebox .tab,
 #sidebox .content {
     background:#bada55;
 }
@@ -56,6 +59,7 @@ p, ul, ol, blockquote, table {
 }
 
 #sidebox .tab {
+    background:#bada55;
     cursor:pointer;
     float:left;
     width:5%;
