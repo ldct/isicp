@@ -1,5 +1,9 @@
+//for clients to override
+
 function focus_callback() {
 }
+
+//functional functions
 
 function cleanCode(code) {
   return code.replace(/^\n/, "").replace(/\n*$/, "").replace(/[ \t]*\n/g, "\n").replace(/\s*$/, "");
@@ -165,6 +169,7 @@ function attachAnswer(target_string, answer) {
 }
 
 function createStaticDisplay(target_string) {
+//creates a codemirror object but locks it
   setup(target_string);
   
   var S = sOf[target_string];
@@ -179,7 +184,14 @@ function createNoeval(target_string) {
   
   var S = sOf[target_string];
   
+  S.editor.setValue("<your answer here>");
   S.editor.setOption("onBlur", function() {update_noeval(target_string)});
+  S.editor.setOption("onFocus", function() {
+    focus_callback(target_string);
+    if (S.getCode() == "<your answer here>") {
+      S.editor.setValue("");
+    }
+  });
   S.$output.hide();
 }
 
