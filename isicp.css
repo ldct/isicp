@@ -31,11 +31,13 @@ p, ul, ol, blockquote, table {
 .wrong-answer {
   padding: 0pt 4pt;
   color: red;
+  text-align:right;
 }
 
 .correct-answer {
   padding: 0pt 4pt;
   color: green;
+  text-align:right;
 }
 
 /*the tab that comes out on click*/

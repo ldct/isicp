@@ -115,7 +115,7 @@ function update(target_string) {
     s.$output.append($("<span>" + result + "</span>"));
   }
   
-  if (s.answer) {
+  if (s.answer) { //I'm thinking of removing this - haven't seen a use case
     if (s.answer == result) {
       s.$grade.attr({'class': 'correct-answer'}).text('\u2713');
     } else {
