@@ -20,27 +20,6 @@ function check(result) {
   return true;
 }
 
-//The S class represents a scheme editor fragment and associated DOMs
-
-var sOf = {};
-
-function S($target, $output, editor) {
-  this.$target = $target;
-  this.$output = $output;
-  this.editor = editor;
-}
-
-S.prototype.getCode = function() {
-  if (this.editor) {
-    return this.editor.getValue();
-  }
-  if (this.code) {
-    return this.code;
-  }
-  console.error(S);
-  throw "getCode couldn't find anything!";
-}
-
 //Biwascheme
 
 var biwascheme = new BiwaScheme.Interpreter( function(e){
@@ -57,39 +36,39 @@ function resetTopEnv() {
   BiwaScheme.TopEnv["set!"] = new BiwaScheme.Syntax("set!");
 }
 
-// check that $target exists, turn it into a $form, attach an $output
-// and add $target, $output and editor to sOf
+editorOf = {};
 
-function setup(target_string) {
+function makeEditable(editable_string) {
 
-  var $target = $("#" + target_string);
+  var $target = $("#" + editable_string);
   if (!$target[0]) {
-    throw "$" + target_string + " did not match anything";
+    throw "$" + editable_string + " did not match anything";
   }
   
   var code = cleanCode($target.text());
-  var $form = $("<textarea>", {text: code});
-  $target.empty().append($form);
   
-  var $output = $("#" + target_string + "-output")
-  if (!$output[0]) {
-    $output = $("<div />", {id: target_string + "-output", 'class':'output'});
-    $target.after($output);
-  }
+  $target.empty();
   
-  var editor = CodeMirror.fromTextArea($form[0],
-  {
-    "matchBrackets": true, 
-    "onBlur": function() {update(target_string)},
-    "onFocus": function() {focus_callback(target_string)}
+  var editor = CodeMirror($target[0], {
+    'value': code,
+    'matchBrackets': true
   });
   
-  sOf[target_string] = new S($target, $output, editor);
+  editorOf[editable_string] = editor;
+}
+
+function linkEval(editable_string, output_string, deps) {
+
+  var e = editorOf[editable_string];
+
+  e.setOption('onBlur', function() {
+    result = biwascheme.evaluate(e.getValue());
+    $("#" + output_string).empty().append($("<span>" + result + "</span>"));
+  });
 }
 
 function evaluate(target_string) {
   
-  var s = sOf[target_string];
   if (s.deps) {
     for (var i = 0; i < s.deps.length; i++) {
       evaluate(s.deps[i]);

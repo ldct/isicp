@@ -22,7 +22,7 @@
     
     <div id="scheme-scratch">(+ 1 2)</div> 
     <script> 
-    createPrompt("scheme-scratch"); 
+    //createPrompt("scheme-scratch"); 
     </script>
   
     <div id="currently-editing"> </div>
@@ -89,7 +89,10 @@ focus_callback = function(target_string) {
 <p> the interpreter will respond by printing
 
 <div id="scheme-number-output" class="output"> </div>
-<script> createPrompt("scheme-number"); </script>
+<script>
+makeEditable("scheme-number");
+linkEval("scheme-number", "scheme-number-output");
+</script>
 
 <p> Expressions representing numbers may be combined with an expression representing a primitive procedure (such as + or *) to form a compound expression that represents the application of the procedure to those numbers. For example:
 
@@ -97,8 +100,12 @@ focus_callback = function(target_string) {
 (+ 137 349)
 </div>
 <script> 
-createPrompt("scheme-plus-1"); 
+$("#scheme-plus-1").after($('<div>', {'id': "scheme-plus-1-output", 'class': "output"}));
+makeEditable("scheme-plus-1");
+linkEval("scheme-plus-1", "scheme-plus-1-output");
 </script>
+
+<!--
 
 <p>
 
@@ -180,7 +187,7 @@ createPrompt("scheme-plus-1");
 
 <p> Even with complex expressions, the interpreter always operates in the same basic cycle: It reads an expression from the terminal, evaluates the expression, and prints the result. This mode of operation is often expressed by saying that the interpreter runs in a read-eval-print loop. Observe in particular that it is not necessary to explicitly instruct the interpreter to print the value of the expression.
 
-
+!-->
 
 <div class='excercise'>
 
@@ -192,10 +199,13 @@ createPrompt("scheme-plus-1");
 <div class="input" id="scheme-ex-111-10-input">
 </div>
 <script> 
-createStaticDisplay("scheme-ex-111-10");
-createNoeval("scheme-ex-111-10-input");
-attachAnswer("scheme-ex-111-10-input", "10");
+
+//createStaticDisplay("scheme-ex-111-10");
+//createNoeval("scheme-ex-111-10-input");
+//attachAnswer("scheme-ex-111-10-input", "10");
 </script>
+
+<!--
 
 <div id="scheme-ex-111-plus">
 (+ 5 3 4)
