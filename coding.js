@@ -62,6 +62,12 @@ function makeEditable(editable) {
   editorOf[editable] = editor;
 }
 
+function makeStatic(stat) {
+  makeEditable(stat);
+  editorOf[stat].setOption("readOnly", 'nocursor');
+  editorOf[stat].setOption("onBlur", function() {});
+}
+
 function linkEval(editable, output, deps) {
 
   var e = editorOf[editable];
