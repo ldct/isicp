@@ -54,6 +54,10 @@ focus_callback = function(target_string) {
   $("#currently-editing").html("<tt>" + ts + "</tt>");
 };
 
+function afterOutput(_e) {
+  $_(_e).after($('<div>', {'id': _e + "-output", 'class': "output"}));
+}
+
 </script>
 
 <div id="main">
@@ -91,7 +95,7 @@ focus_callback = function(target_string) {
 <div id="scheme-number-output" class="output"> </div>
 <script>
 makeEditable("scheme-number");
-linkEval("scheme-number", "scheme-number-output");
+linkEval("scheme-number", "scheme-number-output",  function() {return evaluate("scheme-number");});
 </script>
 
 <p> Expressions representing numbers may be combined with an expression representing a primitive procedure (such as + or *) to form a compound expression that represents the application of the procedure to those numbers. For example:
@@ -99,10 +103,10 @@ linkEval("scheme-number", "scheme-number-output");
 <div id="scheme-plus-1">
 (+ 137 349)
 </div>
-<script> 
-$("#scheme-plus-1").after($('<div>', {'id': "scheme-plus-1-output", 'class': "output"}));
+<script>
+afterOutput("scheme-plus-1");
 makeEditable("scheme-plus-1");
-linkEval("scheme-plus-1", "scheme-plus-1-output");
+linkEval("scheme-plus-1", "scheme-plus-1-output",  function() {return evaluate("scheme-plus-1");});
 </script>
 
 <!--
@@ -255,14 +259,17 @@ attachAnswer("scheme-ex-111-nested-input", "6");
 
 <p> A critical aspect of a programming language is the means it provides for using names to refer to computational objects. We say that the name identifies a variable whose value is the object.
 
+!-->
+
 <p> In the Scheme dialect of Lisp, we name things with define. Typing
 
 <div id="scheme-define-size">
 (define size 2)
 </div>
 <script> 
-createPrompt("scheme-define-size"); 
-attachPushes("scheme-define-size", ["scheme-size", "scheme-times-size"]);
+afterOutput("scheme-define-size");
+makeEditable("scheme-define-size");
+linkEval("scheme-define-size", "scheme-define-size-output", function() {return evaluate("scheme-define-size");});
 </script>
 
 <p> causes the interpreter to associate the value 2 with the name size. Once the name size has been associated with the number 2, we can refer to the value 2 by name:
@@ -271,8 +278,9 @@ attachPushes("scheme-define-size", ["scheme-size", "scheme-times-size"]);
 size
 </div>
 <script> 
-createPrompt("scheme-size"); 
-attachDeps("scheme-size", ["scheme-define-size"]);
+afterOutput("scheme-size");
+makeEditable("scheme-size");
+linkEval("scheme-size", "scheme-size-output", function() {evaluate("scheme-define-size"); return evaluate("scheme-size");});
 </script>
 
 <p>
@@ -281,9 +289,12 @@ attachDeps("scheme-size", ["scheme-define-size"]);
 (* 5 size)
 </div>
 <script> 
-createPrompt("scheme-times-size");
-attachDeps("scheme-times-size", ["scheme-define-size"]);
+afterOutput("scheme-times-size");
+makeEditable("scheme-times-size");
+linkEval("scheme-times-size", "scheme-times-size-output", function() {evaluate("scheme-define-size"); return evaluate("scheme-times-size");});
 </script>
+
+<!--
 
 <p> Here are further examples of the use of define:
 

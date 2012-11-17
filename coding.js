@@ -36,9 +36,18 @@ function resetTopEnv() {
   BiwaScheme.TopEnv["set!"] = new BiwaScheme.Syntax("set!");
 }
 
+function beval(c) {
+
+  try {
+    return biwascheme.evaluate(c)
+  } catch(e) {
+    return;
+  }
+}
+
 editorOf = {};
 
-function $h(s) {
+function $_(s) { // _ to $. _: div id's $: jQuery objects
   ret = $("#" + s);
   if (!ret[0]) {
     throw "#" + s + " did not match anything";
@@ -47,9 +56,9 @@ function $h(s) {
   }
 }
 
-function makeEditable(editable) {
+function makeEditable(_e) {
 
-  var $e = $h(editable);
+  var $e = $_(_e);
   var code = cleanCode($e.text());
   
   $e.empty();
@@ -59,38 +68,33 @@ function makeEditable(editable) {
     'matchBrackets': true
   });
   
-  editorOf[editable] = editor;
+  editorOf[_e] = editor;
 }
 
-function makeStatic(stat) {
-  makeEditable(stat);
-  editorOf[stat].setOption("readOnly", 'nocursor');
-  editorOf[stat].setOption("onBlur", function() {});
+function makeStatic(_static) {
+  makeEditable(_static);
+  editorOf[_static].setOption("readOnly", 'nocursor');
+  editorOf[_static].setOption("onBlur", function() {});
 }
 
-function linkEval(editable, output, deps) {
+function linkEval(_editor, _output, func) {
 
-  var e = editorOf[editable];
+  var editor = editorOf[_editor];
 
-  e.setOption('onBlur', function() {
-    result = biwascheme.evaluate(e.getValue());
-    $h(output).empty().append($("<span>" + result + "</span>"));
+  editor.setOption('onBlur', function() {
+    $_(_output).empty().append($("<span>" + func() + "</span>"));
   });
 }
 
-function evaluate(target_string) {
+function evaluate(_editor) {
   
-  if (s.deps) {
-    for (var i = 0; i < s.deps.length; i++) {
-      evaluate(s.deps[i]);
-    }
+  var deps = [];
+  
+  for (var i = 0; i < deps.length; i++) {
+    evaluate(deps[i]);
   }
-  try {
-    return biwascheme.evaluate(sOf[target_string].getCode());
-  }
-  catch (e) {
-    return;
-  }
+  
+  return beval(editorOf[_editor].getValue());
 }
 
 function update(target_string) {
