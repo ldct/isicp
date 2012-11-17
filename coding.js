@@ -38,32 +38,37 @@ function resetTopEnv() {
 
 editorOf = {};
 
-function makeEditable(editable_string) {
-
-  var $target = $("#" + editable_string);
-  if (!$target[0]) {
-    throw "$" + editable_string + " did not match anything";
+function $h(s) {
+  ret = $("#" + s);
+  if (!ret[0]) {
+    throw "#" + s + " did not match anything";
+  } else {
+    return ret;
   }
+}
+
+function makeEditable(editable) {
+
+  var $e = $h(editable);
+  var code = cleanCode($e.text());
   
-  var code = cleanCode($target.text());
+  $e.empty();
   
-  $target.empty();
-  
-  var editor = CodeMirror($target[0], {
+  var editor = CodeMirror($e[0], {
     'value': code,
     'matchBrackets': true
   });
   
-  editorOf[editable_string] = editor;
+  editorOf[editable] = editor;
 }
 
-function linkEval(editable_string, output_string, deps) {
+function linkEval(editable, output, deps) {
 
-  var e = editorOf[editable_string];
+  var e = editorOf[editable];
 
   e.setOption('onBlur', function() {
     result = biwascheme.evaluate(e.getValue());
-    $("#" + output_string).empty().append($("<span>" + result + "</span>"));
+    $h(output).empty().append($("<span>" + result + "</span>"));
   });
 }
 
