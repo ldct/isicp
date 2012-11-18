@@ -54,6 +54,11 @@
     </script>
   
     <div id="currently-editing"> </div>
+    
+    <p> Video Lectures: 
+    <a href='http://www.youtube.com/watch?v=2Op3QLzMgSY' title="Overview and Introduction to Lisp"> 1A </a> &nbsp;
+    <a href='http://www.youtube.com/watch?v=dlbMuv-jix8' title="Procedures and Processes; Substitution Model"> 1B  </a>
+        
   
   </div>
 </div>
@@ -221,17 +226,7 @@ function afterInput(_e) {
 function answer(s, a) {
   afterInput(s);
   makeStatic(s);
-  
-  makeEditable(s + "-input");
-  var e = editorOf[s + "-input"];
-  e.setValue("<your input here>");
-  e.setOption("onFocus", function() { //specific to input fields
-    if (e.getValue() == "<your input here>") {
-      e.setValue("");
-    }
-  });
-  
-  afterOutput(s + "-input");
+  answerWithInput(s + "-input");
   linkEval(s + "-input", s + "-input-output", function(x, y) {
     if (y == a) {
       return "<div class='correct-answer'> \u2713 </div>";
@@ -239,6 +234,20 @@ function answer(s, a) {
       return "<div class='wrong-answer'> \u2717 </div>";
     }
   });
+}
+
+function answerWithInput(i) {
+  makeEditable(i);
+  var e = editorOf[i];
+  e.setValue("<your input here>");
+  e.setOption("onFocus", function() { //specific to input fields
+    if (e.getValue() == "<your input here>") {
+      e.setValue("");
+    }
+  });
+  
+  afterOutput(i);
+
 }
 </script>
 
@@ -283,6 +292,31 @@ answer("scheme-ex-111-div", 3);
 </div>
 <script> 
 answer("scheme-ex-111-nested", 6);
+</script>
+</div>
+
+<p>
+
+<div class='excercise'>
+
+<p> <b> Exercise 1.2. </b>  Translate the following expression into prefix form
+
+<p style="margin-bottom: 0"> <img src='http://mitpress.mit.edu/sicp/full-text/book/ch1-Z-G-3.gif'>
+
+<div id="scheme-ex-12-input" class='input'>
+</div>
+<script> 
+answerWithInput("scheme-ex-12-input");
+linkEval("scheme-ex-12-input", "scheme-ex-12-input-output", function(x, y) {
+
+  var code = "(equal? (quote " + y + ") '(+ 1 2))";
+
+  if (biwascheme.evaluate(code) == true) {
+    return "<div class='correct-answer'> \u2713 </div>";
+  } else {
+    return "<div class='wrong-answer'> \u2717 </div>";
+  }
+});
 </script>
 </div>
 
