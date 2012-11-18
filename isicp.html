@@ -36,6 +36,8 @@
       afterOutput(s);
       makeEditable(s);
       linkEval(s, s + "-output", function(x, y) {
+        resetTopEnv();
+        
         var ret = evaluate(x);
         
         if (pushesOf[s]) {
@@ -211,7 +213,13 @@ linkEval("scheme-number", "scheme-number-output", function(x, y) {return evaluat
 <p> <b> Exercise 1.1.1. </b>  Below is a sequence of expressions. What is the result printed by the interpreter in response to each expression? Assume that the sequence is to be evaluated in the order in which it is presented.
 
 <script>
+
+function afterInput(_e) {
+  $_(_e).after($('<div>', {'id': _e + "-input", 'class': "input"}));
+}
+
 function answer(s, a) {
+  afterInput(s);
   makeStatic(s);
   
   makeEditable(s + "-input");
@@ -234,10 +242,8 @@ function answer(s, a) {
 }
 </script>
 
-<div id="scheme-ex-111-10">
+<div id="scheme-ex-111-10" class='static'>
 10
-</div>
-<div class="input" id="scheme-ex-111-10-input">
 </div>
 <script> 
 answer("scheme-ex-111-10", 10);
@@ -245,10 +251,8 @@ answer("scheme-ex-111-10", 10);
 
 <p>
 
-<div id="scheme-ex-111-plus">
+<div id="scheme-ex-111-plus" class='static'>
 (+ 5 3 4)
-</div>
-<div class="input" id="scheme-ex-111-plus-input">
 </div>
 <script> 
 answer("scheme-ex-111-plus", 12);
@@ -256,10 +260,8 @@ answer("scheme-ex-111-plus", 12);
 
 <p>
 
-<div id="scheme-ex-111-minus">
+<div id="scheme-ex-111-minus" class='static'>
 (- 9 1)
-</div>
-<div class="input" id="scheme-ex-111-minus-input">
 </div>
 <script> 
 answer("scheme-ex-111-minus", 8);
@@ -267,10 +269,8 @@ answer("scheme-ex-111-minus", 8);
 
 <p>
 
-<div id="scheme-ex-111-div">
+<div id="scheme-ex-111-div" class='static'>
 (/ 6 2)
-</div>
-<div class="input" id="scheme-ex-111-div-input">
 </div>
 <script> 
 answer("scheme-ex-111-div", 3);
@@ -278,10 +278,8 @@ answer("scheme-ex-111-div", 3);
 
 <p>
 
-<div id="scheme-ex-111-nested">
+<div id="scheme-ex-111-nested" class='static'>
 (+ (* 2 4) (- 4 6))
-</div>
-<div class="input" id="scheme-ex-111-nested-input">
 </div>
 <script> 
 answer("scheme-ex-111-nested", 6);
@@ -322,8 +320,6 @@ prompt("scheme-times-size");
 depsOf["scheme-times-size"] = ["scheme-define-size"];
 </script>
 
-<!--
-
 <p> Here are further examples of the use of define:
 
 <div id="scheme-define-radius">
@@ -334,7 +330,7 @@ depsOf["scheme-times-size"] = ["scheme-define-size"];
 </div>
 <script> 
 prompt("scheme-define-radius");
-//attachPushes("scheme-define-radius", ["scheme-circumference"]);
+pushesOf["scheme-define-radius"] = ["scheme-circumference"];
 </script>
 
 <p>
@@ -357,15 +353,42 @@ depsOf["scheme-circumference"] = ["scheme-define-radius"];
 
 <p> <b> Exercise 1.1.2. </b>  Below is a sequence of expressions. What is the result printed by the interpreter in response to each expression? Assume that the sequence is to be evaluated in the order in which it is presented.
 
-<div id="scheme-ex-112">
+<div id="scheme-ex-112-define-a" class='static'>
 (define a 3)
+</div>
+<script> 
+makeStatic("scheme-ex-112-define-a");
+</script>
+
+<p>
+
+<div id="scheme-ex-112-define-b" class='static'>
 (define b (+ a 1))
+</div>
+<script> 
+makeStatic("scheme-ex-112-define-b");
+</script>
+
+<p>
+
+<div id="scheme-ex-112-plus" class='static'>
 (+ a b (* a b))
+</div>
+<script> 
+answer("scheme-ex-112-plus", 19);
+</script>
+
+<p>
+
+<div id="scheme-ex-112-eq" class='static'>
 (= a b)
 </div>
 <script> 
-createStaticDisplay("scheme-ex-112"); 
+answer("scheme-ex-112-eq", "false");
 </script>
+
+
+
 </div>
 
 <h3> 1.1.3  Evaluating Combinations </h3>
@@ -389,7 +412,9 @@ createStaticDisplay("scheme-ex-112");
    (+ 3 5 7))
 </div>
 <div id="scheme-tree-eg-output" class="output"> </div>
-<script> prompt("scheme-tree-eg"); </script>
+<script> 
+prompt("scheme-tree-eg"); 
+</script>
 
 <p> requires that the evaluation rule be applied to four different combinations. We can obtain a picture of this process by representing the combination in the form of a tree, as shown in figure 1.1.
 
@@ -435,7 +460,7 @@ createStaticDisplay("scheme-ex-112");
 </div>
 <script> 
 prompt("scheme-define-square"); 
-attachPushes("scheme-define-square", ["scheme-square-number", "scheme-square-sum", "scheme-square-square"]);
+pushesOf["scheme-define-square"] = ["scheme-square-number", "scheme-square-sum", "scheme-square-square"];
 </script>
 
 <p> We can understand this in the following way:
@@ -449,11 +474,11 @@ attachPushes("scheme-define-square", ["scheme-square-number", "scheme-square-sum
 
 <p> The general form of a procedure definition is
 
-<div id="scheme-define-syntax">
+<div id="scheme-define-syntax" class='static'>
 (define (&ltname&gt &ltformal parameters&gt) &ltbody&gt)
 </div>
 <script> 
-prompt("scheme-define-syntax"); 
+makeStatic("scheme-define-syntax"); 
 </script>
 
 <p> The name is a symbol to be associated with the procedure definition in the environment.The formal parameters are the names used within the body of the procedure to refer to the corresponding arguments of the procedure. The body is an expression that will yield the value of the procedure application when the formal parameters are replaced by the actual arguments to which the procedure is applied.14 The name and the formal parameters are grouped within parentheses, just as they would be in an actual call to the procedure being defined.
@@ -465,7 +490,7 @@ prompt("scheme-define-syntax");
 </div>
 <script> 
 prompt("scheme-square-number"); 
-attachDeps("scheme-square-number", ["scheme-define-square"]);
+depsOf["scheme-square-number"] = ["scheme-define-square"];
 </script>
 
 <p>
@@ -475,7 +500,7 @@ attachDeps("scheme-square-number", ["scheme-define-square"]);
 </div>
 <script> 
 prompt("scheme-square-sum"); 
-attachDeps("scheme-square-sum", ["scheme-define-square"]);
+depsOf["scheme-square-sum"] = ["scheme-define-square"];
 </script>
 
 <p>
@@ -485,17 +510,17 @@ attachDeps("scheme-square-sum", ["scheme-define-square"]);
 </div>
 <script> 
 prompt("scheme-square-square"); 
-attachDeps("scheme-square-square", ["scheme-define-square"]);
+depsOf["scheme-square-square"] = ["scheme-define-square"];
 </script>
 
 
 <p> We can also use square as a building block in defining other procedures. For example, x<sup>2</sup> + y<sup>2</sup> can be expressed as
 
-<div id="scheme-sum-square-eg">
+<div id="scheme-sum-square-eg" class='static'>
 (+ (square x) (square y))
 </div>
 <script> 
-prompt("scheme-sum-square-eg"); 
+makeStatic("scheme-sum-square-eg"); 
 </script>
 
 <p> We can easily define a procedure sum-of-squares that, given any two numbers as arguments, produces the sum of their squares:
@@ -508,7 +533,7 @@ prompt("scheme-sum-square-eg");
 </div>
 <script> 
 prompt("scheme-define-sum-of-squares"); 
-attachDeps("scheme-define-sum-of-squares", ["scheme-define-square"]);
+depsOf["scheme-define-sum-of-squares"] = ["scheme-define-square"];
 </script>
 
 <p> Now we can use sum-of-squares as a building block in constructing further procedures:
@@ -521,7 +546,7 @@ attachDeps("scheme-define-sum-of-squares", ["scheme-define-square"]);
 </div>
 <script> 
 prompt("scheme-f"); 
-attachDeps("scheme-f", ["scheme-define-sum-of-squares"]);
+depsOf["scheme-f"] = ["scheme-define-sum-of-squares"];
 </script>
 
 <p> Compound procedures are used in exactly the same way as primitive procedures. Indeed, one could not tell by looking at the definition of sum-of-squares given above whether square was built into the interpreter, like + and *, or defined as a compound procedure.
@@ -536,65 +561,65 @@ attachDeps("scheme-f", ["scheme-define-sum-of-squares"]);
 
 <p> To illustrate this process, let's evaluate the combination
 
-<div id="scheme-f-1">
+<div id="scheme-f-1" class='static'>
 (f 5)
 </div>
 <script> 
-createStaticDisplay("scheme-f-1"); 
+makeStatic("scheme-f-1"); 
 </script>
 
 <p> where f is the procedure defined in section 1.1.4. We begin by retrieving the body of f:
 
-<div id="scheme-f-2">
+<div id="scheme-f-2" class='static'>
 (sum-of-squares (+ a 1) (* a 2))
 </div>
 <script> 
-createStaticDisplay("scheme-f-2"); 
+makeStatic("scheme-f-2"); 
 </script>
 
 <p> Then we replace the formal parameter a by the argument 5:
 
-<div id="scheme-f-3">
+<div id="scheme-f-3" class='static'>
 (sum-of-squares (+ 5 1) (* 5 2))
 </div>
 <script> 
-createStaticDisplay("scheme-f-3"); 
+makeStatic("scheme-f-3"); 
 </script>
 
 <p> Thus the problem reduces to the evaluation of a combination with two operands and an operator sum-of-squares. Evaluating this combination involves three subproblems. We must evaluate the operator to get the procedure to be applied, and we must evaluate the operands to get the arguments. Now (+ 5 1) produces 6 and (* 5 2) produces 10, so we must apply the sum-of-squares procedure to 6 and 10. These values are substituted for the formal parameters x and y in the body of sum-of-squares, reducing the expression to
 
-<div id="scheme-f-4">
+<div id="scheme-f-4" class='static'>
 (+ (square 6) (square 10))
 </div>
 <script> 
-createStaticDisplay("scheme-f-4"); 
+makeStatic("scheme-f-4"); 
 </script>
 
 <p> If we use the definition of square, this reduces to
 
-<div id="scheme-f-5">
+<div id="scheme-f-5" class='static'>
 (+ (* 6 6) (* 10 10))
 </div>
 <script> 
-createStaticDisplay("scheme-f-5"); 
+makeStatic("scheme-f-5"); 
 </script>
 
 <p> which reduces by multiplication to
 
-<div id="scheme-f-6">
+<div id="scheme-f-6" class='static'>
 (+ 36 100)
 </div>
 <script> 
-createStaticDisplay("scheme-f-6"); 
+makeStatic("scheme-f-6"); 
 </script>
 
 <p> and finally to
 
-<div id="scheme-f-7">
+<div id="scheme-f-7" class='static'>
 136
 </div>
 <script> 
-createStaticDisplay("scheme-f-7"); 
+makeStatic("scheme-f-7"); 
 </script>
 
 <p> The process we have just described is called the substitution model for procedure application. It can be taken as a model that determines the "meaning" of procedure application, insofar as the procedures in this chapter are concerned. However, there are two points that should be stressed:
@@ -611,73 +636,75 @@ createStaticDisplay("scheme-f-7");
 
 <p> According to the description of evaluation given in section 1.1.3, the interpreter first evaluates the operator and operands and then applies the resulting procedure to the resulting arguments. This is not the only way to perform evaluation. An alternative evaluation model would not evaluate the operands until their values were needed. Instead it would first substitute operand expressions for parameters until it obtained an expression involving only primitive operators, and would then perform the evaluation. If we used this method, the evaluation of
 
-<div id="scheme-f-1-n">
+<div id="scheme-f-1-n" class='static'>
 (f 5)
 </div>
 <script> 
-createStaticDisplay("scheme-f-1-n"); 
+makeStatic("scheme-f-1-n"); 
 </script>
 
 <p> would proceed according to the sequence of expansions
 
-<div id="scheme-f-2-n">
+<div id="scheme-f-2-n" class='static'>
 (sum-of-squares (+ 5 1) (* 5 2))
 </div>
 <script> 
-createStaticDisplay("scheme-f-2-n");
+makeStatic("scheme-f-2-n");
 </script>
 
 <p>
 
-<div id="scheme-f-3-n">
+<div id="scheme-f-3-n" class='static'>
 (+    (square (+ 5 1))      (square (* 5 2))  )
 </div>
 <script> 
-createStaticDisplay("scheme-f-3-n");
+makeStatic("scheme-f-3-n");
 </script>
 
 <p>
 
-<div id="scheme-f-4-n">
+<div id="scheme-f-4-n" class='static'>
 (+    (* (+ 5 1) (+ 5 1))   (* (* 5 2) (* 5 2)))
 </div>
 <script> 
-createStaticDisplay("scheme-f-4-n");
+makeStatic("scheme-f-4-n");
 </script>
 
 <p> followed by the reductions
 
-<div id="scheme-f-5-n">
+<div id="scheme-f-5-n" class='static'>
 (+         (* 6 6)             (* 10 10))
 </div>
 <script> 
-createStaticDisplay("scheme-f-5-n");
+makeStatic("scheme-f-5-n");
 </script>
 
 <p>
 
-<div id="scheme-f-6-n">
+<div id="scheme-f-6-n" class='static'>
 (+           36                   100)
 </div>
 <script> 
-createStaticDisplay("scheme-f-6-n");
+makeStatic("scheme-f-6-n");
 </script>
 
 <p>
 
-<div id="scheme-f-7-n">
+<div id="scheme-f-7-n" class='static'>
                     136
 </div>
 <script> 
-createStaticDisplay("scheme-f-7-n");
+makeStatic("scheme-f-7-n");
 </script>
 
 <p> This gives the same answer as our previous evaluation model, but the process is different. In particular, the evaluations of <tt> (+ 5 1) </tt> and <tt> (* 5 2) </tt> are each performed twice here, corresponding to the reduction of the expression
 
-<div id="scheme-x">
+<div id="scheme-x" class='static'>
 (* x x)
 </div>
-<script> prompt("scheme-x"); </script>
+<script> 
+makeStatic("scheme-x"); 
+</script>
 
 <p> with <tt> x </tt> replaced respectively by <tt> (+ 5 1) </tt> and <tt> (* 5 2) </tt>.
 
@@ -703,14 +730,16 @@ createStaticDisplay("scheme-f-7-n");
 
 <p> The general form of a conditional expression is
 
-<div id="scheme-cond-syntax">
+<div id="scheme-cond-syntax" class='static'>
 (cond (&ltp1&gt &lte1&gt)
       (&ltp2&gt &lte2&gt)
       ...
       (&ltpn&gt &lten&gt))
 
 </div>
-<script> createStaticDisplay("scheme-cond-syntax"); </script>
+<script> 
+makeStatic("scheme-cond-syntax"); 
+</script>
 
 <p> consisting of the symbol cond followed by parenthesized pairs of expressions <tt> (&lt;p&gt; &lt;e&gt;) </tt> called clauses. The first expression in each pair is a predicate -- that is, an expression whose value is interpreted as either true or false.
 
@@ -741,7 +770,7 @@ createStaticDisplay("scheme-f-7-n");
 
 <p> This uses the special form if, a restricted type of conditional that can be used when there are precisely two cases in the case analysis. The general form of an if expression is
 
-<div id="scheme-if-syntax">
+<div id="scheme-if-syntax" class='static'>
 (if &ltpredicate&gt &ltconsequent&gt &ltalternative&gt)
 </div>
 <script> prompt("scheme-if-syntax"); </script>
@@ -848,7 +877,7 @@ As an example of how these are used, the condition that a number x be in the ran
 </div>
 <script> 
 prompt("scheme-define-sqrt-iter"); 
-attachDeps("scheme-define-sqrt-iter", ["scheme-define-good-enough", "scheme-define-improve"]);
+depsOf["scheme-define-sqrt-iter"] = ["scheme-define-good-enough", "scheme-define-improve"];
 </script>
 
 <p> A guess is improved by averaging it with the quotient of the radicand and the old guess:
@@ -859,7 +888,7 @@ attachDeps("scheme-define-sqrt-iter", ["scheme-define-good-enough", "scheme-defi
 </div>
 <script> 
 prompt("scheme-define-improve"); 
-attachDeps("scheme-define-improve", ["scheme-define-average"]);
+depsOf["scheme-define-improve"] = ["scheme-define-average"];
 </script>
 
 <p> where
@@ -880,7 +909,7 @@ prompt("scheme-define-average");
 </div>
 <script> 
 prompt("scheme-define-good-enough");
-attachDeps("scheme-define-good-enough", ["scheme-define-square"]); 
+depsOf["scheme-define-good-enough"] = ["scheme-define-square"];
 </script>
 
 <p> Finally, we need a way to get started. For instance, we can always guess that the square root of any number is 1:
@@ -891,7 +920,7 @@ attachDeps("scheme-define-good-enough", ["scheme-define-square"]);
 </div>
 <script> 
 prompt("scheme-define-sqrt");
-attachDeps("scheme-define-sqrt", ["scheme-define-sqrt-iter"]); 
+depsOf["scheme-define-sqrt"] = ["scheme-define-sqrt-iter"];
 </script>
 
 <p> If we type these definitions to the interpreter, we can use sqrt just as we can use any procedure:
@@ -901,7 +930,7 @@ attachDeps("scheme-define-sqrt", ["scheme-define-sqrt-iter"]);
 </div>
 <script> 
 prompt("scheme-sqrt-9");
-attachDeps("scheme-sqrt-9", ["scheme-define-sqrt"]); 
+depsOf["scheme-sqrt-9"] = ["scheme-define-sqrt"];
 </script>
 
 <p>
@@ -911,7 +940,7 @@ attachDeps("scheme-sqrt-9", ["scheme-define-sqrt"]);
 </div>
 <script> 
 prompt("scheme-sqrt-plus");
-attachDeps("scheme-sqrt-plus", ["scheme-define-sqrt"]); 
+depsOf["scheme-sqrt-plus"] = ["scheme-define-sqrt"];
 </script>
 
 <p>
@@ -921,7 +950,7 @@ attachDeps("scheme-sqrt-plus", ["scheme-define-sqrt"]);
 </div>
 <script> 
 prompt("scheme-sqrt-sqrt");
-attachDeps("scheme-sqrt-sqrt", ["scheme-define-sqrt"]); 
+depsOf["scheme-sqrt-sqrt"] = ["scheme-define-sqrt"];
 </script>
 
 <p>
@@ -931,14 +960,18 @@ attachDeps("scheme-sqrt-sqrt", ["scheme-define-sqrt"]);
 </div>
 <script> 
 prompt("scheme-square-sqrt");
-attachDeps("scheme-square-sqrt", ["scheme-define-square", "scheme-define-sqrt"]); 
+depsOf["scheme-square-sqrt"] = ["scheme-define-square", "scheme-define-sqrt"];
 </script>
 
 <p> The sqrt program also illustrates that the simple procedural language we have introduced so far is sufficient for writing any purely numerical program that one could write in, say, C or Pascal. This might seem surprising, since we have not included in our language any iterative (looping) constructs that direct the computer to do something over and over again. Sqrt-iter, on the other hand, demonstrates how iteration can be accomplished using no special construct other than the ordinary ability to call a procedure.24 
 
 </div>
 
-<script> updateAll() </script>
+<script> 
+for (var _e in editorOf) {
+  editorOf[_e].getOption("onBlur")();
+}
+</script>
 
 </body>
 </html>

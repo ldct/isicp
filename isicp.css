@@ -105,6 +105,10 @@ p, ul, ol, blockquote, table {
   /*background: #DCEFF7;*/
 }
 
+.static .CodeMirror:hover {
+  background-color: transparent;
+}
+
 .CodeMirror-matchingbracket {
   background: lightblue;
 }
