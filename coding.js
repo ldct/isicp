@@ -29,26 +29,7 @@ function $_(s) { // _ to $. _: div id's $: jQuery objects
   }
 }
 
-depsOf = {}
-
-function getDeps(_editor) {
-  if (depsOf[_editor]) {
-    return depsOf[_editor];
-  } else {
-    return [];
-  }
-}
-
-function evaluate(_editor) {
-  
-  for (var deps = getDeps(_editor), i = 0; i < deps.length; i++) {
-    evaluate(deps[i]);
-  }
-  
-  return beval(editorOf[_editor].getValue());
-}
-
-//Biwascheme
+////////////////////////////////////////////////////////////////////////////////
 
 var biwascheme = new BiwaScheme.Interpreter( function(e){
   console.log(e.message);
@@ -73,6 +54,27 @@ function beval(c) {
     return;
   }
 }
+
+depsOf = {}
+
+function getDeps(_editor) {
+  if (depsOf[_editor]) {
+    return depsOf[_editor];
+  } else {
+    return [];
+  }
+}
+
+function evaluate(_editor) {
+  
+  for (var deps = getDeps(_editor), i = 0; i < deps.length; i++) {
+    evaluate(deps[i]);
+  }
+  
+  return beval(editorOf[_editor].getValue());
+}
+
+////////////////////////////////////////////////////////////////////////////////
 
 editorOf = {};
 
@@ -105,6 +107,8 @@ function linkEval(_editor, _output, func) {
     $_(_output).empty().append($("<span>" + func(_editor, editor.getValue()) + "</span>"));
   });
 }
+
+/*
 
 function update(target_string) {
 
@@ -203,3 +207,5 @@ function updateAll() {
     update(ts);
   } 
 }
+
+*/

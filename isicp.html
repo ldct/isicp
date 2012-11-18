@@ -22,7 +22,7 @@
     
     <div id="scheme-scratch">(+ 1 2)</div> 
     <script> 
-    //createPrompt("scheme-scratch"); 
+    //prompt("scheme-scratch"); 
     </script>
   
     <div id="currently-editing"> </div>
@@ -100,44 +100,46 @@ linkEval("scheme-number", "scheme-number-output", function(x, y) {return evaluat
 
 <p> Expressions representing numbers may be combined with an expression representing a primitive procedure (such as + or *) to form a compound expression that represents the application of the procedure to those numbers. For example:
 
+<script>
+function prompt(s) {
+  afterOutput(s);
+  makeEditable(s);
+  linkEval(s, s + "-output", function(x, y) {return evaluate(x);});
+}
+</script>
+
 <div id="scheme-plus-1">
 (+ 137 349)
 </div>
-<script>
-afterOutput("scheme-plus-1");
-makeEditable("scheme-plus-1");
-linkEval("scheme-plus-1", "scheme-plus-1-output", function(x, y) {return evaluate(x);});
-</script>
-
-<!--
+<script> prompt("scheme-plus-1"); </script>
 
 <p>
 
 <div id="scheme-minus">
 (- 1000 334)
 </div>
-<script> createPrompt("scheme-minus"); </script>
+<script> prompt("scheme-minus"); </script>
 
 <p>
 
 <div id="scheme-times">
 (* 5 99)
 </div>
-<script> createPrompt("scheme-times"); </script>
+<script> prompt("scheme-times"); </script>
 
 <p>
 
 <div id="scheme-divide">
 (/ 10 5)
 </div>
-<script> createPrompt("scheme-divide"); </script>
+<script> prompt("scheme-divide"); </script>
 
 <p>
 
 <div id="scheme-plus-float">
 (+ 2.7 10)
 </div>
-<script> createPrompt("scheme-plus-float"); </script>
+<script> prompt("scheme-plus-float"); </script>
 
 <p> Expressions such as these, formed by delimiting a list of expressions within parentheses in order to denote procedure application, are called combinations. The leftmost element in the list is called the operator, and the other elements are called operands. The value of a combination is obtained by applying the procedure specified by the operator to the arguments that are the values of the operands.
 
@@ -147,7 +149,7 @@ linkEval("scheme-plus-1", "scheme-plus-1-output", function(x, y) {return evaluat
 (+ 21 35 12 7)
 </div>
 <div id="scheme-plus-multiple-output" class="output"> </div>
-<script> createPrompt("scheme-plus-multiple"); </script>
+<script> prompt("scheme-plus-multiple"); </script>
 
 <p>
 
@@ -155,7 +157,7 @@ linkEval("scheme-plus-1", "scheme-plus-1-output", function(x, y) {return evaluat
 (* 25 4 12)
 </div>
 <div id="scheme-times-multiple-output" class="output"> </div>
-<script> createPrompt("scheme-times-multiple"); </script>
+<script> prompt("scheme-times-multiple"); </script>
 
 <p> No ambiguity can arise, because the operator is always the leftmost element and the entire combination is delimited by the parentheses.
 
@@ -165,7 +167,7 @@ linkEval("scheme-plus-1", "scheme-plus-1-output", function(x, y) {return evaluat
 (+ (* 3 5) (- 10 6))
 </div>
 <div id="scheme-plus-times-output" class="output"> </div>
-<script> createPrompt("scheme-plus-times"); </script>
+<script> prompt("scheme-plus-times"); </script>
 
 <p> There is no limit (in principle) to the depth of such nesting and to the overall complexity of the expressions that the Lisp interpreter can evaluate. It is we humans who get confused by still relatively simple expressions such as
 
@@ -173,7 +175,7 @@ linkEval("scheme-plus-1", "scheme-plus-1-output", function(x, y) {return evaluat
 (+ (* 3 (+ (* 2 4) (+ 3 5))) (+ (- 10 7) 6))
 </div>
 <div id="scheme-long-tree-output" class="output"> </div>
-<script> createPrompt("scheme-long-tree"); </script>
+<script> prompt("scheme-long-tree"); </script>
 
 <p> which the interpreter would readily evaluate to be 57. We can help ourselves by writing such an expression in the form
 
@@ -185,11 +187,9 @@ linkEval("scheme-plus-1", "scheme-plus-1-output", function(x, y) {return evaluat
       6))
 </div>
 <div id="scheme-long-tree-pp-output" class="output"> </div>
-<script> createPrompt("scheme-long-tree-pp"); </script>
+<script> prompt("scheme-long-tree-pp"); </script>
 
 <p> following a formatting convention known as pretty-printing, in which each long combination is written so that the operands are aligned vertically. The resulting indentations display clearly the structure of the expression.
-
-!-->
 
 <p> Even with complex expressions, the interpreter always operates in the same basic cycle: It reads an expression from the terminal, evaluates the expression, and prints the result. This mode of operation is often expressed by saying that the interpreter runs in a read-eval-print loop. Observe in particular that it is not necessary to explicitly instruct the interpreter to print the value of the expression.
 
@@ -197,25 +197,40 @@ linkEval("scheme-plus-1", "scheme-plus-1-output", function(x, y) {return evaluat
 
 <p> <b> Exercise 1.1.1. </b>  Below is a sequence of expressions. What is the result printed by the interpreter in response to each expression? Assume that the sequence is to be evaluated in the order in which it is presented.
 
+<script>
+function answer(s, a) {
+  makeStatic(s);
+  
+  makeEditable(s + "-input");
+  var e = editorOf[s + "-input"];
+  e.setValue("<your input here>");
+  e.setOption("onFocus", function() {
+    if (e.getValue() == "<your input here>") {
+      e.setValue("");
+    }
+  });
+  
+  afterOutput(s + "-input");
+  linkEval(s + "-input", s + "-input-output", function(x, y) {
+    if (y == a) {
+      return "<div class='correct-answer'> \u2713 </div>";
+    } else {
+      return "<div class='wrong-answer'> \u2717 </div>";
+    }
+  });
+}
+</script>
+
 <div id="scheme-ex-111-10">
 10
 </div>
 <div class="input" id="scheme-ex-111-10-input">
 </div>
 <script> 
-makeStatic("scheme-ex-111-10");
-makeEditable("scheme-ex-111-10-input");
-afterOutput("scheme-ex-111-10-input");
-linkEval("scheme-ex-111-10-input", "scheme-ex-111-10-input-output", function(x, y) {
-  if (y == 10) {
-    return "<div class='correct-answer'> \u2713 </div>";
-  } else {
-    return "<div class='wrong-answer'> \u2717 </div>";
-  }
-});
+answer("scheme-ex-111-10", 10);
 </script>
 
-<!--
+<p>
 
 <div id="scheme-ex-111-plus">
 (+ 5 3 4)
@@ -223,10 +238,10 @@ linkEval("scheme-ex-111-10-input", "scheme-ex-111-10-input-output", function(x, 
 <div class="input" id="scheme-ex-111-plus-input">
 </div>
 <script> 
-createStaticDisplay("scheme-ex-111-plus");
-createNoeval("scheme-ex-111-plus-input");
-attachAnswer("scheme-ex-111-plus-input", "12");
+answer("scheme-ex-111-plus", 12);
 </script>
+
+<p>
 
 <div id="scheme-ex-111-minus">
 (- 9 1)
@@ -234,10 +249,10 @@ attachAnswer("scheme-ex-111-plus-input", "12");
 <div class="input" id="scheme-ex-111-minus-input">
 </div>
 <script> 
-createStaticDisplay("scheme-ex-111-minus");
-createNoeval("scheme-ex-111-minus-input");
-attachAnswer("scheme-ex-111-minus-input", "8");
+answer("scheme-ex-111-minus", 8);
 </script>
+
+<p>
 
 <div id="scheme-ex-111-div">
 (/ 6 2)
@@ -245,10 +260,10 @@ attachAnswer("scheme-ex-111-minus-input", "8");
 <div class="input" id="scheme-ex-111-div-input">
 </div>
 <script> 
-createStaticDisplay("scheme-ex-111-div");
-createNoeval("scheme-ex-111-div-input");
-attachAnswer("scheme-ex-111-div-input", "3");
+answer("scheme-ex-111-div", 3);
 </script>
+
+<p>
 
 <div id="scheme-ex-111-nested">
 (+ (* 2 4) (- 4 6))
@@ -256,17 +271,13 @@ attachAnswer("scheme-ex-111-div-input", "3");
 <div class="input" id="scheme-ex-111-nested-input">
 </div>
 <script> 
-createStaticDisplay("scheme-ex-111-nested");
-createNoeval("scheme-ex-111-nested-input");
-attachAnswer("scheme-ex-111-nested-input", "6");
+answer("scheme-ex-111-nested", 6);
 </script>
 </div>
 
 <h3> 1.1.2  Naming and the Environment </h3>
 
 <p> A critical aspect of a programming language is the means it provides for using names to refer to computational objects. We say that the name identifies a variable whose value is the object.
-
-!-->
 
 <p> In the Scheme dialect of Lisp, we name things with define. Typing
 
@@ -314,7 +325,7 @@ depsOf["scheme-times-size"] = ["scheme-define-size"];
 (* pi (* radius radius))
 </div>
 <script> 
-createPrompt("scheme-define-radius"); 
+prompt("scheme-define-radius"); 
 attachPushes("scheme-define-radius", ["scheme-circumference"]);
 </script>
 
@@ -326,7 +337,7 @@ attachPushes("scheme-define-radius", ["scheme-circumference"]);
 circumference
 </div>
 <script> 
-createPrompt("scheme-circumference"); 
+prompt("scheme-circumference"); 
 attachDeps("scheme-circumference", ["scheme-define-radius"]);
 </script>
 
@@ -370,7 +381,7 @@ createStaticDisplay("scheme-ex-112");
    (+ 3 5 7))
 </div>
 <div id="scheme-tree-eg-output" class="output"> </div>
-<script> createPrompt("scheme-tree-eg"); </script>
+<script> prompt("scheme-tree-eg"); </script>
 
 <p> requires that the evaluation rule be applied to four different combinations. We can obtain a picture of this process by representing the combination in the form of a tree, as shown in figure 1.1.
 
@@ -415,7 +426,7 @@ createStaticDisplay("scheme-ex-112");
 (define (square x) (* x x))
 </div>
 <script> 
-createPrompt("scheme-define-square"); 
+prompt("scheme-define-square"); 
 attachPushes("scheme-define-square", ["scheme-square-number", "scheme-square-sum", "scheme-square-square"]);
 </script>
 
@@ -434,7 +445,7 @@ attachPushes("scheme-define-square", ["scheme-square-number", "scheme-square-sum
 (define (&ltname&gt &ltformal parameters&gt) &ltbody&gt)
 </div>
 <script> 
-createPrompt("scheme-define-syntax"); 
+prompt("scheme-define-syntax"); 
 </script>
 
 <p> The name is a symbol to be associated with the procedure definition in the environment.The formal parameters are the names used within the body of the procedure to refer to the corresponding arguments of the procedure. The body is an expression that will yield the value of the procedure application when the formal parameters are replaced by the actual arguments to which the procedure is applied.14 The name and the formal parameters are grouped within parentheses, just as they would be in an actual call to the procedure being defined.
@@ -445,7 +456,7 @@ createPrompt("scheme-define-syntax");
 (square 21)
 </div>
 <script> 
-createPrompt("scheme-square-number"); 
+prompt("scheme-square-number"); 
 attachDeps("scheme-square-number", ["scheme-define-square"]);
 </script>
 
@@ -455,7 +466,7 @@ attachDeps("scheme-square-number", ["scheme-define-square"]);
 (square (+ 2 5))
 </div>
 <script> 
-createPrompt("scheme-square-sum"); 
+prompt("scheme-square-sum"); 
 attachDeps("scheme-square-sum", ["scheme-define-square"]);
 </script>
 
@@ -465,7 +476,7 @@ attachDeps("scheme-square-sum", ["scheme-define-square"]);
 (square (square 3))
 </div>
 <script> 
-createPrompt("scheme-square-square"); 
+prompt("scheme-square-square"); 
 attachDeps("scheme-square-square", ["scheme-define-square"]);
 </script>
 
@@ -476,7 +487,7 @@ attachDeps("scheme-square-square", ["scheme-define-square"]);
 (+ (square x) (square y))
 </div>
 <script> 
-createPrompt("scheme-sum-square-eg"); 
+prompt("scheme-sum-square-eg"); 
 </script>
 
 <p> We can easily define a procedure sum-of-squares that, given any two numbers as arguments, produces the sum of their squares:
@@ -488,7 +499,7 @@ createPrompt("scheme-sum-square-eg");
 (sum-of-squares 3 4)
 </div>
 <script> 
-createPrompt("scheme-define-sum-of-squares"); 
+prompt("scheme-define-sum-of-squares"); 
 attachDeps("scheme-define-sum-of-squares", ["scheme-define-square"]);
 </script>
 
@@ -501,7 +512,7 @@ attachDeps("scheme-define-sum-of-squares", ["scheme-define-square"]);
 (f 5)
 </div>
 <script> 
-createPrompt("scheme-f"); 
+prompt("scheme-f"); 
 attachDeps("scheme-f", ["scheme-define-sum-of-squares"]);
 </script>
 
@@ -658,7 +669,7 @@ createStaticDisplay("scheme-f-7-n");
 <div id="scheme-x">
 (* x x)
 </div>
-<script> createPrompt("scheme-x"); </script>
+<script> prompt("scheme-x"); </script>
 
 <p> with <tt> x </tt> replaced respectively by <tt> (+ 5 1) </tt> and <tt> (* 5 2) </tt>.
 
@@ -680,7 +691,7 @@ createStaticDisplay("scheme-f-7-n");
         ((= x 0) 0)
         ((< x 0) (- x))))
 </div>
-<script> createPrompt("scheme-cond"); </script>
+<script> prompt("scheme-cond"); </script>
 
 <p> The general form of a conditional expression is
 
@@ -706,7 +717,7 @@ createStaticDisplay("scheme-f-7-n");
   (cond ((< x 0) (- x))
         (else x)))
 </div>
-<script> createPrompt("scheme-abs"); </script>
+<script> prompt("scheme-abs"); </script>
 
 <p> which could be expressed in English as "If x is less than zero return - x; otherwise return x." Else is a special symbol that can be used in place of the <tt> &lt;p&gt; </tt> in the final clause of a cond. This causes the cond to return as its value the value of the corresponding <tt> &lt;e&gt; </tt> whenever all previous clauses have been bypassed. In fact, any expression that always evaluates to a true value could be used as the <tt> &lt;p&gt; </tt> here.
 <p> Here is yet another way to write the absolute-value procedure:
@@ -718,14 +729,14 @@ createStaticDisplay("scheme-f-7-n");
       x))
 </div>
 <div id="scheme-abs-output" class="output"> </div>
-<script> createPrompt("scheme-abs-if"); </script>
+<script> prompt("scheme-abs-if"); </script>
 
 <p> This uses the special form if, a restricted type of conditional that can be used when there are precisely two cases in the case analysis. The general form of an if expression is
 
 <div id="scheme-if-syntax">
 (if &ltpredicate&gt &ltconsequent&gt &ltalternative&gt)
 </div>
-<script> createPrompt("scheme-if-syntax"); </script>
+<script> prompt("scheme-if-syntax"); </script>
 
 <p> To evaluate an if expression, the interpreter starts by evaluating the <tt> &lt;predicate&gt;</tt> part of the expression. If the <tt> &lt;predicate&gt;</tt> evaluates to a true value, the interpreter then evaluates the <tt> &lt;consequent&gt;</tt> and returns its value. Otherwise it evaluates the <tt> &lt;alternative&gt;</tt> and returns its value.
 
@@ -760,7 +771,7 @@ As an example of how these are used, the condition that a number x be in the ran
 <div id="scheme-between">
 (and (> x 5) (< x 10))
 </div>
-<script> createPrompt("scheme-between"); </script>
+<script> prompt("scheme-between"); </script>
 
 <p> As another example, we can define a predicate to test whether one number is greater than or equal to another as
 
@@ -768,7 +779,7 @@ As an example of how these are used, the condition that a number x be in the ran
 (define (>= x y)
   (or (> x y) (= x y)))
 </div>
-<script> createPrompt("scheme-le"); </script>
+<script> prompt("scheme-le"); </script>
 
 <p> or alternatively as
 
@@ -776,7 +787,7 @@ As an example of how these are used, the condition that a number x be in the ran
 (define (>= x y)
   (not (< x y)))
 </div>
-<script> createPrompt("scheme-le-2"); </script>
+<script> prompt("scheme-le-2"); </script>
 
 <h3> 1.1.7  Example: Square Roots by Newton's Method </h3>
 
@@ -793,7 +804,7 @@ As an example of how these are used, the condition that a number x be in the ran
   (the y (and (>= y 0)
               (= (square y) x))))
 </div>
-<script> createPrompt("scheme-pseudo-sqrt"); </script>
+<script> prompt("scheme-pseudo-sqrt"); </script>
 
 <p> This only begs the question.
 
@@ -828,7 +839,7 @@ As an example of how these are used, the condition that a number x be in the ran
                  x)))
 </div>
 <script> 
-createPrompt("scheme-define-sqrt-iter"); 
+prompt("scheme-define-sqrt-iter"); 
 attachDeps("scheme-define-sqrt-iter", ["scheme-define-good-enough", "scheme-define-improve"]);
 </script>
 
@@ -839,7 +850,7 @@ attachDeps("scheme-define-sqrt-iter", ["scheme-define-good-enough", "scheme-defi
   (average guess (/ x guess)))
 </div>
 <script> 
-createPrompt("scheme-define-improve"); 
+prompt("scheme-define-improve"); 
 attachDeps("scheme-define-improve", ["scheme-define-average"]);
 </script>
 
@@ -850,7 +861,7 @@ attachDeps("scheme-define-improve", ["scheme-define-average"]);
   (/ (+ x y) 2))
 </div>
 <script> 
-createPrompt("scheme-define-average"); 
+prompt("scheme-define-average"); 
 </script>
 
 <p> We also have to say what we mean by "good enough." The following will do for illustration, but it is not really a very good test. (See exercise 1.7.) The idea is to improve the answer until it is close enough so that its square differs from the radicand by less than a predetermined tolerance (here 0.001):22
@@ -860,7 +871,7 @@ createPrompt("scheme-define-average");
   (< (abs (- (square guess) x)) 0.001))
 </div>
 <script> 
-createPrompt("scheme-define-good-enough");
+prompt("scheme-define-good-enough");
 attachDeps("scheme-define-good-enough", ["scheme-define-square"]); 
 </script>
 
@@ -871,7 +882,7 @@ attachDeps("scheme-define-good-enough", ["scheme-define-square"]);
   (sqrt-iter 1.0 x))
 </div>
 <script> 
-createPrompt("scheme-define-sqrt");
+prompt("scheme-define-sqrt");
 attachDeps("scheme-define-sqrt", ["scheme-define-sqrt-iter"]); 
 </script>
 
@@ -881,7 +892,7 @@ attachDeps("scheme-define-sqrt", ["scheme-define-sqrt-iter"]);
 (sqrt 9)
 </div>
 <script> 
-createPrompt("scheme-sqrt-9");
+prompt("scheme-sqrt-9");
 attachDeps("scheme-sqrt-9", ["scheme-define-sqrt"]); 
 </script>
 
@@ -891,7 +902,7 @@ attachDeps("scheme-sqrt-9", ["scheme-define-sqrt"]);
 (sqrt (+ 100 37))
 </div>
 <script> 
-createPrompt("scheme-sqrt-plus");
+prompt("scheme-sqrt-plus");
 attachDeps("scheme-sqrt-plus", ["scheme-define-sqrt"]); 
 </script>
 
@@ -901,7 +912,7 @@ attachDeps("scheme-sqrt-plus", ["scheme-define-sqrt"]);
 (sqrt (+ (sqrt 2) (sqrt 3)))
 </div>
 <script> 
-createPrompt("scheme-sqrt-sqrt");
+prompt("scheme-sqrt-sqrt");
 attachDeps("scheme-sqrt-sqrt", ["scheme-define-sqrt"]); 
 </script>
 
@@ -911,7 +922,7 @@ attachDeps("scheme-sqrt-sqrt", ["scheme-define-sqrt"]);
 (square (sqrt 1000))
 </div>
 <script> 
-createPrompt("scheme-square-sqrt");
+prompt("scheme-square-sqrt");
 attachDeps("scheme-square-sqrt", ["scheme-define-square", "scheme-define-sqrt"]); 
 </script>
 
