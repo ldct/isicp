@@ -20,9 +20,22 @@
   <div class="tab"></div>
   <div class="content">
     
+    <p>
+    
     <div id="scheme-scratch">(+ 1 2)</div> 
-    <script> 
-    //prompt("scheme-scratch"); 
+    
+    <script>
+    function afterOutput(_e) {
+      $_(_e).after($('<div>', {'id': _e + "-output", 'class': "output"}));
+    }
+
+    function prompt(s) {
+      afterOutput(s);
+      makeEditable(s);
+      linkEval(s, s + "-output", function(x, y) {return evaluate(x);});
+    }
+
+    prompt("scheme-scratch"); 
     </script>
   
     <div id="currently-editing"> </div>
@@ -53,11 +66,6 @@ focus_callback = function(target_string) {
   }
   $("#currently-editing").html("<tt>" + ts + "</tt>");
 };
-
-function afterOutput(_e) {
-  $_(_e).after($('<div>', {'id': _e + "-output", 'class': "output"}));
-}
-
 </script>
 
 <div id="main">
@@ -99,14 +107,6 @@ linkEval("scheme-number", "scheme-number-output", function(x, y) {return evaluat
 </script>
 
 <p> Expressions representing numbers may be combined with an expression representing a primitive procedure (such as + or *) to form a compound expression that represents the application of the procedure to those numbers. For example:
-
-<script>
-function prompt(s) {
-  afterOutput(s);
-  makeEditable(s);
-  linkEval(s, s + "-output", function(x, y) {return evaluate(x);});
-}
-</script>
 
 <div id="scheme-plus-1">
 (+ 137 349)
@@ -285,9 +285,7 @@ answer("scheme-ex-111-nested", 6);
 (define size 2)
 </div>
 <script> 
-afterOutput("scheme-define-size");
-makeEditable("scheme-define-size");
-linkEval("scheme-define-size", "scheme-define-size-output", function(x, y) {return evaluate(x);});
+prompt("scheme-define-size");
 </script>
 
 <p> causes the interpreter to associate the value 2 with the name size. Once the name size has been associated with the number 2, we can refer to the value 2 by name:
@@ -296,9 +294,7 @@ linkEval("scheme-define-size", "scheme-define-size-output", function(x, y) {retu
 size
 </div>
 <script> 
-afterOutput("scheme-size");
-makeEditable("scheme-size");
-linkEval("scheme-size", "scheme-size-output", function(x, y) {return evaluate(x);});
+prompt("scheme-size");
 depsOf["scheme-size"] = ["scheme-define-size"];
 </script>
 
@@ -308,9 +304,7 @@ depsOf["scheme-size"] = ["scheme-define-size"];
 (* 5 size)
 </div>
 <script> 
-afterOutput("scheme-times-size");
-makeEditable("scheme-times-size");
-linkEval("scheme-times-size", "scheme-times-size-output", function(x, y) {return evaluate(x)});
+prompt("scheme-times-size");
 depsOf["scheme-times-size"] = ["scheme-define-size"];
 </script>
 
