@@ -25,6 +25,9 @@
     <div id="scheme-scratch">(+ 1 2)</div> 
     
     <script>
+    
+    pushesOf = {}
+    
     function afterOutput(_e) {
       $_(_e).after($('<div>', {'id': _e + "-output", 'class': "output"}));
     }
@@ -32,7 +35,17 @@
     function prompt(s) {
       afterOutput(s);
       makeEditable(s);
-      linkEval(s, s + "-output", function(x, y) {return evaluate(x);});
+      linkEval(s, s + "-output", function(x, y) {
+        var ret = evaluate(x);
+        
+        if (pushesOf[s]) {
+          for (var pushes = pushesOf[s], i = 0; i < pushes.length; i++) {
+            editorOf[pushes[i]].getOption("onBlur")();
+          }
+        }
+        
+        return evaluate(x);
+      });
     }
 
     prompt("scheme-scratch"); 
@@ -286,6 +299,7 @@ answer("scheme-ex-111-nested", 6);
 </div>
 <script> 
 prompt("scheme-define-size");
+pushesOf["scheme-define-size"] = ["scheme-size", "scheme-times-size"];
 </script>
 
 <p> causes the interpreter to associate the value 2 with the name size. Once the name size has been associated with the number 2, we can refer to the value 2 by name:
@@ -319,8 +333,8 @@ depsOf["scheme-times-size"] = ["scheme-define-size"];
 (* pi (* radius radius))
 </div>
 <script> 
-prompt("scheme-define-radius"); 
-attachPushes("scheme-define-radius", ["scheme-circumference"]);
+prompt("scheme-define-radius");
+//attachPushes("scheme-define-radius", ["scheme-circumference"]);
 </script>
 
 <p>
@@ -332,7 +346,7 @@ circumference
 </div>
 <script> 
 prompt("scheme-circumference"); 
-attachDeps("scheme-circumference", ["scheme-define-radius"]);
+depsOf["scheme-circumference"] = ["scheme-define-radius"];
 </script>
 
 <p> Define is our language's simplest means of abstraction, for it allows us to use simple names to refer to the results of compound operations, such as the circumference computed above. In general, computational objects may have very complex structures, and it would be extremely inconvenient to have to remember and repeat their details each time we want to use them. Indeed, complex programs are constructed by building, step by step, computational objects of increasing complexity. The interpreter makes this step-by-step program construction particularly convenient because name-object associations can be created incrementally in successive interactions. This feature encourages the incremental development and testing of programs and is largely responsible for the fact that a Lisp program usually consists of a large number of relatively simple procedures.
