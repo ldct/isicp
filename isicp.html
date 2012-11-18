@@ -95,7 +95,7 @@ function afterOutput(_e) {
 <div id="scheme-number-output" class="output"> </div>
 <script>
 makeEditable("scheme-number");
-linkEval("scheme-number", "scheme-number-output",  function() {return evaluate("scheme-number");});
+linkEval("scheme-number", "scheme-number-output", function(x, y) {return evaluate(x);});
 </script>
 
 <p> Expressions representing numbers may be combined with an expression representing a primitive procedure (such as + or *) to form a compound expression that represents the application of the procedure to those numbers. For example:
@@ -106,7 +106,7 @@ linkEval("scheme-number", "scheme-number-output",  function() {return evaluate("
 <script>
 afterOutput("scheme-plus-1");
 makeEditable("scheme-plus-1");
-linkEval("scheme-plus-1", "scheme-plus-1-output",  function() {return evaluate("scheme-plus-1");});
+linkEval("scheme-plus-1", "scheme-plus-1-output", function(x, y) {return evaluate(x);});
 </script>
 
 <!--
@@ -204,8 +204,15 @@ linkEval("scheme-plus-1", "scheme-plus-1-output",  function() {return evaluate("
 </div>
 <script> 
 makeStatic("scheme-ex-111-10");
-//createNoeval("scheme-ex-111-10-input");
-//attachAnswer("scheme-ex-111-10-input", "10");
+makeEditable("scheme-ex-111-10-input");
+afterOutput("scheme-ex-111-10-input");
+linkEval("scheme-ex-111-10-input", "scheme-ex-111-10-input-output", function(x, y) {
+  if (y == 10) {
+    return "<div class='correct-answer'> \u2713 </div>";
+  } else {
+    return "<div class='wrong-answer'> \u2717 </div>";
+  }
+});
 </script>
 
 <!--
@@ -269,7 +276,7 @@ attachAnswer("scheme-ex-111-nested-input", "6");
 <script> 
 afterOutput("scheme-define-size");
 makeEditable("scheme-define-size");
-linkEval("scheme-define-size", "scheme-define-size-output", function() {return evaluate("scheme-define-size");});
+linkEval("scheme-define-size", "scheme-define-size-output", function(x, y) {return evaluate(x);});
 </script>
 
 <p> causes the interpreter to associate the value 2 with the name size. Once the name size has been associated with the number 2, we can refer to the value 2 by name:
@@ -280,7 +287,8 @@ size
 <script> 
 afterOutput("scheme-size");
 makeEditable("scheme-size");
-linkEval("scheme-size", "scheme-size-output", function() {evaluate("scheme-define-size"); return evaluate("scheme-size");});
+linkEval("scheme-size", "scheme-size-output", function(x, y) {return evaluate(x);});
+depsOf["scheme-size"] = ["scheme-define-size"];
 </script>
 
 <p>
@@ -291,7 +299,8 @@ linkEval("scheme-size", "scheme-size-output", function() {evaluate("scheme-defin
 <script> 
 afterOutput("scheme-times-size");
 makeEditable("scheme-times-size");
-linkEval("scheme-times-size", "scheme-times-size-output", function() {evaluate("scheme-define-size"); return evaluate("scheme-times-size");});
+linkEval("scheme-times-size", "scheme-times-size-output", function(x, y) {return evaluate(x)});
+depsOf["scheme-times-size"] = ["scheme-define-size"];
 </script>
 
 <!--

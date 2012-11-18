@@ -20,6 +20,34 @@ function check(result) {
   return true;
 }
 
+function $_(s) { // _ to $. _: div id's $: jQuery objects
+  ret = $("#" + s);
+  if (!ret[0]) {
+    throw "#" + s + " did not match anything";
+  } else {
+    return ret;
+  }
+}
+
+depsOf = {}
+
+function getDeps(_editor) {
+  if (depsOf[_editor]) {
+    return depsOf[_editor];
+  } else {
+    return [];
+  }
+}
+
+function evaluate(_editor) {
+  
+  for (var deps = getDeps(_editor), i = 0; i < deps.length; i++) {
+    evaluate(deps[i]);
+  }
+  
+  return beval(editorOf[_editor].getValue());
+}
+
 //Biwascheme
 
 var biwascheme = new BiwaScheme.Interpreter( function(e){
@@ -40,35 +68,27 @@ function beval(c) {
 
   try {
     return biwascheme.evaluate(c)
-  } catch(e) {
+  } 
+  catch(e) {
     return;
   }
 }
 
 editorOf = {};
 
-function $_(s) { // _ to $. _: div id's $: jQuery objects
-  ret = $("#" + s);
-  if (!ret[0]) {
-    throw "#" + s + " did not match anything";
-  } else {
-    return ret;
-  }
-}
+function makeEditable(_editor) {
 
-function makeEditable(_e) {
-
-  var $e = $_(_e);
-  var code = cleanCode($e.text());
+  var $editor = $_(_editor);
+  var code = cleanCode($editor.text());
   
-  $e.empty();
+  $editor.empty();
   
-  var editor = CodeMirror($e[0], {
+  var editor = CodeMirror($editor[0], {
     'value': code,
     'matchBrackets': true
   });
   
-  editorOf[_e] = editor;
+  editorOf[_editor] = editor;
 }
 
 function makeStatic(_static) {
@@ -82,19 +102,8 @@ function linkEval(_editor, _output, func) {
   var editor = editorOf[_editor];
 
   editor.setOption('onBlur', function() {
-    $_(_output).empty().append($("<span>" + func() + "</span>"));
+    $_(_output).empty().append($("<span>" + func(_editor, editor.getValue()) + "</span>"));
   });
-}
-
-function evaluate(_editor) {
-  
-  var deps = [];
-  
-  for (var i = 0; i < deps.length; i++) {
-    evaluate(deps[i]);
-  }
-  
-  return beval(editorOf[_editor].getValue());
 }
 
 function update(target_string) {
@@ -107,14 +116,6 @@ function update(target_string) {
   
   if (check(result)) {
     s.$output.append($("<span>" + result + "</span>"));
-  }
-  
-  if (s.answer) { //I'm thinking of removing this - haven't seen a use case
-    if (s.answer == result) {
-      s.$grade.attr({'class': 'correct-answer'}).text('\u2713');
-    } else {
-      s.$grade.attr({'class': 'wrong-answer'}).text('\u2717');
-    }
   }
 
   if (s.pushes) {

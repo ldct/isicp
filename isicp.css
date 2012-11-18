@@ -29,15 +29,18 @@ p, ul, ol, blockquote, table {
 /*ticks and crosses*/
 
 .wrong-answer {
-  padding: 0pt 4pt;
+  margin-top: -1.5em;
+  font-family: bold;
   color: red;
-  text-align:right;
+  float:right;
 }
 
 .correct-answer {
-  padding: 0pt 4pt;
+  margin-top: -1.5em;
+  font-family: bold;
   color: green;
-  text-align:right;
+  float:right;
+  
 }
 
 /*the tab that comes out on click*/
@@ -93,11 +96,13 @@ p, ul, ol, blockquote, table {
 }
 
 .excercise .CodeMirror:hover {
-  background-color: #B4CFDB;
+  background-color: rgba(180, 207, 219, 0.5);
+  /*background-color: #B4CFDB;*/
 }
 
 .excercise .CodeMirror-focused {
-  background: #DCEFF7;
+  background: rgba(220, 239, 247, 0.5);
+  /*background: #DCEFF7;*/
 }
 
 .CodeMirror-matchingbracket {
