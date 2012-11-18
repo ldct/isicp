@@ -217,7 +217,7 @@ function answer(s, a) {
   makeEditable(s + "-input");
   var e = editorOf[s + "-input"];
   e.setValue("<your input here>");
-  e.setOption("onFocus", function() {
+  e.setOption("onFocus", function() { //specific to input fields
     if (e.getValue() == "<your input here>") {
       e.setValue("");
     }
