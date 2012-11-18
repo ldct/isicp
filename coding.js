@@ -90,6 +90,10 @@ function makeEditable(_editor) {
     'matchBrackets': true
   });
   
+  editor.setOption('extraKeys', {'Ctrl-Enter': function() {
+    editor.getOption("onBlur")();
+  }});
+  
   editorOf[_editor] = editor;
 }
 
