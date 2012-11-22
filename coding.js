@@ -103,7 +103,7 @@ function makeStatic(_static) {
   editorOf[_static].setOption("onBlur", function() {});
 }
 
-function linkEval(_editor, _output, func) {
+function linkEditor(_editor, _output, func) {
 
   var editor = editorOf[_editor];
 

@@ -35,7 +35,7 @@
     function prompt(s) {
       afterOutput(s);
       makeEditable(s);
-      linkEval(s, s + "-output", function(x, y) {
+      linkEditor(s, s + "-output", function(x, y) {
         resetTopEnv();
         
         var ret = evaluate(x);
@@ -123,7 +123,7 @@ focus_callback = function(target_string) {
 <div id="scheme-number-output" class="output"> </div>
 <script>
 makeEditable("scheme-number");
-linkEval("scheme-number", "scheme-number-output", function(x, y) {return evaluate(x);});
+linkEditor("scheme-number", "scheme-number-output", function(x, y) {return evaluate(x);});
 </script>
 
 <p> Expressions representing numbers may be combined with an expression representing a primitive procedure (such as + or *) to form a compound expression that represents the application of the procedure to those numbers. For example:
@@ -227,7 +227,7 @@ function answer(s, a) {
   afterInput(s);
   makeStatic(s);
   answerWithInput(s + "-input");
-  linkEval(s + "-input", s + "-input-output", function(x, y) {
+  linkEditor(s + "-input", s + "-input-output", function(x, y) {
     if (y == a) {
       return "<div class='correct-answer'> \u2713 </div>";
     } else {
@@ -301,15 +301,16 @@ answer("scheme-ex-111-nested", 6);
 
 <p> <b> Exercise 1.2. </b>  Translate the following expression into prefix form
 
-<p style="margin-bottom: 0"> <img src='http://mitpress.mit.edu/sicp/full-text/book/ch1-Z-G-3.gif'>
+<p style="margin-bottom: 0"> <img src='http://upload.wikimedia.org/math/e/5/a/e5aaff25134d0b9f9993e7a5547f3679.png'>
 
 <div id="scheme-ex-12-input" class='input'>
 </div>
 <script> 
 answerWithInput("scheme-ex-12-input");
-linkEval("scheme-ex-12-input", "scheme-ex-12-input-output", function(x, y) {
+linkEditor("scheme-ex-12-input", "scheme-ex-12-input-output", function(x, y) {
 
-  var code = "(equal? (quote " + y + ") '(+ 1 2))";
+  var code = "(equal? (quote " + y + ") " + 
+      "'(/ (+ 5 (/ 1 2) (- 2 (- 3 (+ 6 (/ 1 3))))) (* 3 (- 6 2) (- 2 7))))";
 
   if (biwascheme.evaluate(code) == true) {
     return "<div class='correct-answer'> \u2713 </div>";
