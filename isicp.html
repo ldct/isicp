@@ -28,6 +28,14 @@
     
     pushesOf = {}
     
+    function getPushes(_editor) {
+      if (pushesOf[_editor]) {
+        return pushesOf[_editor];
+      } else {
+        return [];
+      }
+    }
+    
     function afterOutput(_e) {
       $_(_e).after($('<div>', {'id': _e + "-output", 'class': "output"}));
     }
@@ -70,19 +78,16 @@ $('#sidebox .tab').toggle(function(){
     $('#sidebox').animate({'right':'-30%'});
 });
 
-focus_callback = function(target_string) {
+focus_callback = function(s) {
   var ts = "";
-  var S = sOf[target_string];
-  if (S.deps) {
-    for (var i = 0; i < S.deps.length; i++) {
-      ts += "<br>" + S.deps[i];
-    }
+  for (var i = 0, d = getDeps(s); i < d.length; i++) {
+    ts += "<br>" + d[i];
   }
-  ts += "<br> <b>"+ target_string + "</b>";
-  if (S.pushes) {
-    for (var i = 0; i < S.pushes.length; i++) {
-      ts += "<br>" + S.pushes[i];
-    }
+  
+  ts += "<br> <b>"+ s + "</b>";
+
+  for (var i = 0, p = getPushes(s); i < p.length; i++) {
+    ts += "<br>" + p[i];
   }
   $("#currently-editing").html("<tt>" + ts + "</tt>");
 };
@@ -219,13 +224,9 @@ linkEditor("scheme-number", "scheme-number-output", function(x, y) {return evalu
 
 <script>
 
-function afterInput(_e) {
-  $_(_e).after($('<div>', {'id': _e + "-input", 'class': "input"}));
-}
-
 function answer(s, a) {
-  afterInput(s);
   makeStatic(s);
+  $_(s).after($('<div>', {'id': s + "-input", 'class': "input"}));
   answerWithInput(s + "-input");
   linkEditor(s + "-input", s + "-input-output", function(x, y) {
     if (y == a) {
@@ -240,14 +241,15 @@ function answerWithInput(i) {
   makeEditable(i);
   var e = editorOf[i];
   e.setValue("<your input here>");
+  var oldSetOption = e.getOption("onFocus");
   e.setOption("onFocus", function() { //specific to input fields
+    oldSetOption();
     if (e.getValue() == "<your input here>") {
       e.setValue("");
     }
   });
   
   afterOutput(i);
-
 }
 </script>
 

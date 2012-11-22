@@ -1,3 +1,5 @@
+"use strict";
+
 //for clients to override
 
 function focus_callback() {
@@ -20,8 +22,8 @@ function check(result) {
   return true;
 }
 
-function $_(s) { // _ to $. _: div id's $: jQuery objects
-  ret = $("#" + s);
+function $_(s) { // _ to $. _: div id's $: jQuery objects; read _ as #, $_ consumes a hash and adds a $
+  var ret = $("#" + s);
   if (!ret[0]) {
     throw "#" + s + " did not match anything";
   } else {
@@ -55,7 +57,7 @@ function beval(c) {
   }
 }
 
-depsOf = {}
+var depsOf = {}
 
 function getDeps(_editor) {
   if (depsOf[_editor]) {
@@ -76,7 +78,7 @@ function evaluate(_editor) {
 
 ////////////////////////////////////////////////////////////////////////////////
 
-editorOf = {};
+var editorOf = {};
 
 function makeEditable(_editor) {
 
@@ -87,7 +89,8 @@ function makeEditable(_editor) {
   
   var editor = CodeMirror($editor[0], {
     'value': code,
-    'matchBrackets': true
+    'matchBrackets': true,
+    'onFocus': function() {console.log("focus_callback" + _editor); focus_callback(_editor);}
   });
   
   editor.setOption('extraKeys', {'Ctrl-Enter': function() {
