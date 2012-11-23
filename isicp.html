@@ -897,10 +897,10 @@ linkEditor("scheme-ex-13-input", "scheme-ex-13-input-output", function(x, y) {
             
   /*
   (define (square-sum-larger a b c)
-  (cond ((> c b) (square-sum-larger a c b))
-        ((> c a) (square-sum-larger c b a))
-        (else (+ (* a a)
-                 (* b b)))))
+    (cond ((> c b) (square-sum-larger a c b))
+          ((> c a) (square-sum-larger c b a))
+          (else (+ (* a a)
+                   (* b b)))))
    */
 
   if (biwascheme.evaluate(code) == true) {
@@ -912,19 +912,34 @@ linkEditor("scheme-ex-13-input", "scheme-ex-13-input-output", function(x, y) {
 </script>
 </div>
 
-
-
+<p>
 
 <div class='excercise'>
 
-<p> <b> Exercise 1.4. </b> Observe that our model of evaluation allows for combinations whose operators are compound expressions. Use this observation to describe the behavior of the following procedure:
+<p> <b> Exercise 1.4. </b> Describe the behavior of the following procedure by selecting which descriptions are equivalent. If you think that the procedure definition is invalid, choose the reasons why.
 
+<div id="scheme-ex-14" class="static">
 (define (a-plus-abs-b a b)
   ((if (> b 0) + -) a b))
-
 </div>
 
+<p>
 
+<form>
+<input type="checkbox" id="14-1" /> <label for="14-1"> Error: the leftmost subexpression is not a procedure <br>
+<input type="checkbox" id="14-2" /> <label for="14-2"> <tt> (if (> b 0) (+ a b) (- a b)) </tt> </br>
+<input type="checkbox" id="14-3" /> <label for="14-3"> <tt> (+ a (if (> b 0) b (- b))) </tt> </br>
+<input type="checkbox" id="14-4" /> <label for="14-4"> Error: the value of the leftmost subexpresion cannot depend on b </br>
+<input type="checkbox" id="14-5" /> <label for="14-5"> Error: the leftmost subexpression is not evaluated in the substitution model
+</form>
+
+</div>
+<script>
+makeStatic("scheme-ex-14");
+//Observe that our model of evaluation allows for combinations whose operators are compound expressions.
+</script>
+
+<p>
 
 <div class='excercise'>
 
