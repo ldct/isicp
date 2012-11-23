@@ -591,52 +591,6 @@ depsOf["scheme-f"] = ["scheme-define-sum-of-squares"];
 
 <p> Compound procedures are used in exactly the same way as primitive procedures. Indeed, one could not tell by looking at the definition of sum-of-squares given above whether square was built into the interpreter, like + and *, or defined as a compound procedure.
 
-
-
-<div class='excercise'>
-
-<p> <b> Exercise 1.3. </b> Define a procedure that takes three numbers as arguments and returns the sum of the squares of the two larger numbers. 
-
-<div id="scheme-ex-13-input" class='input'></div>
-
-<script> 
-
-makeEditable("scheme-ex-13-input");
-
-var e = editorOf["scheme-ex-13-input"];
-e.setValue("(define (square-sum-larger a b c)\n  <your code here>)");
-
-var oldSetOption = e.getOption("onFocus");
-e.setOption("onFocus", function() {
-  oldSetOption();
-  if (e.getValue() == "(define (square-sum-larger a b c)\n  <your code here>)") {
-    e.setValue("(define (square-sum-larger a b c)\n  ");
-  }
-});
-
-addOutput("scheme-ex-13-input");
-linkEditor("scheme-ex-13-input", "scheme-ex-13-input-output", function(x, y) {
-
-  var code = y + "\n" + "(define ssl square-sum-larger)" +
-            "(and (= (ssl 1 2 3) 13) (= (ssl 2 3 1) 13) (= (ssl 1 1 1) 2))";
-            
-  /*
-  (define (square-sum-larger a b c)
-    (cond ((> c b) (square-sum-larger a c b))
-          ((> c a) (square-sum-larger c b a))
-          (else (+ (* a a)
-                   (* b b)))))
-   */
-
-  if (biwascheme.evaluate(code) == true) {
-    return "<div class='correct-answer'> \u2713 </div>";
-  } else {
-    return "<div class='wrong-answer'> \u2717 </div>";
-  }
-});
-</script>
-</div>
-
 <h3>1.1.5  The Substitution Model for Procedure Application</h3>
 
 <p> To evaluate a combination whose operator names a compound procedure, the interpreter follows much the same process as for combinations whose operators name primitive procedures, which we described in section 1.1.3. That is, the interpreter evaluates the elements of the combination and applies the procedure (which is the value of the operator of the combination) to the arguments (which are the values of the operands of the combination).
@@ -911,6 +865,101 @@ As an example of how these are used, the condition that a number x be in the ran
   (not (< x y)))
 </div>
 <script> prompt("scheme-le-2"); </script>
+
+
+
+<div class='excercise'>
+
+<p> <b> Exercise 1.3. </b> Define a procedure that takes three numbers as arguments and returns the sum of the squares of the two larger numbers. 
+
+<div id="scheme-ex-13-input" class='input'></div>
+
+<script> 
+
+makeEditable("scheme-ex-13-input");
+
+var e = editorOf["scheme-ex-13-input"];
+e.setValue("(define (square-sum-larger a b c)\n  <your code here>)");
+
+var oldSetOption = e.getOption("onFocus");
+e.setOption("onFocus", function() {
+  oldSetOption();
+  if (e.getValue() == "(define (square-sum-larger a b c)\n  <your code here>)") {
+    e.setValue("(define (square-sum-larger a b c)\n  ");
+  }
+});
+
+addOutput("scheme-ex-13-input");
+linkEditor("scheme-ex-13-input", "scheme-ex-13-input-output", function(x, y) {
+
+  var code = y + "\n" + "(define ssl square-sum-larger)" +
+            "(and (= (ssl 1 2 3) 13) (= (ssl 2 3 1) 13) (= (ssl 1 1 1) 2))";
+            
+  /*
+  (define (square-sum-larger a b c)
+  (cond ((> c b) (square-sum-larger a c b))
+        ((> c a) (square-sum-larger c b a))
+        (else (+ (* a a)
+                 (* b b)))))
+   */
+
+  if (biwascheme.evaluate(code) == true) {
+    return "<div class='correct-answer'> \u2713 </div>";
+  } else {
+    return "<div class='wrong-answer'> \u2717 </div>";
+  }
+});
+</script>
+</div>
+
+
+
+
+<div class='excercise'>
+
+<p> <b> Exercise 1.4. </b> Observe that our model of evaluation allows for combinations whose operators are compound expressions. Use this observation to describe the behavior of the following procedure:
+
+(define (a-plus-abs-b a b)
+  ((if (> b 0) + -) a b))
+
+</div>
+
+
+
+<div class='excercise'>
+
+<p> <b> Exercise 1.5. </b> Ben Bitdiddle has invented a test to determine whether the interpreter he is faced with is using applicative-order evaluation or normal-order evaluation. He defines the following two procedures:
+
+<div id="scheme-ex-15-p" class="static">
+(define (p) (p))
+
+(define (test x y)
+  (if (= x 0)
+      0
+      y))
+</div>
+
+<p> Then he evaluates the expression
+
+<div id="scheme-ex-15-test" class="static">
+(test 0 (p))
+</div>
+
+<p> What behavior will Ben observe with an interpreter that uses applicative-order evaluation? What behavior will he observe with an interpreter that uses normal-order evaluation? Explain your answer. (Assume that the evaluation rule for the special form if is the same whether the interpreter is using normal or applicative order: The predicate expression is evaluated first, and the result determines whether to evaluate the consequent or the alternative expression.) 
+
+</div>
+<script>
+makeStatic("scheme-ex-15-p");
+makeStatic("scheme-ex-15-test");
+</script>
+
+
+
+
+
+
+
+
 
 <h3> 1.1.7  Example: Square Roots by Newton's Method </h3>
 
