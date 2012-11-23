@@ -1,5 +1,5 @@
 /*english text, meant for reading*/
-p, ul, ol, blockquote, table {
+p, ul, ol, blockquote, table, label {
   font-family:Georgia;
   color:#2E2E2E;
   line-height:1.5em;

@@ -1,35 +1,23 @@
 <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.1//EN" "http://www.w3.org/TR/xhtml11/DTD/xhtml11.dtd">
-<html xmlns="http://www.w3.org/1999/xhtml" xml:lang="ja">
+<html>
 <head>
 <meta charset="UTF-8">
+
 <script src="biwascheme.js"> </script>
 <script src="codemirror/lib/codemirror.js"></script>
 <script src="codemirror/mode/scheme/scheme.js"></script>
 <script src="jquery.min.js"></script>
 <script src="coding.js"> </script>
-<script>
-pushesOf = {}
+<script src="isicp.js"> </script>
 
-function getPushes(_editor) {
-  if (pushesOf[_editor]) {
-    return pushesOf[_editor];
-  } else {
-    return [];
-  }
-}
-
-function addOutput(_e) {
-  $_(_e).after($('<div>', {'id': _e + "-output", 'class': "output"}));
-}
-</script>
 <link rel="stylesheet" type="text/css" href="codemirror.css" />
 <link rel="stylesheet" type="text/css" href="isicp.css" />
 
-<title>iSICP</title>
+<title>iSICP 1.1 - The Elements of Programming</title>
 </head>
 <body>
 
-<h1>Interactive SICP</h1>
+<h2> The Elements of Programming </h2>
 
 <div id="sidebox">
   <div class="tab"></div>
@@ -38,27 +26,7 @@ function addOutput(_e) {
     <p>
     
     <div id="scheme-scratch">(+ 1 2)</div> 
-    
     <script>
-
-    function prompt(s) {
-      makeEditable(s);
-      addOutput(s);
-      linkEditor(s, s + "-output", function(x, y) {
-        resetTopEnv();
-        
-        var ret = evaluate(x);
-        
-        if (pushesOf[s]) {
-          for (var pushes = pushesOf[s], i = 0; i < pushes.length; i++) {
-            editorOf[pushes[i]].getOption("onBlur")();
-          }
-        }
-        
-        return evaluate(x);
-      });
-    }
-
     prompt("scheme-scratch"); 
     </script>
   
@@ -78,25 +46,9 @@ $('#sidebox .tab').toggle(function(){
 }, function(){
     $('#sidebox').animate({'right':'-30%'});
 });
-
-focus_callback = function(s) {
-  var ts = "";
-  for (var i = 0, d = getDeps(s); i < d.length; i++) {
-    ts += "<br>" + d[i];
-  }
-  
-  ts += "<br> <b>"+ s + "</b>";
-
-  for (var i = 0, p = getPushes(s); i < p.length; i++) {
-    ts += "<br>" + p[i];
-  }
-  $("#currently-editing").html("<tt>" + ts + "</tt>");
-};
 </script>
 
 <div id="main">
-
-<h2> 1.1  The Elements of Programming </h2>
 
 <p> A powerful programming language is more than just a means for instructing a computer to perform tasks. The language also serves as a framework within which we organize our ideas about processes. Thus, when we describe a language, we should pay particular attention to the means that the language provides for combining simple ideas to form more complex ideas. Every powerful language has three mechanisms for accomplishing this:
 
@@ -222,39 +174,6 @@ linkEditor("scheme-number", "scheme-number-output", function(x, y) {return evalu
 <div class='excercise'>
 
 <p> <b> Exercise 1.1.1. </b>  Below is a sequence of expressions. What is the result printed by the interpreter in response to each expression? Assume that the sequence is to be evaluated in the order in which it is presented.
-
-<script>
-
-function answer(s, a) {
-  makeStatic(s);
-  $_(s).after($('<div>', {'id': s + "-input", 'class': "input"}));
-  makePromptingInput(s + "-input");
-  addOutput(s + "-input");
-  linkEditor(s + "-input", s + "-input-output", function(x, y) {
-    if (y == a) {
-      return "<div class='correct-answer'> \u2713 </div>";
-    } else {
-      return "<div class='wrong-answer'> \u2717 </div>";
-    }
-  });
-}
-
-function makePromptingInput(i) {
-
-  makeEditable(i);
-  
-  var e = editorOf[i];
-  e.setValue("<your input here>");
-  
-  var oldSetOption = e.getOption("onFocus");
-  e.setOption("onFocus", function() {
-    oldSetOption();
-    if (e.getValue() == "<your input here>") {
-      e.setValue("");
-    }
-  });
-}
-</script>
 
 <div id="scheme-ex-111-10" class='static'>
 10
@@ -897,10 +816,10 @@ linkEditor("scheme-ex-13-input", "scheme-ex-13-input-output", function(x, y) {
             
   /*
   (define (square-sum-larger a b c)
-  (cond ((> c b) (square-sum-larger a c b))
-        ((> c a) (square-sum-larger c b a))
-        (else (+ (* a a)
-                 (* b b)))))
+    (cond ((> c b) (square-sum-larger a c b))
+          ((> c a) (square-sum-larger c b a))
+          (else (+ (* a a)
+                   (* b b)))))
    */
 
   if (biwascheme.evaluate(code) == true) {
@@ -912,19 +831,34 @@ linkEditor("scheme-ex-13-input", "scheme-ex-13-input-output", function(x, y) {
 </script>
 </div>
 
-
-
+<p>
 
 <div class='excercise'>
 
-<p> <b> Exercise 1.4. </b> Observe that our model of evaluation allows for combinations whose operators are compound expressions. Use this observation to describe the behavior of the following procedure:
+<p> <b> Exercise 1.4. </b> Describe the behavior of the following procedure by selecting which descriptions are equivalent. If you think that the procedure definition is invalid, choose the reasons why.
 
+<div id="scheme-ex-14" class="static">
 (define (a-plus-abs-b a b)
   ((if (> b 0) + -) a b))
-
 </div>
 
+<p>
 
+<form>
+<input type="checkbox" id="14-1" /> <label for="14-1"> Error: the leftmost subexpression is not a procedure <br>
+<input type="checkbox" id="14-2" /> <label for="14-2"> <tt> (if (> b 0) (+ a b) (- a b)) </tt> </br>
+<input type="checkbox" id="14-3" /> <label for="14-3"> <tt> (+ a (if (> b 0) b (- b))) </tt> </br>
+<input type="checkbox" id="14-4" /> <label for="14-4"> Error: the value of the leftmost subexpresion cannot depend on b </br>
+<input type="checkbox" id="14-5" /> <label for="14-5"> Error: the leftmost subexpression is not evaluated in the substitution model
+</form>
+
+</div>
+<script>
+makeStatic("scheme-ex-14");
+//Observe that our model of evaluation allows for combinations whose operators are compound expressions.
+</script>
+
+<p>
 
 <div class='excercise'>
 
