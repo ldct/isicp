@@ -65,17 +65,21 @@ function answer(s, a) {
 }
 
 function makePromptingInput(i) {
+  makeChangeOnFocusInput(i, "<your input here>", "");
+}
+
+function makeChangeOnFocusInput(i, before, after) {
 
   makeEditable(i);
-  
+
   var e = editorOf[i];
-  e.setValue("<your input here>");
-  
-  var oldSetOption = e.getOption("onFocus");
+  e.setValue(before);
+
+  var oldOnFocus = e.getOption("onFocus");
   e.setOption("onFocus", function() {
-    oldSetOption();
-    if (e.getValue() == "<your input here>") {
-      e.setValue("");
+    oldOnFocus();
+    if (e.getValue() == before) {
+      e.setValue(after);
     }
   });
 }

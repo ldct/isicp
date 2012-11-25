@@ -795,32 +795,14 @@ As an example of how these are used, the condition that a number x be in the ran
 
 <script> 
 
-makeEditable("scheme-ex-13-input");
-
-var e = editorOf["scheme-ex-13-input"];
-e.setValue("(define (square-sum-larger a b c)\n  <your code here>)");
-
-var oldSetOption = e.getOption("onFocus");
-e.setOption("onFocus", function() {
-  oldSetOption();
-  if (e.getValue() == "(define (square-sum-larger a b c)\n  <your code here>)") {
-    e.setValue("(define (square-sum-larger a b c)\n  ");
-  }
-});
-
+makeChangeOnFocusInput("scheme-ex-13-input", 
+                       "(define (square-sum-larger a b c)\n  <your code here>)", 
+                       "(define (square-sum-larger a b c)\n  ");
 addOutput("scheme-ex-13-input");
 linkEditor("scheme-ex-13-input", "scheme-ex-13-input-output", function(x, y) {
 
   var code = y + "\n" + "(define ssl square-sum-larger)" +
             "(and (= (ssl 1 2 3) 13) (= (ssl 2 3 1) 13) (= (ssl 1 1 1) 2))";
-            
-  /*
-  (define (square-sum-larger a b c)
-    (cond ((> c b) (square-sum-larger a c b))
-          ((> c a) (square-sum-larger c b a))
-          (else (+ (* a a)
-                   (* b b)))))
-   */
 
   if (biwascheme.evaluate(code) == true) {
     return "<div class='correct-answer'> \u2713 </div>";
@@ -829,6 +811,15 @@ linkEditor("scheme-ex-13-input", "scheme-ex-13-input-output", function(x, y) {
   }
 });
 </script>
+
+<!--
+(define (square-sum-larger a b c)
+  (cond ((> c b) (square-sum-larger a c b))
+        ((> c a) (square-sum-larger c b a))
+        (else (+ (* a a)
+                 (* b b)))))
+!-->
+
 </div>
 
 <p>
