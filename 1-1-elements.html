@@ -835,10 +835,10 @@ linkEditor("scheme-ex-13-input", "scheme-ex-13-input-output", function(x, y) {
 
 <p>
 
-<div id="scheme-ex-14-mcq">
-</div>
+<div id="scheme-ex-14-mcq"></div>
+<div class="p-link" id="14-submit"> submit </div>
 <script>
-var form = $('<form>');
+var form = $('<form>', {'id': "xj"});
 
 function insertChecks(form, checks) {
   for (var i = 0; i < checks.length; i++) {
@@ -857,9 +857,13 @@ insertChecks(form,
              ]);
 
 $("#scheme-ex-14-mcq").append(form);
-</script>
 
-<div class="p-link" onclick="alert('hi')"> submit </div>
+$("#14-submit").click(function() {
+  $("#xj").children("input:checked").each(function(i, j) {
+    console.log(j);
+  });
+});
+</script>
 
 </div>
 <script>
