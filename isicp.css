@@ -6,6 +6,16 @@ p, ul, ol, blockquote, table, label {
   text-align: justify;
 }
 
+
+.p-link {
+  text-decoration: underline;
+  text-align: right;
+}
+
+.p-link:hover {
+  cursor:pointer;
+}
+
 /*Suppress line break when beginning excercise*/
 .excercise p:first-child {
   margin-top:0;
@@ -71,14 +81,14 @@ p, ul, ol, blockquote, table, label {
     height:100%;
 }
 
-
-
 #main {
   width: 60%;
   float: left;
   border-top: 1px solid gray;
   padding: 10px;
 }
+
+/*identifying editable portions*/
 
 .CodeMirror:hover {
   background: #f8f8f8;
@@ -88,6 +98,7 @@ p, ul, ol, blockquote, table, label {
   background: #E2FCF7;
 }
 
+/*autoscroll*/
 .CodeMirror-scroll {
   height: auto;
   width: auto;
@@ -97,12 +108,10 @@ p, ul, ol, blockquote, table, label {
 
 .excercise .CodeMirror:hover {
   background-color: rgba(180, 207, 219, 0.5);
-  /*background-color: #B4CFDB;*/
 }
 
 .excercise .CodeMirror-focused {
   background: rgba(220, 239, 247, 0.5);
-  /*background: #DCEFF7;*/
 }
 
 .static .CodeMirror:hover {
