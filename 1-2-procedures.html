@@ -153,12 +153,17 @@ prompt("scheme-define-factorial-iterative");
 
 <p> <b> Exercise 1.10. </b> The following procedure computes a mathematical function called Ackermann's function.
 
+<div id="scheme-define-ackerman">
 (define (A x y)
   (cond ((= y 0) 0)
         ((= x 0) (* 2 y))
         ((= y 1) 2)
         (else (A (- x 1)
                  (A x (- y 1))))))
+</div>
+<script>
+makeStatic("scheme-define-ackerman");
+</script>
 
 <p> What are the values of the following expressions?
 
