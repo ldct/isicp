@@ -44,7 +44,14 @@ function prompt(s) {
       }
     }
     
-    return evaluate(x);
+    evalx = evaluate(x);
+    
+    console.log(evalx.toString());
+    
+    if (evalx.toString() == "#<undef>") {
+      return "";
+    }
+    return evalx;
   });
 }
 

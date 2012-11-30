@@ -16,8 +16,8 @@ p, ul, ol, blockquote, table, label {
   cursor:pointer;
 }
 
-/*Suppress line break when beginning excercise*/
-.excercise p:first-child {
+/*Suppress line break when beginning exercise*/
+.exercise p:first-child {
   margin-top:0;
 }
 
@@ -31,7 +31,7 @@ p, ul, ol, blockquote, table, label {
   font-style: italic;
 }
 
-.excercise{
+.exercise{
   background-color: #D8E5E8;
   padding: 10pt;
 }
@@ -106,11 +106,11 @@ p, ul, ol, blockquote, table, label {
   overflow-x: auto;
 }
 
-.excercise .CodeMirror:hover {
+.exercise .CodeMirror:hover {
   background-color: rgba(180, 207, 219, 0.5);
 }
 
-.excercise .CodeMirror-focused {
+.exercise .CodeMirror-focused {
   background: rgba(220, 239, 247, 0.5);
 }
 
