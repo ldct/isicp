@@ -167,21 +167,48 @@ makeStatic("scheme-define-ackerman");
 
 <p> What are the values of the following expressions?
 
+<div id="scheme-a-1-10">
 (A 1 10)
+</div>
 
+<div id="scheme-a-2-4">
 (A 2 4)
+</div>
 
+<div id="scheme-a-3-3">
 (A 3 3)
+</div>
+
+</script>
+answer("scheme-a-1-10", 10);
+answer("scheme-a-2-4", 10);
+answer("scheme-a-3-3", 10);
+</script>
 
 <p> Consider the following procedures, where A is the procedure defined above:
 
+<div id="scheme-define-a-0-n">
 (define (f n) (A 0 n))
+</div>
 
+<div id="scheme-define-a-1-n">
 (define (g n) (A 1 n))
+</div>
 
+<div id="scheme-define-a-2-n">
 (define (h n) (A 2 n))
+</div>
 
+<div id="scheme-define-5-n-squared">
 (define (k n) (* 5 n n))
+</div>
+
+</script>
+makeStatic("scheme-define-a-0-n");
+makeStatic("scheme-define-a-1-n");
+makeStatic("scheme-define-a-2-n");
+makeStatic("scheme-define-5-n-squared");
+</script>
 
 <p> Give concise mathematical definitions for the functions computed by the procedures f, g, and h for positive integer values of n. For example, (k n) computes 5n2. 
 
@@ -197,27 +224,34 @@ makeStatic("scheme-define-ackerman");
 
 <p> <img src='http://mitpress.mit.edu/sicp/full-text/book/ch1-Z-G-12.gif' />
 
- We can immediately translate this definition into a recursive procedure for computing Fibonacci numbers:
+<p> We can immediately translate this definition into a recursive procedure for computing Fibonacci numbers:
 
+<div id="scheme-define-fib">
 (define (fib n)
   (cond ((= n 0) 0)
         ((= n 1) 1)
         (else (+ (fib (- n 1))
                  (fib (- n 2))))))
+</div>
+<script>
+prompt("scheme-define-fib");
+</script>
 
 Figure 1.5:  The tree-recursive process generated in computing (fib 5).
 
-Consider the pattern of this computation. To compute (fib 5), we compute (fib 4) and (fib 3). To compute (fib 4), we compute (fib 3) and (fib 2). In general, the evolved process looks like a tree, as shown in figure 1.5. Notice that the branches split into two at each level (except at the bottom); this reflects the fact that the fib procedure calls itself twice each time it is invoked.
+<p> Consider the pattern of this computation. To compute (fib 5), we compute (fib 4) and (fib 3). To compute (fib 4), we compute (fib 3) and (fib 2). In general, the evolved process looks like a tree, as shown in figure 1.5. Notice that the branches split into two at each level (except at the bottom); this reflects the fact that the fib procedure calls itself twice each time it is invoked.
 
-This procedure is instructive as a prototypical tree recursion, but it is a terrible way to compute Fibonacci numbers because it does so much redundant computation. Notice in figure 1.5 that the entire computation of (fib 3) -- almost half the work -- is duplicated. In fact, it is not hard to show that the number of times the procedure will compute (fib 1) or (fib 0) (the number of leaves in the above tree, in general) is precisely Fib(n + 1). To get an idea of how bad this is, one can show that the value of Fib(n) grows exponentially with n. More precisely (see exercise 1.13), Fib(n) is the closest integer to n /5, where
+<p> This procedure is instructive as a prototypical tree recursion, but it is a terrible way to compute Fibonacci numbers because it does so much redundant computation. Notice in figure 1.5 that the entire computation of (fib 3) -- almost half the work -- is duplicated. In fact, it is not hard to show that the number of times the procedure will compute (fib 1) or (fib 0) (the number of leaves in the above tree, in general) is precisely Fib(n + 1). To get an idea of how bad this is, one can show that the value of Fib(n) grows exponentially with n. More precisely (see exercise 1.13), Fib(n) is the closest integer to n /5, where
 
-is the golden ratio, which satisfies the equation
 
-Thus, the process uses a number of steps that grows exponentially with the input. On the other hand, the space required grows only linearly with the input, because we need keep track only of which nodes are above us in the tree at any point in the computation. In general, the number of steps required by a tree-recursive process will be proportional to the number of nodes in the tree, while the space required will be proportional to the maximum depth of the tree.
 
-We can also formulate an iterative process for computing the Fibonacci numbers. The idea is to use a pair of integers a and b, initialized to Fib(1) = 1 and Fib(0) = 0, and to repeatedly apply the simultaneous transformations
+<p> is the golden ratio, which satisfies the equation
 
-It is not hard to show that, after applying this transformation n times, a and b will be equal, respectively, to Fib(n + 1) and Fib(n). Thus, we can compute Fibonacci numbers iteratively using the procedure
+<p> Thus, the process uses a number of steps that grows exponentially with the input. On the other hand, the space required grows only linearly with the input, because we need keep track only of which nodes are above us in the tree at any point in the computation. In general, the number of steps required by a tree-recursive process will be proportional to the number of nodes in the tree, while the space required will be proportional to the maximum depth of the tree.
+
+<p> We can also formulate an iterative process for computing the Fibonacci numbers. The idea is to use a pair of integers a and b, initialized to Fib(1) = 1 and Fib(0) = 0, and to repeatedly apply the simultaneous transformations
+
+<p> It is not hard to show that, after applying this transformation n times, a and b will be equal, respectively, to Fib(n + 1) and Fib(n). Thus, we can compute Fibonacci numbers iteratively using the procedure
 
 (define (fib n)
   (fib-iter 1 0 n))
@@ -227,13 +261,13 @@ It is not hard to show that, after applying this transformation n times, a and b
       b
       (fib-iter (+ a b) a (- count 1))))
 
-This second method for computing Fib(n) is a linear iteration. The difference in number of steps required by the two methods -- one linear in n, one growing as fast as Fib(n) itself -- is enormous, even for small inputs.
+<p> This second method for computing Fib(n) is a linear iteration. The difference in number of steps required by the two methods -- one linear in n, one growing as fast as Fib(n) itself -- is enormous, even for small inputs.
 
-One should not conclude from this that tree-recursive processes are useless. When we consider processes that operate on hierarchically structured data rather than numbers, we will find that tree recursion is a natural and powerful tool.32 But even in numerical operations, tree-recursive processes can be useful in helping us to understand and design programs. For instance, although the first fib procedure is much less efficient than the second one, it is more straightforward, being little more than a translation into Lisp of the definition of the Fibonacci sequence. To formulate the iterative algorithm required noticing that the computation could be recast as an iteration with three state variables.
+<p> One should not conclude from this that tree-recursive processes are useless. When we consider processes that operate on hierarchically structured data rather than numbers, we will find that tree recursion is a natural and powerful tool.32 But even in numerical operations, tree-recursive processes can be useful in helping us to understand and design programs. For instance, although the first fib procedure is much less efficient than the second one, it is more straightforward, being little more than a translation into Lisp of the definition of the Fibonacci sequence. To formulate the iterative algorithm required noticing that the computation could be recast as an iteration with three state variables.
 
-Example: Counting change
+<h4>Example: Counting change</h4>
 
-It takes only a bit of cleverness to come up with the iterative Fibonacci algorithm. In contrast, consider the following problem: How many different ways can we make change of $ 1.00, given half-dollars, quarters, dimes, nickels, and pennies? More generally, can we write a procedure to compute the number of ways to change any given amount of money?
+<p> It takes only a bit of cleverness to come up with the iterative Fibonacci algorithm. In contrast, consider the following problem: How many different ways can we make change of $ 1.00, given half-dollars, quarters, dimes, nickels, and pennies? More generally, can we write a procedure to compute the number of ways to change any given amount of money?
 
 This problem has a simple solution as a recursive procedure. Suppose we think of the types of coins available as arranged in some order. Then the following relation holds:
 
