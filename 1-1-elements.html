@@ -818,10 +818,11 @@ linkEditor("scheme-ex-13-input", "scheme-ex-13-input-output", function(x, y) {
   }
 
   var code = y + "\n" + "(define ssl square-sum-larger)" +
-            "(and (= (ssl 1 2 3) 13)" + 
-                 "(= (ssl 2 3 1) 13)" + 
-                 ssls(12, 13, 14) +
-                 "(= (ssl 1 1 1) 2))";
+            "(and " +
+                      ssls(1, 2, 3)  +
+                      ssls(12, 2, 7) +
+                      ssls(4, 13, 6) +
+                      ssls(2, 13, 5) + ")";
 
   if (biwascheme.evaluate(code) == true) {
     return "<div class='correct-answer'> \u2713 </div>";
