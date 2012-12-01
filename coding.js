@@ -6,12 +6,15 @@ function focus_callback() {
 
 //functional functions
 
+function arrayEq(arr1, arr2) {
+  return $(arr1).not(arr2).length == 0 && $(arr2).not(arr1).length == 0
+}
+
 function cleanCode(code) {
   return code.replace(/^\n/, "").replace(/\n*$/, "").replace(/[ \t]*\n/g, "\n").replace(/\s*$/, "");
 }
 
 function check(result) {
-
   if (result == undefined) {
     return false;
   }
@@ -180,7 +183,7 @@ function answer(s, a) {
   addOutput(s + "-input");
   linkEditor(s + "-input", s + "-input-output", function(x, y) {
     if (y == a) {
-      return "<div class='correct-answer'> \u2713 </div>";
+      return "<div class='right-answer'> \u2713 </div>";
     } else {
       return "<div class='wrong-answer'> \u2717 </div>";
     }
@@ -205,4 +208,57 @@ function makeChangeOnFocusInput(i, before, after) {
       e.setValue(after);
     }
   });
+}
+
+function makeForm(uid, right_entries, wrong_entries) {
+
+  console.log(right_entries, wrong_entries);
+
+  var form = $('<form>', {'id': uid});
+
+  for (var i = 0; i < right_entries.length; i++) {
+    form.append($("<input>", {type: "checkbox", id: uid + "-right-" + i, value: 'right'}));
+    form.append($("<label>", {for: uid + "-right-" + i, 'html': right_entries[i]}));
+    form.append($('<br>'));
+  }
+  
+  for (var i = 0; i < wrong_entries.length; i++) {
+    form.append($("<input>", {type: "checkbox", id: uid + "-wrong-" + i, value: 'wrong'}));
+    form.append($("<label>", {for: uid + "-wrong-" + i, 'html': wrong_entries[i]}));
+    form.append($('<br>'));
+  }
+  
+  return form;
+}
+
+function makeMCQ(_mcq, right_entries, wrong_entries) {
+  $_(_mcq).append(makeForm(_mcq + "_form", right_entries, wrong_entries));
+
+  $_(_mcq).append($("<div>", {'class': 'p-link', 'id': _mcq + "-submit", 'html': 'submit'}));  
+  addOutput(_mcq + "-submit");
+  
+  $_(_mcq + "-submit").click(function() {
+  
+    var checked = [];
+    var unchecked = [];
+    
+    $_(_mcq + "_form").children("input:checked").each(function(i, j) {
+      checked.push(j.value);
+    });
+    
+    $_(_mcq + "_form").children("input:not(:checked)").each(function(i, j) {
+      unchecked.push(j.value);
+    });
+    
+    var $out = $_(_mcq + "-submit-output");
+    
+    console.log(checked);
+    
+    if (arrayEq(checked,["right"]) && arrayEq(unchecked,["wrong"])) {
+      $out.empty().append($("<div class='submit-ans right-answer'> \u2713 </div>"));
+    } else {
+      $out.empty().append($("<div class='submit-ans wrong-answer'> \u2717 </div>"));
+    }
+  
+});
 }

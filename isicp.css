@@ -45,12 +45,15 @@ p, ul, ol, blockquote, table, label {
   float:right;
 }
 
-.correct-answer {
+.right-answer {
   margin-top: -1.5em;
   font-family: bold;
   color: green;
   float:right;
-  
+}
+
+.submit-ans {
+  margin-top: 0em;
 }
 
 /*the tab that comes out on click*/

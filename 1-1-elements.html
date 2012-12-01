@@ -237,7 +237,7 @@ linkEditor("scheme-ex-12-input", "scheme-ex-12-input-output", function(x, y) {
       "'(/ (+ 5 (/ 1 2) (- 2 (- 3 (+ 6 (/ 1 3))))) (* 3 (- 6 2) (- 2 7))))";
 
   if (biwascheme.evaluate(code) == true) {
-    return "<div class='correct-answer'> \u2713 </div>";
+    return "<div class='right-answer'> \u2713 </div>";
   } else {
     return "<div class='wrong-answer'> \u2717 </div>";
   }
@@ -825,7 +825,7 @@ linkEditor("scheme-ex-13-input", "scheme-ex-13-input-output", function(x, y) {
                       ssls(2, 13, 5) + ")";
 
   if (biwascheme.evaluate(code) == true) {
-    return "<div class='correct-answer'> \u2713 </div>";
+    return "<div class='right-answer'> \u2713 </div>";
   } else {
     return "<div class='wrong-answer'> \u2717 </div>";
   }
@@ -856,37 +856,16 @@ linkEditor("scheme-ex-13-input", "scheme-ex-13-input-output", function(x, y) {
 <p>
 
 <div id="scheme-ex-14-mcq"></div>
-<div class="p-link" id="14-submit"> submit </div>
+<p>
 <script>
-
-function insertChecks(uid, checks) {
-
-  var form = $('<form>', {'id': uid});
-
-  for (var i = 0; i < checks.length; i++) {
-    form.append($("<input>", {type: "checkbox", id: uid + "-" + i}));
-    form.append($("<label>", {for: uid + "-" + i, 'html': checks[i]}));
-    form.append($('<br>'));
-  }
-  
-  return form;
-}
-
-var form = insertChecks("compound-operator",
-  ["Error: the leftmost subexpression is not a procedure",
-   "<tt> (if (> b 0) (+ a b) (- a b)) </tt>",
-   "<tt> (+ a (if (> b 0) b (- b))) </tt>",
-   "Error: the value of the leftmost subexpresion cannot depend on b",
-   "Error: the leftmost subexpression is not evaluated in the substitution model"
-   ]);
-
-$("#scheme-ex-14-mcq").append(form);
-
-$("#14-submit").click(function() {
-  $("#compound-operator").children("input:checked").each(function(i, j) {
-    console.log(j);
-  });
-});
+makeMCQ("scheme-ex-14-mcq", 
+    ["<tt> (if (> b 0) (+ a b) (- a b)) </tt>",
+     "<tt> (+ a (if (> b 0) b (- b))) </tt>",
+     "<tt> (+ a (abs b)) </tt>"],
+    ["Error: the leftmost subexpression is not a procedure",
+     "Error: the value of the leftmost subexpresion cannot depend on b",
+     "Error: the leftmost subexpression is not evaluated in the substitution model"
+     ]);
 </script>
 
 </div>
@@ -1113,14 +1092,13 @@ prompt("scheme-define-new-if");
 prompt("scheme-new-if-1");
 prompt("scheme-new-if-1");
 prompt("scheme-sqrt-iter-new-if");
-var form = insertChecks("form-new-if-", 
-  ["It works as before",
-   "Infinite loop: sqrt-iter always evaluates itself",
-   "Infinite loop: cond evaluates all its arguments",
-   "Error: only <tt> if </tt> can perform conditional evaluations"
-   ]);
 
-$("#scheme-new-if-mcq").append(form);
+$("#scheme-new-if-mcq").append(makeForm("form-new-if-", 
+    ["It works as before",
+     "Infinite loop: sqrt-iter always evaluates itself",
+     "Infinite loop: cond evaluates all its arguments",
+     "Error: only <tt> if </tt> can perform conditional evaluations"
+     ], []));
 </script>
 
 <div class="exercise">
