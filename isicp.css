@@ -1,5 +1,5 @@
 /*english text, meant for reading*/
-p, ul, ol, blockquote, table, label {
+p, ul, ol, blockquote, table, label, h1, h2, h3, h4, a {
   font-family:Georgia;
   color:#2E2E2E;
   line-height:1.5em;
@@ -128,3 +128,6 @@ p, ul, ol, blockquote, table, label {
 div.CodeMirror span.CodeMirror-matchingbracket {
     color: #869CEB; /*why can't we use .CodeMirror-matchingbracket? */
 }
+
+#toc .H3 { font-size:14px;}
+#toc .H4 { font-size:12px;}

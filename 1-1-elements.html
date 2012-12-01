@@ -32,6 +32,10 @@
   
     <div id="currently-editing"> </div>
     
+    <p>
+    
+    <div id="toc"> </div>
+    
     <p> Video Lectures: 
     <a href='http://www.youtube.com/watch?v=2Op3QLzMgSY' title="Overview and Introduction to Lisp"> 1A </a> &nbsp;
     <a href='http://www.youtube.com/watch?v=dlbMuv-jix8' title="Procedures and Processes; Substitution Model"> 1B  </a>
@@ -46,6 +50,20 @@ $('#sidebox .tab').toggle(function(){
 }, function(){
     $('#sidebox').animate({'right':'-30%'});
 });
+
+$(document).ready(function() {
+  $("h3, h4").each(function(i) {
+      var current = $(this);
+      current.attr("id", "title" + i);
+      
+      console.log(current);
+      
+      var pos = current.position().top / $("#content").height() * $(window).height();
+      $("#toc").append($("<a>", {href: '#title' + i, html: current.html(), 'class': current[0].nodeName})).append($('<br>'));
+      $("#link" + i).css("top", pos);
+  });
+});
+
 </script>
 
 <div id="main">
@@ -66,7 +84,7 @@ $('#sidebox .tab').toggle(function(){
 
 <p> In this chapter we will deal only with simple numerical data so that we can focus on the rules for building procedures.4 In later chapters we will see that these same rules allow us to build procedures to manipulate compound data as well.
 
-<h3> 1.1.1  Expressions </h3>
+<h3> Expressions </h3>
 
 <p> One easy way to get started at programming is to examine some typical interactions with an interpreter for the Scheme dialect of Lisp. Imagine that you are sitting at a computer terminal. You type an expression, and the interpreter responds by displaying the result of its evaluating that expression.
 
@@ -223,9 +241,9 @@ answer("scheme-ex-111-nested", 6);
 
 <div class='exercise'>
 
-<p> <b> Exercise 1.2. </b>  Translate the following expression into prefix form
+<p> <b> Exercise 1.2. </b>  Translate the following expression into prefix form.
 
-<p style="margin-bottom: 0"> <img src='http://upload.wikimedia.org/math/e/5/a/e5aaff25134d0b9f9993e7a5547f3679.png'>
+<p style="margin-bottom: 0"> <img src='http://upload.wikimedia.org/math/4/3/e/43e4ba3449a3038629dca7de56757cae.png'>
 <div id="scheme-ex-12-input" class='input'></div>
 
 <script> 
@@ -234,7 +252,7 @@ addOutput("scheme-ex-12-input");
 linkEditor("scheme-ex-12-input", "scheme-ex-12-input-output", function(x, y) {
 
   var code = "(equal? (quote " + y + ") " + 
-      "'(/ (+ 5 (/ 1 2) (- 2 (- 3 (+ 6 (/ 1 3))))) (* 3 (- 6 2) (- 2 7))))";
+      "'(/ (+ 5 4 (- 2 (- 3 (+ 6 (/ 4 5))))) (* 3 (- 6 2) (- 2 7))))";
 
   if (biwascheme.evaluate(code) == true) {
     return "<div class='right-answer'> \u2713 </div>";
@@ -245,7 +263,7 @@ linkEditor("scheme-ex-12-input", "scheme-ex-12-input-output", function(x, y) {
 </script>
 </div>
 
-<h3> 1.1.2  Naming and the Environment </h3>
+<h3> Naming and the Environment </h3>
 
 <p> A critical aspect of a programming language is the means it provides for using names to refer to computational objects. We say that the name identifies a variable whose value is the object.
 
@@ -350,7 +368,7 @@ answer("scheme-ex-112-eq", "false");
 
 </div>
 
-<h3> 1.1.3  Evaluating Combinations </h3>
+<h3> Evaluating Combinations </h3>
 
 <p> One of our goals in this chapter is to isolate issues about thinking procedurally. As a case in point, let us consider that, in evaluating combinations, the interpreter is itself following a procedure.
 
@@ -398,7 +416,7 @@ prompt("scheme-tree-eg");
 
 <p> Such exceptions to the general evaluation rule are called special forms. Define is the only example of a special form that we have seen so far, but we will meet others shortly. Each special form has its own evaluation rule. The various kinds of expressions (each with its associated evaluation rule) constitute the syntax of the programming language. In comparison with most other programming languages, Lisp has a very simple syntax; that is, the evaluation rule for expressions can be described by a simple general rule together with specialized rules for a small number of special forms.11
 
-<h3> 1.1.4  Compound Procedures </h3>
+<h3> Compound Procedures </h3>
 
 <p> We have identified in Lisp some of the elements that must appear in any powerful programming language:
 
@@ -510,7 +528,7 @@ depsOf["scheme-f"] = ["scheme-define-sum-of-squares"];
 
 <p> Compound procedures are used in exactly the same way as primitive procedures. Indeed, one could not tell by looking at the definition of sum-of-squares given above whether square was built into the interpreter, like + and *, or defined as a compound procedure.
 
-<h3>1.1.5  The Substitution Model for Procedure Application</h3>
+<h3> The Substitution Model for Procedure Application</h3>
 
 <p> To evaluate a combination whose operator names a compound procedure, the interpreter follows much the same process as for combinations whose operators name primitive procedures, which we described in section 1.1.3. That is, the interpreter evaluates the elements of the combination and applies the procedure (which is the value of the operator of the combination) to the arguments (which are the values of the operands of the combination).
 
@@ -671,7 +689,7 @@ makeStatic("scheme-x");
 
 <p> Lisp uses applicative-order evaluation, partly because of the additional efficiency obtained from avoiding multiple evaluations of expressions such as those illustrated with <tt> (+ 5 1) </tt> and <tt> (* 5 2) </tt> above and, more significantly, because normal-order evaluation becomes much more complicated to deal with when we leave the realm of procedures that can be modeled by substitution. On the other hand, normal-order evaluation can be an extremely valuable tool, and we will investigate some of its implications in chapters 3 and 4.16
 
-<h3>1.1.6  Conditional Expressions and Predicates</h3>
+<h3> Conditional Expressions and Predicates</h3>
 
 <p> The expressive power of the class of procedures that we can define at this point is very limited, because we have no way to make tests and to perform different operations depending on the result of a test. For instance, we cannot define a procedure that computes the absolute value of a number by testing whether the number is positive, negative, or zero and taking different actions in the different cases according to the rule
 
@@ -911,7 +929,7 @@ makeStatic("scheme-ex-15-test");
 
 
 
-<h3> 1.1.7  Example: Square Roots by Newton's Method </h3>
+<h3> Example: Square Roots by Newton's Method </h3>
 
 <p> Procedures, as introduced above, are much like ordinary mathematical functions. They specify a value that is determined by one or more parameters. But there is an important difference between mathematical functions and computer procedures. Procedures must be effective.
 
@@ -1093,15 +1111,17 @@ prompt("scheme-new-if-2");
 depsOf["scheme-new-if-1"] = ["scheme-define-new-if"];
 depsOf["scheme-new-if-2"] = ["scheme-define-new-if"];
 
-prompt("scheme-sqrt-iter-new-if");
+makeStatic("scheme-sqrt-iter-new-if");
 
-$("#scheme-new-if-mcq").append(makeForm("form-new-if-", 
+makeMCQ("scheme-new-if-mcq", 
+    ["Infinite loop: sqrt-iter always evaluates itself"],
     ["It works as before",
-     "Infinite loop: sqrt-iter always evaluates itself",
      "Infinite loop: cond evaluates all its arguments",
      "Error: only <tt> if </tt> can perform conditional evaluations"
-     ], []));
+    ]);
 </script>
+
+<p>
 
 <div class="exercise">
 <p> <b>Exercise 1.7. </b> The good-enough? test used in computing square roots will not be very effective for finding the square roots of very small numbers. Also, in  real computers, arithmetic operations are almost always performed with limited precision. This makes  our test inadequate for very large numbers. Explain these statements, with examples showing how the  test fails for small and large numbers.
@@ -1121,6 +1141,8 @@ $("#scheme-new-if-mcq").append(makeForm("form-new-if-",
   (sqrt-iter 1 2))
 !-->
 </div>
+
+<p>
 
 <div class="exercise">
 

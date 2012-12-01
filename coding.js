@@ -224,8 +224,6 @@ function makeChangeOnFocusInput(i, before, after) {
 
 function makeForm(uid, right_entries, wrong_entries) {
 
-  console.log(right_entries, wrong_entries);
-
   var form = $('<form>', {'id': uid});
   
   var entries = [];
