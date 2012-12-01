@@ -1055,11 +1055,9 @@ depsOf["scheme-square-sqrt"] = ["scheme-define-square", "scheme-define-sqrt"];
 <p> <b> Exercise 1.6. </b> Alyssa P. Hacker doesn’t see why if needs to be provided as q special form. “Why can’t  I just define it as an ordinary procedure in terms of cond?” she asks. Alyssa’s friend Eva Lu Ator claims  this can indeed be done, and she defines a new version of if:
 
 <div id="scheme-define-new-if">
-
 (define (new-if predicate then-clause else-clause)       
-  (cond (predicatethen-clause) 
+  (cond (predicate then-clause) 
         (else else-clause)))
-
 </div>
 
 <p> Eva demonstrates the program for Alyssa:
@@ -1090,7 +1088,11 @@ depsOf["scheme-square-sqrt"] = ["scheme-define-square", "scheme-define-sqrt"];
 <script>
 prompt("scheme-define-new-if");
 prompt("scheme-new-if-1");
-prompt("scheme-new-if-1");
+prompt("scheme-new-if-2");
+
+depsOf["scheme-new-if-1"] = ["scheme-define-new-if"];
+depsOf["scheme-new-if-2"] = ["scheme-define-new-if"];
+
 prompt("scheme-sqrt-iter-new-if");
 
 $("#scheme-new-if-mcq").append(makeForm("form-new-if-", 
