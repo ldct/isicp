@@ -11,7 +11,7 @@ function cleanCode(code) {
 }
 
 function check(result) {
-  //console.log(typeof(result), result);
+
   if (result == undefined) {
     return false;
   }
@@ -206,105 +206,3 @@ function makeChangeOnFocusInput(i, before, after) {
     }
   });
 }
-
-/*
-
-function update(target_string) {
-
-  result = evaluate(target_string);
-
-  var s = sOf[target_string];
-  
-  s.$output.empty();
-  
-  if (check(result)) {
-    s.$output.append($("<span>" + result + "</span>"));
-  }
-
-  if (s.pushes) {
-    for (var i = 0; i < s.pushes.length; i++) {
-      update(s.pushes[i]); //no cyclic dependencies allowed
-    }
-  }
-}
-
-function update_noeval(target_string) {
-
-  var s = sOf[target_string];
-
-  result = sOf[target_string].getCode();
-  
-  if (s.answer) {
-    if (s.answer == result) {
-      s.$grade.attr({'class': 'correct-answer'}).text('\u2713');
-    } else {
-      s.$grade.attr({'class': 'wrong-answer'}).text('\u2717');
-    }
-  }
-}
-
-//public methods
-
-function createPrompt(target_string) {
-  setup(target_string);
-}
-
-function createStaticPrompt(target_string) {
-  setup(target_string);
-  sOf[target_string].editor.setOption("readOnly", true);
-}
-
-function attachAnswer(target_string, answer) {
-  
-  //creates and attaches the DOM for output
-  
-  var $grade = $("<div />", {id: target_string + "-grade", 'class':'wrong-answer', text: '\u2717'});
-
-  sOf[target_string].$output.after($grade);
-  
-  sOf[target_string].answer = answer;
-  sOf[target_string].$grade = $grade;
-}
-
-function createStaticDisplay(target_string) {
-//creates a codemirror object but locks it
-  setup(target_string);
-  
-  var S = sOf[target_string];
-  
-  S.editor.setOption("readOnly", true);
-  S.editor.setOption("onBlur", function() {});
-  S.$output.hide();
-}
-
-function createNoeval(target_string) {
-  setup(target_string);
-  
-  var S = sOf[target_string];
-  
-  S.editor.setValue("<your answer here>");
-  S.editor.setOption("onBlur", function() {update_noeval(target_string)});
-  S.editor.setOption("onFocus", function() {
-    focus_callback(target_string);
-    if (S.getCode() == "<your answer here>") {
-      S.editor.setValue("");
-    }
-  });
-  S.$output.hide();
-}
-
-function attachDeps(target_string, deps) {
-  sOf[target_string].deps = deps;
-}
-
-function attachPushes(target_string, pushes) {
-  sOf[target_string].pushes = pushes;
-}
-
-function updateAll() {
-  for (ts in sOf) {
-    update(ts);
-  } 
-}
-
-*/
