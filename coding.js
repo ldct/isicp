@@ -33,6 +33,18 @@ function $_(s) { // _ to $. _: div id's $: jQuery objects; read _ as #, $_ consu
   }
 }
 
+function shuffle(myArray) {
+  var i = myArray.length;
+  if ( i == 0 ) return false;
+  while ( --i ) {
+     var j = Math.floor( Math.random() * ( i + 1 ) );
+     var tempi = myArray[i];
+     var tempj = myArray[j];
+     myArray[i] = tempj;
+     myArray[j] = tempi;
+   }
+}
+
 ////////////////////////////////////////////////////////////////////////////////
 
 var biwascheme = new BiwaScheme.Interpreter( function(e){
@@ -215,16 +227,21 @@ function makeForm(uid, right_entries, wrong_entries) {
   console.log(right_entries, wrong_entries);
 
   var form = $('<form>', {'id': uid});
-
-  for (var i = 0; i < right_entries.length; i++) {
-    form.append($("<input>", {type: "checkbox", id: uid + "-right-" + i, value: 'right'}));
-    form.append($("<label>", {for: uid + "-right-" + i, 'html': right_entries[i]}));
-    form.append($('<br>'));
+  
+  var entries = [];
+  for (var i in right_entries) {
+    entries.push({text: right_entries[i], score: 'right'});
+  }
+  for (var i in wrong_entries) {
+    entries.push({text: wrong_entries[i], score: 'wrong'});
   }
   
-  for (var i = 0; i < wrong_entries.length; i++) {
-    form.append($("<input>", {type: "checkbox", id: uid + "-wrong-" + i, value: 'wrong'}));
-    form.append($("<label>", {for: uid + "-wrong-" + i, 'html': wrong_entries[i]}));
+  shuffle(entries);
+  
+  for (var i in entries) {
+    var e = entries[i];
+    form.append($("<input>", {type: "checkbox", id: uid + "-" + i, value: e.score}));
+    form.append($("<label>", {for: uid + "-" + i, 'html': e.text}));
     form.append($('<br>'));
   }
   
