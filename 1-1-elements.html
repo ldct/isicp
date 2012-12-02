@@ -85,7 +85,7 @@ $(document).ready(function() {
 
 <p> In programming, we deal with two kinds of elements: procedures and data. (Later we will discover that they are really not so distinct.) Informally, data is "stuff" that we want to manipulate, and procedures are descriptions of the rules for manipulating the data. Thus, any powerful programming language should be able to describe primitive data and primitive procedures and should have methods for combining and abstracting procedures and data.
 
-<p> In this chapter we will deal only with simple numerical data so that we can focus on the rules for building procedures.4 In later chapters we will see that these same rules allow us to build procedures to manipulate compound data as well.
+<p> In this chapter we will deal only with simple numerical data so that we can focus on the rules for building procedures. In later chapters we will see that these same rules allow us to build procedures to manipulate compound data as well.
 
 <h3> Expressions </h3>
 
@@ -105,7 +105,7 @@ makeEditable("scheme-number");
 linkEditor("scheme-number", "scheme-number-output", function(x, y) {return evaluate(x);});
 </script>
 
-<p> Expressions representing numbers may be combined with an expression representing a primitive procedure (such as + or *) to form a compound expression that represents the application of the procedure to those numbers. For example:
+<p> Expressions representing numbers may be combined with an expression representing a primitive procedure (such as <tt>+</tt> or <tt>*</tt>) to form a compound expression that represents the application of the procedure to those numbers. For example:
 
 <div id="scheme-plus-1">
 (+ 137 349)
@@ -176,7 +176,7 @@ linkEditor("scheme-number", "scheme-number-output", function(x, y) {return evalu
 <div id="scheme-long-tree-output" class="output"> </div>
 <script> prompt("scheme-long-tree"); </script>
 
-<p> which the interpreter would readily evaluate to be 57. We can help ourselves by writing such an expression in the form
+<p> which the interpreter would readily evaluate to be <tt>57</tt>. We can help ourselves by writing such an expression in the form
 
 <div id="scheme-long-tree-pp">
 (+ (* 3
@@ -270,7 +270,7 @@ linkEditor("scheme-ex-12-input", "scheme-ex-12-input-output", function(x, y) {
 
 <p> A critical aspect of a programming language is the means it provides for using names to refer to computational objects. We say that the name identifies a variable whose value is the object.
 
-<p> In the Scheme dialect of Lisp, we name things with define. Typing
+<p> In the Scheme dialect of Lisp, we name things with <tt>define</tt>. Typing
 
 <div id="scheme-define-size">
 (define size 2)
@@ -280,7 +280,7 @@ prompt("scheme-define-size");
 pushesOf["scheme-define-size"] = ["scheme-size", "scheme-times-size"];
 </script>
 
-<p> causes the interpreter to associate the value 2 with the name size. Once the name size has been associated with the number 2, we can refer to the value 2 by name:
+<p> causes the interpreter to associate the value <tt>2</tt> with the name <tt>size</tt>. Once the name <tt>size</tt> has been associated with the number <tt>2</tt>, we can refer to the value <tt>2</tt> by name:
 
 <div id="scheme-size">
 size
@@ -300,7 +300,7 @@ prompt("scheme-times-size");
 depsOf["scheme-times-size"] = ["scheme-define-size"];
 </script>
 
-<p> Here are further examples of the use of define:
+<p> Here are further examples of the use of <tt>define</tt>:
 
 <div id="scheme-define-radius">
 (define pi 3.14159)
@@ -325,7 +325,7 @@ prompt("scheme-circumference");
 depsOf["scheme-circumference"] = ["scheme-define-radius"];
 </script>
 
-<p> Define is our language's simplest means of abstraction, for it allows us to use simple names to refer to the results of compound operations, such as the circumference computed above. In general, computational objects may have very complex structures, and it would be extremely inconvenient to have to remember and repeat their details each time we want to use them. Indeed, complex programs are constructed by building, step by step, computational objects of increasing complexity. The interpreter makes this step-by-step program construction particularly convenient because name-object associations can be created incrementally in successive interactions. This feature encourages the incremental development and testing of programs and is largely responsible for the fact that a Lisp program usually consists of a large number of relatively simple procedures.
+<p> <tt>define</tt> is our language's simplest means of abstraction, for it allows us to use simple names to refer to the results of compound operations, such as the circumference computed above. In general, computational objects may have very complex structures, and it would be extremely inconvenient to have to remember and repeat their details each time we want to use them. Indeed, complex programs are constructed by building, step by step, computational objects of increasing complexity. The interpreter makes this step-by-step program construction particularly convenient because name-object associations can be created incrementally in successive interactions. This feature encourages the incremental development and testing of programs and is largely responsible for the fact that a Lisp program usually consists of a large number of relatively simple procedures.
 
 <p> It should be clear that the possibility of associating values with symbols and later retrieving them means that the interpreter must maintain some sort of memory that keeps track of the name-object pairs. This memory is called the environment (more precisely the global environment, since we will see later that a computation may involve a number of different environments).
 
@@ -413,9 +413,9 @@ prompt("scheme-tree-eg");
 <li> the values of other names are the objects associated with those names in the environment. 
 </ul>
 
-<p> We may regard the second rule as a special case of the third one by stipulating that symbols such as + and * are also included in the global environment, and are associated with the sequences of machine instructions that are their "values." The key point to notice is the role of the environment in determining the meaning of the symbols in expressions. In an interactive language such as Lisp, it is meaningless to speak of the value of an expression such as (+ x 1) without specifying any information about the environment that would provide a meaning for the symbol x (or even for the symbol +). As we shall see in chapter 3, the general notion of the environment as providing a context in which evaluation takes place will play an important role in our understanding of program execution.
+<p> We may regard the second rule as a special case of the third one by stipulating that symbols such as + and * are also included in the global environment, and are associated with the sequences of machine instructions that are their "values." The key point to notice is the role of the environment in determining the meaning of the symbols in expressions. In an interactive language such as Lisp, it is meaningless to speak of the value of an expression such as <tt> (+ x 1) </tt> without specifying any information about the environment that would provide a meaning for the symbol <tt>x</tt> (or even for the symbol <tt>+</tt>). As we shall see in chapter 3, the general notion of the environment as providing a context in which evaluation takes place will play an important role in our understanding of program execution.
 
-<p> Notice that the evaluation rule given above does not handle definitions. For instance, evaluating (define x 3) does not apply define to two arguments, one of which is the value of the symbol x and the other of which is 3, since the purpose of the define is precisely to associate x with a value. (That is, (define x 3) is not a combination.)
+<p> Notice that the evaluation rule given above does not handle definitions. For instance, evaluating <tt> (define x 3) </tt> does not apply define to two arguments, one of which is the value of the symbol <tt>x</tt> and the other of which is <tt>3</tt>, since the purpose of the define is precisely to associate x with a value. (That is, <tt> (define x 3) </tt> is not a combination.)
 
 <p> Such exceptions to the general evaluation rule are called special forms. Define is the only example of a special form that we have seen so far, but we will meet others shortly. Each special form has its own evaluation rule. The various kinds of expressions (each with its associated evaluation rule) constitute the syntax of the programming language. In comparison with most other programming languages, Lisp has a very simple syntax; that is, the evaluation rule for expressions can be described by a simple general rule together with specialized rules for a small number of special forms.
 
