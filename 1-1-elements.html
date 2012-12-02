@@ -1210,6 +1210,47 @@ depsOf["scheme-ex-17-my-test"] = ["scheme-ex-17-input"];
 
 <p> Use this formula to implement a cube-root procedure analogous to the square-root procedure. (In Section 1.3.4 we will see how to implement Newton’s  method in general as an abstraction of these square root and cube-root procedures.)
 
+<div id="scheme-ex-18">
+(define (cube-root x)
+  )
+</div>
+
+<p>
+
+<div id="scheme-ex-18-test">
+(cube-root 27)
+</div>
+<script>
+prompt("scheme-ex-18");
+prompt("scheme-ex-18-test");
+
+depsOf["scheme-ex-18-test"] = ["scheme-ex-18"];
+pushesOf["scheme-ex-18"] = ["scheme-ex-18-test"];
+
+editorOf["scheme-ex-18-test"].setOption("readOnly", 'nocursor');
+</script>
+
+<!--
+(define (cube x)
+  (* x x x))
+
+(define (good-enough? guess x)
+  (< (abs (- (cube guess) x)) 0.001))
+
+(define (improve guess x)
+  (/ (+ (/ x (* guess guess))
+        (* 2 guess))
+     3))
+
+(define (cube-root-iter guess x)
+  (if (good-enough? guess x)
+      guess
+      (cube-root-iter (improve guess x) x)))
+
+(define (cube-root x) 
+  (cube-root-iter 1 x))
+!-->
+
 </div>
 
 <h3>Procedures as Black-Box Abstractions </h3>
@@ -1347,21 +1388,6 @@ prompt("scheme-define-sqrt-no-x");
 
 <p> We will use block structure extensively to help us break up large programs into tractable pieces. The idea of block structure originated with the programming language Algol 60. It appears in most advanced programming languages and is an important tool for helping to organize the construction of large programs.
 
-
-
-<!--
-(define (improve guess x)
-  (/ (+ (/ x (* y y)) 
-        (* 2 y)) 
-     3)
-
-(define (cubert-iter guess x)
-  (if (good-enough? guess x)
-      guess
-      (cubert-iter (improve guess x) x)))
-
-(define (cubert x) (cubert-iter 1 x))
-!-->
 </div>
 
 <script> 
