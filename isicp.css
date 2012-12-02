@@ -129,5 +129,21 @@ div.CodeMirror span.CodeMirror-matchingbracket {
     color: #869CEB; /*why can't we use .CodeMirror-matchingbracket? */
 }
 
-#toc .H3 { font-size:14px;}
-#toc .H4 { font-size:12px;}
+#toc .h3 { 
+  font-size:14px;
+}
+#toc .h4, .div{ 
+  margin-left: 2em;
+  font-size:12px;
+}
+
+label { /*thx cousera*/
+  padding-bottom:5px;
+  float: none;
+  margin-left: 5px;
+  display: inline-block;
+  vertical-align: middle;
+  text-align: left;
+  width: auto;
+  max-width: 95%;
+}
