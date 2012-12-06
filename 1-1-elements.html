@@ -940,9 +940,9 @@ makeStatic("scheme-ex-15-p");
 makeStatic("scheme-ex-15-test");
 makeMCQ("scheme-ex-15-mcq", 
     ["In applicative-order evaluation, <tt>(p)</tt> will be evaluated, resulting in an infinite loop",
-     "In normal-order evaluation, <tt>(p)</tt> is not evaluated because predicate of <tt>if</tt> evaluates to false"],
+     "In normal-order evaluation, <tt>(p)</tt> is not evaluated because predicate of <tt>if</tt> evaluates to <tt>true</tt>"],
     ["In normal-order evaluation, <tt>(p)</tt> will be evaluated, resulting in an infinite loop",
-     "In applicative-order evaluation, <tt>(p)</tt> is not evaluated because predicate of <tt>if</tt> evaluates to false",
+     "In applicative-order evaluation, <tt>(p)</tt> is not evaluated because predicate of <tt>if</tt> evaluates to <tt>true</tt>",
      "Error in both cases: <tt>(p)</tt> cannot be defined in terms of itself",
      "In both cases, <tt>0</tt> is returned because <tt>(p)</tt> evaluates to itself, terminating the recursion"
      ]);
