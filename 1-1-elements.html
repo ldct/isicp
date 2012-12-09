@@ -72,13 +72,16 @@ $(document).ready(function() {
   $("h3, h4, .exercise").each(function(i) {
   
       var current = $(this);
-      current.attr("id", "title" + i);
       
-      var a = $("<a>", {href: "#title" + i, html: current.text().slice(0,50), 'class': current[0].nodeName.toLowerCase()});
+      var title = current.text().slice(0,50).replace(/^\s+/, "").replace(/\s+$/, "").replace(/:/, "").replace(/\s+/g, "-").replace(/\./g, "-").replace(/\-+/g, "-");
+      
+      current.attr("id", title);
+      
+      var a = $("<a>", {href: "#" + title, html: current.text().slice(0,50), 'class': current[0].nodeName.toLowerCase()});
       
       a.click(function() {
         $('html, body').animate({
-            'scrollTop':   $('#title' + i).offset().top
+            'scrollTop':   $('#' + title).offset().top
         }, 250);
       });
       
