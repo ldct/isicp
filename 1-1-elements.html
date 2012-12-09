@@ -74,9 +74,15 @@ $(document).ready(function() {
       var current = $(this);
       current.attr("id", "title" + i);
       
-      var pos = current.position().top / $("#content").height() * $(window).height();
-      $("#toc").append($("<a>", {href: '#title' + i, html: current.text().slice(0,50), 'class': current[0].nodeName.toLowerCase()})).append($('<br>'));
-      $("#link" + i).css("top", pos);
+      var a = $("<a>", {html: current.text().slice(0,50), 'class': current[0].nodeName.toLowerCase()});
+      
+      a.click(function() {
+        $('html, body').animate({
+            'scrollTop':   $('#title' + i).offset().top
+        }, 2000);
+      });
+      
+      $("#toc").append(a).append($('<br>'));
   });
   
   $('#sidebox').animate({'right':'0%'});
@@ -116,7 +122,10 @@ $(document).ready(function() {
 
 <div id="scheme-number-output" class="output"> </div>
 <script>
-$("body").hide();
+var deferDraw = (location.hash == "");
+if (deferDraw) {
+  $("body").hide();
+}
 makeEditable("scheme-number");
 linkEditor("scheme-number", "scheme-number-output", function(x, y) {return evaluate(x);});
 </script>
@@ -1411,27 +1420,35 @@ prompt("scheme-define-sqrt-no-x");
 </div>
 
 <script> 
-/*
-for (var _e in editorOf) {
-  setTimeout(editorOf[_e].getOption("onBlur"), 1);
-}
-*/
-$("body").show();
 
-var todo = [];
 for (var _e in editorOf) {
-  todo.push(editorOf[_e]);
+  editorOf[_e].getOption("onBlur")();
 }
 
-setTimeout(function() {
-  var e = todo.shift();
-  e.getOption("onBlur")();
-  e.refresh();
-  
-  if (todo.length > 0) {
-    setTimeout(arguments.callee, 25);
+if (deferDraw) {
+  $("body").show();
+  var todo = [];
+  for (var _e in editorOf) {
+    todo.push(editorOf[_e]);
   }
-}, 25);
+
+  setTimeout(function() {
+    var e = todo.shift();
+    e.refresh();
+    
+    if (todo.length > 0) {
+      setTimeout(arguments.callee, 25);
+    }
+  }, 25);
+}
+
+if (!deferDraw) {
+  $(function () {
+    $('html, body').animate({
+      scrollTop: $(location.hash).offset().top
+   }, 2000);
+ });
+}
 
 </script>
 
