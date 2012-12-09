@@ -74,12 +74,12 @@ $(document).ready(function() {
       var current = $(this);
       current.attr("id", "title" + i);
       
-      var a = $("<a>", {html: current.text().slice(0,50), 'class': current[0].nodeName.toLowerCase()});
+      var a = $("<a>", {href: "#title" + i, html: current.text().slice(0,50), 'class': current[0].nodeName.toLowerCase()});
       
       a.click(function() {
         $('html, body').animate({
             'scrollTop':   $('#title' + i).offset().top
-        }, 2000);
+        }, 250);
       });
       
       $("#toc").append(a).append($('<br>'));
@@ -1446,7 +1446,7 @@ if (!deferDraw) {
   $(function () {
     $('html, body').animate({
       scrollTop: $(location.hash).offset().top
-   }, 2000);
+   }, 500);
  });
 }
 
