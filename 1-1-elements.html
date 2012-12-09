@@ -63,7 +63,7 @@
 
 <script> 
 $('#sidebox .tab').toggle(function(){
-    $('#sidebox').animate({'right':0});
+    $('#sidebox').animate({'right':'0%'});
 }, function(){
     $('#sidebox').animate({'right':'-30%'});
 });
@@ -79,7 +79,7 @@ $(document).ready(function() {
       $("#link" + i).css("top", pos);
   });
   
-  $('#sidebox').animate({'right':'0'});
+  $('#sidebox').animate({'right':'0%'});
 });
 
 </script>
@@ -1416,11 +1416,23 @@ for (var _e in editorOf) {
   setTimeout(editorOf[_e].getOption("onBlur"), 1);
 }
 */
-
-for (var _e in editorOf) {
-  editorOf[_e].getOption("onBlur")();
-}
 $("body").show();
+
+var todo = [];
+for (var _e in editorOf) {
+  todo.push(editorOf[_e]);
+}
+
+setTimeout(function() {
+  var e = todo.shift();
+  e.getOption("onBlur")();
+  e.refresh();
+  
+  if (todo.length > 0) {
+    setTimeout(arguments.callee, 25);
+  }
+}, 25);
+
 </script>
 
 <a href="https://github.com/zodiac/appspot-grading/tree/master/isicp"><img style="position: absolute; top: 0; right: 0; border: 0;" src="https://s3.amazonaws.com/github/ribbons/forkme_right_green_007200.png" alt="Fork me on GitHub"></a>
