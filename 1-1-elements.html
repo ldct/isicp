@@ -11,6 +11,7 @@
 <script src="codemirror/mode/scheme/scheme.js"></script>
 <script src="jquery.min.js"></script>
 <script src="coding.js"> </script>
+<script src="graph.js"></script>
 
 <title>iSICP 1.1 - The Elements of Programming</title>
 <script type="text/javascript">
@@ -420,8 +421,33 @@ answer("scheme-ex-112-eq", "false");
    (+ 3 5 7))
 </div>
 <div id="scheme-tree-eg-output" class="output"> </div>
+
+
+<svg id="canvas"></svg>
+    
+    
+    
 <script> 
-prompt("scheme-tree-eg"); 
+var tripped = false;
+makeEditable("scheme-tree-eg");
+addOutput("scheme-tree-eg");
+linkEditor("scheme-tree-eg", "scheme-tree-eg-output", function(x, y) {
+
+	var g = new Graph("canvas", 960, 700 );
+
+	g.createVertex("390");
+	g.createVertex("26");
+	g.createVertex("15");
+	g.createVertex("*");
+	g.createEdge("390","26");
+	g.createEdge("390","15");
+	g.createEdge("390","*");
+
+	g.go();
+	
+  resetTopEnv();
+  return evaluate(x);
+});
 </script>
 
 <p> requires that the evaluation rule be applied to four different combinations. We can obtain a picture of this process by representing the combination in the form of a tree, as shown in figure 1.1.
