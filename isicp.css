@@ -179,3 +179,7 @@ img.center {
   margin-left:auto; 
   margin-right:auto;
 }
+
+.CodeMirror {
+  line-height: 1.3em;
+}
