@@ -14,6 +14,7 @@
 <script src="coding.js"> </script>
 <script src="footnote/tooltip.js"></script>
 <script src="footnote/tooltip.dynamic.js"></script>
+<script src="footnote/footnote.js"></script>
 
 <title>iSICP 1.1 - The Elements of Programming</title>
 <script type="text/javascript">
@@ -135,7 +136,7 @@ the usual roundoff behavior that one observes when using arithmetic
 operations that preserve a limited number of decimal places of
 accuracy in noninteger operations.
 </div>
-<script src="footnote/footnote.js"></script>
+<script> bind_footnote(); </script>
 
 <h3> Expressions </h3>
 
@@ -155,7 +156,7 @@ when we wish to emphasize the distinction between the input typed by
 the user and the response printed by the interpreter, we will show the
 latter in slanted characters.
 </div>
-<script src="footnote/footnote.js"></script>
+<script> bind_footnote(); </script>
 
 <div id="scheme-number-output" class="output"> </div>
 <script>
@@ -260,7 +261,7 @@ pretty-print position whenever a new line is started and one that
 highlights the matching left parenthesis whenever a right parenthesis
 is typed.
 </div>
-<script src="footnote/footnote.js"></script>
+<script> bind_footnote(); </script>
 
 <p> Even with complex expressions, the interpreter always operates in the same basic cycle: It reads an expression from the terminal, evaluates the expression, and prints the result. This mode of operation is often expressed by saying that the interpreter runs in a read-eval-print loop. Observe in particular that it is not necessary to explicitly instruct the interpreter to print the value of the expression.
 
