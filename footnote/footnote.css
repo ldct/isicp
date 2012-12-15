@@ -11,17 +11,16 @@ a.footnote:hover {
 
 /* tooltip styling */
 .tooltip {
-  display:none;
+  display: none;
   font-family: Georgia;
   font-size: 100%;
   line-height: 1.5em;
   text-align: justify;
-  background: #e8e8e8;
+  background: #f0f0f0;
+  color: #333;
   padding: 2em;
   width: 70ex;
-  float: left;
-  color:#333;
-  box-shadow: 8px 8px 4px #777;
+  box-shadow: 5px 5px 22px #555;
 }
 
 .tooltip a {
