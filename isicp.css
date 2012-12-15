@@ -11,7 +11,7 @@ p, ul, ol, blockquote, table, label, h1, h2, h3, h4, a {
   text-align: justify;
 }
 
-h1, h2, h3, h4, b {
+h1, h2, h3, h4 {
   margin-top: 1.5em;
   color: #444;
 }
