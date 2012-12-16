@@ -3,17 +3,34 @@
 <head>
 <meta charset="UTF-8">
 
+<link rel="stylesheet" type="text/css" href="codemirror.css" />
+<link rel="stylesheet" type="text/css" href="isicp.css" />
+<link rel="stylesheet" type="text/css" href="footnote/footnote.css" />
+<link rel="stylesheet" type="text/css" href="theme.css" />
+
 <script src="biwascheme.js"> </script>
 <script src="codemirror/lib/codemirror.js"></script>
 <script src="codemirror/mode/scheme/scheme.js"></script>
 <script src="jquery.min.js"></script>
 <script src="coding.js"> </script>
-<script src="isicp.js"> </script>
-
-<link rel="stylesheet" type="text/css" href="codemirror.css" />
-<link rel="stylesheet" type="text/css" href="isicp.css" />
+<script src="footnote/tooltip.js"></script>
+<script src="footnote/tooltip.dynamic.js"></script>
+<script src="footnote/footnote.js"></script>
 
 <title>iSICP 1.2 - Procedures and the Processes They Generate</title>
+<script type="text/javascript">
+
+  var _gaq = _gaq || [];
+  _gaq.push(['_setAccount', 'UA-36868476-1']);
+  _gaq.push(['_trackPageview']);
+
+  (function() {
+    var ga = document.createElement('script'); ga.type = 'text/javascript'; ga.async = true;
+    ga.src = ('https:' == document.location.protocol ? 'https://ssl' : 'http://www') + '.google-analytics.com/ga.js';
+    var s = document.getElementsByTagName('script')[0]; s.parentNode.insertBefore(ga, s);
+  })();
+  
+</script>
 </head>
 <body>
 
@@ -32,9 +49,15 @@
   
     <div id="currently-editing"> </div>
     
+    <p>
+    
+    <div id="toc"> </div>
+    
     <p> Video Lectures: 
     <a href='http://www.youtube.com/watch?v=2Op3QLzMgSY' title="Overview and Introduction to Lisp"> 1A </a> &nbsp;
     <a href='http://www.youtube.com/watch?v=dlbMuv-jix8' title="Procedures and Processes; Substitution Model"> 1B  </a>
+    
+    <p style='font-size:12px'> (Click on the left edge of this green box to hide it!)
         
   
   </div>
@@ -42,10 +65,13 @@
 
 <script> 
 $('#sidebox .tab').toggle(function(){
-    $('#sidebox').animate({'right':0});
+    $('#sidebox').animate({'right':'0%'});
 }, function(){
     $('#sidebox').animate({'right':'-30%'});
 });
+
+$(document).ready(createTOC);
+
 </script>
 
 <div id="main">
