@@ -248,12 +248,10 @@ function prompt(s) {
       }
     }
     
-    var evalx = evaluate(x);
-    
-    if (evalx && evalx.toString && evalx.toString() == "#<undef>") {
+    if (ret && ret.toString && ret.toString() == "#<undef>") {
       return "";
     }
-    return evalx;
+    return ret;
   });
 }
 
