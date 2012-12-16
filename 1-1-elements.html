@@ -304,7 +304,7 @@ linkEditor("scheme-ex-12-input", "scheme-ex-12-input-output", function(x, y) {
   var code = "(equal? (quote " + y + ") " + 
       "'(/ (+ 5 4 (- 2 (- 3 (+ 6 (/ 4 5))))) (* 3 (- 6 2) (- 2 7))))";
 
-  if (biwascheme.evaluate(code) == true) {
+  if (beval(code) == true) {
     return "<div class='right-answer'> \u2713 </div>";
   } else {
     return "<div class='wrong-answer'> \u2717 </div>";
@@ -915,7 +915,7 @@ linkEditor("scheme-ex-13-input", "scheme-ex-13-input-output", function(x, y) {
                       ssls(4, 13, 6) +
                       ssls(2, 13, 5) + ")";
 
-  if (biwascheme.evaluate(code) == true) {
+  if (beval(code) == true) {
     return "<div class='right-answer'> \u2713 </div>";
   } else {
     return "<div class='wrong-answer'> \u2717 </div>";
