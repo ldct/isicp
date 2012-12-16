@@ -296,6 +296,7 @@ prompt("scheme-define-fib");
 
 <p> It is not hard to show that, after applying this transformation n times, a and b will be equal, respectively, to Fib(n + 1) and Fib(n). Thus, we can compute Fibonacci numbers iteratively using the procedure
 
+<div id="scheme-define-fib-iterative">
 (define (fib n)
   (fib-iter 1 0 n))
 
@@ -303,6 +304,10 @@ prompt("scheme-define-fib");
   (if (= count 0)
       b
       (fib-iter (+ a b) a (- count 1))))
+</div>
+<script>
+prompt("scheme-define-fib-iterative");
+</script>
 
 <p> This second method for computing Fib(n) is a linear iteration. The difference in number of steps required by the two methods -- one linear in n, one growing as fast as Fib(n) itself -- is enormous, even for small inputs.
 
@@ -379,7 +384,52 @@ depsOf["scheme-count-change-100"] = ["scheme-define-count-change"];
 <p> <b> Exercise 1.11. </b> A function f is defined by the rule that f(n) = n if n&lt;3 and f(n) = f(n - 1) + 2f(n - 2) + 3f(n - 3) if n &gt; 3. Write a procedure that computes f by means of a recursive process. 
 
 <p> Write a procedure that computes f by means of an iterative process.
+
+<div id="scheme-ex-fn-3-input" class='input'></div>
+
 </div>
+
+<script>
+makeChangeOnFocusInput("scheme-ex-fn-3-input", 
+                       "(define (f n)\n  <your code here>)", 
+                       "(define (f n)\n  ");
+addOutput("scheme-ex-fn-3-input");
+linkEditor("scheme-ex-fn-3-input", "scheme-ex-fn-3-input-output", function(x, y) {
+
+function f(n) {
+  if (n < 3) {
+    return n;
+  } else {
+    return f(n-1) + 2*f(n-2) + 3*f(n-3);
+  }
+}
+
+function fs(n) {
+  return "(= (f " + n + ") " + f(n) + ")";
+}
+
+
+  var code = y + "\n" +
+            "(and " + fs(1)  + 
+                      fs(10) + 
+                      fs(3) + ")";
+
+  if (biwascheme.evaluate(code) == true) {
+    return "<div class='right-answer'> \u2713 </div>";
+  } else {
+    return "<div class='wrong-answer'> \u2717 </div>";
+  }
+});
+</script>
+
+<!--
+(define (f n)
+  (if (< n 3)
+      n
+      (+ (* 1 (f (- n 1)))
+         (* 2 (f (- n 2)))
+         (* 3 (f (- n 3))))))
+!-->
 
 <p>
 
@@ -569,7 +619,6 @@ prompt("scheme-define-even");
 
 <div class='exercise'>
 <p> <b> Exercise 1.17. </b> The exponentiation algorithms in this section are based on performing exponentiation by means of repeated multiplication. In a similar way, one can perform integer multiplication by means of repeated addition. The following multiplication procedure (in which it is assumed that our language can only add, not multiply) is analogous to the expt procedure:
-</div>
 
 <div id="scheme-define-times">
 (define (* a b)
@@ -583,6 +632,10 @@ prompt("scheme-define-times");
 
 <p> This algorithm takes a number of steps that is linear in b. Now suppose we include, together with addition, operations double, which doubles an integer, and halve, which divides an (even) integer by 2. Using these, design a multiplication procedure analogous to fast-expt that uses a logarithmic number of steps.
 
+</div>
+
+<p>
+
 <div class='exercise'>
 <p> <b> Exercise 1.18. </b> Using the results of exercises 1.16 and 1.17, devise a procedure that generates an iterative process for multiplying two integers in terms of adding, doubling, and halving and uses a logarithmic number of steps.40
 </div>
@@ -590,17 +643,20 @@ prompt("scheme-define-times");
 <p>
 
 <div class='exercise'>
-Exercise 1.19.   There is a clever algorithm for computing the Fibonacci numbers in a logarithmic number of steps. Recall the transformation of the state variables a and b in the fib-iter process of section 1.2.2: a a + b and b a. Call this transformation T, and observe that applying T over and over again n times, starting with 1 and 0, produces the pair Fib(n + 1) and Fib(n). In other words, the Fibonacci numbers are produced by applying Tn, the nth power of the transformation T, starting with the pair (1,0). Now consider T to be the special case of p = 0 and q = 1 in a family of transformations Tpq, where Tpq transforms the pair (a,b) according to a bq + aq + ap and b bp + aq. Show that if we apply such a transformation Tpq twice, the effect is the same as using a single transformation Tp'q' of the same form, and compute p' and q' in terms of p and q. This gives us an explicit way to square these transformations, and thus we can compute Tn using successive squaring, as in the fast-expt procedure. Put this all together to complete the following procedure, which runs in a logarithmic number of steps:41
+<p> <b> Exercise 1.19. </b>  There is a clever algorithm for computing the Fibonacci numbers in a logarithmic number of steps. Recall the transformation of the state variables a and b in the fib-iter process of section 1.2.2: a a + b and b a. Call this transformation T, and observe that applying T over and over again n times, starting with 1 and 0, produces the pair Fib(n + 1) and Fib(n). In other words, the Fibonacci numbers are produced by applying Tn, the nth power of the transformation T, starting with the pair (1,0). Now consider T to be the special case of p = 0 and q = 1 in a family of transformations Tpq, where Tpq transforms the pair (a,b) according to a bq + aq + ap and b bp + aq. Show that if we apply such a transformation Tpq twice, the effect is the same as using a single transformation Tp'q' of the same form, and compute p' and q' in terms of p and q. This gives us an explicit way to square these transformations, and thus we can compute Tn using successive squaring, as in the fast-expt procedure. Put this all together to complete the following procedure, which runs in a logarithmic number of steps:41
 
+
+<div id="scheme-define-log-fib">
 (define (fib n)
   (fib-iter 1 0 0 1 n))
+  
 (define (fib-iter a b p q count)
   (cond ((= count 0) b)
         ((even? count)
          (fib-iter a
                    b
-                   <??>      ; compute p'
-                   <??>      ; compute q'
+                   &lt;??&gt;      ; compute p'
+                   &lt;??&gt;      ; compute q'
                    (/ count 2)))
         (else (fib-iter (+ (* b q) (* a q) (* a p))
                         (+ (* b p) (* a q))
@@ -608,41 +664,53 @@ Exercise 1.19.   There is a clever algorithm for computing the Fibonacci numbers
                         q
                         (- count 1)))))
 </div>
+<script>
+prompt("scheme-define-log-fib");
+</script>
+
+</div>
 
 <h3>  Greatest Common Divisors </h3>
 
 <p> The greatest common divisor (GCD) of two integers a and b is defined to be the largest integer that divides both a and b with no remainder. For example, the GCD of 16 and 28 is 4. In chapter 2, when we investigate how to implement rational-number arithmetic, we will need to be able to compute GCDs in order to reduce rational numbers to lowest terms. (To reduce a rational number to lowest terms, we must divide both the numerator and the denominator by their GCD. For example, 16/28 reduces to 4/7.) One way to find the GCD of two integers is to factor them and search for common factors, but there is a famous algorithm that is much more efficient.
 
-The idea of the algorithm is based on the observation that, if r is the remainder when a is divided by b, then the common divisors of a and b are precisely the same as the common divisors of b and r. Thus, we can use the equation
+<p> The idea of the algorithm is based on the observation that, if r is the remainder when a is divided by b, then the common divisors of a and b are precisely the same as the common divisors of b and r. Thus, we can use the equation
 
-to successively reduce the problem of computing a GCD to the problem of computing the GCD of smaller and smaller pairs of integers. For example,
+<p> to successively reduce the problem of computing a GCD to the problem of computing the GCD of smaller and smaller pairs of integers. For example,
 
-reduces GCD(206,40) to GCD(2,0), which is 2. It is possible to show that starting with any two positive integers and performing repeated reductions will always eventually produce a pair where the second number is 0. Then the GCD is the other number in the pair. This method for computing the GCD is known as Euclid's Algorithm.42
+<p> reduces GCD(206,40) to GCD(2,0), which is 2. It is possible to show that starting with any two positive integers and performing repeated reductions will always eventually produce a pair where the second number is 0. Then the GCD is the other number in the pair. This method for computing the GCD is known as Euclid's Algorithm.42
 
-It is easy to express Euclid's Algorithm as a procedure:
+<p> It is easy to express Euclid's Algorithm as a procedure:
 
+<div id="scheme-define-gcd">
 (define (gcd a b)
   (if (= b 0)
       a
       (gcd b (remainder a b))))
+</div>
+<script>
+prompt("scheme-define-gcd");
+</script>
 
-This generates an iterative process, whose number of steps grows as the logarithm of the numbers involved.
+<p> This generates an iterative process, whose number of steps grows as the logarithm of the numbers involved.
 
-The fact that the number of steps required by Euclid's Algorithm has logarithmic growth bears an interesting relation to the Fibonacci numbers:
+<p> The fact that the number of steps required by Euclid's Algorithm has logarithmic growth bears an interesting relation to the Fibonacci numbers:
 
-Lamé's Theorem: If Euclid's Algorithm requires k steps to compute the GCD of some pair, then the smaller number in the pair must be greater than or equal to the kth Fibonacci number.43
+<blockquote> Lamé's Theorem: If Euclid's Algorithm requires k steps to compute the GCD of some pair, then the smaller number in the pair must be greater than or equal to the kth Fibonacci number.43 </blockquote>
 
-We can use this theorem to get an order-of-growth estimate for Euclid's Algorithm. Let n be the smaller of the two inputs to the procedure. If the process takes k steps, then we must have n> Fib (k) k/5. Therefore the number of steps k grows as the logarithm (to the base ) of n. Hence, the order of growth is (log n).
+<p> We can use this theorem to get an order-of-growth estimate for Euclid's Algorithm. Let n be the smaller of the two inputs to the procedure. If the process takes k steps, then we must have n> Fib (k) k/5. Therefore the number of steps k grows as the logarithm (to the base ) of n. Hence, the order of growth is O(log n).
 
-Exercise 1.20.  The process that a procedure generates is of course dependent on the rules used by the interpreter. As an example, consider the iterative gcd procedure given above. Suppose we were to interpret this procedure using normal-order evaluation, as discussed in section 1.1.5. (The normal-order-evaluation rule for if is described in exercise 1.5.) Using the substitution method (for normal order), illustrate the process generated in evaluating (gcd 206 40) and indicate the remainder operations that are actually performed. How many remainder operations are actually performed in the normal-order evaluation of (gcd 206 40)? In the applicative-order evaluation?
+<div class="exercise">
+<p> <b> Exercise 1.20. </b> The process that a procedure generates is of course dependent on the rules used by the interpreter. As an example, consider the iterative gcd procedure given above. Suppose we were to interpret this procedure using normal-order evaluation, as discussed in section 1.1.5. (The normal-order-evaluation rule for if is described in exercise 1.5.) Using the substitution method (for normal order), illustrate the process generated in evaluating (gcd 206 40) and indicate the remainder operations that are actually performed. How many remainder operations are actually performed in the normal-order evaluation of (gcd 206 40)? In the applicative-order evaluation?
+</div>
 
-1.2.6  Example: Testing for Primality
+<h3>  Example: Testing for Primality </h3>
 
-This section describes two methods for checking the primality of an integer n, one with order of growth (n), and a ``probabilistic'' algorithm with order of growth (log n). The exercises at the end of this section suggest programming projects based on these algorithms.
+<p> This section describes two methods for checking the primality of an integer n, one with order of growth (n), and a ``probabilistic'' algorithm with order of growth (log n). The exercises at the end of this section suggest programming projects based on these algorithms.
 
-Searching for divisors
+<h4> Searching for divisors </h4>
 
-Since ancient times, mathematicians have been fascinated by problems concerning prime numbers, and many people have worked on the problem of determining ways to test if numbers are prime. One way to test if a number is prime is to find the number's divisors. The following program finds the smallest integral divisor (greater than 1) of a given number n. It does this in a straightforward way, by testing n for divisibility by successive integers starting with 2.
+<p> Since ancient times, mathematicians have been fascinated by problems concerning prime numbers, and many people have worked on the problem of determining ways to test if numbers are prime. One way to test if a number is prime is to find the number's divisors. The following program finds the smallest integral divisor (greater than 1) of a given number n. It does this in a straightforward way, by testing n for divisibility by successive integers starting with 2.
 
 (define (smallest-divisor n)
   (find-divisor n 2))
@@ -653,24 +721,24 @@ Since ancient times, mathematicians have been fascinated by problems concerning 
 (define (divides? a b)
   (= (remainder b a) 0))
 
-We can test whether a number is prime as follows: n is prime if and only if n is its own smallest divisor.
+<p> We can test whether a number is prime as follows: n is prime if and only if n is its own smallest divisor.
 
 (define (prime? n)
   (= n (smallest-divisor n)))
 
-The end test for find-divisor is based on the fact that if n is not prime it must have a divisor less than or equal to n.44 This means that the algorithm need only test divisors between 1 and n. Consequently, the number of steps required to identify n as prime will have order of growth (n).
+<p> The end test for find-divisor is based on the fact that if n is not prime it must have a divisor less than or equal to n.44 This means that the algorithm need only test divisors between 1 and n. Consequently, the number of steps required to identify n as prime will have order of growth (n).
 
-The Fermat test
+<h4> The Fermat test </h4>
 
-The (log n) primality test is based on a result from number theory known as Fermat's Little Theorem.45
+<p> The (log n) primality test is based on a result from number theory known as Fermat's Little Theorem.45
 
-Fermat's Little Theorem: If n is a prime number and a is any positive integer less than n, then a raised to the nth power is congruent to a modulo n.
+<blockquote> Fermat's Little Theorem: If n is a prime number and a is any positive integer less than n, then a raised to the nth power is congruent to a modulo n. </blockquote>
 
-(Two numbers are said to be congruent modulo n if they both have the same remainder when divided by n. The remainder of a number a when divided by n is also referred to as the remainder of a modulo n, or simply as a modulo n.)
+<p> (Two numbers are said to be congruent modulo n if they both have the same remainder when divided by n. The remainder of a number a when divided by n is also referred to as the remainder of a modulo n, or simply as a modulo n.)
 
-If n is not prime, then, in general, most of the numbers a &lt; n will not satisfy the above relation. This leads to the following algorithm for testing primality: Given a number n, pick a random number a &lt; n and compute the remainder of an modulo n. If the result is not equal to a, then n is certainly not prime. If it is a, then chances are good that n is prime. Now pick another random number a and test it with the same method. If it also satisfies the equation, then we can be even more confident that n is prime. By trying more and more values of a, we can increase our confidence in the result. This algorithm is known as the Fermat test.
+<p> If n is not prime, then, in general, most of the numbers a &lt; n will not satisfy the above relation. This leads to the following algorithm for testing primality: Given a number n, pick a random number a &lt; n and compute the remainder of an modulo n. If the result is not equal to a, then n is certainly not prime. If it is a, then chances are good that n is prime. Now pick another random number a and test it with the same method. If it also satisfies the equation, then we can be even more confident that n is prime. By trying more and more values of a, we can increase our confidence in the result. This algorithm is known as the Fermat test.
 
-To implement the Fermat test, we need a procedure that computes the exponential of a number modulo another number:
+<p> To implement the Fermat test, we need a procedure that computes the exponential of a number modulo another number:
 
 (define (expmod base exp m)
   (cond ((= exp 0) 1)
@@ -681,9 +749,9 @@ To implement the Fermat test, we need a procedure that computes the exponential 
          (remainder (* base (expmod base (- exp 1) m))
                     m))))        
 
-This is very similar to the fast-expt procedure of section 1.2.4. It uses successive squaring, so that the number of steps grows logarithmically with the exponent.46
+<p> This is very similar to the fast-expt procedure of section 1.2.4. It uses successive squaring, so that the number of steps grows logarithmically with the exponent.46
 
-The Fermat test is performed by choosing at random a number a between 1 and n - 1 inclusive and checking whether the remainder modulo n of the nth power of a is equal to a. The random number a is chosen using the procedure random, which we assume is included as a primitive in Scheme. Random returns a nonnegative integer less than its integer input. Hence, to obtain a random number between 1 and n - 1, we call random with an input of n - 1 and add 1 to the result:
+<p> The Fermat test is performed by choosing at random a number a between 1 and n - 1 inclusive and checking whether the remainder modulo n of the nth power of a is equal to a. The random number a is chosen using the procedure random, which we assume is included as a primitive in Scheme. Random returns a nonnegative integer less than its integer input. Hence, to obtain a random number between 1 and n - 1, we call random with an input of n - 1 and add 1 to the result:
 
 (define (fermat-test n)
   (define (try-it a)
@@ -697,13 +765,13 @@ The following procedure runs the test a given number of times, as specified by a
         ((fermat-test n) (fast-prime? n (- times 1)))
         (else false)))
 
-Probabilistic methods
+<h4> Probabilistic methods </h4>
 
-The Fermat test differs in character from most familiar algorithms, in which one computes an answer that is guaranteed to be correct. Here, the answer obtained is only probably correct. More precisely, if n ever fails the Fermat test, we can be certain that n is not prime. But the fact that n passes the test, while an extremely strong indication, is still not a guarantee that n is prime. What we would like to say is that for any number n, if we perform the test enough times and find that n always passes the test, then the probability of error in our primality test can be made as small as we like.
+<p> The Fermat test differs in character from most familiar algorithms, in which one computes an answer that is guaranteed to be correct. Here, the answer obtained is only probably correct. More precisely, if n ever fails the Fermat test, we can be certain that n is not prime. But the fact that n passes the test, while an extremely strong indication, is still not a guarantee that n is prime. What we would like to say is that for any number n, if we perform the test enough times and find that n always passes the test, then the probability of error in our primality test can be made as small as we like.
 
-Unfortunately, this assertion is not quite correct. There do exist numbers that fool the Fermat test: numbers n that are not prime and yet have the property that an is congruent to a modulo n for all integers a &lt; n. Such numbers are extremely rare, so the Fermat test is quite reliable in practice.47 There are variations of the Fermat test that cannot be fooled. In these tests, as with the Fermat method, one tests the primality of an integer n by choosing a random integer a &lt; n and checking some condition that depends upon n and a. (See exercise 1.28 for an example of such a test.) On the other hand, in contrast to the Fermat test, one can prove that, for any n, the condition does not hold for most of the integers a &lt; n unless n is prime. Thus, if n passes the test for some random choice of a, the chances are better than even that n is prime. If n passes the test for two random choices of a, the chances are better than 3 out of 4 that n is prime. By running the test with more and more randomly chosen values of a we can make the probability of error as small as we like.
+<p> Unfortunately, this assertion is not quite correct. There do exist numbers that fool the Fermat test: numbers n that are not prime and yet have the property that an is congruent to a modulo n for all integers a &lt; n. Such numbers are extremely rare, so the Fermat test is quite reliable in practice.47 There are variations of the Fermat test that cannot be fooled. In these tests, as with the Fermat method, one tests the primality of an integer n by choosing a random integer a &lt; n and checking some condition that depends upon n and a. (See exercise 1.28 for an example of such a test.) On the other hand, in contrast to the Fermat test, one can prove that, for any n, the condition does not hold for most of the integers a &lt; n unless n is prime. Thus, if n passes the test for some random choice of a, the chances are better than even that n is prime. If n passes the test for two random choices of a, the chances are better than 3 out of 4 that n is prime. By running the test with more and more randomly chosen values of a we can make the probability of error as small as we like.
 
-The existence of tests for which one can prove that the chance of error becomes arbitrarily small has sparked interest in algorithms of this type, which have come to be known as probabilistic algorithms. There is a great deal of research activity in this area, and probabilistic algorithms have been fruitfully applied to many fields.48
+<p> The existence of tests for which one can prove that the chance of error becomes arbitrarily small has sparked interest in algorithms of this type, which have come to be known as probabilistic algorithms. There is a great deal of research activity in this area, and probabilistic algorithms have been fruitfully applied to many fields.48
 
 Exercise 1.21.  Use the smallest-divisor procedure to find the smallest divisor of each of the following numbers: 199, 1999, 19999.
 
@@ -720,7 +788,7 @@ Exercise 1.22.  Most Lisp implementations include a primitive called runtime tha
   (display " *** ")
   (display elapsed-time))
 
-Using this procedure, write a procedure search-for-primes that checks the primality of consecutive odd integers in a specified range. Use your procedure to find the three smallest primes larger than 1000; larger than 10,000; larger than 100,000; larger than 1,000,000. Note the time needed to test each prime. Since the testing algorithm has order of growth of (n), you should expect that testing for primes around 10,000 should take about 10 times as long as testing for primes around 1000. Do your timing data bear this out? How well do the data for 100,000 and 1,000,000 support the n prediction? Is your result compatible with the notion that programs on your machine run in time proportional to the number of steps required for the computation?
+<p> Using this procedure, write a procedure search-for-primes that checks the primality of consecutive odd integers in a specified range. Use your procedure to find the three smallest primes larger than 1000; larger than 10,000; larger than 100,000; larger than 1,000,000. Note the time needed to test each prime. Since the testing algorithm has order of growth of (n), you should expect that testing for primes around 10,000 should take about 10 times as long as testing for primes around 1000. Do your timing data bear this out? How well do the data for 100,000 and 1,000,000 support the n prediction? Is your result compatible with the notion that programs on your machine run in time proportional to the number of steps required for the computation?
 
 Exercise 1.23.  The smallest-divisor procedure shown at the start of this section does lots of needless testing: After it checks to see if the number is divisible by 2 there is no point in checking to see if it is divisible by any larger even numbers. This suggests that the values used for test-divisor should not be 2, 3, 4, 5, 6, ..., but rather 2, 3, 5, 7, 9, .... To implement this change, define a procedure next that returns 3 if its input is equal to 2 and otherwise returns its input plus 2. Modify the smallest-divisor procedure to use (next test-divisor) instead of (+ test-divisor 1). With timed-prime-test incorporating this modified version of smallest-divisor, run the test for each of the 12 primes found in exercise 1.22. Since this modification halves the number of test steps, you should expect it to run about twice as fast. Is this expectation confirmed? If not, what is the observed ratio of the speeds of the two algorithms, and how do you explain the fact that it is different from 2?
 
@@ -731,9 +799,10 @@ Exercise 1.25.  Alyssa P. Hacker complains that we went to a lot of extra work i
 (define (expmod base exp m)
   (remainder (fast-expt base exp) m))
 
-Is she correct? Would this procedure serve as well for our fast prime tester? Explain.
+<p> Is she correct? Would this procedure serve as well for our fast prime tester? Explain.
 
-Exercise 1.26.  Louis Reasoner is having great difficulty doing exercise 1.24. His fast-prime? test seems to run more slowly than his prime? test. Louis calls his friend Eva Lu Ator over to help. When they examine Louis's code, they find that he has rewritten the expmod procedure to use an explicit multiplication, rather than calling square:
+<div class="exercise">
+<p> <b> Exercise 1.26. </b> Louis Reasoner is having great difficulty doing exercise 1.24. His fast-prime? test seems to run more slowly than his prime? test. Louis calls his friend Eva Lu Ator over to help. When they examine Louis's code, they find that he has rewritten the expmod procedure to use an explicit multiplication, rather than calling square:
 
 (define (expmod base exp m)
   (cond ((= exp 0) 1)
@@ -745,11 +814,20 @@ Exercise 1.26.  Louis Reasoner is having great difficulty doing exercise 1.24. H
          (remainder (* base (expmod base (- exp 1) m))
                     m))))
 
-``I don't see what difference that could make,'' says Louis. ``I do.'' says Eva. ``By writing the procedure like that, you have transformed the (log n) process into a (n) process.'' Explain.
+<p> ``I don't see what difference that could make,'' says Louis. ``I do.'' says Eva. ``By writing the procedure like that, you have transformed the (log n) process into a (n) process.'' Explain.
+</div>
 
-Exercise 1.27.  Demonstrate that the Carmichael numbers listed in footnote 47 really do fool the Fermat test. That is, write a procedure that takes an integer n and tests whether an is congruent to a modulo n for every a &lt; n, and try your procedure on the given Carmichael numbers.
+<p>
 
-Exercise 1.28.  One variant of the Fermat test that cannot be fooled is called the Miller-Rabin test (Miller 1976; Rabin 1980). This starts from an alternate form of Fermat's Little Theorem, which states that if n is a prime number and a is any positive integer less than n, then a raised to the (n - 1)st power is congruent to 1 modulo n. To test the primality of a number n by the Miller-Rabin test, we pick a random number a &lt; n and raise a to the (n - 1)st power modulo n using the expmod procedure. However, whenever we perform the squaring step in expmod, we check to see if we have discovered a ``nontrivial square root of 1 modulo n,'' that is, a number not equal to 1 or n - 1 whose square is equal to 1 modulo n. It is possible to prove that if such a nontrivial square root of 1 exists, then n is not prime. It is also possible to prove that if n is an odd number that is not prime, then, for at least half the numbers a &lt; n, computing an-1 in this way will reveal a nontrivial square root of 1 modulo n. (This is why the Miller-Rabin test cannot be fooled.) Modify the expmod procedure to signal if it discovers a nontrivial square root of 1, and use this to implement the Miller-Rabin test with a procedure analogous to fermat-test. Check your procedure by testing various known primes and non-primes. Hint: One convenient way to make expmod signal is to have it return 0.
+<div class="exercise">
+<p> <b> Exercise 1.27. </b> Demonstrate that the Carmichael numbers listed in footnote 47 really do fool the Fermat test. That is, write a procedure that takes an integer n and tests whether an is congruent to a modulo n for every a &lt; n, and try your procedure on the given Carmichael numbers.
+</div>
+
+<p>
+
+<div class="exercise">
+<p> <b> Exercise 1.28. </b> One variant of the Fermat test that cannot be fooled is called the Miller-Rabin test (Miller 1976; Rabin 1980). This starts from an alternate form of Fermat's Little Theorem, which states that if n is a prime number and a is any positive integer less than n, then a raised to the (n - 1)st power is congruent to 1 modulo n. To test the primality of a number n by the Miller-Rabin test, we pick a random number a &lt; n and raise a to the (n - 1)st power modulo n using the expmod procedure. However, whenever we perform the squaring step in expmod, we check to see if we have discovered a ``nontrivial square root of 1 modulo n,'' that is, a number not equal to 1 or n - 1 whose square is equal to 1 modulo n. It is possible to prove that if such a nontrivial square root of 1 exists, then n is not prime. It is also possible to prove that if n is an odd number that is not prime, then, for at least half the numbers a &lt; n, computing an-1 in this way will reveal a nontrivial square root of 1 modulo n. (This is why the Miller-Rabin test cannot be fooled.) Modify the expmod procedure to signal if it discovers a nontrivial square root of 1, and use this to implement the Miller-Rabin test with a procedure analogous to fermat-test. Check your procedure by testing various known primes and non-primes. Hint: One convenient way to make expmod signal is to have it return 0.
+</div>
 
 <p> <a rel="license" href="http://creativecommons.org/licenses/by-sa/3.0/deed.en_US"><img alt="Creative Commons License" style="border-width:0" src="http://i.creativecommons.org/l/by-sa/3.0/88x31.png" /></a><br /><span xmlns:dct="http://purl.org/dc/terms/" href="http://purl.org/dc/dcmitype/InteractiveResource" property="dct:title" rel="dct:type">Interactive SICP</span> is licensed under a <a rel="license" href="http://creativecommons.org/licenses/by-sa/3.0/deed.en_US">Creative Commons Attribution-ShareAlike 3.0 Unported License</a>.<br />Based on a work at <a xmlns:dct="http://purl.org/dc/terms/" href="http://mitpress.mit.edu/sicp/" rel="dct:source">http://mitpress.mit.edu/sicp/</a>.
 
