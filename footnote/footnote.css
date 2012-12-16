@@ -21,6 +21,7 @@ a.footnote:hover {
   padding: 2em;
   width: 70ex;
   box-shadow: 5px 5px 22px #555;
+  z-index: 2;
 }
 
 .tooltip a {
