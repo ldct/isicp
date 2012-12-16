@@ -11,7 +11,7 @@ p, ul, ol, blockquote, table, label, h1, h2, h3, h4, a {
   text-align: justify;
 }
 
-h1, h2, h3, h4, b {
+h1, h2, h3, h4 {
   margin-top: 1.5em;
   color: #444;
 }
@@ -41,10 +41,6 @@ h2 {
   font-style: italic;
   padding: 0pt 4pt;
   color: #444;
-}
-
-.input {
-  font-style: italic;
 }
 
 .exercise {
@@ -80,10 +76,6 @@ h2 {
     top:10px;
     width:35%;
     height:100%;
-}
-
-#scheme-scratch {
-  margin-top: 2.5em;
 }
 
 #sidebox .content {
