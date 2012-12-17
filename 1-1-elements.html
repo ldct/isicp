@@ -90,7 +90,7 @@ $(document).ready(createTOC);
 
 <p> In programming, we deal with two kinds of elements: procedures and data. (Later we will discover that they are really not so distinct.) Informally, data is &ldquo;stuff&thinsp;&rdquo; that we want to manipulate, and procedures are descriptions of the rules for manipulating the data. Thus, any powerful programming language should be able to describe primitive data and primitive procedures and should have methods for combining and abstracting procedures and data.
 
-<p> In this chapter we will deal only with simple numerical data so that we can focus on the rules for building procedures.<a id="f4" class="footnote"><sup>4</sup></a> In later chapters we will see that these same rules allow us to build procedures to manipulate compound data as well.
+<p> In this chapter we will deal only with simple numerical data so that we can focus on the rules for building procedures.<a name="footnote_1.4" class="footnote"><sup>4</sup></a> In later chapters we will see that these same rules allow us to build procedures to manipulate compound data as well.
 
 <div class="tooltip"> 
 The characterization of numbers as &ldquo;simple data&rdquo; is a barefaced bluff.
@@ -113,7 +113,6 @@ the usual roundoff behavior that one observes when using arithmetic
 operations that preserve a limited number of decimal places of
 accuracy in noninteger operations.
 </div>
-<script> bind_footnote(); </script>
 
 <h3> Expressions </h3>
 
@@ -125,12 +124,11 @@ accuracy in noninteger operations.
 486
 </div>
 
-<p> the interpreter will respond by printing<a id="f5" class="footnote"><sup>5</sup></a>
+<p> the interpreter will respond by printing<a name="footnote_1.5" class="footnote"><sup>5</sup></a>
 
 <div class="tooltip"> 
 Throughout this book, when we wish to emphasize the distinction between the input typed by the user and the response printed by the interpreter, we will show the latter in slanted characters.
 </div>
-<script> bind_footnote(); </script>
 
 <div id="scheme-number-output" class="output"> </div>
 <script>
@@ -225,7 +223,7 @@ linkEditor("scheme-number", "scheme-number-output", function(x, y) {return evalu
 <div id="scheme-long-tree-pp-output" class="output"> </div>
 <script> prompt("scheme-long-tree-pp"); </script>
 
-<p> following a formatting convention known as pretty-printing, in which each long combination is written so that the operands are aligned vertically. The resulting indentations display clearly the structure of the expression.<a id="f6" class="footnote"><sup>6</sup></a>
+<p> following a formatting convention known as pretty-printing, in which each long combination is written so that the operands are aligned vertically. The resulting indentations display clearly the structure of the expression.<a name="footnote_1.6" class="footnote"><sup>6</sup></a>
 
 <div class="tooltip"> 
 Lisp systems typically provide
@@ -235,7 +233,6 @@ pretty-print position whenever a new line is started and one that
 highlights the matching left parenthesis whenever a right parenthesis
 is typed.
 </div>
-<script> bind_footnote(); </script>
 
 <p> Even with complex expressions, the interpreter always operates in the same basic cycle: It reads an expression from the terminal, evaluates the expression, and prints the result. This mode of operation is often expressed by saying that the interpreter runs in a read-eval-print loop. Observe in particular that it is not necessary to explicitly instruct the interpreter to print the value of the expression.
 

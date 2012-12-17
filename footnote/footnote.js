@@ -1,12 +1,9 @@
-// Binds tooltip to preceding element having class "footnote".
-var bind_footnote = function() {
-  $(document).ready( function() {
-    $(".footnote").tooltip({ delay: 500 })
-      .dynamic({	
-  		top:	  { direction: 'up' },
-  		bottom:	  { direction: 'down' },
-  		left:	  { direction: 'right' },
-  		right:	  { direction: 'left' } 
-  	       });
-  });
-};
+// It seems to associate each element from class "footnote" 
+// with immediately following element from class "tooltip". 
+// Apparently it binds all such pairs in one go.
+
+$(function() {
+  $(".footnote").tooltip({
+    delay: 600
+  }).dynamic();
+});
