@@ -1,16 +1,17 @@
-/* trigger button */
-a.footnote {
+a.footnote_marker {
   color: #841;
   cursor: default;
+  font-size: 80%; 
+  vertical-align: top; 
+  position: relative;
+  top: -0.4ex;
 }
 
-/* mouseover state */
-a.footnote:hover {
+a.footnote_marker:hover {
   color: #481;
 }
 
-/* tooltip styling */
-.tooltip {
+.footnote {
   display: none;
   font-family: Georgia;
   font-size: 100%;
@@ -23,7 +24,8 @@ a.footnote:hover {
   box-shadow: 5px 5px 22px #555;
   z-index: 2;
 }
-
-.tooltip a {
+/*
+.footnote a {
   color:#841;
 }
+*/

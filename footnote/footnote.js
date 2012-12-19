@@ -1,9 +1,10 @@
-// It seems to associate each element from class "footnote" 
-// with immediately following element from class "tooltip". 
-// Apparently it binds all such pairs in one go.
+// It associates each element from class "footnote_marker" 
+// with immediately following element from class "footnote". 
+// It binds all such pairs in one go.
 
 $(function() {
-  $(".footnote").tooltip({
+  $(".footnote_marker").tooltip({
+    tipClass: 'footnote',
     delay: 600
   }).dynamic();
 });
