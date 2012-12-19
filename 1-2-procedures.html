@@ -44,7 +44,7 @@
     
     <div id="scheme-scratch">(+ 1 2)</div> 
     <script>
-    prompt("scheme-scratch"); 
+    prompt("scheme-scratch");
     </script>
   
     <div id="currently-editing"> </div>
@@ -106,6 +106,10 @@ There are many ways to compute factorials. One way is to make use of the observa
       (* n (factorial (- n 1)))))
 </div>
 <script>
+var deferDraw = (location.hash == "");
+if (deferDraw) {
+  $("body").hide();
+}
 prompt("scheme-define-factorial");
 </script>
 
