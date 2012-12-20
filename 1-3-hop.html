@@ -45,6 +45,11 @@
     <div id="scheme-scratch">(+ 1 2)</div> 
     <script>
     prompt("scheme-scratch"); 
+    
+    var deferDraw = (location.hash == "");
+    if (deferDraw) {
+      $("body").hide();
+    }
     </script>
   
     <div id="currently-editing"> </div>
@@ -78,17 +83,124 @@ $(document).ready(createTOC);
 
 <p> We have seen that procedures are, in effect, abstractions that describe compound operations on numbers independent of the particular numbers. For example, when we
 
+<div id="scheme-define-cube">
 (define (cube x) (* x x x))
+</div>
+<script>
+prompt("scheme-define-cube");
+</script>
 
 <p> we are not talking about the cube of a particular number, but rather about a method for obtaining the cube of any number. Of course we could get along without ever defining this procedure, by always writing expressions such as
 
+<div id="scheme-cube-ex">
 (* 3 3 3)
 (* x x x)
-(* y y y)        
+(* y y y)
+</div>
+<script>
+prompt("scheme-cube-ex");
+</script>
 
 <p> and never mentioning cube explicitly. This would place us at a serious disadvantage, forcing us to work always at the level of the particular operations that happen to be primitives in the language (multiplication, in this case) rather than in terms of higher-level operations. Our programs would be able to compute cubes, but our language would lack the ability to express the concept of cubing. One of the things we should demand from a powerful programming language is the ability to build abstractions by assigning names to common patterns and then to work in terms of the abstractions directly. Procedures provide this ability. This is why all but the most primitive programming languages include mechanisms for defining procedures.
 
 <p> Yet even in numerical processing we will be severely limited in our ability to create abstractions if we are restricted to procedures whose parameters must be numbers. Often the same programming pattern will be used with a number of different procedures. To express such patterns as concepts, we will need to construct procedures that can accept procedures as arguments or return procedures as values. Procedures that manipulate procedures are called higher-order procedures. This section shows how higher-order procedures can serve as powerful abstraction mechanisms, vastly increasing the expressive power of our language.
+
+<h3> Procedures as Arguments </h3>
+
+<p> Consider the following three procedures. The first computes the sum of the integers from a through b:
+
+<div id="scheme-define-sum-integers">
+(define (sum-integers a b)
+  (if (&gt; a b)
+      0
+      (+ a (sum-integers (+ a 1) b))))
+</div>
+<script>
+prompt("scheme-define-sum-integers");
+</script>
+
+<p> The second computes the sum of the cubes of the integers in the given range:
+
+<div id="scheme-define-sum-cubes">
+(define (sum-cubes a b)
+  (if (&lt; a b)
+      0
+      (+ (cube a) (sum-cubes (+ a 1) b))))
+</div>
+<script>
+prompt("scheme-define-sum-cubes");
+</script>
+
+<p> The third computes the sum of a sequence of terms in the series
+
+<p> <img src='http://mitpress.mit.edu/sicp/full-text/book/ch1-Z-G-26.gif'>
+
+<p> which converges to /8 (very slowly):49
+
+<div id="scheme-define-pi-sum">
+(define (pi-sum a b)
+  (if ( a b)
+      0
+      (+ (/ 1.0 (* a (+ a 2))) (pi-sum (+ a 4) b))))
+</div>
+<script>
+prompt("scheme-define-pi-sum");
+</script>
+
+<p> These three procedures clearly share a common underlying pattern. They are for the most part identical, differing only in the name of the procedure, the function of a used to compute the term to be added, and the function that provides the next value of a. We could generate each of the procedures by filling in slots in the same template:
+
+<div id="scheme-sum-template">
+(define (&lt;name&gt; a b)
+  (if (> a b)
+      0
+      (+ (&lt;term&gt; a)
+         (&lt;name&gt; (&lt;next&gt; a) b))))
+</div>
+<script>
+prompt("scheme-sum-template");
+</script>
+
+<p> The presence of such a common pattern is strong evidence that there is a useful abstraction waiting to be brought to the surface. Indeed, mathematicians long ago identified the abstraction of summation of a series and invented ``sigma notation,'' for example
+
+<p> <img src='http://mitpress.mit.edu/sicp/full-text/book/ch1-Z-G-27.gif'>
+
+<p> to express this concept. The power of sigma notation is that it allows mathematicians to deal with the concept of summation itself rather than only with particular sums -- for example, to formulate general results about sums that are independent of the particular series being summed.
+
+<p> Similarly, as program designers, we would like our language to be powerful enough so that we can write a procedure that expresses the concept of summation itself rather than only procedures that compute particular sums. We can do so readily in our procedural language by taking the common template shown above and transforming the ``slots'' into formal parameters:
+
+<div id="scheme-define-sum">
+(define (sum term a next b)
+  (if (> a b)
+      0
+      (+ (term a)
+         (sum term (next a) next b))))
+</div>
+<script>
+prompt("scheme-define-sum");
+</script>
+
+<p> Notice that sum takes as its arguments the lower and upper bounds a and b together with the procedures term and next. We can use sum just as we would any procedure. For example, we can use it (along with a procedure inc that increments its argument by 1) to define sum-cubes:
+
+<div id="scheme-define-sum-cubes-sum">
+(define (inc n) (+ n 1))
+(define (sum-cubes a b)
+  (sum cube a inc b))
+</div>
+<script>
+prompt("scheme-define-sum-cubes-sum");
+depsOf["scheme-define-sum-cubes-sum"] = ["scheme-define-sum"];
+</script>
+
+<div> Using this, we can compute the sum of the cubes of the integers from 1 to 10:
+
+<div id="scheme-sum-cubes-1-10">
+(sum-cubes 1 10)
+</div>
+<script>
+prompt("scheme-sum-cubes-1-10");
+depsOf["scheme-sum-cubes-1-10"] = ["scheme-define-sum-cubes"];
+</script>
+
 
 
 
