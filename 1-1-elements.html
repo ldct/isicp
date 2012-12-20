@@ -119,7 +119,7 @@ if (deferDraw) {
   $("body").hide();
 }
 makeEditable("scheme-number");
-linkEditor("scheme-number", "scheme-number-output", function(x, y) {return evaluate(x);});
+linkEditor("scheme-number", "scheme-number-output", function(x, y) {return eval_editor(x);});
 </script>
 
 <p> Expressions representing numbers may be combined with an expression representing a primitive procedure (such as <tt>+</tt> or <tt>*</tt>) to form a compound expression that represents the application of the procedure to those numbers. For example:
@@ -278,7 +278,7 @@ linkEditor("scheme-ex-12-input", "scheme-ex-12-input-output", function(x, y) {
   var code = "(equal? (quote " + y + ") " + 
       "'(/ (+ 5 4 (- 2 (- 3 (+ 6 (/ 4 5))))) (* 3 (- 6 2) (- 2 7))))";
 
-  if (beval(code) == true) {
+  if (eval_scheme(code) == true) {
     return "<div class='right-answer'> \u2713 </div>";
   } else {
     return "<div class='wrong-answer'> \u2717 </div>";
@@ -435,8 +435,7 @@ linkEditor("scheme-tree-eg", "scheme-tree-eg-output", function(x, y) {
     tripped = true;
   }
   
-  resetTopEnv();
-  return evaluate(x);
+  return eval_editor(x);
 });
 </script>
 
@@ -889,7 +888,7 @@ linkEditor("scheme-ex-13-input", "scheme-ex-13-input-output", function(x, y) {
                       ssls(4, 13, 6) +
                       ssls(2, 13, 5) + ")";
 
-  if (beval(code) == true) {
+  if (eval_scheme(code) == true) {
     return "<div class='right-answer'> \u2713 </div>";
   } else {
     return "<div class='wrong-answer'> \u2717 </div>";
@@ -1202,13 +1201,10 @@ makeChangeOnFocusInput("scheme-ex-17-input",
                        "(define (my-sqrt x)\n  ");
 addOutput("scheme-ex-17-input");
 linkEditor("scheme-ex-17-input", "scheme-ex-17-input-output", function(x, y) {
-  resetTopEnv();
-  
-  var ret = evaluate(x);
   
   editorOf["scheme-ex-17-my-test"].getOption("onBlur")();
   
-  var evalx = evaluate(x);
+  var evalx = eval_editor(x);
   
   if (evalx && evalx.toString && evalx.toString() == "#<undef>") {
     return "";

@@ -122,23 +122,22 @@ var biwascheme = new BiwaScheme.Interpreter( function(e){
   console.log(e.message);
 });
 
-function resetTopEnv() {
-  BiwaScheme.TopEnv = {};
-  BiwaScheme.TopEnv["define"] = new BiwaScheme.Syntax("define");
-  BiwaScheme.TopEnv["begin"] = new BiwaScheme.Syntax("begin");
-  BiwaScheme.TopEnv["quote"] = new BiwaScheme.Syntax("quote");
-  BiwaScheme.TopEnv["lambda"] = new BiwaScheme.Syntax("lambda");
-  BiwaScheme.TopEnv["if"] = new BiwaScheme.Syntax("if");
-  BiwaScheme.TopEnv["set!"] = new BiwaScheme.Syntax("set!");
-}
+function eval_scheme(s) {
 
-function beval(c) {
+  resetTopEnv();
 
   try {
-    return biwascheme.evaluate(c)
-  } 
-  catch(e) {
-    return;
+    return biwascheme.evaluate(s);
+  } catch (e) {
+    return;// e.toString(); 
+  }
+}
+
+function resetTopEnv() {
+  BiwaScheme.TopEnv = {};
+  
+  for (var s in ["define", "begin", "quote", "lambda", "if", "set!"]) {
+    BiwaScheme.TopEnv[s] = new BiwaScheme.Syntax(s);
   }
 }
 
@@ -152,13 +151,19 @@ function getDeps(_editor) {
   }
 }
 
-function evaluate(_editor) {
+function getDependedOnCode(_editor) {
+  var code = "";
   
   for (var deps = getDeps(_editor), i = 0; i < deps.length; i++) {
-    evaluate(deps[i]);
+    code += getDependedOnCode(deps[i]);
   }
   
-  return beval(editorOf[_editor].getValue());
+  return code + editorOf[_editor].getValue();
+}
+
+function eval_editor(_editor) {
+  
+  return eval_scheme(getDependedOnCode(_editor));
 }
 
 ////////////////////////////////////////////////////////////////////////////////
@@ -238,9 +243,8 @@ function prompt(s) {
   makeEditable(s);
   addOutput(s);
   linkEditor(s, s + "-output", function(x, y) {
-    resetTopEnv();
     
-    var ret = evaluate(x);
+    var ret = eval_editor(x);
     
     if (pushesOf[s]) {
       for (var pushes = pushesOf[s], i = 0; i < pushes.length; i++) {
@@ -353,7 +357,7 @@ function createTOC() {
   
       var current = $(this);
       
-      var title = current.text().slice(0,50).replace(/^\s+/, "").replace(/\s+$/, "").replace(/:/, "").replace(/\s+/g, "-").replace(/\./g, "-").replace(/\-+/g, "-").replace(/[\(\)]/g, "").replace(/'/g, "");
+      var title = current.text().slice(0,50).replace(/^\s+/, "").replace(/\s+$/, "").replace(/:/, "").replace(/\s+/g, "-").replace(/\./g, "-").replace(/\-+/g, "-").replace(/[\(\)]/g, "").replace(/\?/, "").replace(/'/g, "");
       
       current.attr("id", title);
       
