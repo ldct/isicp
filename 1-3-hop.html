@@ -123,23 +123,24 @@ prompt("scheme-define-sum-integers");
 
 <div id="scheme-define-sum-cubes">
 (define (sum-cubes a b)
-  (if (&lt; a b)
+  (if (&gt; a b)
       0
       (+ (cube a) (sum-cubes (+ a 1) b))))
 </div>
 <script>
 prompt("scheme-define-sum-cubes");
+depsOf["scheme-define-sum-cubes"] = ["scheme-define-cube"];
 </script>
 
 <p> The third computes the sum of a sequence of terms in the series
 
 <p> <img src='http://mitpress.mit.edu/sicp/full-text/book/ch1-Z-G-26.gif'>
 
-<p> which converges to /8 (very slowly):49
+<p> which converges to pi/8 (very slowly):49
 
 <div id="scheme-define-pi-sum">
 (define (pi-sum a b)
-  (if ( a b)
+  (if (&gt; a b)
       0
       (+ (/ 1.0 (* a (+ a 2))) (pi-sum (+ a 4) b))))
 </div>
@@ -151,7 +152,7 @@ prompt("scheme-define-pi-sum");
 
 <div id="scheme-sum-template">
 (define (&lt;name&gt; a b)
-  (if (> a b)
+  (if (&gt; a b)
       0
       (+ (&lt;term&gt; a)
          (&lt;name&gt; (&lt;next&gt; a) b))))
@@ -170,7 +171,7 @@ prompt("scheme-sum-template");
 
 <div id="scheme-define-sum">
 (define (sum term a next b)
-  (if (> a b)
+  (if (&gt; a b)
       0
       (+ (term a)
          (sum term (next a) next b))))
@@ -181,26 +182,255 @@ prompt("scheme-define-sum");
 
 <p> Notice that sum takes as its arguments the lower and upper bounds a and b together with the procedures term and next. We can use sum just as we would any procedure. For example, we can use it (along with a procedure inc that increments its argument by 1) to define sum-cubes:
 
-<div id="scheme-define-sum-cubes-sum">
+<div id="scheme-define-inc">
 (define (inc n) (+ n 1))
+</div>
+<script>
+prompt("scheme-define-inc");
+</script>
+
+<div id="scheme-define-sum-cubes-sum">
+
 (define (sum-cubes a b)
   (sum cube a inc b))
 </div>
 <script>
 prompt("scheme-define-sum-cubes-sum");
-depsOf["scheme-define-sum-cubes-sum"] = ["scheme-define-sum"];
+depsOf["scheme-define-sum-cubes-sum"] = ["scheme-define-cube", "scheme-define-inc", "scheme-define-sum"];
 </script>
 
-<div> Using this, we can compute the sum of the cubes of the integers from 1 to 10:
+<p> Using this, we can compute the sum of the cubes of the integers from 1 to 10:
 
 <div id="scheme-sum-cubes-1-10">
 (sum-cubes 1 10)
 </div>
 <script>
 prompt("scheme-sum-cubes-1-10");
-depsOf["scheme-sum-cubes-1-10"] = ["scheme-define-sum-cubes"];
+depsOf["scheme-sum-cubes-1-10"] = ["scheme-define-sum-cubes-sum"];
 </script>
 
+<p> With the aid of an identity procedure to compute the term, we can define sum-integers in terms of sum:
+
+<div id="scheme-define-sum-integers-sum">
+(define (identity x) x)
+
+(define (sum-integers a b)
+  (sum identity a inc b))
+</div>
+<script>
+prompt("scheme-define-sum-integers-sum");
+depsOf["scheme-define-sum-integers-sum"] = ["scheme-define-inc", "scheme-define-sum"];
+</script>
+
+<p> Then we can add up the integers from 1 to 10:
+
+<div id="scheme-sum-integers-1-10">
+(sum-integers 1 10)
+</div>
+<script>
+prompt("scheme-sum-integers-1-10");
+depsOf["scheme-sum-integers-1-10"] = ["scheme-define-sum-integers-sum"];
+</script>
+
+<p> We can also define pi-sum in the same way:50
+
+<div id="scheme-define-pi-sum-sum">
+(define (pi-sum a b)
+  (define (pi-term x)
+    (/ 1.0 (* x (+ x 2))))
+  (define (pi-next x)
+    (+ x 4))
+  (sum pi-term a pi-next b))
+</div>
+<script>
+prompt("scheme-define-pi-sum-sum");
+depsOf["scheme-define-pi-sum-sum"] = ["scheme-define-sum"];
+</script>
+
+<p> Using these procedures, we can compute an approximation to  :
+
+<div id="scheme-pi-sum-pi">
+(* 8 (pi-sum 1 1000))
+</div>
+<script>
+prompt("scheme-pi-sum-pi");
+depsOf["scheme-pi-sum-pi"] = ["scheme-define-pi-sum-sum"];
+</script>
+
+<p> Once we have sum, we can use it as a building block in formulating further concepts. For instance, the definite integral of a function f between the limits a and b can be approximated numerically using the formula
+
+<p> <img src='http://mitpress.mit.edu/sicp/full-text/book/ch1-Z-G-28.gif'>
+
+<p> for small values of dx. We can express this directly as a procedure:
+
+<div id="scheme-define-integral">
+(define (integral f a b dx)
+  (define (add-dx x) (+ x dx))
+  (* (sum f (+ a (/ dx 2.0)) add-dx b)
+     dx))
+</div>
+<script>
+prompt("scheme-define-integral");
+depsOf["scheme-define-integral"] = ["scheme-define-sum"];
+</script>
+
+<p>
+
+<div id="scheme-integral-cube">
+(integral cube 0 1 0.01)
+</div>
+
+<p>
+
+<div id="scheme-integral-cube-finer">
+(integral cube 0 1 0.001)
+</div>
+<script>
+prompt("scheme-integral-cube");
+depsOf["scheme-integral-cube"] = ["scheme-define-cube", "scheme-define-integral"];
+prompt("scheme-integral-cube-finer");
+depsOf["scheme-integral-cube-finer"] = ["scheme-define-cube", "scheme-define-integral"];
+</script>
+
+<p> (The exact value of the integral of cube between 0 and 1 is 1/4.)
+
+<div class="exercise">
+<p> <b> Exercise 1.29. </b> Simpson's Rule is a more accurate method of numerical integration than the method illustrated above. Using Simpson's Rule, the integral of a function f between a and b is approximated as
+
+<p> <img src='http://mitpress.mit.edu/sicp/full-text/book/ch1-Z-G-29.gif'>
+
+<p> where h = (b - a)/n, for some even integer n, and yk = f(a + kh). (Increasing n increases the accuracy of the approximation.) Define a procedure that takes as arguments f, a, b, and n and returns the value of the integral, computed using Simpson's Rule. Use your procedure to integrate cube between 0 and 1 (with n = 100 and n = 1000), and compare the results to those of the integral procedure shown above.
+
+</div>
+
+<p>
+
+<div class="exercise">
+<p> <b> Exercise 1.30. </b> The sum procedure above generates a linear recursion. The procedure can be rewritten so that the sum is performed iteratively. Show how to do this by filling in the missing expressions in the following definition:
+
+(define (sum term a next b)
+  (define (iter a result)
+    (if <??>
+        <??>
+        (iter <??> <??>)))
+  (iter <??> <??>))
+  
+</div>
+
+<p>
+
+<div class="exercise">
+<p> <b> Exercise 1.31. </b>
+
+<ol style="list-style-type: lower-alpha">
+<li>
+The sum procedure is only the simplest of a vast number of similar abstractions that can be captured as higher-order procedures.51 Write an analogous procedure called product that returns the product of the values of a function at points over a given range. Show how to define factorial in terms of product. Also use product to compute approximations to  using the formula52
+
+<p> <img src='http://mitpress.mit.edu/sicp/full-text/book/ch1-Z-G-30.gif'>
+</li>
+
+<li>
+If your product procedure generates a recursive process, write one that generates an iterative process. If it generates an iterative process, write one that generates a recursive process.
+</li>
+</ol>
+</div>
+
+<div class="exercise">
+<p> <b> Exercise 1.32. </b>
+
+<ol style="list-style-type: lower-alpha">
+<li>
+<p> Show that sum and product (exercise 1.31) are both special cases of a still more general notion called accumulate that combines a collection of terms, using some general accumulation function:
+
+<div id="scheme-accumulate-signature">
+(accumulate combiner null-value term a next b)
+</div>
+<script>
+prompt("scheme-accumulate-signature");
+</script>
+
+<p> Accumulate takes as arguments the same term and range specifications as sum and product, together with a combiner procedure (of two arguments) that specifies how the current term is to be combined with the accumulation of the preceding terms and a null-value that specifies what base value to use when the terms run out. Write accumulate and show how sum and product can both be defined as simple calls to accumulate. Write two procedures, one that generates a recursive process and one iterative.
+
+</div>
+
+<div class="exercise">
+<p> <b> Exercise 1.33. </b> You can obtain an even more general version of accumulate (exercise 1.32) by introducing the notion of a filter on the terms to be combined. That is, combine only those terms derived from values in the range that satisfy a specified condition. The resulting filtered-accumulate abstraction takes the same arguments as accumulate, together with an additional predicate of one argument that specifies the filter. Write filtered-accumulate as a procedure. Show how to express the following using filtered-accumulate:
+
+<ol style="list-style-type: lower-alpha">
+<li>
+the sum of the squares of the prime numbers in the interval a to b (assuming that you have a prime? predicate already written)
+</li>
+
+<li>
+the product of all the positive integers less than n that are relatively prime to n (i.e., all positive integers i &lt; n such that GCD(i,n) = 1).
+</li>
+</ol>
+
+</div>
+
+<h3> Constructing Procedures Using Lambda </h3>
+
+<p> In using sum as in section 1.3.1, it seems terribly awkward to have to define trivial procedures such as pi-term and pi-next just so we can use them as arguments to our higher-order procedure. Rather than define pi-next and pi-term, it would be more convenient to have a way to directly specify ``the procedure that returns its input incremented by 4'' and ``the procedure that returns the reciprocal of its input times its input plus 2.'' We can do this by introducing the special form lambda, which creates procedures. Using lambda we can describe what we want as
+
+<div id="scheme-lambda-plus-4">
+(lambda (x) (+ x 4))
+</div>
+<script>
+prompt("scheme-lambda-plus-4");
+</script>
+
+<p> and
+
+<div id="scheme-lambda-inv-poly">
+(lambda (x) (/ 1.0 (* x (+ x 2))))
+</div>
+<script>
+prompt("scheme-lambda-inv-poly");
+</script>
+
+<p> Then our pi-sum procedure can be expressed without defining any auxiliary procedures as
+
+(define (pi-sum a b)
+  (sum (lambda (x) (/ 1.0 (* x (+ x 2))))
+       a
+       (lambda (x) (+ x 4))
+       b))
+
+Again using lambda, we can write the integral procedure without having to define the auxiliary procedure add-dx:
+
+(define (integral f a b dx)
+  (* (sum f
+          (+ a (/ dx 2.0))
+          (lambda (x) (+ x dx))
+          b)
+     dx))
+
+In general, lambda is used to create procedures in the same way as define, except that no name is specified for the procedure:
+
+(lambda (<formal-parameters>) <body>)
+
+The resulting procedure is just as much a procedure as one that is created using define. The only difference is that it has not been associated with any name in the environment. In fact,
+
+
+(define (plus4 x) (+ x 4))
+
+is equivalent to
+
+(define plus4 (lambda (x) (+ x 4)))
+
+<p> We can read a lambda expression as follows:
+
+<p><p><tt>&nbsp;&nbsp;&nbsp;&nbsp;(lambda&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;(x)&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;(+&nbsp;&nbsp;&nbsp;&nbsp;x&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;4))<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<img src="book-Z-G-D-16.gif" border="0">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<img src="book-Z-G-D-16.gif" border="0">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<img src="book-Z-G-D-16.gif" border="0">&nbsp;&nbsp;&nbsp;&nbsp;<img src="book-Z-G-D-16.gif" border="0">&nbsp;&nbsp;&nbsp;&nbsp;<img src="book-Z-G-D-16.gif" border="0"><br>
+&nbsp;the&nbsp;procedure&nbsp;&nbsp;&nbsp;of&nbsp;an&nbsp;argument&nbsp;<tt>x</tt>&nbsp;&nbsp;that&nbsp;adds&nbsp;&nbsp;<tt>x</tt>&nbsp;and&nbsp;4<br>
+</tt><p><p>
+
+Like any expression that has a procedure as its value, a lambda expression can be used as the operator in a combination such as
+
+((lambda (x y z) (+ x y (square z))) 1 2 3)
+12
+
+or, more generally, in any context where we would normally use a procedure name.53
 
 
 

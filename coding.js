@@ -172,6 +172,11 @@ var editorOf = {};
 
 function makeEditable(_editor) {
 
+  if (editorOf[_editor]) {
+    throw "Error: makeEditable called with " + _editor + " which already exists!";
+    return;
+  }
+
   var $editor = $_(_editor);
   var code = cleanCode($editor.text());
   
@@ -240,6 +245,7 @@ function addOutput(_e) {
 }
 
 function prompt(s) {
+
   makeEditable(s);
   addOutput(s);
   linkEditor(s, s + "-output", function(x, y) {
