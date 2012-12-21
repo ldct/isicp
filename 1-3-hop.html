@@ -612,6 +612,7 @@ prompt("scheme-define-f-close-define");
   (g 2))
 </div>
 <script>
+prompt("scheme-define-f-g2");
 </script>
 
 Then we have
@@ -956,150 +957,103 @@ we actually saw two ways to compute square roots as fixed points.  Each method
 begins with a function and finds a fixed point of some transformation of the
 function.  We can express this general idea itself as a procedure:
 
-<div id="">
+<div id="scheme-define-fixed-point-of-transform">
 (define (fixed-point-of-transform g transform guess)
   (fixed-point (transform g) guess))
 </div>
 <script>
+prompt("scheme-define-fixed-point-of-transform");
 </script>
 
-This very general procedure takes as its arguments a procedure @code{g} that
-computes some function, a procedure that transforms @code{g}, and an initial
-guess.  The returned result is a fixed point of the transformed function.
+<p> This very general procedure takes as its arguments a procedure <tt> g </tt> that computes some function, a procedure that transforms <tt> g </tt>, and an initial guess.  The returned result is a fixed point of the transformed function.
 
-Using this abstraction, we can recast the first square-root computation from
-this section (where we look for a fixed point of the average-damped version of
-@i{y} |-&gt; <em> x </em>/@i{y}) as an instance of this general method:
+<p> Using this abstraction, we can recast the first square-root computation from this section (where we look for a fixed point of the average-damped version of y -&gt; x/y) as an instance of this general method:
 
-<div id="">
+
+<div id="scheme-define-sqrt-fixed-point-of-transform">
 (define (sqrt x)
   (fixed-point-of-transform (lambda (y) (/ x y))
                             average-damp
                             1.0))
 </div>
 <script>
+prompt("scheme-define-sqrt-fixed-point-of-transform");
 </script>
 
-Similarly, we can express the second square-root computation from this section
-(an instance of Newton's method that finds a fixed point of the Newton
-transform of @i{y} |-&gt; @i{y}^2 - <em> x </em>) as
+<p> Similarly, we can express the second square-root computation from this section (an instance of Newton's method that finds a fixed point of the Newton transform of y -&gt; y<sup>2</sup> - x) as
 
-<div id="">
+<div id="scheme-defne-sqrt-fixed-point-of-newton-transform">
 (define (sqrt x)
   (fixed-point-of-transform (lambda (y) (- (square y) x))
                             newton-transform
                             1.0))
 </div>
 <script>
+prompt("scheme-defne-sqrt-fixed-point-of-newton-transform");
 </script>
 
-We began section @ref{1-3} with the observation that compound procedures are a
-crucial abstraction mechanism, because they permit us to express general
-methods of computing as explicit elements in our programming language.  Now
-we've seen how higher-order procedures permit us to manipulate these general
-methods to create further abstractions.
+<p> We began section 1.3 with the observation that compound procedures are a crucial abstraction mechanism, because they permit us to express general methods of computing as explicit elements in our programming language. Now we've seen how higher-order procedures permit us to manipulate these general methods to create further abstractions.
 
-As programmers, we should be alert to opportunities to identify the underlying
-abstractions in our programs and to build upon them and generalize them to
-create more powerful abstractions.  This is not to say that one should always
-write programs in the most abstract way possible; expert programmers know how
-to choose the level of abstraction appropriate to their task.  But it is
-important to be able to think in terms of these abstractions, so that we can be
-ready to apply them in new contexts.  The significance of higher-order
-procedures is that they enable us to represent these abstractions explicitly as
-elements in our programming language, so that they can be handled just like
-other computational elements.
+<p> As programmers, we should be alert to opportunities to identify the underlying abstractions in our programs and to build upon them and generalize them to create more powerful abstractions. This is not to say that one should always write programs in the most abstract way possible; expert programmers know how to choose the level of abstraction appropriate to their task. But it is important to be able to think in terms of these abstractions, so that we can be ready to apply them in new contexts. The significance of higher-order procedures is that they enable us to represent these abstractions explicitly as elements in our programming language, so that they can be handled just like other computational elements.
 
-In general, programming languages impose restrictions on the ways in which
-computational elements can be manipulated.  Elements with the fewest
-restrictions are said to have @newterm{first-class} status.  Some of the
-``rights and privileges'' of first-class elements are:@footnote{The notion of
-first-class status of programming-language elements is due to the British
-computer scientist Christopher Strachey (1916-1975).}
+<p> In general, programming languages impose restrictions on the ways in which computational elements can be manipulated.  Elements with the fewest restrictions are said to have @newterm{first-class} status.  Some of the ``rights and privileges'' of first-class elements are:@footnote{The notion of
+first-class status of programming-language elements is due to the British computer scientist Christopher Strachey (1916-1975).}
 
-@itemize @bullet
+<ul>
 
-@item
-They may be named by variables.
+<li> They may be named by variables. </li>
+<li> They may be passed as arguments to procedures. </li>
+<li> They may be returned as the results of procedures. </li>
+<li> They may be included in data structures.65 </li>
 
-@item
-They may be passed as arguments to procedures.
+</ul>
 
-@item
-They may be returned as the results of procedures.
+Lisp, unlike other common programming languages, awards procedures full first-class status.  This poses challenges for efficient implementation, but the resulting gain in expressive power is enormous.@footnote{The major implementation cost of first-class procedures is that allowing procedures to be returned as values requires reserving storage for a procedure's free variableseven while the procedure is not executing.  In the Scheme implementation we will study in section @ref{4-1}, these variables are stored in the procedure's environment.}
 
-@item
-They may be included in data structures.@footnote{We'll see examples of this
-after we introduce data structures in @ref{Chapter 2}.}
+<div class="exercise">
 
-@end itemize
-
-Lisp, unlike other common programming languages, awards procedures full
-first-class status.  This poses challenges for efficient implementation, but
-the resulting gain in expressive power is enormous.@footnote{The major
-implementation cost of first-class procedures is that allowing procedures to be
-returned as values requires reserving storage for a procedure's free variables
-even while the procedure is not executing.  In the Scheme implementation we
-will study in section @ref{4-1}, these variables are stored in the procedure's
-environment.}
-
-@quotation
-@strong{@anchor{Exercise 1-40}Exercise 1.40:} Define a procedure @code{cubic}
+<p> Exercise 1.40. Define a procedure @code{cubic}
 that can be used together with the @code{newtons-method} procedure in
 expressions of the form
 
-<div id="">
+<div id="scheme-newtons-method-cubic">
 (newtons-method (cubic a b c) 1)
 </div>
 <script>
+prompt("scheme-newtons-method-cubic");
 </script>
 
-@noindent
-to approximate zeros of the cubic <em> x </em>^3 +
-@i{a}<em> x </em>^2 + @i{b}<em> x </em> + @i{c}.
-@end quotation
+<p> to approximate zeros of the cubic x3 + ax2 + bx + c.
 
-@quotation
-@strong{@anchor{Exercise 1-41}Exercise 1.41:} Define a procedure @code{double}
-that takes a procedure of one argument as argument and returns a procedure that
-applies the original procedure twice.  For example, if @code{inc} is a
-procedure that adds 1 to its argument, then @code{(double inc)} should be a
-procedure that adds 2.  What value is returned by
+</div>
 
-<div id="">
+<div class="exercise">
+<p> <b> Exercise 1.41. </b> Define a procedure <tt> double </tt> that takes a procedure of one argument as argument and returns a procedure that applies the original procedure twice.  For example, if <tt> inc </tt> is a procedure that adds 1 to its argument, then @code{(double inc)} should be a procedure that adds 2.  What value is returned by
+
+<div id="scheme-double-itered-inc">
 (((double (double double)) inc) 5)
 </div>
 <script>
+prompt("scheme-double-itered-inc");
 </script>
-@end quotation
+</div>
 
-@quotation
-@strong{@anchor{Exercise 1-42}Exercise 1.42:} Let <em> f </em> and @i{g} be two
-one-argument functions.  The @newterm{composition} <em> f </em> after @i{g} is defined
-to be the function <em> x </em> |-&gt; <em> f </em>(@i{g}(<em> x </em>)).  Define a procedure
-@code{compose} that implements composition.  For example, if @code{inc} is a
-procedure that adds 1 to its argument,
+<div class="exercise">
+<p> <b> Exercise 1.42. </b> Let f and g be two one-argument functions. The composition f after g is defined to be the function x f(g(x)). Define a procedure compose that implements composition. For example, if inc is a procedure that adds 1 to its argument,
 
-<div id="">
+
+<div id="scheme-compose-square-inc">
 ((compose square inc) 6)
-@i{49}
 </div>
 <script>
+prompt("scheme-compose-square-inc");
 </script>
-@end quotation
 
-@quotation
-@strong{@anchor{Exercise 1-43}Exercise 1.43:} If <em> f </em> is a numerical function
-and @i{n} is a positive integer, then we can form the @i{n}th repeated
-application of <em> f </em>, which is defined to be the function whose value at <em> x </em>
-is <em> f(f </em>(@dots{}(<em> f(x </em>))@dots{})).  For example, if <em> f </em> is the
-function <em> x </em> |-&gt; <em> x </em> + 1, then the @i{n}th repeated application of <em> f </em> is
-the function <em> x </em> |-&gt; <em> x </em> + @i{n}.  If <em> f </em> is the operation of squaring a
-number, then the @i{n}th repeated application of <em> f </em> is the function that
-raises its argument to the 2^@i{n}th power.  Write a procedure that takes as
-inputs a procedure that computes <em> f </em> and a positive integer @i{n} and returns
-the procedure that computes the @i{n}th repeated application of <em> f </em>.  Your
-procedure should be able to be used as follows:
+</div>
+
+<div class="exercise">
+<p> Exercise 1.43.  If f is a numerical function and n is a positive integer, then we can form the nth repeated application of f, which is defined to be the function whose value at x is f(f(...(f(x))...)). For example, if f is the function x   x + 1, then the nth repeated application of f is the function x   x + n. If f is the operation of squaring a number, then the nth repeated application of f is the function that raises its argument to the 2nth power. Write a procedure that takes as inputs a procedure that computes f and a positive integer n and returns the procedure that computes the nth repeated application of f. Your procedure should be able to be used as follows:
+
 
 <div id="">
 ((repeated square 2) 5)
@@ -1110,7 +1064,7 @@ procedure should be able to be used as follows:
 
 Hint: You may find it convenient to use @code{compose} from @ref{Exercise
 1-42}.
-@end quotation
+</div>
 
 @quotation
 @strong{@anchor{Exercise 1-44}Exercise 1.44:} The idea of @newterm{smoothing} a
