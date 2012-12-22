@@ -17,7 +17,10 @@
 <script src="footnote/tooltip.dynamic.js"></script>
 <script src="footnote/footnote.js"></script>
 
-<title>iSICP 1.1 - The Elements of Programming</title>
+<title>
+iSICP 1.1 - The Elements of Programming
+
+</title>
 <script type="text/javascript">
 
   var _gaq = _gaq || [];
@@ -54,8 +57,10 @@
     <div id="toc"> </div>
     
     <p> Video Lectures: 
+
     <a href='http://www.youtube.com/watch?v=2Op3QLzMgSY' title="Overview and Introduction to Lisp" target="_blank"> 1A </a> &nbsp;
     <a href='http://www.youtube.com/watch?v=dlbMuv-jix8' title="Procedures and Processes; Substitution Model" target="_blank"> 1B  </a>
+
     
     <p style='font-size:12px'> (Click on the left edge of this green box to hide it!)
         
@@ -71,6 +76,11 @@ $('#sidebox .tab').toggle(function(){
 });
 
 $(document).ready(createTOC);
+
+var deferDraw = (location.hash == "");
+if (deferDraw) {
+  $("body").hide();
+}
 
 </script>
 
@@ -114,10 +124,6 @@ Throughout this book, when we wish to emphasize the distinction between the inpu
 
 <div id="scheme-number-output" class="output"> </div>
 <script>
-var deferDraw = (location.hash == "");
-if (deferDraw) {
-  $("body").hide();
-}
 makeEditable("scheme-number");
 linkEditor("scheme-number", "scheme-number-output", function(x, y) {return eval_editor(x);});
 </script>
