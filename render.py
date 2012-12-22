@@ -14,13 +14,12 @@ with open("1-1-elements.content.html") as content:
     if re.match("@@", s):
       continue
     if tag_re.match(s):
-      tag_content[s] = split[i+1][:-1]
-
+      tag_content[s[:-1]] = split[i+1][:-1]
 
 with open("template.html") as template:
   lines = template.readlines()
   for l in lines:
     if tag_re.match(l):
-      print tag_content[l],
+      print tag_content[l[:-1]],
     else:
       print l,
