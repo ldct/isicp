@@ -1,12 +1,12 @@
 #!/usr/bin/env python
 
-import re
+import sys, re
 
 tag_re = re.compile("(\{\{[\w@]+\}\}\n)")
 
 tag_content = {}
 
-with open("1-1-elements.content.html") as content:
+with open(sys.argv[1]) as content:
   lines = [l for l in content.readlines() if l[0:2] != "@@"]
   lines = ''.join(lines)
   split = tag_re.split(lines)
