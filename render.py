@@ -14,7 +14,7 @@ with open("1-1-elements.content.html") as content:
     if re.match("@@", s):
       continue
     if tag_re.match(s):
-      tag_content[s] = split[i+1]
+      tag_content[s] = split[i+1][:-1]
 
 
 with open("template.html") as template:
