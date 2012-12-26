@@ -1215,33 +1215,33 @@ procedure of the form
 <script>
 </script>
 
-@noindent
-where @code{add} and @code{mul} are not the primitive procedures @code{+} and
-@code{*} but rather more complex things that will perform the appropriate
-operations for whatever kinds of data we pass in as the arguments @code{a},
-@code{b}, @code{x}, and @code{y}. The key point is that the only thing
-@code{linear-combination} should need to know about @code{a}, @code{b},
-@code{x}, and @code{y} is that the procedures @code{add} and @code{mul} will
+<p> where <tt> add </tt> and <tt> mul </tt> are not the primitive procedures <tt> + </tt> and
+<tt> * </tt> but rather more complex things that will perform the appropriate
+operations for whatever kinds of data we pass in as the arguments <tt> a </tt>,
+<tt> b </tt>, <tt> x </tt>, and <tt> y </tt>. The key point is that the only thing
+<tt> linear-combination </tt> should need to know about <tt> a </tt>, <tt> b </tt>,
+<tt> x </tt>, and <tt> y </tt> is that the procedures <tt> add </tt> and <tt> mul </tt> will
 perform the appropriate manipulations.  From the perspective of the procedure
-@code{linear-combination}, it is irrelevant what @code{a}, @code{b}, @code{x},
-and @code{y} are and even more irrelevant how they might happen to be
+<tt> linear-combination </tt>, it is irrelevant what <tt> a </tt>, <tt> b </tt>, <tt> x </tt>,
+and <tt> y </tt> are and even more irrelevant how they might happen to be
 represented in terms of more primitive data.  This same example shows why it is
 important that our programming language provide the ability to manipulate
 compound objects directly: Without this, there is no way for a procedure such
-as @code{linear-combination} to pass its arguments along to @code{add} and
-@code{mul} without having to know their detailed structure.@footnote{The
+as <tt> linear-combination </tt> to pass its arguments along to <tt> add </tt> and
+<tt> mul </tt> without having to know their detailed structure.<div class="footnote"> The
 ability to directly manipulate procedures provides an analogous increase in the
 expressive power of a programming language.  For example, in section
-@ref{1-3-1} we introduced the @code{sum} procedure, which takes a procedure
-@code{term} as an argument and computes the sum of the values of @code{term}
-over some specified interval.  In order to define @code{sum}, it is crucial
-that we be able to speak of a procedure such as @code{term} as an entity in its
-own right, without regard for how @code{term} might be expressed with more
+@ref{1-3-1 </div> we introduced the <tt> sum </tt> procedure, which takes a procedure
+<tt> term </tt> as an argument and computes the sum of the values of <tt> term </tt>
+over some specified interval.  In order to define <tt> sum </tt>, it is crucial
+that we be able to speak of a procedure such as <tt> term </tt> as an entity in its
+own right, without regard for how <tt> term </tt> might be expressed with more
 primitive operations.  Indeed, if we did not have the notion of ``a
 procedure,'' it is doubtful that we would ever even think of the possibility of
-defining an operation such as @code{sum}.  Moreover, insofar as performing the
-summation is concerned, the details of how @code{term} may be constructed from
+defining an operation such as <tt> sum </tt>.  Moreover, insofar as performing the
+summation is concerned, the details of how <tt> term </tt> may be constructed from
 more primitive operations are irrelevant.}
+
 
 We begin this chapter by implementing the rational-number arithmetic system
 mentioned above.  This will form the background for our discussion of compound
