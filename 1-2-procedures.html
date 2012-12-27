@@ -653,12 +653,12 @@ prompt("scheme-define-expt-iterative");
 
 <p> We can express this method as a procedure:
 
-<div id="scheme-define-square-hiden" style="display:none">
+<div id="scheme-define-square-hidden">
 (define (square x)
   (* x x))
 </div>
 <script>
-prompt("scheme-define-square-hiden");
+new fakeEditor("scheme-define-square-hidden");
 </script>
 
 <div id="scheme-define-fast-expt">
@@ -669,7 +669,7 @@ prompt("scheme-define-square-hiden");
 </div>
 <script>
 prompt("scheme-define-fast-expt");
-depsOf["scheme-define-fast-expt"] = ["scheme-define-even", "scheme-define-square-hiden"];
+depsOf["scheme-define-fast-expt"] = ["scheme-define-even", "scheme-define-square-hidden"];
 </script>
 
 <p> where the predicate to test whether an integer is even is defined in terms of the primitive procedure remainder by
