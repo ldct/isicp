@@ -39,3 +39,21 @@ $(function() {
     effect: 'darken'
   }).dynamic(); // keeps footnote in viewport
 });
+
+var make_clickable = function() {
+  var note_nr = $(this).attr("name").match(/footnote_(\d-\d+)/)[1];
+  var endnote_name = "#endnote_" + note_nr;
+  $(this).attr({ href: endnote_name });
+}
+
+var generate_endnote = function() {
+  var footnote_name = "#" + $(this).attr("id"),
+      footnote_nr = footnote_name.match(/footnote_(\d-\d+)/)[1],
+      footnote_text = $(this)[0].innerHTML,
+      backlink = "<a name='endnote_" + footnote_nr + "' "
+		  + "class='endnote_marker' href='"
+		  + footnote_name + "a'>" 
+		  + footnote_nr.substring(2) + "</a>",
+      endnote = "<p>" + backlink + footnote_text + "</p>\n";
+  $("#endnotes").append(endnote);
+}

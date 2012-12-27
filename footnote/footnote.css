@@ -1,13 +1,14 @@
-a.footnote_marker {
+a.footnote_marker, a.endnote_marker {
   color: #841;
-  cursor: default;
+  text-decoration: none;
+/*  cursor: default; */
   font-size: 80%; 
   vertical-align: top; 
   position: relative;
   top: -0.4ex;
 }
 
-a.footnote_marker:hover {
+a.footnote_marker:hover, a.endnote_marker:hover {
   color: #481;
 }
 
