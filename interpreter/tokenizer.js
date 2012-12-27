@@ -41,10 +41,10 @@ function valid_symbol(s) {
 }
 
 function next_candidate_token(line, k) {
-    //A tuple (tok, k'), where tok is the next substring of line at or
-    //after position k that could be a token (assuming it passes a validity
-    //check), and k' is the position in line following that token.  Returns
-    //(None, len(line)) when there are no more tokens.
+    // A tuple (tok, k'), where tok is the next substring of line at or
+    // after position k that could be a token (assuming it passes a validity
+    // check), and k' is the position in line following that token.  Returns
+    // (None, len(line)) when there are no more tokens.
     while (k < line.length) {
         var c = line[k];
 

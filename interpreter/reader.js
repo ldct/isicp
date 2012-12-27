@@ -17,11 +17,22 @@ would be read to the value, where possible.
 
 function read(form) {
     var lines = form.readarea.value.split('\n');
-    var code_buffer = new Buffer(tokenize_lines(lines));
-    var c = '';
-    console.log(code_buffer);
+    var codebuffer = new Buffer(tokenize_lines(lines));
+    while (codebuffer.current() != null) {
+	try {
+	    form.writearea.value += scheme_read(codebuffer).toString() + "\n";
+	} catch(e) {
+	    console.log(e);
+	    break
+	}
+    }
 }
-    
+
+
+/////////////////////
+// Data Structures //
+/////////////////////
+
 function Pair(first, second) {    
     this.first = first;
     this.second = second;
@@ -152,3 +163,54 @@ Buffer.prototype = {
 	return this.current_line[this.index];
     }
 }
+
+////////////////////////
+// Scheme list parser //
+////////////////////////
+
+function scheme_read(src) {
+    // Read the next expression from SRC, a Buffer of tokens
+    var val, quoted
+    if (src.current() == null) {
+	throw "EOFError";
+    }
+    val = src.pop();
+    if (val == "nil") {
+        return nil;
+    } else if (! (DELIMITERS.inside(val))) {
+        return val;
+    } else if (val == "'") {
+        quoted = scheme_read(src);
+        return new Pair('quote', new Pair(quoted, nil));
+    } else if (val == "(") {
+        return read_tail(src);
+    } else {
+        throw "SyntaxError: unexpected token: " + val
+    }
+}
+
+
+function read_tail(src) {
+    // Return the remainder of an array in SRC, starting before an element or )
+    var first, rest, end_token, next_token
+    if (src.current() == null) {
+        throw "SyntaxError: unexpected end of file"
+    }
+    if (src.current() == ")") {
+        src.pop();
+        return nil;
+    }
+    if (src.current() == ".") {
+        src.pop();
+        end_token = scheme_read(src);
+        next_token = src.pop();
+        if (next_token != ")") {
+            throw "SyntaxError: Expected one element after ."
+        }
+        return end_token;
+    }
+    first = scheme_read(src);
+    rest = read_tail(src);
+    return new Pair(first, rest);
+}
+
