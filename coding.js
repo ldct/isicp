@@ -168,6 +168,31 @@ function eval_editor(_editor) {
 
 ////////////////////////////////////////////////////////////////////////////////
 
+function fakeEditor(_editor) {
+
+  if (editorOf[_editor]) {
+    throw "Error: makeFakeEditor called with " + _editor + " which already exists!";
+    return;
+  }
+
+  var $editor = $_(_editor);
+  this.code = cleanCode($editor.text());
+  
+  $editor.empty();
+  
+  editorOf[_editor] = this;
+}
+
+fakeEditor.prototype.getValue = function() {
+  return this.code;
+}
+
+fakeEditor.prototype.getOption = function() {
+  return function() {return;};
+}
+
+////////////////////////////////////////////////////////////////////////////////
+
 var editorOf = {};
 
 function makeEditable(_editor) {
