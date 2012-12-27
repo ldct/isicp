@@ -1,88 +1,18 @@
-<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.1//EN" "http://www.w3.org/TR/xhtml11/DTD/xhtml11.dtd">
-<html>
-<head>
-<meta charset="UTF-8">
-
-<link rel="stylesheet" type="text/css" href="codemirror.css" />
-<link rel="stylesheet" type="text/css" href="isicp.css" />
-<link rel="stylesheet" type="text/css" href="footnote/footnote.css" />
-<link rel="stylesheet" type="text/css" href="theme.css" />
-
-<script src="biwascheme.js"> </script>
-<script src="codemirror/lib/codemirror.js"></script>
-<script src="codemirror/mode/scheme/scheme.js"></script>
-<script src="jquery.min.js"></script>
-<script src="coding.js"> </script>
-<script src="footnote/tooltip.js"></script>
-<script src="footnote/tooltip.dynamic.js"></script>
-<script src="footnote/footnote.js"></script>
-
+{{title}}
 <title>iSICP 1.3 - Higher-Order Procedures</title>
-<script type="text/javascript">
+@@
 
-  var _gaq = _gaq || [];
-  _gaq.push(['_setAccount', 'UA-36868476-1']);
-  _gaq.push(['_trackPageview']);
-
-  (function() {
-    var ga = document.createElement('script'); ga.type = 'text/javascript'; ga.async = true;
-    ga.src = ('https:' == document.location.protocol ? 'https://ssl' : 'http://www') + '.google-analytics.com/ga.js';
-    var s = document.getElementsByTagName('script')[0]; s.parentNode.insertBefore(ga, s);
-  })();
-
-</script>
-</head>
-<body>
-
+{{h2}}
 <h2 style="width: 60%"> Formulating Abstractions with Higher-Order Procedures </h2>
+@@
 
-<div id="sidebox">
-  <div class="tab"></div>
-  <div class="content">
-    
-    <p> <a href="index.html">Back to Contents</a>
-    
-    <div id="scheme-scratch">(+ 1 2)</div> 
-    <script>
-    prompt("scheme-scratch"); 
-    </script>
-  
-    <div id="currently-editing"> </div>
-    
-    <p>
-    
-    <div id="toc"> </div>
-    
-    <p> Video Lectures: 
-
+{{videos}}
     <a href='http://www.youtube.com/watch?v=2Op3QLzMgSY' title="Overview and Introduction to Lisp" target="_blank"> 1A </a> &nbsp;
     <a href='http://www.youtube.com/watch?v=dlbMuv-jix8' title="Procedures and Processes; Substitution Model" target="_blank"> 1B  </a>
     <!--TODO!-->
-    
-    <p style='font-size:12px'> (Click on the left edge of this green box to hide it!)
-        
-  
-  </div>
-</div>
+@@
 
-<script> 
-$('#sidebox .tab').toggle(function(){
-    $('#sidebox').animate({'right':'0%'});
-}, function(){
-    $('#sidebox').animate({'right':'-30%'});
-});
-
-$(document).ready(createTOC);
-
-var deferDraw = (location.hash == "");
-if (deferDraw) {
-  $("body").hide();
-}
-
-</script>
-
-<div id="main">
-
+{{main_text}}
 <p> We have seen that procedures are, in effect, abstractions that describe compound operations on numbers independent of the particular numbers. For example, when we
 
 <div id="scheme-define-cube">
@@ -1059,7 +989,6 @@ prompt("scheme-compose-square-inc");
 
 <div id="">
 ((repeated square 2) 5)
-@i{625}
 </div>
 <script>
 </script>
@@ -1068,267 +997,11 @@ Hint: You may find it convenient to use @code{compose} from @ref{Exercise
 1-42}.
 </div>
 
-@quotation
-@strong{@anchor{Exercise 1-44}Exercise 1.44:} The idea of @newterm{smoothing} a
-function is an important concept in signal processing.  If <em> f </em> is a function
-and @i{d}<em> x </em> is some small number, then the smoothed version of <em> f </em> is the
-function whose value at a point <em> x </em> is the average of <em> f(x </em> -
-@i{d}<em> x </em>), <em> f(x </em>), and <em> f(x </em> + @i{d}<em> x </em>).  Write a procedure
-@code{smooth} that takes as input a procedure that computes <em> f </em> and returns a
-procedure that computes the smoothed <em> f </em>.  It is sometimes valuable to
-repeatedly smooth a function (that is, smooth the smoothed function, and so on)
-to obtained the @newterm{@i{n}-fold smoothed function}.  Show how to generate
-the @i{n}-fold smoothed function of any given function using @code{smooth} and
-@code{repeated} from @ref{Exercise 1-43}.
-@end quotation
+<p> Exercise 1.44.  The idea of smoothing a function is an important concept in signal processing. If f is a function and dx is some small number, then the smoothed version of f is the function whose value at a point x is the average of f(x - dx), f(x), and f(x + dx). Write a procedure smooth that takes as input a procedure that computes f and returns a procedure that computes the smoothed f. It is sometimes valuable to repeatedly smooth a function (that is, smooth the smoothed function, and so on) to obtained the n-fold smoothed function. Show how to generate the n-fold smoothed function of any given function using smooth and repeated from exercise 1.43.
 
-@quotation
-@strong{@anchor{Exercise 1-45}Exercise 1.45:} We saw in section @ref{1-3-3}
-that attempting to compute square roots by naively finding a fixed point of
-@i{y} |-&gt; <em> x </em>/@i{y} does not converge, and that this can be fixed by average
-damping.  The same method works for finding cube roots as fixed points of the
-average-damped @i{y} |-&gt; <em> x </em>/@i{y}^2.  Unfortunately, the process does not
-work for fourth roots---a single average damp is not enough to make a
-fixed-point search for @i{y} |-&gt; <em> x </em>/@i{y}^3 converge.  On the other hand, if
-we average damp twice (i.e., use the average damp of the average damp of @i{y}
-|-&gt; <em> x </em>/@i{y}^3) the fixed-point search does converge.  Do some experiments
-to determine how many average damps are required to compute @i{n}th roots as a
-fixed-point search based upon repeated average damping of @i{y} |-&gt;
-<em> x </em>/@i{y}^(@i{n}-1).  Use this to implement a simple procedure for computing
-@i{n}th roots using <tt> fixed-point </tt>, @code{average-damp}, and the
-@code{repeated} procedure of @ref{Exercise 1-43}.  Assume that any arithmetic
-operations you need are available as primitives.
-@end quotation
+<p> Exercise 1.45.  We saw in section 1.3.3 that attempting to compute square roots by naively finding a fixed point of y x/y does not converge, and that this can be fixed by average damping. The same method works for finding cube roots as fixed points of the average-damped y  x/y2. Unfortunately, the process does not work for fourth roots -- a single average damp is not enough to make a fixed-point search for y  x/y3 converge. On the other hand, if we average damp twice (i.e., use the average damp of the average damp of y  x/y3) the fixed-point search does converge. Do some experiments to determine how many average damps are required to compute nth roots as a fixed-point search based upon repeated average damping of y  x/yn-1. Use this to implement a simple procedure for computing nth roots using fixed-point, average-damp, and the repeated procedure of exercise 1.43. Assume that any arithmetic operations you need are available as primitives.
 
-@quotation
-@strong{@anchor{Exercise 1-46}Exercise 1.46:} Several of the numerical methods
-described in this chapter are instances of an extremely general computational
-strategy known as @newterm{iterative improvement}.  Iterative improvement says
-that, to compute something, we start with an initial guess for the answer, test
-if the guess is good enough, and otherwise improve the guess and continue the
-process using the improved guess as the new guess.  Write a procedure
-@code{iterative-improve} that takes two procedures as arguments: a method for
-telling whether a guess is good enough and a method for improving a guess.
-@code{Iterative-improve} should return as its value a procedure that takes a
-guess as argument and keeps improving the guess until it is good enough.
-Rewrite the @code{sqrt} procedure of section @ref{1-1-7} and the
-<tt> fixed-point </tt> procedure of section @ref{1-3-3} in terms of
-@code{iterative-improve}.
-@end quotation
-
-@node    Chapter 2, Chapter 3, Chapter 1, Top
-@chapter Building Abstractions with Data
-
-@quotation
-We now come to the decisive step of mathematical abstraction: we forget about
-what the symbols stand for. @dots{}[The mathematician] need not be idle; there
-are many operations which he may carry out with these symbols, without ever
-having to look at the things they stand for.
-
----Hermann Weyl, @cite{The Mathematical Way of Thinking}
-@end quotation
-
-We concentrated in @ref{Chapter 1} on computational processes and on the role
-of procedures in program design.  We saw how to use primitive data (numbers)
-and primitive operations (arithmetic operations), how to combine procedures to
-form compound procedures through composition, conditionals, and the use of
-parameters, and how to abstract procedures by using @code{define}.  We saw that
-a procedure can be regarded as a pattern for the local evolution of a process,
-and we classified, reasoned about, and performed simple algorithmic analyses of
-some common patterns for processes as embodied in procedures.  We also saw that
-higher-order procedures enhance the power of our language by enabling us to
-manipulate, and thereby to reason in terms of, general methods of computation.
-This is much of the essence of programming.
-
-In this chapter we are going to look at more complex data.  All the procedures
-in @ref{Chapter 1} operate on simple numerical data, and simple data are not
-sufficient for many of the problems we wish to address using computation.
-Programs are typically designed to model complex phenomena, and more often than
-not one must construct computational objects that have several parts in order
-to model real-world phenomena that have several aspects.  Thus, whereas our
-focus in @ref{Chapter 1} was on building abstractions by combining procedures
-to form compound procedures, we turn in this chapter to another key aspect of
-any programming language: the means it provides for building abstractions by
-combining data objects to form @newterm{compound data}.
-
-Why do we want compound data in a programming language?  For the same reasons
-that we want compound procedures: to elevate the conceptual level at which we
-can design our programs, to increase the modularity of our designs, and to
-enhance the expressive power of our language.  Just as the ability to define
-procedures enables us to deal with processes at a higher conceptual level than
-that of the primitive operations of the language, the ability to construct
-compound data objects enables us to deal with data at a higher conceptual level
-than that of the primitive data objects of the language.
-
-Consider the task of designing a system to perform arithmetic with rational
-numbers.  We could imagine an operation @code{add-rat} that takes two rational
-numbers and produces their sum.  In terms of simple data, a rational number can
-be thought of as two integers: a numerator and a denominator.  Thus, we could
-design a program in which each rational number would be represented by two
-integers (a numerator and a denominator) and where @code{add-rat} would be
-implemented by two procedures (one producing the numerator of the sum and one
-producing the denominator).  But this would be awkward, because we would then
-need to explicitly keep track of which numerators corresponded to which
-denominators.  In a system intended to perform many operations on many rational
-numbers, such bookkeeping details would clutter the programs substantially, to
-say nothing of what they would do to our minds.  It would be much better if we
-could ``glue together'' a numerator and denominator to form a pair---a
-@newterm{compound data object}---that our programs could manipulate in a way
-that would be consistent with regarding a rational number as a single
-conceptual unit.
-
-The use of compound data also enables us to increase the modularity of our
-programs.  If we can manipulate rational numbers directly as objects in their
-own right, then we can separate the part of our program that deals with
-rational numbers per se from the details of how rational numbers may be
-represented as pairs of integers.  The general technique of isolating the parts
-of a program that deal with how data objects are represented from the parts of
-a program that deal with how data objects are used is a powerful design
-methodology called @newterm{data abstraction}.  We will see how data
-abstraction makes programs much easier to design, maintain, and modify.
-
-The use of compound data leads to a real increase in the expressive
-power of our programming language.  Consider the idea of forming a
-``linear combination'' @i{a}<em> x </em> + @i{b}@i{y}.  We might like to write
-a procedure that would accept @i{a}, @i{b}, <em> x </em>, and @i{y} as
-arguments and return the value of @i{a}<em> x </em> + @i{b}@i{y}.  This
-presents no difficulty if the arguments are to be numbers, because we
-can readily define the procedure
-
-<div id="">
-(define (linear-combination a b x y)
-  (+ (* a x) (* b y)))
-</div>
-<script>
-</script>
-
-But suppose we are not concerned only with numbers.  Suppose we would like to
-express, in procedural terms, the idea that one can form linear combinations
-whenever addition and multiplication are defined---for rational numbers,
-complex numbers, polynomials, or whatever.  We could express this as a
-procedure of the form
-
-<div id="">
-(define (linear-combination a b x y)
-  (add (mul a x) (mul b y)))
-</div>
-<script>
-</script>
-
-<p> where <tt> add </tt> and <tt> mul </tt> are not the primitive procedures <tt> + </tt> and
-<tt> * </tt> but rather more complex things that will perform the appropriate
-operations for whatever kinds of data we pass in as the arguments <tt> a </tt>,
-<tt> b </tt>, <tt> x </tt>, and <tt> y </tt>. The key point is that the only thing
-<tt> linear-combination </tt> should need to know about <tt> a </tt>, <tt> b </tt>,
-<tt> x </tt>, and <tt> y </tt> is that the procedures <tt> add </tt> and <tt> mul </tt> will
-perform the appropriate manipulations.  From the perspective of the procedure
-<tt> linear-combination </tt>, it is irrelevant what <tt> a </tt>, <tt> b </tt>, <tt> x </tt>,
-and <tt> y </tt> are and even more irrelevant how they might happen to be
-represented in terms of more primitive data.  This same example shows why it is
-important that our programming language provide the ability to manipulate
-compound objects directly: Without this, there is no way for a procedure such
-as <tt> linear-combination </tt> to pass its arguments along to <tt> add </tt> and
-<tt> mul </tt> without having to know their detailed structure.<div class="footnote"> The
-ability to directly manipulate procedures provides an analogous increase in the
-expressive power of a programming language.  For example, in section
-@ref{1-3-1 </div> we introduced the <tt> sum </tt> procedure, which takes a procedure
-<tt> term </tt> as an argument and computes the sum of the values of <tt> term </tt>
-over some specified interval.  In order to define <tt> sum </tt>, it is crucial
-that we be able to speak of a procedure such as <tt> term </tt> as an entity in its
-own right, without regard for how <tt> term </tt> might be expressed with more
-primitive operations.  Indeed, if we did not have the notion of ``a
-procedure,'' it is doubtful that we would ever even think of the possibility of
-defining an operation such as <tt> sum </tt>.  Moreover, insofar as performing the
-summation is concerned, the details of how <tt> term </tt> may be constructed from
-more primitive operations are irrelevant.}
+<p> Exercise 1.46.  Several of the numerical methods described in this chapter are instances of an extremely general computational strategy known as iterative improvement. Iterative improvement says that, to compute something, we start with an initial guess for the answer, test if the guess is good enough, and otherwise improve the guess and continue the process using the improved guess as the new guess. Write a procedure iterative-improve that takes two procedures as arguments: a method for telling whether a guess is good enough and a method for improving a guess. Iterative-improve should return as its value a procedure that takes a guess as argument and keeps improving the guess until it is good enough. Rewrite the sqrt procedure of section 1.1.7 and the fixed-point procedure of section 1.3.3 in terms of iterative-improve.
 
 
-We begin this chapter by implementing the rational-number arithmetic system
-mentioned above.  This will form the background for our discussion of compound
-data and data abstraction.  As with compound procedures, the main issue to be
-addressed is that of abstraction as a technique for coping with complexity, and
-we will see how data abstraction enables us to erect suitable
-@newterm{abstraction barriers} between different parts of a program.
-
-We will see that the key to forming compound data is that a programming
-language should provide some kind of ``glue'' so that data objects can be
-combined to form more complex data objects.  There are many possible kinds of
-glue.  Indeed, we will discover how to form compound data using no special
-``data'' operations at all, only procedures.  This will further blur the
-distinction between ``procedure'' and ``data,'' which was already becoming
-tenuous toward the end of @ref{Chapter 1}.  We will also explore some
-conventional techniques for representing sequences and trees.  One key idea in
-dealing with compound data is the notion of @newterm{closure}---that the glue
-we use for combining data objects should allow us to combine not only primitive
-data objects, but compound data objects as well.  Another key idea is that
-compound data objects can serve as @newterm{conventional interfaces} for
-combining program modules in mix-and-match ways.  We illustrate some of these
-ideas by presenting a simple graphics language that exploits closure.
-
-We will then augment the representational power of our language by introducing
-@newterm{symbolic expressions}---data whose elementary parts can be arbitrary
-symbols rather than only numbers.  We explore various alternatives for
-representing sets of objects.  We will find that, just as a given numerical
-function can be computed by many different computational processes, there are
-many ways in which a given data structure can be represented in terms of
-simpler objects, and the choice of representation can have significant impact
-on the time and space requirements of processes that manipulate the data.  We
-will investigate these ideas in the context of symbolic differentiation, the
-representation of sets, and the encoding of information.
-
-Next we will take up the problem of working with data that may be represented
-differently by different parts of a program.  This leads to the need to
-implement @newterm{generic operations}, which must handle many different types
-of data.  Maintaining modularity in the presence of generic operations requires
-more powerful abstraction barriers than can be erected with simple data
-abstraction alone.  In particular, we introduce @newterm{data-directed
-programming} as a technique that allows individual data representations to be
-designed in isolation and then combined @newterm{additively} (i.e., without
-modification).  To illustrate the power of this approach to system design, we
-close the chapter by applying what we have learned to the implementation of a
-package for performing symbolic arithmetic on polynomials, in which the
-coefficients of the polynomials can be integers, rational numbers, complex
-numbers, and even other polynomials. 
-<hr>
-
-<p> <a rel="license" href="http://creativecommons.org/licenses/by-sa/3.0/deed.en_US" target="_blank"><img alt="Creative Commons License" style="border-width:0" src="http://i.creativecommons.org/l/by-sa/3.0/88x31.png" /></a><br /><span xmlns:dct="http://purl.org/dc/terms/" href="http://purl.org/dc/dcmitype/InteractiveResource" property="dct:title" rel="dct:type">Interactive SICP</span> is licensed under a <a rel="license" href="http://creativecommons.org/licenses/by-sa/3.0/deed.en_US" target="_blank">Creative Commons Attribution-ShareAlike 3.0 Unported License</a>.<br />Based on a work at <a xmlns:dct="http://purl.org/dc/terms/" href="http://mitpress.mit.edu/sicp/" rel="dct:source" target="_blank">http://mitpress.mit.edu/sicp/</a>.
-
-</div>
-
-<script> 
-
-for (var _e in editorOf) {
-  editorOf[_e].getOption("onBlur")();
-}
-
-if (deferDraw) {
-  $("body").show();
-  var todo = [];
-  for (var _e in editorOf) {
-    todo.push(editorOf[_e]);
-  }
-
-  setTimeout(function() {
-    var e = todo.shift();
-    e.refresh();
-    
-    if (todo.length > 0) {
-      setTimeout(arguments.callee, 25);
-    }
-  }, 25);
-}
-
-if (!deferDraw) {
-  $(function () {
-    $('html, body').animate({
-      scrollTop: $(location.hash).offset().top
-   }, 500);
- });
-}
-
-</script>
-
-<a href="https://github.com/zodiac/appspot-grading/tree/master/isicp" target="_blank"><img style="position: absolute; top: 0; right: 0; border: 0;" src="https://s3.amazonaws.com/github/ribbons/forkme_right_green_007200.png" alt="Fork me on GitHub"></a>
-
-</body>
-</html>
+@@

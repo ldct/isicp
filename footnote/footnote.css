@@ -20,9 +20,9 @@ a.footnote_marker:hover {
   background: #f0f0f0;
   color: #333;
   padding: 2em;
-  width: 70ex;
-  box-shadow: 5px 5px 22px #555;
-  z-index: 2;
+  width: 53%; /* 70ex */
+  box-shadow: 4px 4px 22px #777;
+  z-index: 12;
 }
 /*
 .footnote a {

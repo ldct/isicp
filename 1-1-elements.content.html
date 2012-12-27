@@ -1,87 +1,17 @@
-<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.1//EN" "http://www.w3.org/TR/xhtml11/DTD/xhtml11.dtd">
-<html>
-<head>
-<meta charset="UTF-8">
-
-<link rel="stylesheet" type="text/css" href="codemirror.css" />
-<link rel="stylesheet" type="text/css" href="isicp.css" />
-<link rel="stylesheet" type="text/css" href="footnote/footnote.css" />
-<link rel="stylesheet" type="text/css" href="theme.css" />
-
-<script src="biwascheme.js"> </script>
-<script src="codemirror/lib/codemirror.js"></script>
-<script src="codemirror/mode/scheme/scheme.js"></script>
-<script src="jquery.min.js"></script>
-<script src="coding.js"> </script>
-<script src="footnote/tooltip.js"></script>
-<script src="footnote/tooltip.dynamic.js"></script>
-<script src="footnote/footnote.js"></script>
-
+{{title}}
 <title>iSICP 1.1 - The Elements of Programming</title>
-<script type="text/javascript">
+@@
 
-  var _gaq = _gaq || [];
-  _gaq.push(['_setAccount', 'UA-36868476-1']);
-  _gaq.push(['_trackPageview']);
-
-  (function() {
-    var ga = document.createElement('script'); ga.type = 'text/javascript'; ga.async = true;
-    ga.src = ('https:' == document.location.protocol ? 'https://ssl' : 'http://www') + '.google-analytics.com/ga.js';
-    var s = document.getElementsByTagName('script')[0]; s.parentNode.insertBefore(ga, s);
-  })();
-
-</script>
-</head>
-<body>
-
+{{h2}}
 <h2> The Elements of Programming </h2>
+@@
 
-<div id="sidebox">
-  <div class="tab"></div>
-  <div class="content">
-    
-    <p> <a href="index.html">Back to Contents</a>
-    
-    <div id="scheme-scratch">(+ 1 2)</div> 
-    <script>
-    prompt("scheme-scratch"); 
-    </script>
-  
-    <div id="currently-editing"> </div>
-    
-    <p>
-    
-    <div id="toc"> </div>
-    
-    <p> Video Lectures: 
-
+{{videos}}
     <a href='http://www.youtube.com/watch?v=2Op3QLzMgSY' title="Overview and Introduction to Lisp" target="_blank"> 1A </a> &nbsp;
     <a href='http://www.youtube.com/watch?v=dlbMuv-jix8' title="Procedures and Processes; Substitution Model" target="_blank"> 1B  </a>
-    
-    <p style='font-size:12px'> (Click on the left edge of this green box to hide it!)
-        
-  
-  </div>
-</div>
+@@
 
-<script> 
-$('#sidebox .tab').toggle(function(){
-    $('#sidebox').animate({'right':'0%'});
-}, function(){
-    $('#sidebox').animate({'right':'-30%'});
-});
-
-$(document).ready(createTOC);
-
-var deferDraw = (location.hash == "");
-if (deferDraw) {
-  $("body").hide();
-}
-
-</script>
-
-<div id="main">
-
+{{main_text}}
 <p> A powerful programming language is more than just a means for instructing a computer to perform tasks. The language also serves as a framework within which we organize our ideas about processes. Thus, when we describe a language, we should pay particular attention to the means that the language provides for combining simple ideas to form more complex ideas. Every powerful language has three mechanisms for accomplishing this:
 
 <ul>
@@ -1432,47 +1362,5 @@ prompt("scheme-define-sqrt-block");
 prompt("scheme-define-sqrt-no-x");
 </script>
 
-<p> We will use block structure extensively to help us break up large programs into tractable pieces. The idea of block structure originated with the programming language Algol 60. It appears in most advanced programming languages and is an important tool for helping to organize the construction of large programs. 
-<hr>
-
-<p> <a rel="license" href="http://creativecommons.org/licenses/by-sa/3.0/deed.en_US" target="_blank"><img alt="Creative Commons License" style="border-width:0" src="http://i.creativecommons.org/l/by-sa/3.0/88x31.png" /></a><br /><span xmlns:dct="http://purl.org/dc/terms/" href="http://purl.org/dc/dcmitype/InteractiveResource" property="dct:title" rel="dct:type">Interactive SICP</span> is licensed under a <a rel="license" href="http://creativecommons.org/licenses/by-sa/3.0/deed.en_US" target="_blank">Creative Commons Attribution-ShareAlike 3.0 Unported License</a>.<br />Based on a work at <a xmlns:dct="http://purl.org/dc/terms/" href="http://mitpress.mit.edu/sicp/" rel="dct:source" target="_blank">http://mitpress.mit.edu/sicp/</a>.
-
-</div>
-
-<script> 
-
-for (var _e in editorOf) {
-  editorOf[_e].getOption("onBlur")();
-}
-
-if (deferDraw) {
-  $("body").show();
-  var todo = [];
-  for (var _e in editorOf) {
-    todo.push(editorOf[_e]);
-  }
-
-  setTimeout(function() {
-    var e = todo.shift();
-    e.refresh();
-    
-    if (todo.length > 0) {
-      setTimeout(arguments.callee, 25);
-    }
-  }, 25);
-}
-
-if (!deferDraw) {
-  $(function () {
-    $('html, body').animate({
-      scrollTop: $(location.hash).offset().top
-   }, 500);
- });
-}
-
-</script>
-
-<a href="https://github.com/zodiac/appspot-grading/tree/master/isicp" target="_blank"><img style="position: absolute; top: 0; right: 0; border: 0;" src="https://s3.amazonaws.com/github/ribbons/forkme_right_green_007200.png" alt="Fork me on GitHub"></a>
-
-</body>
-</html>
+<p> We will use block structure extensively to help us break up large programs into tractable pieces. The idea of block structure originated with the programming language Algol 60. It appears in most advanced programming languages and is an important tool for helping to organize the construction of large programs.
+@@
