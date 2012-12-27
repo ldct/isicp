@@ -1,0 +1,29 @@
+<html>
+<head>
+<meta charset="UTF-8">
+<script src="interpreter/tokenizer.js"></script>
+<script src="interpreter/reader.js"></script>
+
+<title>Scheme Interpreter Test</title>
+</head>
+
+<body>
+
+<form name="myform" action="" method="get">
+<textarea name="readarea" cols="40" rows="5">
+(define (odd? x) (= 1 (remainder x 2)))
+(define (filter predicate sequence)
+  (cond ((null? sequence) nil)
+        ((predicate (car sequence))
+         (cons (car sequence)
+               (filter predicate (cdr sequence))))
+        (else (filter predicate (cdr sequence)))))
+(filter odd? (list 1 2 3 4 5))
+</textarea>
+<input type="button" name="button" value="Read" onClick="read(this.form)">
+<textarea name="writearea" cols="40" rows="5">
+</textarea>
+</form>
+
+</body>
+</html>
