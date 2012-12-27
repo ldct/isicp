@@ -119,7 +119,7 @@ function shuffle(myArray) {
 ////////////////////////////////////////////////////////////////////////////////
 
 var biwascheme = new BiwaScheme.Interpreter( function(e){
-  console.log(e.message);
+  console.log("Biwascheme ", e.message);
 });
 
 function eval_scheme(s) {
