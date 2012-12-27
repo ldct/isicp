@@ -16,19 +16,13 @@ would be read to the value, where possible.
 */
 
 function read(form) {
-    var code = form.readarea.value.split("\n");
-    form.writearea.value = tokenize_lines(code);
-    code = new Pair(1, new Pair(2, new Pair(3, nil)))
-    console.log(code.toString());
-    console.log(code.valueOf());
-    console.log(code.length());
-    console.log(code.getitem(0));
-    console.log(code.getitem(2));
-    console.log(code.map(function(n) {return n*n;}).toString());
+    var lines = form.readarea.value.split('\n');
+    var code_buffer = new Buffer(tokenize_lines(lines));
+    var c = '';
+    console.log(code_buffer);
 }
     
-function Pair(first, second) {
-    
+function Pair(first, second) {    
     this.first = first;
     this.second = second;
 }
@@ -77,7 +71,7 @@ Pair.prototype = {
 	return y.first;
     },
     map : function(fn) {
-	// Return a Scheme list after mapping JavaScript function FN to SELF
+	// Return a Scheme list after mapping JavaScript function FN to THIS
 	var mapped = fn(this.first);
 	if ((this.second === nil) || (this.second instanceof Pair)) {
 	    return new Pair(mapped, this.second.map(fn)) ;
@@ -99,7 +93,7 @@ var nil = {
     length : function() {
 	return 0;
     },
-    getitem : function(self, k) {
+    getitem : function(k) {
         if (k < 0) {
             throw "IndexError: negative index into list";
 	}
@@ -109,3 +103,52 @@ var nil = {
 	return this
     }
 };
+
+/*
+A Buffer provides a way of accessing a sequence of tokens across lines.
+
+Its constructor takes an array, called "the source", that returns the
+next line of tokens as a list each time it is queried, or null to indicate
+the end of data.
+
+The Buffer in effect concatenates the sequences returned from its source
+and then supplies the items from them one at a time through its pop()
+method, calling the source for more sequences of items only when needed.
+
+In addition, Buffer provides a current method to look at the
+next item to be supplied, without sequencing past it.
+*/
+
+function Buffer(source) {
+    this.line_index = 0;
+    this.index = 0;
+    this.source = source;
+    this.current_line = [];
+    this.current();
+}
+
+Buffer.prototype = {
+    pop : function() {
+	// Remove the next item from self and return it. If self has
+        // exhausted its source, returns null
+	var current = this.current();
+	this.index += 1;
+	return current;
+    },
+    more_on_line : function() {
+	return (this.index < this.current_line.length);
+    },
+    current : function() {
+	while (! this.more_on_line()) {
+	    this.index = 0;
+	    if (this.line_index < this.source.length) {
+		this.current_line = this.source[this.line_index];
+		this.line_index += 1;
+	    } else {
+		this.current_line = [];
+		return null;
+	    }
+	}
+	return this.current_line[this.index];
+    }
+}

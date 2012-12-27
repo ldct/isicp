@@ -104,7 +104,6 @@ function tokenize_line (line) {
 }
 
 function tokenize_lines(input) {
-    //An iterator that returns lists of tokens, one for each line of the
-    //iterable input sequence.
+    // Returns list of lists of tokens, one for each line of the input array
     return input.map(tokenize_line);
 }
