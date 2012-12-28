@@ -26,7 +26,7 @@ _PRIMITIVES["boolean?"] = scheme_booleanp;
 
 function scheme_true(val) {
     // All values in Scheme are true except False.
-    return !(val === false);
+    return (!(val === false));
 }
 
 function scheme_false(val) {
@@ -57,7 +57,7 @@ _PRIMITIVES["null?"] = scheme_nullp;
 function scheme_listp(x) {
     // Return whether x is a well-formed list. Assumes no cycles
     while (x !== nil) {
-	if !(x instanceof Pair) {
+	if (!(x instanceof Pair)) {
 	    return false;
 	}
 	x = x.second;
@@ -97,12 +97,11 @@ function scheme_list() {
     return result;
 }
 _PRIMITIVES["list"] = scheme_list;
-
 function scheme_append() {
     if (arguments.length == 0) {
 	return nil;
     }
-    var result = arguments[-1];
+    var result = arguments[arguments.length - 1];
     for (var i = arguments.length - 2; i >= 0; i--) {
 	var v = arguments[i];
 	if (v !== nil) {
@@ -166,11 +165,16 @@ function scheme_add() {
 _PRIMITIVES["+"] = scheme_add;
 
 function scheme_sub() {
-    if (arguments.length < 1) {
-	throw "SchemeError: too few arguments";
+    var args = Array.prototype.slice.call(arguments);
+    if (args.length < 1) {
+	throw "SchemeError: too few args";
+    } else if (args.length == 1) {
+	_check_nums([args[0]]);
+	return -args[0];
+    } else {
+	return _arith(function(a, b) {return a-b;}, args[0], 
+		      args.slice(1));
     }
-    return _arith(function(a, b) {return a-b;}, arguments[0], 
-		  arguments.slice(1));
 }
 _PRIMITIVES["-"] = scheme_sub;
 
@@ -265,7 +269,7 @@ function scheme_atomp(x) {
 }
 _PRIMITIVES["atom?"] = scheme_atomp;
 
-function scheme_diplay(val) {
+function scheme_display(val) {
     return val.toString();
 }
 _PRIMITIVES["display"] = scheme_display;
