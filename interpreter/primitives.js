@@ -278,7 +278,7 @@ function scheme_display(val) {
 _PRIMITIVES["display"] = new PrimitiveProcedure(scheme_display);
 
 function scheme_print(val) {
-    return val.toString + "\n";
+    return val.toString() + "\n";
 }
 _PRIMITIVES["print"] = new PrimitiveProcedure(scheme_print);
 

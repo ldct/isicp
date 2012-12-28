@@ -31,7 +31,7 @@ Frame.prototype = {
 	// Return the value bound to SYMBOL.  Errors if SYMBOL is not found
 	if (symbol in this.bindings) {
 	    return this.bindings[symbol];
-	} else if (this.parent === null) {
+	} else if (this.parent !== null) {
 	    return this.parent.lookup(symbol);
 	} else {
 	    throw "SchemeError: unknown identifier: " + symbol.toString;
