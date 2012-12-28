@@ -1,3 +1,6 @@
+
+// This file implements the primitives of the Scheme language
+
 function PrimitiveProcedure(fn, use_env) {
     if (typeof use_env === "undefined") {
 	use_env = false;
@@ -22,7 +25,7 @@ _PRIMITIVES = {}
 function scheme_booleanp(x) {
     return (x === true) || (x === false);
 }
-_PRIMITIVES["boolean?"] = scheme_booleanp;
+_PRIMITIVES["boolean?"] = new PrimitiveProcedure(scheme_booleanp);
 
 function scheme_true(val) {
     // All values in Scheme are true except False.
@@ -37,22 +40,22 @@ function scheme_false(val) {
 function scheme_not(x) {
     return ! scheme_true(x);
 }
-_PRIMITIVES["not"] = scheme_not;
+_PRIMITIVES["not"] = new PrimitiveProcedure(scheme_not);
 
 function scheme_eqp(x, y) {
     return x === y;
 }
-_PRIMITIVES["eq?"] = scheme_eqp;
+_PRIMITIVES["eq?"] = new PrimitiveProcedure(scheme_eqp);
 
 function scheme_pairp(x) {
     return x instanceof Pair;
 }
-_PRIMITIVES["pair?"] = scheme_pairp;
+_PRIMITIVES["pair?"] = new PrimitiveProcedure(scheme_pairp);
 
 function scheme_nullp(x) {
     return x === nil;
 }
-_PRIMITIVES["null?"] = scheme_nullp;
+_PRIMITIVES["null?"] = new PrimitiveProcedure(scheme_nullp);
 
 function scheme_listp(x) {
     // Return whether x is a well-formed list. Assumes no cycles
@@ -64,30 +67,30 @@ function scheme_listp(x) {
     }
     return true;
 }
-_PRIMITIVES["list?"] = scheme_listp;
+_PRIMITIVES["list?"] = new PrimitiveProcedure(scheme_listp);
 
 function scheme_length(x) {
     check_type(x, scheme_listp, 0, "length");
     return x.length();
 }
-_PRIMITIVES["length"] = scheme_length;
+_PRIMITIVES["length"] = new PrimitiveProcedure(scheme_length);
 
 function scheme_cons(x, y) {
     return new Pair(x, y);
 }
-_PRIMITIVES["cons"] = scheme_cons;
+_PRIMITIVES["cons"] = new PrimitiveProcedure(scheme_cons);
 
 function scheme_car(x) {
     check_type(x, scheme_pairp, 0, 'car');
     return x.first;
 }
-_PRIMITIVES["car"] = scheme_car;
+_PRIMITIVES["car"] = new PrimitiveProcedure(scheme_car);
 
 function scheme_cdr(x) {
     check_type(x, scheme_pairp, 0, 'cdr');
     return x.second;
 }
-_PRIMITIVES["cdr"] = scheme_cdr;
+_PRIMITIVES["cdr"] = new PrimitiveProcedure(scheme_cdr);
 
 function scheme_list() {
     var result = nil;
@@ -96,7 +99,7 @@ function scheme_list() {
     }
     return result;
 }
-_PRIMITIVES["list"] = scheme_list;
+_PRIMITIVES["list"] = new PrimitiveProcedure(scheme_list);
 function scheme_append() {
     if (arguments.length == 0) {
 	return nil;
@@ -119,22 +122,22 @@ function scheme_append() {
     }
     return result;
 }
-_PRIMITIVES["append"] = scheme_append;
+_PRIMITIVES["append"] = new PrimitiveProcedure(scheme_append);
 
 function scheme_symbolp(x) {
     return typeof x === "string";
 }
-_PRIMITIVES["symbol?"] = scheme_symbolp;
+_PRIMITIVES["symbol?"] = new PrimitiveProcedure(scheme_symbolp);
 
 function scheme_numberp(x) {
     return typeof x === "number";
 }
-_PRIMITIVES["number?"] = scheme_numberp;
+_PRIMITIVES["number?"] = new PrimitiveProcedure(scheme_numberp);
 
 function scheme_integerp(x) {
     return (typeof x === "number") && Math.floor(x) === x;
 }
-_PRIMITIVES["integer?"] = scheme_integerp;
+_PRIMITIVES["integer?"] = new PrimitiveProcedure(scheme_integerp);
 
 function _check_nums(vals) {
     // Check that all elements in array VALS are numbers
@@ -162,7 +165,7 @@ function _arith(fn, init, vals) {
 function scheme_add() {
     return _arith(function(a, b) {return a+b;}, 0, arguments);
 }
-_PRIMITIVES["+"] = scheme_add;
+_PRIMITIVES["+"] = new PrimitiveProcedure(scheme_add);
 
 function scheme_sub() {
     var args = Array.prototype.slice.call(arguments);
@@ -176,12 +179,12 @@ function scheme_sub() {
 		      args.slice(1));
     }
 }
-_PRIMITIVES["-"] = scheme_sub;
+_PRIMITIVES["-"] = new PrimitiveProcedure(scheme_sub);
 
 function scheme_mul() {
     return _arith(function(a, b) {return a*b;}, 1, arguments);
 }
-_PRIMITIVES["*"] = scheme_mul;
+_PRIMITIVES["*"] = new PrimitiveProcedure(scheme_mul);
 
 function scheme_div(x, y) {
     if (y === 0) {
@@ -189,100 +192,100 @@ function scheme_div(x, y) {
     }
     return _arith(function(a, b) {return a/b;}, x, [y]);
 }
-_PRIMITIVES["/"] = scheme_div;
+_PRIMITIVES["/"] = new PrimitiveProcedure(scheme_div);
 
 function scheme_quotient(x, y) {
     return Math.floor(scheme_div(x, y));
 }
-_PRIMITIVES["quotient"] = scheme_quotient;
+_PRIMITIVES["quotient"] = new PrimitiveProcedure(scheme_quotient);
 
 function scheme_remainder(x, y) {
     return x - scheme_quotient(x, y);
 }
-_PRIMITIVES["remainder"] = scheme_remainder;
-_PRIMITIVES["modulo"] = scheme_remainder;
+_PRIMITIVES["remainder"] = new PrimitiveProcedure(scheme_remainder);
+_PRIMITIVES["modulo"] = _PRIMITIVES["remainder"];
 
 function scheme_floor(x) {
     _check_nums([x]);
     return Math.floor(x);
 }
-_PRIMITIVES["floor"] = scheme_floor;
+_PRIMITIVES["floor"] = new PrimitiveProcedure(scheme_floor);
 
 function scheme_ceil(x) {
     _check_nums([x]);
     return Math.ceil(x);
 }
-_PRIMITIVES["ceil"] = scheme_ceil;
+_PRIMITIVES["ceil"] = new PrimitiveProcedure(scheme_ceil);
 
 
 function scheme_eq(x, y) {
     _check_nums([x, y]);
     return x === y;
 }
-_PRIMITIVES["="] = scheme_eq;
+_PRIMITIVES["="] = new PrimitiveProcedure(scheme_eq);
 
 function scheme_lt(x, y) {
     _check_nums([x, y]);
     return x < y;
 }
-_PRIMITIVES["<"] = scheme_lt;
+_PRIMITIVES["<"] = new PrimitiveProcedure(scheme_lt);
 
 function scheme_gt(x, y) {
     _check_nums([x, y]);
     return x > y;
 }
-_PRIMITIVES[">"] = scheme_gt;
+_PRIMITIVES[">"] = new PrimitiveProcedure(scheme_gt);
 
 function scheme_le(x, y) {
     _check_nums([x, y]);
     return x <= y;
 }
-_PRIMITIVES["<="] = scheme_le;
+_PRIMITIVES["<="] = new PrimitiveProcedure(scheme_le);
 
 function scheme_ge(x, y) {
     _check_nums([x, y]);
     return x >= y;
 }
-_PRIMITIVES[">="] = scheme_ge;
+_PRIMITIVES[">="] = new PrimitiveProcedure(scheme_ge);
 
 function scheme_evenp(x) {
     _check_nums([x]);
     return x % 2 === 0;
 }
-_PRIMITIVES["even?"] = scheme_evenp;
+_PRIMITIVES["even?"] = new PrimitiveProcedure(scheme_evenp);
 
 function scheme_oddp(x) {
     _check_nums([x]);
     return x % 2 === 1;
 }
-_PRIMITIVES["odd?"] = scheme_oddp;
+_PRIMITIVES["odd?"] = new PrimitiveProcedure(scheme_oddp);
 
 function scheme_zerop(x) {
     _check_nums([x]);
     return x === 0;
 }
-_PRIMITIVES["zero?"] = scheme_zerop;
+_PRIMITIVES["zero?"] = new PrimitiveProcedure(scheme_zerop);
 
 function scheme_atomp(x) {
     return scheme_booleanp(x) || scheme_numberp(x) || scheme_symbolp(x) ||
            scheme_nullp(x);
 }
-_PRIMITIVES["atom?"] = scheme_atomp;
+_PRIMITIVES["atom?"] = new PrimitiveProcedure(scheme_atomp);
 
 function scheme_display(val) {
     return val.toString();
 }
-_PRIMITIVES["display"] = scheme_display;
+_PRIMITIVES["display"] = new PrimitiveProcedure(scheme_display);
 
 function scheme_print(val) {
     return val.toString + "\n";
 }
-_PRIMITIVES["print"] = scheme_print;
+_PRIMITIVES["print"] = new PrimitiveProcedure(scheme_print);
 
 function scheme_newline() {
     return "\n";
 }
-_PRIMITIVES["newline"] = scheme_newline;
+_PRIMITIVES["newline"] = new PrimitiveProcedure(scheme_newline);
 
 function scheme_error(msg) {
     if (msg === undefined) {
@@ -291,9 +294,9 @@ function scheme_error(msg) {
 	throw "SchemeError: " + msg;
     }
 }
-_PRIMITIVES["error"] = scheme_error;
+_PRIMITIVES["error"] = new PrimitiveProcedure(scheme_error);
 
 function scheme_exit() {
     throw "EOFError";
 }
-_PRIMITIVES["exit"] = scheme_exit;
+_PRIMITIVES["exit"] = new PrimitiveProcedure(scheme_exit);

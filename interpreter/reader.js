@@ -15,19 +15,6 @@ The toString() method of a Scheme value will return a Scheme expression that
 would be read to the value, where possible.
 */
 
-function read(form) {
-    var lines = form.readarea.value.split('\n');
-    var codebuffer = new Buffer(tokenize_lines(lines));
-    while (codebuffer.current() != null) {
-	try {
-	    form.writearea.value += scheme_read(codebuffer).toString() + "\n";
-	} catch(e) {
-	    console.log(e);
-	    break
-	}
-    }
-}
-
 
 /////////////////////
 // Data Structures //
