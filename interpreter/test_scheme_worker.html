@@ -1,0 +1,15 @@
+<html>
+<body>
+
+<script>
+var w = new Worker("scheme_worker.js");
+w.onmessage = function(e) {
+  console.log(e.data);
+}
+
+w.postMessage({op:"+", args:[1, 1]});
+console.log("hi");
+</script>
+
+</body>
+</html>
