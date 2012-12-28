@@ -119,7 +119,7 @@ function shuffle(myArray) {
 ////////////////////////////////////////////////////////////////////////////////
 
 var biwascheme = new BiwaScheme.Interpreter( function(e){
-  console.log(e.message);
+  console.log("Biwascheme ", e.message);
 });
 
 function eval_scheme(s) {
@@ -164,6 +164,31 @@ function getDependedOnCode(_editor) {
 function eval_editor(_editor) {
   
   return eval_scheme(getDependedOnCode(_editor));
+}
+
+////////////////////////////////////////////////////////////////////////////////
+
+function fakeEditor(_editor) {
+
+  if (editorOf[_editor]) {
+    throw "Error: makeFakeEditor called with " + _editor + " which already exists!";
+    return;
+  }
+
+  var $editor = $_(_editor);
+  this.code = cleanCode($editor.text());
+  
+  $editor.empty();
+  
+  editorOf[_editor] = this;
+}
+
+fakeEditor.prototype.getValue = function() {
+  return this.code;
+}
+
+fakeEditor.prototype.getOption = function() {
+  return function() {return;};
 }
 
 ////////////////////////////////////////////////////////////////////////////////
