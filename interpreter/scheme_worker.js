@@ -1,4 +1,12 @@
 onmessage = function(event) {
+
+  importScripts('reader.js', 'tokenizer.js', 'primitives.js', 'scheme.js');
+  
+  var env = create_global_frame();
+  var codebuffer = new Buffer(tokenize_lines([event.data]));
+  this.postMessage(scheme_eval(scheme_read(codebuffer), env));
+
+/*
   var args=event.data.args;
   switch(event.data.op) {
     case "+":
@@ -21,4 +29,5 @@ onmessage = function(event) {
       }
       break;
   }
+*/
 };
