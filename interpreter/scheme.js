@@ -173,6 +173,83 @@ function pair_to_array(list) {
 // Special Forms //
 ///////////////////
 
+function do_lambda_form(vals, env) {
+    // Evaluate a lambda form with parameters VALS in environment ENV
+    var value, formals
+    check_form(vals, 2);
+    formals = vals.getitem(0);
+    check_formals(formals);
+    if (vals.length == 2) {
+        value = vals.getitem(1);
+    } else {
+        value = new Pair('begin', vals.second);
+    }
+    return LambdaProcedure(formals, value, env);
+}
+
+function do_define_form(vals, env) {
+    // Evaluate a define form with parameters VALS in environment ENV
+    var target, value, t, v
+    check_form(vals, 2);
+    target = vals.getitem(0);
+    if (scheme_symbolp(target)) {
+        check_form(vals, 2, 2);
+        value = scheme_eval(vals.getitem(1), env);
+        env.define(target, value);
+    } else if (target instanceof Pair) {
+        t = target.getitem(0);
+        if (! scheme_symbolp(t)) {
+            throw "SchemeError: not a variable: " + t.toString();
+        }
+        v = new Pair(vals.first.second, vals.second);
+        value = do_lambda_form(v, env);
+        env.define(t, value);
+    } else {
+        throw "SchemeError: bad argument to define"
+    }
+}
+
+function do_quote_form(vals) {
+    // Evaluate a quote form with parameters VALS
+    check_form(vals, 1, 1);
+    return vals.getitem(0);
+}
+
+function do_let_form(vals, env) {
+    // Evaluate a let form with parameters VALS in environment ENV
+    check_form(vals, 2);
+    var bindings = vals.getitem(0);
+    var exprs = vals.second;
+    if (! scheme_listp(bindings)) {
+        throw "SchemeError: bad bindings list in let form";
+    }
+    // Add a frame containing bindings
+    var names = nil
+    vals = nil
+    var new_env = env.make_call_frame(names, vals);
+    for (var i = 0; i < bindings.length; i++) {
+	var binding = bindings[i]
+        check_form(binding, 2, 2);
+        if (! scheme_symbolp(binding.getitem(0))) {
+            throw "SchemeError: bad binding: " + binding.toString();
+        }
+        var name = binding.getitem(0);
+        var value = scheme_eval(binding.getitem(1), env);
+        new_env.define(name, value);
+    } 
+    // Evaluate all but the last expression after bindings, and return the last
+    var last = exprs.length - 1;
+    for (i = 0; i < last; i++) {
+        scheme_eval(exprs.getitem(i), new_env);
+    }
+    return [exprs.getitem(last), new_env];
+}
+
+
+/////////////////
+// Logic Forms //
+/////////////////
+
 function do_and_form() {}
 function do_or_form() {}
 function do_if_form() {}
