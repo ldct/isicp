@@ -22,6 +22,14 @@
 prompt("scheme-define-cube");
 </script>
 
+<div id="scheme-define-square">
+(define (square x)
+  (* x x))
+</div>
+<script>
+new fakeEditor("scheme-define-square");
+</script>
+
 <p> we are not talking about the cube of a particular number, but rather about a method for obtaining the cube of any number. Of course we could get along without ever defining this procedure, by always writing expressions such as
 
 <div id="scheme-cube-ex">
@@ -331,6 +339,7 @@ prompt("scheme-lambda-inv-poly");
 </div>
 <script>
 prompt("scheme-define-pi-sum-lambda");
+depsOf["scheme-define-pi-sum-lambda"] = ["scheme-define-sum"];
 </script>
 
 <p> Again using lambda, we can write the integral procedure without having to define the auxiliary procedure add-dx:
@@ -345,6 +354,7 @@ prompt("scheme-define-pi-sum-lambda");
 </div>
 <script>
 prompt("scheme-define-integral-lambda");
+depsOf["scheme-define-integral-lambda"] = ["scheme-define-sum"];
 </script>
 
 <p> In general, lambda is used to create procedures in the same way as define, except that no name is specified for the procedure:
@@ -365,7 +375,7 @@ prompt("scheme-lambda-syntax");
 prompt("scheme-define-plus4");
 </script>
 
-is equivalent to
+<p> is equivalent to
 
 <div id="scheme-define-plus4-lambda">
 (define plus4 (lambda (x) (+ x 4)))
@@ -388,6 +398,7 @@ prompt("scheme-define-plus4-lambda");
 </div>
 <script>
 prompt("scheme-apply-lambda");
+depsOf["scheme-apply-lambda"] = ["scheme-define-square"];
 </script>
 
 <p> or, more generally, in any context where we would normally use a procedure name.53
@@ -415,6 +426,7 @@ prompt("scheme-apply-lambda");
 </div>
 <script>
 prompt("scheme-define-f-helpers");
+depsOf["scheme-define-f-helpers"] = ["scheme-define-square"];
 </script>
 
 <p> Of course, we could use a <tt> lambda </tt> expression to specify an anonymous procedure for binding our local variables.  The body of <tt> f </tt> then becomes a single call to that procedure:
@@ -430,6 +442,7 @@ prompt("scheme-define-f-helpers");
 </div>
 <script>
 prompt("scheme-define-f-lambda");
+depsOf["scheme-define-f-lambda"] = ["scheme-define-square"];
 </script>
 
 <p> This construct is so useful that there is a special form called <tt> let </tt> to make its use more convenient.  Using <tt> let </tt>, the <tt> f </tt> procedure could be written as
@@ -444,6 +457,7 @@ prompt("scheme-define-f-lambda");
 </div>
 <script>
 prompt("scheme-define-f-let");
+depsOf["scheme-define-f-let"] = ["scheme-define-square"];
 </script>
 
 <p> The general form of a <tt> let </tt> expression is
@@ -491,20 +505,37 @@ prompt("scheme-let-expanded-syntax");
 <li>
 <tt> let </tt> allows one to bind variables as locally as possible to where they are to be used.  For example, if the value of <tt> x </tt> is 5, the value of the expression
 
+<div id="scheme-let-close-prelude">
+(define x 5)
+</div>
+
 <div id="scheme-let-close">
 (+ (let ((x 3))
      (+ x (* x 10)))
    x)
 </div>
+
+
+<p> is  <span id="scheme-let-close-output" class="output"> </span>
+
 <script>
-prompt("scheme-let-close");//TODO
+new fakeEditor("scheme-let-close-prelude");
+
+makeEditable("scheme-let-close");
+linkEditor("scheme-let-close", "scheme-let-close-output", function(x, y) {return eval_editor(x) + ".";});
+
+depsOf["scheme-let-close"] = ["scheme-let-close-prelude"];
 </script>
 
-<p> is 38.  Here, the <tt> x </tt> in the body of the <tt> let </tt> is 3, so the value of the <tt> let </tt> expression is 33.  On the other hand, the <tt> x </tt> that is the second argument to the outermost <tt> + </tt> is still 5.
+<p> Here, the <tt> x </tt> in the body of the <tt> let </tt> is 3, so the value of the <tt> let </tt> expression is 33.  On the other hand, the <tt> x </tt> that is the second argument to the outermost <tt> + </tt> is still 5.
 </li>
 
 <li>
 <p> The variables' values are computed outside the <tt> let. </tt> This matters when the expressions that provide the values for the local variables depend upon variables having the same names as the local variables themselves.  For example, if the value of <tt> x </tt> is 2, the expression
+
+<div id="scheme-let-shadow-prelude">
+(define x 2)
+</div>
 
 <div id="scheme-let-shadow">
 (let ((x 3)
@@ -512,15 +543,19 @@ prompt("scheme-let-close");//TODO
   (* x y))
 </div>
 <script>
-prompt("scheme-let-shadow");
+new fakeEditor("scheme-let-shadow-prelude");
+
+makeEditable("scheme-let-shadow");
+linkEditor("scheme-let-shadow", "scheme-let-shadow-output", function(x, y) {return eval_editor(x);});
+
+depsOf["scheme-let-shadow"] = ["scheme-let-shadow-prelude"];
 </script>
 
-
-will have the value 12 because, inside the body of the <tt> let </tt>, <tt> x </tt> will be 3 and <tt>y</tt> will be 4 (which is the outer <tt> x </tt> plus 2).
+will have the value <span id="scheme-let-shadow-output" class="output"></span> because, inside the body of the <tt> let, x </tt> will be 3 and <tt>y</tt> will be 4 (which is the outer <tt> x </tt> plus 2).
 </li>
 </ul>
 
-Sometimes we can use internal definitions to get the same effect as with <tt> let </tt>.  For example, we could have defined the procedure <tt> f </tt> above as
+<p> Sometimes we can use internal definitions to get the same effect as with <tt> let. </tt>  For example, we could have defined the procedure <tt> f </tt> above as
 
 <div id="scheme-define-f-close-define">
 (define (f x y)
@@ -532,6 +567,7 @@ Sometimes we can use internal definitions to get the same effect as with <tt> le
 </div>
 <script>
 prompt("scheme-define-f-close-define");
+depsOf["scheme-define-f-close-define"] = ["scheme-define-square"];
 </script>
 
 <p> We prefer, however, to use <tt> let </tt> in situations like this and to use internal <tt> define </tt> only for internal procedures.@footnote{Understanding internal definitions well enough to be sure a program means what we intend it to mean requires a more elaborate model of the evaluation process than we have presented in this chapter.  The subtleties do not arise with internal definitions of procedures, however.  We will return to this issue in section @ref{4-1-6}, after we learn more about evaluation.}
@@ -577,6 +613,15 @@ What happens if we (perversely) ask the interpreter to evaluate the combination
 
 <p> The <em> half-interval method </em> is a simple but powerful technique for finding roots of an equation <em> f(x) = 0 </em>, where <em> f </em> is a continuous function.  The idea is that, if we are given points <em> a </em> and <em> b </em> such that <em> f(a) &lt; 0 &lt; f (b) </em>, then <em> f </em> must have at least one zero between <em> a </em> and <em> b </em>.  To locate a zero, let <em> x </em> be the average of <em> a </em> and <em> b </em> and compute <em> f(x) </em>.  If <em> f(x) &gt; 0  </em>, then <em> f </em> must have a zero between <em> a </em> and <em> x </em>.  If <em> f(x) &lt; 0</em>, then <em> f </em> must have a zero between <em> x </em> and <em> b </em>.  Continuing in this way, we can identify smaller and smaller intervals on which <em> f </em> must have a zero.  When we reach a point where the interval is small enough, the process stops.  Since the interval of uncertainty is reduced by half at each step of the process, the number of steps required grows as @i{[theta]}(@code{log}( @i{L}/@i{T})), where @i{L} is the length of the original interval and @i{T} is the error tolerance (that is, the size of the interval we will consider ``small enough'').  Here is a procedure that implements this strategy:
 
+<div id="scheme-define-average">
+(define (average x y)
+  (/ (+ x y)
+     2))
+</div>
+<script>
+new fakeEditor("scheme-define-average");
+</script>
+
 <div id="scheme-define-search">
 (define (search f neg-point pos-point)
   (let ((midpoint (average neg-point pos-point)))
@@ -591,6 +636,7 @@ What happens if we (perversely) ask the interpreter to evaluate the combination
 </div>
 <script>
 prompt("scheme-define-search");
+depsOf["scheme-define-search"] = ["scheme-define-average", "scheme-define-close-enough"];
 </script>
 
 <p> We assume that we are initially given the function <em> f </em> together with points at which its values are negative and positive.  We first compute the midpoint of the two given points.  Next we check to see if the given interval is small enough, and if so we simply return the midpoint as our answer.  Otherwise, we compute as a test value the value of <em> f </em> at the midpoint.  If the test value is positive, then we continue the process with a new interval running from the original negative point to the midpoint.  If the test value is negative, we continue with the interval from the midpoint to the positive point.  Finally, there is the possibility that the test value is 0, in which case the midpoint is itself the root we are searching for.
@@ -620,6 +666,7 @@ prompt("scheme-define-close-enough");
 </div>
 <script>
 prompt("scheme-define-half-interval-method");
+depsOf["scheme-define-half-interval-method"] = ["scheme-define-search"];
 </script>
 
 <p> The following example uses the half-interval method to approximate pi as the root between 2 and 4 of sin(x) = 0:
@@ -629,6 +676,7 @@ prompt("scheme-define-half-interval-method");
 </div>
 <script>
 prompt("scheme-half-interval-method-sine");
+depsOf["scheme-half-interval-method-sine"] = ["scheme-define-half-interval-method"];
 </script>
 
 <p> Here is another example, using the half-interval method to search for a root of the equation x<sup>3</sup> - 2x - 3 = 0 between 1 and 2:
@@ -640,6 +688,7 @@ prompt("scheme-half-interval-method-sine");
 </div>
 <script>
 prompt("scheme-half-interval-method-poly");
+depsOf["scheme-half-interval-method-poly"] = ["scheme-define-half-interval-method"];
 </script>
 
 <h4> Finding fixed points of functions </h4>
@@ -667,6 +716,7 @@ f(x), f(f(x), (f(f(f(x))))
 </div>
 <script>
 prompt("scheme-define-fixed-point");
+depsOf["scheme-define-fixed-point"] = ["scheme-define-close-enough"];
 </script>
 
 <p> For example, we can use this method to approximate the fixed point of the cosine function, starting with 1 as an initial approximation:
@@ -676,26 +726,31 @@ prompt("scheme-define-fixed-point");
 </div>
 <script>
 prompt("scheme-fixed-point-cos");
+depsOf["scheme-fixed-point-cos"] = ["scheme-define-fixed-point"];
 </script>
 
-Similarly, we can find a solution to the equation y = sin(y) + cos(y):
+<p> Similarly, we can find a solution to the equation y = sin(y) + cos(y):
 
-<div id="">
+<div id="scheme-fixed-point-sin-cos">
 (fixed-point (lambda (y) (+ (sin y) (cos y)))
              1.0)
 </div>
 <script>
+prompt("scheme-fixed-point-sin-cos");
+depsOf["scheme-fixed-point-sin-cos"] = ["scheme-define-fixed-point"];
 </script>
 
 <p> The fixed-point process is reminiscent of the process we used for finding square roots in section 1.1.7. Both are based on the idea of repeatedly improving a guess until the result satisfies some criterion. In fact, we can readily formulate the square-root computation as a fixed-point search. Computing the square root of some number x requires finding a y such that y2 = x. Putting this equation into the equivalent form y = x/y, we recognize that we are looking for a fixed point of the function58 y -> x/y, and we can therefore try to compute square roots as
 
 <div id="scheme-define-sqrt">
 (define (sqrt x)
+  (do not run)
   (fixed-point (lambda (y) (/ x y))
                1.0))
 </div>
 <script>
 prompt("scheme-define-sqrt");
+depsOf["scheme-define-sqrt"] = ["scheme-define-fixed-point"];
 </script>
 
 <p> Unfortunately, this fixed-point search does not converge. Consider an initial guess y1. The next guess is y2 = x/y1 and the next guess is y3 = x/y2 = x/(x/y1) = y1. This results in an infinite loop in which the two guesses y1 and y2 repeat over and over, oscillating about the answer.
@@ -709,16 +764,26 @@ prompt("scheme-define-sqrt");
 </div>
 <script>
 prompt("scheme-define-sqrt-average");
+depsOf["scheme-define-sqrt-average"] = ["scheme-define-fixed-point", "scheme-define-average"];
 </script>
 
 <p> (Note that y = (1/2)(y + x/y) is a simple transformation of the equation y = x/y; to derive it, add y to both sides of the equation and divide by 2.)
 
 <p> With this modification, the square-root procedure works. In fact, if we unravel the definitions, we can see that the sequence of approximations to the square root generated here is precisely the same as the one generated by our original square-root procedure of section 1.1.7. This approach of averaging successive approximations to a solution, a technique we that we call average damping, often aids the convergence of fixed-point searches.
 
+<div class="exercise">
 <p> Exercise 1.35.  Show that the golden ratio  (section 1.2.2) is a fixed point of the transformation x   1 + 1/x, and use this fact to compute  by means of the fixed-point procedure.
+</div>
 
+<p>
+
+<div class="exercise">
 <p> Exercise 1.36.  Modify fixed-point so that it prints the sequence of approximations it generates, using the newline and display primitives shown in exercise 1.22. Then find a solution to xx = 1000 by finding a fixed point of x  log(1000)/log(x). (Use Scheme's primitive log procedure, which computes natural logarithms.) Compare the number of steps this takes with and without average damping. (Note that you cannot start fixed-point with a guess of 1, as this would cause division by log(1) = 0.)
+</div> 
 
+<p>
+
+<div class="exercise">
 <p> Exercise 1.37.  
 
 <ol>
@@ -728,7 +793,7 @@ An infinite continued fraction is an expression of the form
 
 <p> As an example, one can show that the infinite continued fraction expansion with the Ni and the Di all equal to 1 produces 1/, where  is the golden ratio (described in section 1.2.2). One way to approximate an infinite continued fraction is to truncate the expansion after a given number of terms. Such a truncation -- a so-called k-term finite continued fraction -- has the form
 
-Suppose that @code{n} and <tt> d </tt> are procedures of one argument (the term index <em> i </em> that return the <em> N_i </em> and <em> Di </em> of the terms of the continued fraction.  Define a procedure @code{cont-frac} such that evaluating <tt> (cont-frac n d k) </tt> computes the value of the <em>k</em>-term finite continued fraction. Check your procedure by approximating 1/phi using
+<p> Suppose that @code{n} and <tt> d </tt> are procedures of one argument (the term index <em> i </em> that return the <em> N_i </em> and <em> Di </em> of the terms of the continued fraction.  Define a procedure @code{cont-frac} such that evaluating <tt> (cont-frac n d k) </tt> computes the value of the <em>k</em>-term finite continued fraction. Check your procedure by approximating 1/phi using
 
 <div id="scheme-test-cont-frac">
 (cont-frac (lambda (i) 1.0)
@@ -739,7 +804,7 @@ Suppose that @code{n} and <tt> d </tt> are procedures of one argument (the term 
 prompt("scheme-test-cont-frac");
 </script>
 
-for successive values of <tt> k </tt>. How large must you make <tt> k </tt> in order to get an approximation that is accurate to 4 decimal places?
+<p> for successive values of <tt> k </tt>. How large must you make <tt> k </tt> in order to get an approximation that is accurate to 4 decimal places?
 </li>
 
 <li>
@@ -748,16 +813,27 @@ that generates an iterative process.  If it generates an iterative process,
 write one that generates a recursive process.
 </li>
 </ol>
+</div>
 
+<p>
+
+<div class="exercise">
 <p> Exercise 1.38.  In 1737, the Swiss mathematician Leonhard Euler published a memoir De Fractionibus Continuis, which included a continued fraction expansion for e - 2, where e is the base of the natural logarithms. In this fraction, the Ni are all 1, and the Di are successively 1, 2, 1, 1, 4, 1, 1, 6, 1, 1, 8, .... Write a program that uses your cont-frac procedure from exercise 1.37 to approximate e, based on Euler's expansion.
+</div>
 
+<p>
+
+<div class="exercise">
 <p> Exercise 1.39.  A continued fraction representation of the tangent function was published in 1770 by the German mathematician J.H. Lambert:
 
 <p> <img src='http://mitpress.mit.edu/sicp/full-text/book/ch1-Z-G-36.gif'>
 
-where <em> x </em> is in radians.  Define a procedure <tt> (tan-cf x k) </tt> that computes an approximation to the tangent function based on Lambert's formula. <tt> k </tt> specifies the number of terms to compute, as in Exercise 1-37.
+<p> where <em> x </em> is in radians.  Define a procedure <tt> (tan-cf x k) </tt> that computes an approximation to the tangent function based on Lambert's formula. <tt> k </tt> specifies the number of terms to compute, as in Exercise 1-37.
+</div>
 
 <h3> Procedures as Returned Values </h3>
+
+<!--TODO CONT!-->
 
 <p> The above examples demonstrate how the ability to pass procedures as arguments significantly enhances the expressive power of our programming language.  We can achieve even more expressive power by creating procedures whose returned values are themselves procedures.
 
@@ -841,8 +917,7 @@ prompt("scheme-define-deriv");
 prompt("scheme-define-dx");
 </script>
 
-<p> Like average-damp, deriv is a procedure that takes a procedure as argument and returns a procedure as value. For example, to approximate the derivative of x   x3 at 5 (whose exact value is 75) we can evaluate
-
+<p> Like average-damp, deriv is a procedure that takes a procedure as argument and returns a procedure as value. For example, to approximate the derivative of f(x) = x<sup>3</sup> at 5 (whose exact value is 75) we can evaluate
 
 <div id="scheme-deriv-cube">
 (define (cube x) (* x x x))
@@ -851,6 +926,7 @@ prompt("scheme-define-dx");
 </div>
 <script>
 prompt("scheme-deriv-cube");
+depsOf["scheme-deriv-cube"] = ["scheme-define-deriv", "scheme-define-dx"];
 </script>
 
 <p> With the aid of <tt> deriv </tt>, we can express Newton's method as a fixed-point process:
@@ -865,6 +941,7 @@ prompt("scheme-deriv-cube");
 </div>
 <script>
 prompt("scheme-define-newton-transform");
+depsOf["scheme-define-newton-transform"] = ["scheme-define-deriv", "scheme-define-dx", "scheme-define-fixed-point"];
 </script>
 
 <p> The newton-transform procedure expresses the formula at the beginning of this section, and newtons-method is readily defined in terms of this. It takes as arguments a procedure that computes the function for which we want to find a zero, together with an initial guess. For instance, to find the square root of x, we can use Newton's method to find a zero of the function y  y2 - x starting with an initial guess of 1.63 This provides yet another form of the square-root procedure:
@@ -878,6 +955,7 @@ prompt("scheme-define-newton-transform");
 </div>
 <script>
 prompt("scheme-define-sqrt-newton");
+depsOf["scheme-define-sqrt-newton"] = ["scheme-define-newton-transform", "scheme-define-square"];
 </script>
 
 <h4> Abstractions and first-class procedures </h4>
