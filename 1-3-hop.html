@@ -903,6 +903,8 @@ write one that generates a recursive process.
 
 <h3> Procedures as Returned Values </h3>
 
+<!--TODO CONT!-->
+
 <p> The above examples demonstrate how the ability to pass procedures as arguments significantly enhances the expressive power of our programming language.  We can achieve even more expressive power by creating procedures whose returned values are themselves procedures.
 
 <p> We can illustrate this idea by looking again at the fixed-point example described at the end of section 1.3.3. We formulated a new version of the square-root procedure as a fixed-point search, starting with the observation that x is a fixed-point of the function y -&gt; x/y. Then we used average damping to make the approximations converge. Average damping is a useful general technique in itself. Namely, given a function f, we consider the function whose value at x is equal to the average of x and f(x).

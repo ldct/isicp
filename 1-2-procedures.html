@@ -879,11 +879,13 @@ depsOf["scheme-define-expmod"] = ["scheme-define-remainder", "scheme-define-squa
     (= (expmod a n n) a))
   (try-it (+ 1 (random (- n 1)))))
 </div>
+<!--TODO implement random!-->
 <script>
 prompt("scheme-define-fermat-test");
+depsOf["scheme-define-fermat-test"] = ["scheme-define-expmod"];
 </script>
 
-The following procedure runs the test a given number of times, as specified by a parameter. Its value is true if the test succeeds every time, and false otherwise.
+<p> The following procedure runs the test a given number of times, as specified by a parameter. Its value is true if the test succeeds every time, and false otherwise.
 
 <div id="scheme-define-fast-prime">
 (define (fast-prime? n times)
