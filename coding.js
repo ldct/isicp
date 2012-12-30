@@ -191,6 +191,10 @@ fakeEditor.prototype.getOption = function() {
   return function() {return;};
 }
 
+fakeEditor.prototype.refresh = function() {
+  return;
+}
+
 ////////////////////////////////////////////////////////////////////////////////
 
 var editorOf = {};

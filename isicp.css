@@ -71,29 +71,39 @@ h2 {
 /*the tab that comes out on click*/
 
 #sidebox {
-    position:fixed;
-    right:-30%;
-    top:10px;
-    width:35%;
-    height:100%;
+  position:fixed;
+  right:-30%;
+  top:10px;
+  width:35%;
+  height:100%;
 }
 
 #sidebox .content {
-    background:#bada55;
+  background:#bada55;
 }
 
 #sidebox .content {
-    float:right;
-    width:92%;
-    height:100%;
+  float:right;
+  width:92%;
+  height:100%;
 }
 
 #sidebox .tab {
-    background:#bada55;
-    cursor:pointer;
-    float:left;
-    width:8%;
-    height:100%;
+  background:#bada55;
+  cursor:pointer;
+  float:left;
+  width:8%;
+  height:100%;
+}
+
+#sidebox .navlink {
+  text-decoration: none;
+  font-size: 2em;
+  margin:0.1em;
+}
+
+#sidebox .navlink:hover {
+  cursor: pointer;
 }
 
 #main {

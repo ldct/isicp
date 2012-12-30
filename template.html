@@ -5,17 +5,15 @@
 
 <link rel="stylesheet" type="text/css" href="codemirror.css" />
 <link rel="stylesheet" type="text/css" href="isicp.css" />
-<link rel="stylesheet" type="text/css" href="footnote/footnote.css" />
-<link rel="stylesheet" type="text/css" href="theme.css" />
+<link rel="stylesheet" type="text/css" href="lib/footnotes.css" />
+<link rel="stylesheet" type="text/css" href="lib/theme.css" />
 
 <script src="biwascheme.js"> </script>
 <script src="codemirror/lib/codemirror.js"></script>
 <script src="codemirror/mode/scheme/scheme.js"></script>
 <script src="jquery.min.js"></script>
 <script src="coding.js"> </script>
-<script src="footnote/tooltip.js"></script>
-<script src="footnote/tooltip.dynamic.js"></script>
-<script src="footnote/footnote.js"></script>
+<script src="lib/footnotes.js"></script>
 
 {{title}}
 <script type="text/javascript">
@@ -40,22 +38,51 @@
   <div class="tab"></div>
   <div class="content">
     
-    <p> <a href="index.html">Back to Contents</a>
+    <p> 
     
-    <div id="scheme-scratch">(+ 1 2)</div> 
-    <script>
-    prompt("scheme-scratch"); 
-    </script>
-  
-    <div id="currently-editing"> </div>
+    <a href="index.html" class="navlink">&larr;</a>
+    <span id="currently-editing-link" class="navlink"> () </span>
+    <span id="toc-link" class="navlink"> .. </span>
+    <span id="video-link" class="navlink"> &#9656; </span>
     
     <p>
     
+    <div id="currently-editing"> </div>
+    
+    <script>
+    
+    function hideAll() {
+      $("#currently-editing").hide();
+      $("#toc").hide();
+      $("#video").hide();
+    }
+    
+    $("#currently-editing-link").click(function() {
+      hideAll();
+      $("#currently-editing").show();
+    });
+    
+    $("#toc-link").click(function() {
+      hideAll();
+      $("#toc").show();
+    });
+    
+    $("#video-link").click(function() {
+      hideAll();
+      $("#video").show();
+    });
+    
+    hideAll();
+    
+    </script>
+    
     <div id="toc"> </div>
     
+    <div id="video">
     <p> Video Lectures: 
 
 {{videos}}
+    </div>
     
     <p style='font-size:12px'> (Click on the left edge of this green box to hide it!)
         
@@ -82,6 +109,8 @@ if (deferDraw) {
 <div id="main">
 
 {{main_text}}
+
+{{footnotes}}
 
 <hr>
 
