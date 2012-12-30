@@ -52,10 +52,10 @@ Frame.prototype = {
 	var frame = new Frame(this);
 	var formals = pair_to_array(formals);
 	var vals = pair_to_array(vals);
-	if (formals.length != vals.length) {
+	if (formals.length() != vals.length()) {
 	    throw "SchemeError: Invalid number of arguments";
 	}
-	for (var i = 0; i < formals.length; i++) {
+	for (var i = 0; i < formals.length(); i++) {
 	    frame.bindings[formals[i]] = vals[i];
 	}
 	return frame;
@@ -179,7 +179,7 @@ function do_lambda_form(vals, env) {
     check_form(vals, 2);
     formals = vals.getitem(0);
     check_formals(formals);
-    if (vals.length == 2) {
+    if (vals.length() == 2) {
         value = vals.getitem(1);
     } else {
         value = new Pair('begin', vals.second);
@@ -227,7 +227,7 @@ function do_let_form(vals, env) {
     var names = nil
     vals = nil
     var new_env = env.make_call_frame(names, vals);
-    for (var i = 0; i < bindings.length; i++) {
+    for (var i = 0; i < bindings.length(); i++) {
 	var binding = bindings[i]
         check_form(binding, 2, 2);
         if (! scheme_symbolp(binding.getitem(0))) {
@@ -238,23 +238,82 @@ function do_let_form(vals, env) {
         new_env.define(name, value);
     } 
     // Evaluate all but the last expression after bindings, and return the last
-    var last = exprs.length - 1;
+    var last = exprs.length() - 1;
     for (i = 0; i < last; i++) {
         scheme_eval(exprs.getitem(i), new_env);
     }
     return [exprs.getitem(last), new_env];
 }
 
-
 /////////////////
 // Logic Forms //
 /////////////////
 
-function do_and_form() {}
-function do_or_form() {}
-function do_if_form() {}
-function do_cond_form() {}
-function do_begin_form() {}
+function do_if_form(vals, env) {
+    // Evaluate if form with parameters VALS in environment ENV
+    check_form(vals, 3, 3);
+    var pred = scheme_eval(vals.getitem(0), env);
+    var cons = vals.getitem(1);
+    var alt = vals.getitem(2);
+    if (scheme_true(val)) {
+	return cons;
+    } else {
+	return alt;
+    }
+}
+
+function do_and_form(vals, env) {
+    // Evaluate short-circuited and with parameters VALS in environment ENV
+    if (vals.length() == 0) {return true;}
+    for (var i = 0; i < vals.length(); i++) {
+	var pred = scheme_eval(vals.getitem(i), env);
+	if (scheme_false(val)) {return false;}
+    }
+    return pred;
+}
+
+function do_or_form(vals, env) {
+    // Evaluate short-circuited or with parameters VALS in environment ENV
+    for (var i = 0; i < vals.length(); i++) {
+	var pred = scheme_eval(vals.getitem(i), env);
+	if (scheme_true(pred)) {return pred;}
+    }
+    return false;
+}
+
+function do_cond_form(vals, env) {
+    // Evaluate cond form with parameters VALS in environment ENV
+    var num_clauses = vals.length();
+    for (var i = 0; i < vals.length(); i++) {
+	var clause = vals[i];
+	check_form(clause, 1);
+	if (clause.first === "else") {
+	    if (i < num_clauses - 1) {
+		throw "SchemeError: else must be last";
+	    }
+	    var test = true;
+	    if (clause.second === nil) {
+		throw "SchemeError: badly formed else clause";
+	    }
+	} else {
+	    test = scheme_eval(clause.first, env);
+	}
+	if (scheme_true(test)) {
+	    if (clause.second.length() == 0) {return test;}
+	    return new Pair('begin', clause.second);
+	}
+    }
+    return null;
+}
+function do_begin_form(vals, env) {
+    // Evaluate begin form with parameters VALS in environment ENV
+    check_form(vals, 1);
+    var eval_length = len(vals) - 1;
+    for (var l = 0; l < eval_length; l++) {
+	scheme_eval(vals.getitem(l), env);
+    }
+    return vals.getitem(eval_length);
+}
 
 LOGIC_FORMS = {
         "and": do_and_form,
@@ -282,3 +341,40 @@ function add_primitives(frame) {
 	frame.define(name, _PRIMITIVES[name]);
     }
 }
+
+// Utility methods for checking the structure of Scheme programs
+
+function check_form(expr, min, max) {
+    // Check EXPR (default SELF.expr) is a proper list whose length is
+    // at least MIN and no more than MAX (default: no maximum). Raises
+    // a SchemeError if this is not the case
+    if (! scheme_listp(expr)) {
+	throw "SchemeError: badly formed expression: " + expr.toString();
+    }
+    var length = expr.length();
+    if (length < min) {
+	throw "SchemeError: too few operands in form";
+    } else if ( (! (max === undefined)) && (length > max) ) {
+	throw "SchemeError: too many operands in form";
+    }
+}
+
+function check_formals(formals) {
+    // Check that FORMALS is a valid parameter list, a Scheme list of symbols
+    // in which each symbol is distinct
+    check_form(formals, 0);
+    var symbols = [];
+    for (var i = 0; i < formals.length(); i++) {
+	var symbol = formals.getitem(i);
+	if (! scheme_symbolp(symbol)) {
+	    throw "SchemeError: not a symbol: " + symbol.toString();
+	}
+	if (symbols.inside(symbol)) {
+	    throw "SchemeError: repeated symbol in formal parameters: "
+	          + symbol;
+	} else {
+	    symbols.push(symbol);
+	}
+    }
+}
+    
