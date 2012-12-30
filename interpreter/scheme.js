@@ -8,9 +8,12 @@ function read(form) {
     var codebuffer = new Buffer(tokenize_lines(lines));
     var env = create_global_frame();
     while (codebuffer.current() != null) {
+	
 	try {
-	    form.writearea.value += 
-	      scheme_eval(scheme_read(codebuffer), env).toString() + "\n";
+	    var result = scheme_eval(scheme_read(codebuffer), env);
+	    if (! (result === null || result === undefined)) {
+		form.writearea.value += result.toString() + "\n";
+	    }
 	} catch(e) {
 	    console.log(e);
 	    break
@@ -34,7 +37,7 @@ Frame.prototype = {
 	} else if (this.parent !== null) {
 	    return this.parent.lookup(symbol);
 	} else {
-	    throw "SchemeError: unknown identifier: " + symbol.toString;
+	    throw "SchemeError: unknown identifier: " + symbol.toString();
 	}
     },
     global_frame : function() {
@@ -52,10 +55,10 @@ Frame.prototype = {
 	var frame = new Frame(this);
 	var formals = pair_to_array(formals);
 	var vals = pair_to_array(vals);
-	if (formals.length() != vals.length()) {
+	if (formals.length != vals.length) {
 	    throw "SchemeError: Invalid number of arguments";
 	}
-	for (var i = 0; i < formals.length(); i++) {
+	for (var i = 0; i < formals.length; i++) {
 	    frame.bindings[formals[i]] = vals[i];
 	}
 	return frame;
@@ -184,7 +187,7 @@ function do_lambda_form(vals, env) {
     } else {
         value = new Pair('begin', vals.second);
     }
-    return LambdaProcedure(formals, value, env);
+    return new LambdaProcedure(formals, value, env);
 }
 
 function do_define_form(vals, env) {
@@ -228,7 +231,7 @@ function do_let_form(vals, env) {
     vals = nil
     var new_env = env.make_call_frame(names, vals);
     for (var i = 0; i < bindings.length(); i++) {
-	var binding = bindings[i]
+	var binding = bindings.getitem(i);
         check_form(binding, 2, 2);
         if (! scheme_symbolp(binding.getitem(0))) {
             throw "SchemeError: bad binding: " + binding.toString();
@@ -255,7 +258,7 @@ function do_if_form(vals, env) {
     var pred = scheme_eval(vals.getitem(0), env);
     var cons = vals.getitem(1);
     var alt = vals.getitem(2);
-    if (scheme_true(val)) {
+    if (scheme_true(pred)) {
 	return cons;
     } else {
 	return alt;
@@ -267,7 +270,7 @@ function do_and_form(vals, env) {
     if (vals.length() == 0) {return true;}
     for (var i = 0; i < vals.length(); i++) {
 	var pred = scheme_eval(vals.getitem(i), env);
-	if (scheme_false(val)) {return false;}
+	if (scheme_false(pred)) {return false;}
     }
     return pred;
 }
@@ -285,7 +288,7 @@ function do_cond_form(vals, env) {
     // Evaluate cond form with parameters VALS in environment ENV
     var num_clauses = vals.length();
     for (var i = 0; i < vals.length(); i++) {
-	var clause = vals[i];
+	var clause = vals.getitem(i);
 	check_form(clause, 1);
 	if (clause.first === "else") {
 	    if (i < num_clauses - 1) {
@@ -308,7 +311,7 @@ function do_cond_form(vals, env) {
 function do_begin_form(vals, env) {
     // Evaluate begin form with parameters VALS in environment ENV
     check_form(vals, 1);
-    var eval_length = len(vals) - 1;
+    var eval_length = vals.length() - 1;
     for (var l = 0; l < eval_length; l++) {
 	scheme_eval(vals.getitem(l), env);
     }
