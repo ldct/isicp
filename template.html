@@ -41,35 +41,21 @@
     <p> 
     
     <a href="index.html" class="navlink">&larr;</a>
-    <span id="scratch-link" class="navlink"> > </span>
     <span id="currently-editing-link" class="navlink"> () </span>
     <span id="toc-link" class="navlink"> .. </span>
     <span id="video-link" class="navlink"> &#9656; </span>
     
     <p>
     
-    <div id="scratch">
-      <div id="scheme-scratch">(+ 1 2)</div> 
-      <script>
-      prompt("scheme-scratch"); 
-      </script>
-    </div>
-    
     <div id="currently-editing"> </div>
     
     <script>
     
     function hideAll() {
-      $("#scratch").hide();
       $("#currently-editing").hide();
       $("#toc").hide();
       $("#video").hide();
     }
-    
-    $("#scratch-link").click(function() {
-      hideAll();
-      $("#scratch").show();
-    });
     
     $("#currently-editing-link").click(function() {
       hideAll();

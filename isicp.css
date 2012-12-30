@@ -98,7 +98,8 @@ h2 {
 
 #sidebox .navlink {
   text-decoration: none;
-  font-size: 2em; 
+  font-size: 2em;
+  margin:0.1em;
 }
 
 #sidebox .navlink:hover {

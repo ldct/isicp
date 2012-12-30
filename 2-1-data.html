@@ -5,17 +5,15 @@
 
 <link rel="stylesheet" type="text/css" href="codemirror.css" />
 <link rel="stylesheet" type="text/css" href="isicp.css" />
-<link rel="stylesheet" type="text/css" href="footnote/footnote.css" />
-<link rel="stylesheet" type="text/css" href="theme.css" />
+<link rel="stylesheet" type="text/css" href="lib/footnotes.css" />
+<link rel="stylesheet" type="text/css" href="lib/theme.css" />
 
 <script src="biwascheme.js"> </script>
 <script src="codemirror/lib/codemirror.js"></script>
 <script src="codemirror/mode/scheme/scheme.js"></script>
 <script src="jquery.min.js"></script>
 <script src="coding.js"> </script>
-<script src="footnote/tooltip.js"></script>
-<script src="footnote/tooltip.dynamic.js"></script>
-<script src="footnote/footnote.js"></script>
+<script src="lib/footnotes.js"></script>
 
 <title> iSICP 2.1 - Introduction to Data Abstraction </title>
 <script type="text/javascript">
@@ -43,35 +41,21 @@
     <p> 
     
     <a href="index.html" class="navlink">&larr;</a>
-    <span id="scratch-link" class="navlink"> > </span>
     <span id="currently-editing-link" class="navlink"> () </span>
     <span id="toc-link" class="navlink"> .. </span>
     <span id="video-link" class="navlink"> &#9656; </span>
     
     <p>
     
-    <div id="scratch">
-      <div id="scheme-scratch">(+ 1 2)</div> 
-      <script>
-      prompt("scheme-scratch"); 
-      </script>
-    </div>
-    
     <div id="currently-editing"> </div>
     
     <script>
     
     function hideAll() {
-      $("#scratch").hide();
       $("#currently-editing").hide();
       $("#toc").hide();
       $("#video").hide();
     }
-    
-    $("#scratch-link").click(function() {
-      hideAll();
-      $("#scratch").show();
-    });
     
     $("#currently-editing-link").click(function() {
       hideAll();
@@ -453,46 +437,3 @@ prompt("scheme-define-church-numeral");
 <p> Define <tt> one </tt> and <tt> two </tt> directly (not in terms of <tt> zero </tt> and <tt> add-1 </tt>).  (Hint: Use substitution to evaluate <tt> (add-1 zero) </tt>).  Give a direct definition of the addition procedure <tt> + </tt> (not in terms of repeated application of <tt> add-1 </tt>).
 </div>
 
-<hr>
-
-<p> <a rel="license" href="http://creativecommons.org/licenses/by-sa/3.0/deed.en_US" target="_blank"><img alt="Creative Commons License" style="border-width:0" src="http://i.creativecommons.org/l/by-sa/3.0/88x31.png" /></a><br /><span xmlns:dct="http://purl.org/dc/terms/" href="http://purl.org/dc/dcmitype/InteractiveResource" property="dct:title" rel="dct:type">Interactive SICP</span> is licensed under a <a rel="license" href="http://creativecommons.org/licenses/by-sa/3.0/deed.en_US" target="_blank">Creative Commons Attribution-ShareAlike 3.0 Unported License</a>.<br />Based on a work at <a xmlns:dct="http://purl.org/dc/terms/" href="http://mitpress.mit.edu/sicp/" rel="dct:source" target="_blank">http://mitpress.mit.edu/sicp/</a>.
-
-</div>
-
-<script> 
-
-for (var _e in editorOf) {
-  editorOf[_e].getOption("onBlur")();
-}
-
-if (deferDraw) {
-  $("body").show();
-  var todo = [];
-  for (var _e in editorOf) {
-    todo.push(editorOf[_e]);
-  }
-
-  setTimeout(function() {
-    var e = todo.shift();
-    e.refresh();
-    
-    if (todo.length > 0) {
-      setTimeout(arguments.callee, 25);
-    }
-  }, 25);
-}
-
-if (!deferDraw) {
-  $(function () {
-    $('html, body').animate({
-      scrollTop: $(location.hash).offset().top
-   }, 500);
- });
-}
-
-</script>
-
-<a href="https://github.com/zodiac/appspot-grading/tree/master/isicp" target="_blank"><img style="position: absolute; top: 0; right: 0; border: 0;" src="https://s3.amazonaws.com/github/ribbons/forkme_right_green_007200.png" alt="Fork me on GitHub"></a>
-
-</body>
-</html>
