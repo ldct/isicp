@@ -200,15 +200,20 @@ function scheme_div(x, y) {
 _PRIMITIVES["/"] = new PrimitiveProcedure(scheme_div);
 
 function scheme_quotient(x, y) {
-    return Math.floor(scheme_div(x, y));
+    var d = x/y;
+    return Math[d > 0 ? "floor" : "ceil"](d); //round to zero
 }
 _PRIMITIVES["quotient"] = new PrimitiveProcedure(scheme_quotient);
 
 function scheme_remainder(x, y) {
-    return x - scheme_quotient(x, y);
+    return  x % y;
 }
 _PRIMITIVES["remainder"] = new PrimitiveProcedure(scheme_remainder);
-_PRIMITIVES["modulo"] = _PRIMITIVES["remainder"];
+
+function scheme_modulo(x, y) {
+    return ((x % y) + y) % y;
+}
+_PRIMITIVES["modulo"] = new PrimitiveProcedure(scheme_modulo);
 
 function scheme_floor(x) {
     _check_nums([x]);
