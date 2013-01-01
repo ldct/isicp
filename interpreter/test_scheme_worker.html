@@ -7,8 +7,7 @@ w.onmessage = function(e) {
   console.log(e.data);
 }
 
-w.postMessage("(+ 3 4)");
-console.log("hi");
+w.postMessage("(define (square x) (* x x)) (square 3)");
 </script>
 
 </body>

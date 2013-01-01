@@ -15,7 +15,8 @@ function read(form) {
 	try {
 	    var result = scheme_eval(scheme_read(codebuffer), env);
 	    if (! (result === null || result === undefined)) {
-		form.writearea.value += result.toString() + "\n";
+		    console.log(result);
+		    form.writearea.value += result.toString() + "\n";
 	    }
 	} catch(e) {
 	    console.log(e);
