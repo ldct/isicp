@@ -1,17 +1,20 @@
 <html>
 <body>
 
+<form>
+<textarea name="input" rows=5 cols=50>
+(define (fib n) (cond ((= n 0) 0) ((= n 1) 1) (else (begin (display 'f) (+ (fib (- n 1)) (fib (- n 2))))))) (fib 20)
+</textarea>
+<input type="button" value="Post" onClick="w.postMessage(this.form.input.value)">
+</form>
+
 <script>
 var w = new Worker("scheme_worker.js");
 w.onmessage = function(e) {
   console.log(e.data);
 }
 
-w.postMessage("(define (fib n) (cond ((= n 0) 0) ((= n 1) 1) (else (begin (display 'f) (+ (fib (- n 1)) (fib (- n 2))))))) (fib 20)");
-w.postMessage("(fib 3)");
-/*
-(define (fib n) (cond ((= n 0) 0) ((= n 1) 1) (else (begin (display 'f) (+ (fib (- n 1)) (fib (- n 2)))))))
-*/
+w.postMessage("(+ 4 5)");
 </script>
 
 </body>

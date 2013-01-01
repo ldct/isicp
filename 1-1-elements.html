@@ -315,7 +315,6 @@ linkEditor("scheme-ex-12-input", "scheme-ex-12-input-output", function(x, y) {
 </div>
 <script> 
 prompt("scheme-define-size");
-pushesOf["scheme-define-size"] = ["scheme-size", "scheme-times-size"];
 </script>
 
 <p> causes the interpreter to associate the value <tt>2</tt> with the name <tt>size</tt>. Once the name <tt>size</tt> has been associated with the number <tt>2</tt>, we can refer to the value <tt>2</tt> by name:
@@ -325,7 +324,7 @@ size
 </div>
 <script> 
 prompt("scheme-size");
-depsOf["scheme-size"] = ["scheme-define-size"];
+addDep("scheme-size", ["scheme-define-size"]);
 </script>
 
 <p>
@@ -335,7 +334,7 @@ depsOf["scheme-size"] = ["scheme-define-size"];
 </div>
 <script> 
 prompt("scheme-times-size");
-depsOf["scheme-times-size"] = ["scheme-define-size"];
+addDep("scheme-times-size", ["scheme-define-size"]);
 </script>
 
 <p> Here are further examples of the use of <tt>define</tt>:
@@ -348,7 +347,6 @@ depsOf["scheme-times-size"] = ["scheme-define-size"];
 </div>
 <script> 
 prompt("scheme-define-radius");
-pushesOf["scheme-define-radius"] = ["scheme-circumference"];
 </script>
 
 <p>
@@ -360,7 +358,7 @@ circumference
 </div>
 <script> 
 prompt("scheme-circumference"); 
-depsOf["scheme-circumference"] = ["scheme-define-radius"];
+addDep("scheme-circumference", ["scheme-define-radius"]);
 </script>
 
 <p> <tt>define</tt> is our language's simplest means of abstraction, for it allows us to use simple names to refer to the results of compound operations, such as the circumference computed above. In general, computational objects may have very complex structures, and it would be extremely inconvenient to have to remember and repeat their details each time we want to use them. Indeed, complex programs are constructed by building, step by step, computational objects of increasing complexity. The interpreter makes this step-by-step program construction particularly convenient because name-object associations can be created incrementally in successive interactions. This feature encourages the incremental development and testing of programs and is largely responsible for the fact that a Lisp program usually consists of a large number of relatively simple procedures.
@@ -499,8 +497,7 @@ linkEditor("scheme-tree-eg", "scheme-tree-eg-output", function(x, y) {
 (define (square x) (* x x))
 </div>
 <script> 
-prompt("scheme-define-square"); 
-pushesOf["scheme-define-square"] = ["scheme-square-number", "scheme-square-sum", "scheme-square-square"];
+prompt("scheme-define-square");
 </script>
 
 <p> We can understand this in the following way:
@@ -530,7 +527,7 @@ makeStatic("scheme-define-syntax");
 </div>
 <script> 
 prompt("scheme-square-number"); 
-depsOf["scheme-square-number"] = ["scheme-define-square"];
+addDep("scheme-square-number", ["scheme-define-square"]);
 </script>
 
 <p>
@@ -540,7 +537,7 @@ depsOf["scheme-square-number"] = ["scheme-define-square"];
 </div>
 <script> 
 prompt("scheme-square-sum"); 
-depsOf["scheme-square-sum"] = ["scheme-define-square"];
+addDep("scheme-square-sum", ["scheme-define-square"]);
 </script>
 
 <p>
@@ -550,7 +547,7 @@ depsOf["scheme-square-sum"] = ["scheme-define-square"];
 </div>
 <script> 
 prompt("scheme-square-square"); 
-depsOf["scheme-square-square"] = ["scheme-define-square"];
+addDep("scheme-square-square", ["scheme-define-square"]);
 </script>
 
 
@@ -573,7 +570,7 @@ makeStatic("scheme-sum-square-eg");
 </div>
 <script> 
 prompt("scheme-define-sum-of-squares"); 
-depsOf["scheme-define-sum-of-squares"] = ["scheme-define-square"];
+addDep("scheme-define-sum-of-squares", ["scheme-define-square"]);
 </script>
 
 <p> Now we can use sum-of-squares as a building block in constructing further procedures:
@@ -586,7 +583,7 @@ depsOf["scheme-define-sum-of-squares"] = ["scheme-define-square"];
 </div>
 <script> 
 prompt("scheme-f"); 
-depsOf["scheme-f"] = ["scheme-define-sum-of-squares"];
+addDep("scheme-f", ["scheme-define-sum-of-squares"]);
 </script>
 
 <p> Compound procedures are used in exactly the same way as primitive procedures. Indeed, one could not tell by looking at the definition of sum-of-squares given above whether square was built into the interpreter, like + and *, or defined as a compound procedure.
@@ -866,7 +863,7 @@ As an example of how these are used, the condition that a number x be in the ran
 </div>
 <script> prompt("scheme-le-2"); </script>
 
-
+<p>
 
 <div class='exercise'>
 
@@ -1046,7 +1043,7 @@ makeMCQ("scheme-ex-15-mcq",
 </div>
 <script> 
 prompt("scheme-define-sqrt-iter"); 
-depsOf["scheme-define-sqrt-iter"] = ["scheme-define-good-enough", "scheme-define-improve"];
+addDep("scheme-define-sqrt-iter", ["scheme-define-good-enough", "scheme-define-improve"]);
 </script>
 
 <p> A guess is improved by averaging it with the quotient of the radicand and the old guess:
@@ -1057,7 +1054,7 @@ depsOf["scheme-define-sqrt-iter"] = ["scheme-define-good-enough", "scheme-define
 </div>
 <script> 
 prompt("scheme-define-improve"); 
-depsOf["scheme-define-improve"] = ["scheme-define-average"];
+addDep("scheme-define-improve", ["scheme-define-average"]);
 </script>
 
 <p> where
@@ -1078,7 +1075,7 @@ prompt("scheme-define-average");
 </div>
 <script> 
 prompt("scheme-define-good-enough");
-depsOf["scheme-define-good-enough"] = ["scheme-define-square"];
+addDep("scheme-define-good-enough", ["scheme-define-square"]);
 </script>
 
 <p> Finally, we need a way to get started. For instance, we can always guess that the square root of any number is 1:
@@ -1089,7 +1086,7 @@ depsOf["scheme-define-good-enough"] = ["scheme-define-square"];
 </div>
 <script> 
 prompt("scheme-define-sqrt");
-depsOf["scheme-define-sqrt"] = ["scheme-define-sqrt-iter"];
+addDep("scheme-define-sqrt", ["scheme-define-sqrt-iter"]);
 </script>
 
 <p> If we type these definitions to the interpreter, we can use sqrt just as we can use any procedure:
@@ -1099,7 +1096,7 @@ depsOf["scheme-define-sqrt"] = ["scheme-define-sqrt-iter"];
 </div>
 <script> 
 prompt("scheme-sqrt-9");
-depsOf["scheme-sqrt-9"] = ["scheme-define-sqrt"];
+addDep("scheme-sqrt-9", ["scheme-define-sqrt"]);
 </script>
 
 <p>
@@ -1109,7 +1106,7 @@ depsOf["scheme-sqrt-9"] = ["scheme-define-sqrt"];
 </div>
 <script> 
 prompt("scheme-sqrt-plus");
-depsOf["scheme-sqrt-plus"] = ["scheme-define-sqrt"];
+addDep("scheme-sqrt-plus", ["scheme-define-sqrt"]);
 </script>
 
 <p>
@@ -1119,7 +1116,7 @@ depsOf["scheme-sqrt-plus"] = ["scheme-define-sqrt"];
 </div>
 <script> 
 prompt("scheme-sqrt-sqrt");
-depsOf["scheme-sqrt-sqrt"] = ["scheme-define-sqrt"];
+addDep("scheme-sqrt-sqrt", ["scheme-define-sqrt"]);
 </script>
 
 <p>
@@ -1129,7 +1126,7 @@ depsOf["scheme-sqrt-sqrt"] = ["scheme-define-sqrt"];
 </div>
 <script> 
 prompt("scheme-square-sqrt");
-depsOf["scheme-square-sqrt"] = ["scheme-define-square", "scheme-define-sqrt"];
+addDep("scheme-square-sqrt", ["scheme-define-square", "scheme-define-sqrt"]);
 </script>
 
 <p> The sqrt program also illustrates that the simple procedural language we have introduced so far is sufficient for writing any purely numerical program that one could write in, say, C or Pascal. This might seem surprising, since we have not included in our language any iterative (looping) constructs that direct the computer to do something over and over again. Sqrt-iter, on the other hand, demonstrates how iteration can be accomplished using no special construct other than the ordinary ability to call a procedure. 
@@ -1175,8 +1172,8 @@ prompt("scheme-define-new-if");
 prompt("scheme-new-if-1");
 prompt("scheme-new-if-2");
 
-depsOf["scheme-new-if-1"] = ["scheme-define-new-if"];
-depsOf["scheme-new-if-2"] = ["scheme-define-new-if"];
+addDep("scheme-new-if-1", ["scheme-define-new-if"]);
+addDep("scheme-new-if-2", ["scheme-define-new-if"]);
 
 makeStatic("scheme-sqrt-iter-new-if");
 
@@ -1211,7 +1208,7 @@ makeMCQ("scheme-new-if-mcq",
 
 <script> 
 
-depsOf["scheme-ex-17-input"] = ["scheme-define-sqrt"];
+addDep("scheme-ex-17-input", ["scheme-define-sqrt"]);
 
 makeChangeOnFocusInput("scheme-ex-17-input", 
                        "(define (my-sqrt x)\n  <your code here>)", 
@@ -1238,11 +1235,11 @@ linkEditor("scheme-ex-17-input", "scheme-ex-17-input-output", function(x, y) {
 
 prompt("scheme-ex-17-test");
 editorOf["scheme-ex-17-test"].setOption("readOnly", 'nocursor');
-depsOf["scheme-ex-17-test"] = ["scheme-define-sqrt"];
+addDep("scheme-ex-17-test", ["scheme-define-sqrt"]);
 
 prompt("scheme-ex-17-my-test");
 editorOf["scheme-ex-17-my-test"].setOption("readOnly", 'nocursor');
-depsOf["scheme-ex-17-my-test"] = ["scheme-ex-17-input"];
+addDep("scheme-ex-17-my-test", ["scheme-ex-17-input"]);
 </script>
 
 <!--
@@ -1285,8 +1282,7 @@ depsOf["scheme-ex-17-my-test"] = ["scheme-ex-17-input"];
 prompt("scheme-ex-18");
 prompt("scheme-ex-18-test");
 
-depsOf["scheme-ex-18-test"] = ["scheme-ex-18"];
-pushesOf["scheme-ex-18"] = ["scheme-ex-18-test"];
+addDep("scheme-ex-18-test", ["scheme-ex-18"]);
 
 editorOf["scheme-ex-18-test"].setOption("readOnly", 'nocursor');
 </script>
