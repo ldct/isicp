@@ -1,6 +1,4 @@
-onmessage = function(event) {
-
-  importScripts("reader.js", "tokenizer.js");
+importScripts("reader.js", "tokenizer.js");
 
 //PRIMITIVES.JS//
 
@@ -338,7 +336,7 @@ Frame.prototype = {
         }
     },
     global_frame : function() {
-    // The global environment at the root of the parent chain
+        // The global environment at the root of the parent chain
         var e = this;
         while (e.parent !== null) {
             e = e.parent;
@@ -361,8 +359,8 @@ Frame.prototype = {
         return frame;
         },
     define : function(sym , val) {
-            // Define Scheme symbol SYM to have value VAL in SELF
-            this.bindings[sym] = val;
+        // Define Scheme symbol SYM to have value VAL in SELF
+        this.bindings[sym] = val;
     }
 }
 
@@ -678,7 +676,10 @@ function check_formals(formals) {
     }
 }
 
-  var env = create_global_frame();
+var env = create_global_frame();
+
+onmessage = function(event) {
+
   var codebuffer = new Buffer(tokenize_lines([event.data]));
   
   while (codebuffer.current() != null) {

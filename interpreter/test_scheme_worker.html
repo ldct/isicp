@@ -7,9 +7,8 @@ w.onmessage = function(e) {
   console.log(e.data);
 }
 
-//w.postMessage("(define (fib n) (cond ((= n 0) 0) ((= n 1) 1) (else (begin (display 'f) (+ (fib (- n 1)) (fib (- n 2))))))) (fib 20)");
-w.postMessage("(quotient 13 -4)");
-
+w.postMessage("(define (fib n) (cond ((= n 0) 0) ((= n 1) 1) (else (begin (display 'f) (+ (fib (- n 1)) (fib (- n 2))))))) (fib 20)");
+w.postMessage("(fib 3)");
 /*
 (define (fib n) (cond ((= n 0) 0) ((= n 1) 1) (else (begin (display 'f) (+ (fib (- n 1)) (fib (- n 2)))))))
 */
