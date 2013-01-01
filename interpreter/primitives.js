@@ -1,4 +1,3 @@
-
 // This file implements the primitives of the Scheme language
 
 function PrimitiveProcedure(fn, use_env) {
@@ -273,17 +272,20 @@ function scheme_atomp(x) {
 _PRIMITIVES["atom?"] = new PrimitiveProcedure(scheme_atomp);
 
 function scheme_display(val) {
-    return val.toString();
+    // NOT Pure!
+    form_out.writearea.value += val.toString();
 }
 _PRIMITIVES["display"] = new PrimitiveProcedure(scheme_display);
 
 function scheme_print(val) {
-    return val.toString() + "\n";
+    // NOT Pure!
+    form_out.writearea.value += val.toString() + "\n";
 }
 _PRIMITIVES["print"] = new PrimitiveProcedure(scheme_print);
 
 function scheme_newline() {
-    return "\n";
+    // NOT Pure!
+    form_out.writearea.value += "\n";
 }
 _PRIMITIVES["newline"] = new PrimitiveProcedure(scheme_newline);
 

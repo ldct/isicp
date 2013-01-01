@@ -7,8 +7,11 @@ function read(form) {
     var lines = form.readarea.value.split('\n');
     var codebuffer = new Buffer(tokenize_lines(lines));
     var env = create_global_frame();
+    // create global variable for functions such as display and print to use
+    // (I hate doing this but it's the only solution I can think of now)
+    form_out = form;
+    form.writearea.value = '';
     while (codebuffer.current() != null) {
-	
 	try {
 	    var result = scheme_eval(scheme_read(codebuffer), env);
 	    if (! (result === null || result === undefined)) {
@@ -16,7 +19,7 @@ function read(form) {
 	    }
 	} catch(e) {
 	    console.log(e);
-	    break
+	    break;
 	}
     }
 }
