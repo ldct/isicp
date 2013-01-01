@@ -288,7 +288,7 @@ function scheme_print(val) {
 _PRIMITIVES["print"] = new PrimitiveProcedure(scheme_print);
 
 function scheme_newline() {
-    this.postMessage(form_out.writearea.value += "\n");
+    this.postMessage("\n");
 }
 _PRIMITIVES["newline"] = new PrimitiveProcedure(scheme_newline);
 
