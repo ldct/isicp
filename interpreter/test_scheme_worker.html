@@ -6,8 +6,7 @@ var w = new Worker("scheme_worker.js");
 w.onmessage = function(e) {
   console.log(e.data);
 }
-
-w.postMessage("(+ 1 (begin (display 'hi) 3))");
+w.postMessage("(define (fib n) (cond ((= n 0) 0) ((= n 1) 1) (else (begin (display 'f) (+ (fib (- n 1)) (fib (- n 2))))))) (fib 20)");
 </script>
 
 </body>
