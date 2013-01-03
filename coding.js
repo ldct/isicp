@@ -241,15 +241,33 @@ function linkEditor(_editor, _output, func) {
 
 ////////////////////////////////////////////////////////////////////////////////
 
+function getAllDeps(s) {
+  var ret = [];
+  for (var i = 0, d = getDeps(s); i < d.length; i++) {  
+    ret = ret.concat(getAllDeps(d[i]));
+    ret.push(d[i]);
+  }
+  return ret;
+}
+
+function getAllPushes(s) {
+  var ret = [];
+  for (var i = 0, d = getPushes(s); i < d.length; i++) {  
+    ret.push(d[i]);
+    ret = ret.concat(getAllPushes(d[i]));
+  }
+  return ret;
+}
+
 focus_callback = function(s) {
   var ts = "";
-  for (var i = 0, d = getDeps(s); i < d.length; i++) {
+  for (var i = 0, d = getAllDeps(s); i < d.length; i++) {  //TODO list all deps
     ts += "<br>" + d[i];
   }
   
   ts += "<br> <b>"+ s + "</b>";
 
-  for (var i = 0, p = getPushes(s); i < p.length; i++) {
+  for (var i = 0, p = getAllPushes(s); i < p.length; i++) {
     ts += "<br>" + p[i];
   }
   $("#currently-editing").html("<tt>" + ts + "</tt>");
@@ -267,6 +285,18 @@ function getPushes(_editor) {
   }
 }
 
+function addDep(_e, deps) {
+  depsOf[_e] = deps;
+  for (var i in deps) {
+    var p = pushesOf[deps[i]];
+    if (p) {
+      p.push(_e);
+    } else {
+      pushesOf[deps[i]] = [_e];
+    }
+  }
+}
+
 ///////////////////////////////////////////////////////////////////////////////
 
 function addOutput(_e) {
@@ -281,10 +311,8 @@ function prompt(s) {
     
     var ret = eval_editor(x);
     
-    if (pushesOf[s]) {
-      for (var pushes = pushesOf[s], i = 0; i < pushes.length; i++) {
-        editorOf[pushes[i]].getOption("onBlur")();
-      }
+    for (var pushes = getPushes(s), i = 0; i < pushes.length; i++) {
+      editorOf[pushes[i]].getOption("onBlur")();
     }
     
     if (ret && ret.toString && ret.toString() == "#<undef>") {
