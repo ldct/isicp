@@ -1,0 +1,35 @@
+<html>
+<head>
+<meta charset="UTF-8">
+
+<link rel="stylesheet" type="text/css" href="codemirror.css" />
+<link rel="stylesheet" type="text/css" href="isicp.css" />
+
+<script src="codemirror/lib/codemirror.js"></script>
+<script src="codemirror/mode/scheme/scheme.js"></script>
+
+<script type="text/javascript" src="https://files.nyu.edu/cb125/public/Lambda/lambda.js"></script>
+
+<script src="biwascheme.js"></script>
+<script src="coding.js"></script>
+</head>
+
+<body>
+
+<div id="lambda">
+(((lambda x (lambda Q (Q x))) j) P)
+</div>
+<div id="lambda-output">
+</div>
+<script>
+makeEditable("lambda");
+linkEditor("lambda", "lambda-output", function(x,y) {
+  var f = formatTree(fixedPoint(stringToTree(y)));
+  console.log(f);
+  return f;
+});
+</script>
+
+</body>
+
+</html>
