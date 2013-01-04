@@ -178,7 +178,7 @@ function scheme_sub() {
     _check_nums([args[0]]);
     return -args[0];
     } else {
-    return _arith(function(a, b) {return a-b;}, args[0], 
+    return _arith(function(a, b) {return a-b;}, args[0],
                   args.slice(1));
     }
 }
@@ -308,7 +308,7 @@ function scheme_exit() {
     throw "EOFError";
 }
 _PRIMITIVES["exit"] = new PrimitiveProcedure(scheme_exit);
-  
+
 //SCHEME.JS//
 
 /*
@@ -378,7 +378,7 @@ function LambdaProcedure(formals, body, env) {
 
 LambdaProcedure.prototype = {
     toString : function() {
-        return "(lambda "+ this.formals.toString() +" "+ 
+        return "(lambda "+ this.formals.toString() +" "+
                this.body.toString() +")" ;
     }
 }
@@ -422,7 +422,7 @@ function scheme_eval(expr, env) {
             env = l[1];
         } else {
             var procedure = scheme_eval(first, env);
-        var args = rest.map(function(operand) 
+        var args = rest.map(function(operand)
                 {return scheme_eval(operand, env);});
             if (procedure instanceof LambdaProcedure) {
                 env = procedure.env.make_call_frame(procedure.formals, args);
@@ -452,14 +452,22 @@ function apply_primitive(procedure, args, env) {
     if (procedure.use_env) {
         args.concat(env);
     }
-    try {
-        return procedure.fn.apply(this, args);
-    } catch(e) {
-        throw "SchemeError: Invalid number of arguments"
-    }
+    // if (args.length != num_parameters(procedure.fn)) {
+    // throw "SchemeError: Invalid number of arguments"
+    // } else {
+    return procedure.fn.apply(this, args);
+    // }
+}
+
+function num_parameters(func) {
+    // Returns the number of formal parameters a function has
+    var funStr = func.toString();
+    var args = funStr.slice(funStr.indexOf('(')+1, funStr.indexOf(')'));
+    return args.match(/,/g).length + 1;
 }
 
 function pair_to_array(list) {
+    // Helper function to turn a scheme list into a javascript array
     if (list === nil) {
         return [];
     }
@@ -534,7 +542,7 @@ function do_let_form(vals, env) {
         var name = binding.getitem(0);
         var value = scheme_eval(binding.getitem(1), env);
         new_env.define(name, value);
-    } 
+    }
     // Evaluate all but the last expression after bindings, and return the last
     var last = exprs.length() - 1;
     for (i = 0; i < last; i++) {
@@ -676,19 +684,19 @@ function check_formals(formals) {
     }
 }
 
-var env = create_global_frame();
+
 
 onmessage = function(event) {
-
-  var codebuffer = new Buffer(tokenize_lines([event.data]));
-  
-  while (codebuffer.current() != null) {
-
-    var result = scheme_eval(scheme_read(codebuffer), env);
-    if (! (result === null || result === undefined)) {
-        this.postMessage(result.toString());
+    var env = create_global_frame(); // new global frame every message exchange
+    var codebuffer = new Buffer(tokenize_lines([event.data]));
+    while (codebuffer.current() != null) {
+        try {
+            var result = scheme_eval(scheme_read(codebuffer), env);
+            if (! (result === null || result === undefined)) {
+                this.postMessage(result.toString());
+            }
+        } catch(e) {
+            this.postMessage(e.toString());
+        }
     }
-  }
-    
-  
 };
