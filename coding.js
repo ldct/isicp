@@ -303,7 +303,7 @@ function addOutput(_e) {
   $_(_e).after($('<div>', {'id': _e + "-output", 'class': "output"}));
 }
 
-function prompt(s) {
+function promptSync(s) {
 
   makeEditable(s);
   addOutput(s);
@@ -319,6 +319,42 @@ function prompt(s) {
       return "";
     }
     return ret;
+  });
+}
+
+function prompt(s) {
+
+  makeEditable(s);
+  addOutput(s);
+  
+  var editor = editorOf[s];
+  var _output = s + "-output";
+    
+  editor.setOption('onBlur', function() {
+
+    var output_fragment = [];
+
+    var w = new Worker("interpreter/scheme_worker.js");
+    w.onmessage = function(e) {
+
+      if (e.data.end) {
+        if (output_fragment.length == 0) {
+          $_(_output).empty();
+        }
+        w.terminate();        
+        return;
+      }
+
+      output_fragment.push($("<span>" + e.data + "<br> </span>"));
+      $_(_output).empty().append(output_fragment);
+    }
+    
+    w.postMessage(getDependedOnCode(s));
+    
+    for (var pushes = getPushes(s), i = 0; i < pushes.length; i++) {
+      editorOf[pushes[i]].getOption("onBlur")();
+    }
+
   });
 }
 

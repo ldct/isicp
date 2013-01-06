@@ -684,9 +684,7 @@ function check_formals(formals) {
     }
 }
 
-
-
-onmessage = function(event) {
+onmessage = function(event) {    
     var env = create_global_frame(); // new global frame every message exchange
     var codebuffer = new Buffer(tokenize_lines(event.data.split("\n")));
     while (codebuffer.current() != null) {
@@ -699,4 +697,5 @@ onmessage = function(event) {
             this.postMessage(e.toString() + "\n");
         }
     }
+    this.postMessage({"end": true});
 };

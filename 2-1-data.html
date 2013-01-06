@@ -40,10 +40,10 @@
     
     <p> 
     
-    <a href="index.html" class="navlink">&larr;</a>
-    <span id="currently-editing-link" class="navlink"> () </span>
-    <span id="toc-link" class="navlink"> .. </span>
-    <span id="video-link" class="navlink"> &#9656; </span>
+    <a href="index.html" class="navlink"> <img src='images/home.svg' width=32 height=32> </a>
+    <span id="currently-editing-link" class="navlink"> <img src='images/file-edit.svg' width=32 height=32> </span>
+    <span id="toc-link" class="navlink"> <img src='images/list.svg' width=32 height=32> </span>
+    <span id="video-link" class="navlink"> <img src='images/video.svg' width=32 height=32> </span>
     
     <p>
     
@@ -437,3 +437,48 @@ prompt("scheme-define-church-numeral");
 <p> Define <tt> one </tt> and <tt> two </tt> directly (not in terms of <tt> zero </tt> and <tt> add-1 </tt>).  (Hint: Use substitution to evaluate <tt> (add-1 zero) </tt>).  Give a direct definition of the addition procedure <tt> + </tt> (not in terms of repeated application of <tt> add-1 </tt>).
 </div>
 
+
+ 
+<hr>
+
+<p> <a rel="license" href="http://creativecommons.org/licenses/by-sa/3.0/deed.en_US" target="_blank"><img alt="Creative Commons License" style="border-width:0" src="http://i.creativecommons.org/l/by-sa/3.0/88x31.png" /></a><br /><span xmlns:dct="http://purl.org/dc/terms/" href="http://purl.org/dc/dcmitype/InteractiveResource" property="dct:title" rel="dct:type">Interactive SICP</span> is licensed under a <a rel="license" href="http://creativecommons.org/licenses/by-sa/3.0/deed.en_US" target="_blank">Creative Commons Attribution-ShareAlike 3.0 Unported License</a>.<br />Based on a work at <a xmlns:dct="http://purl.org/dc/terms/" href="http://mitpress.mit.edu/sicp/" rel="dct:source" target="_blank">http://mitpress.mit.edu/sicp/</a>.
+
+</div>
+
+<script> 
+
+for (var _e in editorOf) {
+  editorOf[_e].getOption("onBlur")();
+}
+
+if (deferDraw) {
+  $("body").show();
+  var todo = [];
+  for (var _e in editorOf) {
+    todo.push(editorOf[_e]);
+  }
+
+  setTimeout(function() {
+    var e = todo.shift();
+    e.refresh();
+    
+    if (todo.length > 0) {
+      setTimeout(arguments.callee, 25);
+    }
+  }, 25);
+}
+
+if (!deferDraw) {
+  $(function () {
+    $('html, body').animate({
+      scrollTop: $(location.hash).offset().top
+   }, 500);
+ });
+}
+
+</script>
+
+<a href="https://github.com/zodiac/appspot-grading/tree/master/isicp" target="_blank"><img style="position: absolute; top: 0; right: 0; border: 0;" src="https://s3.amazonaws.com/github/ribbons/forkme_right_green_007200.png" alt="Fork me on GitHub"></a>
+
+</body>
+</html>
