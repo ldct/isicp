@@ -688,15 +688,15 @@ function check_formals(formals) {
 
 onmessage = function(event) {
     var env = create_global_frame(); // new global frame every message exchange
-    var codebuffer = new Buffer(tokenize_lines([event.data]));
+    var codebuffer = new Buffer(tokenize_lines(event.data.split("\n")));
     while (codebuffer.current() != null) {
         try {
             var result = scheme_eval(scheme_read(codebuffer), env);
             if (! (result === null || result === undefined)) {
-                this.postMessage(result.toString());
+                this.postMessage(result.toString() + "\n");
             }
         } catch(e) {
-            this.postMessage(e.toString());
+            this.postMessage(e.toString() + "\n");
         }
     }
 };
