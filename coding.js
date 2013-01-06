@@ -336,6 +336,15 @@ function prompt(s) {
 
     var w = new Worker("interpreter/scheme_worker.js");
     w.onmessage = function(e) {
+
+      if (e.data.end) {
+        if (output_fragment.length == 0) {
+          $_(_output).empty();
+        }
+        w.terminate();        
+        return;
+      }
+
       output_fragment.push($("<span>" + e.data + "<br> </span>"));
       $_(_output).empty().append(output_fragment);
     }
