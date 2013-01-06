@@ -1,5 +1,3 @@
-
-
 Array.prototype.inside = function (element) {
     if (this.indexOf(element) == -1) {
 	return false;
@@ -19,7 +17,9 @@ Array.prototype.map = function(fun) {
 
 var DIGITS = "0123456789".split('');
 var ASCII_LOWERCASE = "abcdefghijklmnopqrstuvwxyz".split('');
-var _SYMBOL_STARTS = '!$%&*/:<=>?@^_~'.split('').concat(ASCII_LOWERCASE);
+var ASCII_UPPERCASE = "ABCDEFGHIJKLMNOPQRSTUVWXYZ".split('');
+var ASCII_LETTERS = ASCII_LOWERCASE.concat(ASCII_UPPERCASE);
+var _SYMBOL_STARTS = '!$%&*/:<=>?@^_~'.split('').concat(ASCII_LETTERS);
 var _SYMBOL_INNERS = _SYMBOL_STARTS.concat(DIGITS, '+-.'.split(''));
 var _NUMERAL_STARTS = DIGITS.concat('+-.'.split(''));
 var _WHITESPACE = ' \t\n\r'.split('');
