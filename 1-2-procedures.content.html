@@ -866,6 +866,12 @@ prompt("scheme-define-gcd");
 
 <div class="exercise">
 <p> <b> Exercise 1.20. </b> The process that a procedure generates is of course dependent on the rules used by the interpreter. As an example, consider the iterative gcd procedure given above. Suppose we were to interpret this procedure using normal-order evaluation, as discussed in section 1.1.5. (The normal-order-evaluation rule for if is described in exercise 1.5.) Using the substitution method (for normal order), illustrate the process generated in evaluating (gcd 206 40) and indicate the remainder operations that are actually performed. How many remainder operations are actually performed in the normal-order evaluation of <tt> (gcd 206 40)? </tt> In the applicative-order evaluation?
+
+<div id="scheme-ex-120" style="display:none">
+</div>
+<script> 
+answer("scheme-ex-120", 18);
+</script>
 </div>
 
 <h3>  Example: Testing for Primality </h3>
@@ -887,15 +893,40 @@ prompt("scheme-define-gcd");
   (= (remainder b a) 0))
 </div>
 
-<div id="scheme-define-remainder">
-(define remainder mod)
-</div>
-
 <script>
 prompt("scheme-define-smallest-divisor");
-new fakeEditor("scheme-define-remainder");
-depsOf["scheme-define-smallest-divisor"] = ["scheme-define-square", "scheme-define-remainder"];
+depsOf["scheme-define-smallest-divisor"] = ["scheme-define-square"];
 </script>
+
+<p>
+
+<div class="exercise">
+<p> <b> Exercise 1.21. </b> Use the smallest-divisor procedure to find the smallest divisor of each of the following numbers: 199, 1999, 19999.
+
+<div id="ex-121-199">
+199
+</div>
+<script>
+answer("ex-121-199", 199);
+</script>
+
+<div id="ex-121-1999">
+1999
+</div>
+<script>
+answer("ex-121-1999", 1999);
+</script>
+
+<div id="ex-121-19999">
+19999
+</div>
+<script>
+answer("ex-121-19999", 7);
+</script>
+
+</div>
+
+<p>
 
 <p> We can test whether a number is prime as follows: n is prime if and only if n is its own smallest divisor.
 
@@ -934,7 +965,7 @@ depsOf["scheme-define-prime"] = ["scheme-define-smallest-divisor"];
 </div>
 <script>
 prompt("scheme-define-expmod");
-depsOf["scheme-define-expmod"] = ["scheme-define-remainder", "scheme-define-square"];
+depsOf["scheme-define-expmod"] = ["scheme-define-square"];
 </script>  
 
 <p> This is very similar to the fast-expt procedure of section 1.2.4. It uses successive squaring, so that the number of steps grows logarithmically with the exponent.46
@@ -963,6 +994,7 @@ depsOf["scheme-define-fermat-test"] = ["scheme-define-expmod"];
 </div>
 <script>
 prompt("scheme-define-fast-prime");
+addDep("scheme-define-fast-prime", ["scheme-define-fermat-test"]);
 </script>
 
 <h4> Probabilistic methods </h4>
@@ -972,12 +1004,6 @@ prompt("scheme-define-fast-prime");
 <p> Unfortunately, this assertion is not quite correct. There do exist numbers that fool the Fermat test: numbers n that are not prime and yet have the property that an is congruent to a modulo n for all integers a &lt; n. Such numbers are extremely rare, so the Fermat test is quite reliable in practice.47 There are variations of the Fermat test that cannot be fooled. In these tests, as with the Fermat method, one tests the primality of an integer n by choosing a random integer a &lt; n and checking some condition that depends upon n and a. (See exercise 1.28 for an example of such a test.) On the other hand, in contrast to the Fermat test, one can prove that, for any n, the condition does not hold for most of the integers a &lt; n unless n is prime. Thus, if n passes the test for some random choice of a, the chances are better than even that n is prime. If n passes the test for two random choices of a, the chances are better than 3 out of 4 that n is prime. By running the test with more and more randomly chosen values of a we can make the probability of error as small as we like.
 
 <p> The existence of tests for which one can prove that the chance of error becomes arbitrarily small has sparked interest in algorithms of this type, which have come to be known as probabilistic algorithms. There is a great deal of research activity in this area, and probabilistic algorithms have been fruitfully applied to many fields.48
-
-<div class="exercise">
-<p> <b> Exercise 1.21. </b> Use the smallest-divisor procedure to find the smallest divisor of each of the following numbers: 199, 1999, 19999.
-</div>
-
-<p>
 
 <div class="exercise">
 <p> <b> Exercise 1.22. </b> Most Lisp implementations include a primitive called runtime that returns an integer that specifies the amount of time the system has been running (measured, for example, in microseconds). The following timed-prime-test procedure, when called with an integer n, prints n and checks to see if n is prime. If n is prime, the procedure prints three asterisks followed by the amount of time used in performing the test.

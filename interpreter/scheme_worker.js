@@ -203,6 +203,12 @@ function scheme_quotient(x, y) {
 }
 _PRIMITIVES["quotient"] = new PrimitiveProcedure(scheme_quotient);
 
+function scheme_random(n) {
+    return Math.floor((Math.random()*n));
+}
+_PRIMITIVES["random"] = new PrimitiveProcedure(scheme_random);
+
+
 function scheme_remainder(x, y) {
     return  x % y;
 }
