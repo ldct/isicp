@@ -212,8 +212,9 @@ makeStatic("scheme-define-a-2-n");
 makeStatic("scheme-define-5-n-squared");
 </script>
 
-<p> Give concise mathematical definitions for the functions computed by the procedures f, g, and h for positive integer values of n. For example, <tt>(k n)</tt> computes <tt> 5n<sup>2</sup> </tt>. 
+<p> Give concise mathematical definitions for the functions computed by the procedures f, g, and h for positive integer values of n. For example, <tt>(k n)</tt> computes <tt> 5n<sup>2</sup>. </tt> 
 
+<p> Check your answers <a href='http://www.billthelizard.com/2009/11/sicp-exercises-19-and-110.html'> here </a>
 </div>
 
 <h3> Tree Recursion </h3>
@@ -460,7 +461,17 @@ function ps(row, col) {
 <p>
 
 <div class="exercise">
-<p> <b> Exercise 1.13. </b> Prove that Fib(n) is the closest integer to <img src='http://upload.wikimedia.org/math/e/7/e/e7e35987f0d33ed055c0909aacaaedc5.png'>, where <img src='http://upload.wikimedia.org/math/4/9/e/49e8a76ceee7c67c84383ebdf06683be.png'> Hint: Let <img src='http://upload.wikimedia.org/math/e/7/f/e7f0abcf4d3c316fca62b0c3662701a0.png'> Use induction and the definition of the Fibonacci numbers (see section 1.2.2) to prove that <img src='http://upload.wikimedia.org/math/7/4/d/74d191cba08a88c2018cfd67fbc52dd1.png'>
+<p> <b> Exercise 1.13. </b> Prove that Fib(n) is the closest integer to <img src='http://upload.wikimedia.org/math/1/a/6/1a66b24ec4c976257d0fb57e2145490d.png' style="height:1.5em">, where 
+
+<p> <img src='http://upload.wikimedia.org/math/4/9/e/49e8a76ceee7c67c84383ebdf06683be.png'> 
+
+<p> Hint: Let 
+
+<p> <img src='http://upload.wikimedia.org/math/e/7/f/e7f0abcf4d3c316fca62b0c3662701a0.png'> 
+
+<p> Use induction and the definition of the Fibonacci numbers (see section 1.2.2) to prove that 
+
+<p> <img src='http://upload.wikimedia.org/math/7/4/d/74d191cba08a88c2018cfd67fbc52dd1.png'>
 </div>
 
 <h3> Orders of Growth </h3>
@@ -606,7 +617,7 @@ depsOf["scheme-define-fast-expt"] = ["scheme-define-even", "scheme-define-square
 
 <div id="scheme-define-even">
 (define (even? n)
-  (= (mod n 2) 0))
+  (= (remainder n 2) 0))
 </div>
 <script>
 prompt("scheme-define-even"); //TODO s/mod/remainder/g
@@ -619,13 +630,50 @@ prompt("scheme-define-even"); //TODO s/mod/remainder/g
 <div class='exercise'>
 <p> <b> Exercise 1.16. </b> Design a procedure that evolves an iterative exponentiation process that uses successive squaring and uses a logarithmic number of steps, as does fast-expt. (Hint: Using the observation that (b<sup>n/2</sup>)<sup>2</sup> = (b<sup>2</sup>)<sup>n/2</sup>, keep, along with the exponent n and the base b, an additional state variable a, and define the state transformation in such a way that the product a bn is unchanged from state to state. At the beginning of the process a is taken to be 1, and the answer is given by the value of a at the end of the process. In general, the technique of defining an <em> invariant quantity </em> that remains unchanged from state to state is a powerful way to think about the design of iterative algorithms.)
 
-<div id="scheme-define-expt-iter">
+<div id="scheme-ex-fast-iter-input">
 </div>
+
 <script>
-prompt("scheme-define-expt-iter");
+makeChangeOnFocusInput("scheme-ex-fast-iter-input", 
+                       "(define (fast-expt b n)\n  <your code here>)", 
+                       "(define (fast-expt b n)\n  ");
+addOutput("scheme-ex-fast-iter-input");
+linkEditor("scheme-ex-fast-iter-input", "scheme-ex-fast-iter-input-output", function(x, y) {
+
+  function es(b, n) {
+    return "(= (fast-expt " + b + " " + n + ") " + Math.pow(b,n) + ")";
+  }
+
+  var code = y + "\n" +
+            "(and " + es(7,5) + 
+                      es(4,9) + 
+                      es(3,4) + ")"
+
+  if (biwascheme.evaluate(code) == true) {
+    return "<div class='right-answer'> \u2713 </div>";
+  } else {
+    return "<div class='wrong-answer'> \u2717 </div>";
+  }
+});
 </script>
 
 </div>
+
+<!--
+(define (even? n)
+   (= (mod n 2) 0))
+
+(define (square x)
+   (* x x))
+
+(define (expt-iter b n a)
+   (cond ((= n 0) a)
+         ((even? n) (expt-iter (square b) (/ n 2) a))
+         (else (expt-iter  b (- n 1) (* a b)))))
+
+(define (fast-expt b n)
+   (expt-iter b n 1))
+!-->
 
 <p> 
 
@@ -644,12 +692,66 @@ prompt("scheme-define-times");
 
 <p> This algorithm takes a number of steps that is linear in b. Now suppose we include, together with addition, operations double, which doubles an integer, and halve, which divides an (even) integer by 2. Using these, design a multiplication procedure analogous to fast-expt that uses a logarithmic number of steps.
 
+<div id="scheme-ex-mul-input">
+</div>
+
+<script>
+makeChangeOnFocusInput("scheme-ex-mul-input", 
+                       "(define (mul a b)\n  <your code here>)", 
+                       "(define (mul a b)\n  ");
+addOutput("scheme-ex-mul-input");
+linkEditor("scheme-ex-mul-input", "scheme-ex-mul-input-output", function(x, y) {
+
+  function ms(a, b) {
+    return "(= (mul " + a + " " + b + ") " + a*b + ")";
+  }
+
+  var code = y + "\n" +
+            "(and " + ms(7,5) + 
+                      ms(4,9) + 
+                      ms(3,4) + ")"
+
+  if (biwascheme.evaluate(code) == true) {
+    return "<div class='right-answer'> \u2713 </div>";
+  } else {
+    return "<div class='wrong-answer'> \u2717 </div>";
+  }
+});
+</script>
+
 </div>
 
 <p>
 
 <div class='exercise'>
 <p> <b> Exercise 1.18. </b> Using the results of exercises 1.16 and 1.17, devise a procedure that generates an iterative process for multiplying two integers in terms of adding, doubling, and halving and uses a logarithmic number of steps.40
+
+<div id="scheme-ex-mul-iter-input">
+</div>
+
+<script>
+makeChangeOnFocusInput("scheme-ex-mul-iter-input", 
+                       "(define (mul a b)\n  <your code here>)", 
+                       "(define (mul a b)\n  ");
+addOutput("scheme-ex-mul-iter-input");
+linkEditor("scheme-ex-mul-iter-input", "scheme-ex-mul-iter-input-output", function(x, y) {
+
+  function ms(a, b) {
+    return "(= (mul " + a + " " + b + ") " + a*b + ")";
+  }
+
+  var code = y + "\n" +
+            "(and " + ms(7,5) + 
+                      ms(4,9) + 
+                      ms(3,4) + ")"
+
+  if (biwascheme.evaluate(code) == true) {
+    return "<div class='right-answer'> \u2713 </div>";
+  } else {
+    return "<div class='wrong-answer'> \u2717 </div>";
+  }
+});
+</script>
 </div>
 
 <p>
@@ -672,7 +774,7 @@ b &lt;- bp + aq
 <p> Show that if we apply such a transformation T<sub>pq</sub> twice, the effect is the same as using a single transformation T<sub>p'q'</sub> of the same form, and compute p' and q' in terms of p and q. This gives us an explicit way to square these transformations, and thus we can compute T<sup>n</sup> using successive squaring, as in the fast-expt procedure. Put this all together to complete the following procedure, which runs in a logarithmic number of steps:41
 
 
-<div id="scheme-define-log-fib">
+<div id="scheme-ex-log-fib">
 (define (fib n)
   (fib-iter 1 0 0 1 n))
   
@@ -690,11 +792,47 @@ b &lt;- bp + aq
                         q
                         (- count 1)))))
 </div>
+
 <script>
-prompt("scheme-define-log-fib");
+makeEditable("scheme-ex-log-fib");
+addOutput("scheme-ex-log-fib");
+linkEditor("scheme-ex-log-fib", "scheme-ex-log-fib-output", function(x, y) {
+
+  function fib(n){
+    var i;
+    var fibs = [];
+    fibs.push(0);
+    fibs.push(1);
+    for(i=0; i<n; i++){
+      fibs.push(fibs[0] + fibs[1]);
+      fibs.shift();
+    }  
+    return fibs[0];
+  }
+
+  function fibs(n) {
+    return "(= (fib " + n + ") " + fib(n) + ")";
+  }
+
+  var code = y + "\n" +
+            "(and " + fibs(10) + 
+                      fibs(11) + 
+                      fibs(13) + ")"
+
+  if (biwascheme.evaluate(code) == true) {
+    return "<div class='right-answer'> \u2713 </div>";
+  } else {
+    return "<div class='wrong-answer'> \u2717 </div>";
+  }
+});
 </script>
 
 </div>
+
+<!--
+(+ (* p p) (* q q))     ; compute p'
+(+ (* 2 p q) (* q q))   ; compute q'
+!-->
 
 <h3>  Greatest Common Divisors </h3>
 
