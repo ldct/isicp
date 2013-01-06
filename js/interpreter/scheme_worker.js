@@ -208,6 +208,8 @@ function scheme_random(n) {
 }
 _PRIMITIVES["random"] = new PrimitiveProcedure(scheme_random);
 
+_PRIMITIVES["sin"] = new PrimitiveProcedure(Math.sin);
+_PRIMITIVES["cos"] = new PrimitiveProcedure(Math.cos);
 
 function scheme_remainder(x, y) {
     return  x % y;
