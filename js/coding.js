@@ -334,7 +334,7 @@ function prompt(s) {
 
     var output_fragment = [];
 
-    var w = new Worker("interpreter/scheme_worker.js");
+    var w = new Worker("js/interpreter/scheme_worker.js");
     w.onmessage = function(e) {
 
       if (e.data.end) {
