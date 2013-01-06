@@ -40,10 +40,10 @@
     
     <p> 
     
-    <a href="index.html" class="navlink">&larr;</a>
-    <span id="currently-editing-link" class="navlink"> () </span>
-    <span id="toc-link" class="navlink"> .. </span>
-    <span id="video-link" class="navlink"> &#9656; </span>
+    <a href="index.html" class="navlink"> <img src='images/home.svg' width=32 height=32> </a>
+    <span id="currently-editing-link" class="navlink"> <img src='images/file-edit.svg' width=32 height=32> </span>
+    <span id="toc-link" class="navlink"> <img src='images/list.svg' width=32 height=32> </span>
+    <span id="video-link" class="navlink"> <img src='images/video.svg' width=32 height=32> </span>
     
     <p>
     
@@ -948,6 +948,7 @@ average of <em> x </em> and <em> f(x </em>).
 </div>
 <script>
 prompt("scheme-define-average-damp");
+
 </script>
 
 <p> <tt> average-damp </tt> is a procedure that takes as its argument a procedure f and returns as its value a procedure (produced by the lambda) that, when applied to a number x, produces the average of x and (f x). For example, applying average-damp to the square procedure produces a procedure whose value at some number x is the average of x and x2. Applying this resulting procedure to 10 returns the average of 10 and 100, or 55:59
