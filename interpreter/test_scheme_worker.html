@@ -4,33 +4,37 @@
 </head>
 <body>
 
+<table border="0">
+<tr>
+
+<td>
 <form>
-<textarea name="input" rows=15 cols=50>
-(define (add n result)
-(if (= n 0)
-    (begin (display 'answer:) (display result))
-    (begin (if (= (modulo n 10000) 0)
-               (print n)
-               #t)
-           (add (- n 1) (+ result n)))))
-
-(add 100000 0)
-</textarea>
+<textarea name="input" rows=30 cols=60></textarea>
+<br>
 <input type="button" value="Evaluate" onClick="out.value = ''; w.postMessage(this.form.input.value);">
-<input type="button" value="Run Tests" onClick="out.value = test(this.form.input.value);">
-
+<input type="button" value="Run Tests" onClick="out.value = ''; test(this.form.input.value, out);">
+<input type="button" value="Clear" onClick="this.form.input.value = ''">
 </form>
+</td>
+<td>
+<textarea id="output" rows=30 cols=60 readOnly=true></textarea>
+</td>
 
-<h2>Output:</h2>
-<textarea id="output" rows=20 cols=50 readOnly=true></textarea>
+</tr>
+</table>
 
 <script>
   var w = new Worker("scheme_worker.js");
   var out = document.getElementById("output");
-    
+  
   w.onmessage = function(e) {
+    if (e.data.end) {
+      out.value += "\n";
+      return;
+    }
     out.value += e.data;
   }
+  
 </script>
 
 </body>

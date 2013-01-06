@@ -1,15 +1,23 @@
 ;;; Test cases for Scheme.
 ;;;
-;;; In order to run only a prefix of these examples, add the line
+;;; How to use:
+;;; 
+;;; Each test is determined by a block of code followed by lines starting with
+;;; "; expect ". There can be multiple "expect" lines, to test code that output
+;;; multiple lines.
+;;; 
+;;; Copy and Paste these tests into the textarea in test_scheme_worker.html, 
+;;; and hit Run Tests to start.
+;;; 
+;;; If a test outputs more lines than what is expected, all the tests after that
+;;; one would fail.
+;;; 
+;;; CAUTION: every expression that evaluates to a value must be followed by an
+;;; expect statement. Otherwise all the tests after that one will fail!
 ;;;
-;;; (exit)
-;;;
-;;; after the last test you wish to run.
-
 ;;; *** Add more of your own here! ***
 
 
-;;; Problem 7
 
 (begin (+ 2 3) (+ 5 6))
 ; expect 11
@@ -26,27 +34,21 @@
 (begin (+ 1 2))
 ; expect 3
 
-;;; Problem 8
-
 (lambda (a b c) (- (* b b) (* 4 a c)))
 ; expect (lambda (a b c) (- (* b b) (* 4 a c)))
 
 (lambda (a) (define x 2) (+ x a))
 ; expect (lambda (a) (begin (define x 2) (+ x a)))
 
-;;; Problem A9
-
 (define (f x)
   (define (g y)
     (+ 1 y))
   (g x))
+
 (f 2)
-; expect 3
-
 (f 3)
+; expect 3
 ; expect 4
-
-;;; Problem B12
 
 (define (f1 a b) (+ a b))
 (f1 1 2)
@@ -55,8 +57,6 @@
 (define f2 (lambda () 5))
 (f2)
 ; expect 5
-
-;;; Problem A13
 
 (if (= 1 1) 't 'f)
 ; expect t
@@ -76,13 +76,11 @@
 (if 0 't 'f)
 ; expect t
 
-;;; Problem B14
-
 (and)
-; expect True
+; expect true
 
 (or)
-; expect False
+; expect false
 
 (and 4 5 6)
 ; expect 6
@@ -91,12 +89,10 @@
 ; expect 5
 
 (and #t #f 42 (/ 1 0))
-; expect False
+; expect false
 
 (or 4 #t (/ 1 0))
 ; expect 4
-
-;;; Problem A15
 
 (cond ((= 4 3) 'nope)
       ((= 4 4) 'hi)
@@ -106,7 +102,7 @@
 (cond ((= 4 3) 'wat)
       ((= 4 4))
       (else 'hm))
-; expect True
+; expect true
 
 (cond ((= 4 4) 'here 42)
       (else 'wat 0))
@@ -115,16 +111,13 @@
 (cond ((and 1 2)))
 ; expect 2
 
-;;; Problem A16
-
 (define x 'hi)
 (define y 'bye)
 (let ((x 42)
       (y (* 5 10)))
  (list x y))
-; expect (42 50)
-
 (list x y)
+; expect (42 50)
 ; expect (hi bye)
 
 (define (november) 
@@ -139,28 +132,6 @@
 	(y x))
     y))
 ; expect 5
-
-;;; Problem B17
-
-(mu (x) (+ x y))
-; expect (mu (x) (+ x y))
-
-(mu (a) (define x 2) (+ x a))
-; expect (mu (a) (begin (define x 2) (+ x a)))
-
-(define f (mu (x) (+ x y)))
-(define g (lambda (x y) (f (+ x x))))
-(g 3 7)
-; expect 13
-
-; mu shouldn't change bindings in the frame it is called
-(define f (mu (x) (define y (+ x z)) y))
-(define z 1)
-(define y 2)
-(f 3)
-; expect 4
-y
-; expect 2
 
 ;;; These are examples from several sections of "The Structure
 ;;; and Interpretation of Computer Programs" by Abelson and Sussman.
@@ -206,20 +177,12 @@ y
       6))
 ; expect 57
 
-
-;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
-;;; Move the following (exit) line to run additional tests. ;;;
-;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
-
-
-
 ;;; 1.1.2
 
 (define size 2)
 size
-; expect 2
-
 (* 5 size)
+; expect 2
 ; expect 10
 
 (define pi 3.14159)
@@ -238,23 +201,24 @@ circumference
 ; expect 441
 
 (define square (lambda (x) (* x x))) ; See Section 1.3.2
-(square 21)
-; expect 441
-
+(square 21) 
 (square (+ 2 5))
+; expect 441
 ; expect 49
 
 (square (square 3))
 ; expect 81
 
+(define (square x) (* x x))
+
 (define (sum-of-squares x y)
   (+ (square x) (square y)))
 (sum-of-squares 3 4)
-; expect 25
 
 (define (f a)
   (sum-of-squares (+ a 1) (* a 2)))
 (f 5)
+; expect 25
 ; expect 136
 
 ;;; 1.1.6
@@ -263,13 +227,12 @@ circumference
   (cond ((> x 0) x)
         ((= x 0) 0)
         ((< x 0) (- x))))
+
 (abs -3)
-; expect 3
-
 (abs 0)
-; expect 0
-
 (abs 3)
+; expect 3
+; expect 0
 ; expect 3
 
 (define (a-plus-abs-b a b)
@@ -560,7 +523,7 @@ one-through-four
         ((eq? item (car x)) x)
         (else (memq item (cdr x)))))
 (memq 'apple '(pear banana prune))
-; expect False
+; expect false
 
 (memq 'apple '(x (apple sauce) y apple pear))
 ; expect (apple pear)
@@ -572,13 +535,13 @@ one-through-four
         ((null? x) (null? y))
         (else (eq? x y))))
 (equal? '(1 2 (three)) '(1 2 (three)))
-; expect True
+; expect true
 
 (equal? '(1 2 (three)) '(1 2 three))
-; expect False
+; expect false
 
 (equal? '(1 2 three) '(1 2 (three)))
-; expect False
+; expect false
 
 ;;; Peter Norvig tests (http://norvig.com/lispy2.html)
 
@@ -600,9 +563,6 @@ one-through-four
 (define fact (lambda (n) (if (<= n 1) 1 (* n (fact (- n 1))))))
 (fact 3)
 ; expect 6
-
-(fact 50)
-; expect 30414093201713378043612608166064768844377641568960512000000000000
 
 (define (combine f)
   (lambda (x y)
@@ -662,13 +622,13 @@ one-through-four
 ; expect 1
 
 (or false true)
-; expect True
+; expect true
 
 (or)
-; expect False
+; expect false
 
 (and)
-; expect True
+; expect true
 
 (or 1 2 3)
 ; expect 1
@@ -699,13 +659,6 @@ one-through-four
 ;(f 1 2 3 4 5)
 ;; expect (3 4 5)
 
-(define g (mu () x))
-(define (high f x)
-  (f))
-
-(high g 2)
-; expect 2
-
 (define (print-and-square x)
   (print x)
   (square x))
@@ -714,12 +667,7 @@ one-through-four
 ; expect 144
 
 (/ 1 0)
-; expect Error
-
-(define addx (mu (x) (+ x y)))
-(define add2xy (lambda (x y) (addx (+ x x))))
-(add2xy 3 7)
-; expect 13
+; expect SchemeError: division by zero
 
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
@@ -874,25 +822,14 @@ one-through-four
 					  (car list1))))))
 (compare-lists (list-partitions 5 2 4)
 	       '((4 1) (3 2)))
-; expect True
+; expect true
 
 (compare-lists (list-partitions 7 3 5)
 	       '((5 1 1) (4 2 1) (3 3 1) (3 2 2) (5 2) (4 3)))
-; expect True
+; expect true
 
 (compare-lists (list-partitions 10 10 10) '((10) (9 1) (8 2) (7 3) (6 4) (5 5) (4 4 2) (4 3 3) (5 3 2) (5 4 1) (6 2 2) (6 3 1) (7 2 1) (8 1 1) (7 1 1 1) (6 2 1 1) (6 1 1 1 1) (5 3 1 1) (5 2 2 1) (5 2 1 1 1) (5 1 1 1 1 1) (4 4 1 1)  (4 3 2 1) (4 3 1 1 1) (4 2 2 2) (4 2 2 1 1) (4 2 1 1 1 1) (4 1 1 1 1 1 1) (3 3 3 1) (3 3 2 2) (3 3 2 1 1) (3 3 1 1 1 1) (3 2 2 2 1) (3 2 2 1 1 1) (3 2 1 1 1 1 1) (3 1 1 1 1 1 1 1) (2 2 2 2 2) (2 2 2 2 1 1) (2 2 2 1 1 1 1) (2 2 1 1 1 1 1 1) (2 1 1 1 1 1 1 1 1) (1 1 1 1 1 1 1 1 1 1)))
-; expect True
-
-; Draw the hax image using turtle graphics.
-(define (hax n k)
-  ; *** YOUR CODE HERE ***
-  
-  nil)
-
-
-;;;;;;;;;;;;;;;;;;;;
-;;; Extra credit ;;;
-;;;;;;;;;;;;;;;;;;;;
+; expect true
 
 ; Tail call optimization test
 (define (sum n total)
@@ -900,3 +837,21 @@ one-through-four
     (sum (- n 1) (+ n total))))
 (sum 1001 0)
 ; expect 501501
+
+; display test
+(define (add n result)
+  (if (= n 0)
+      (begin (display 'answer:) (display result))
+      (begin (if (= (modulo n 200) 0)
+                 (print n)
+                 #t)
+             (add (- n 1) (+ result n)))))
+
+(add 1000 0)
+
+; expect 1000
+; expect 800
+; expect 600
+; expect 400
+; expect 200
+; expect answer:500500
