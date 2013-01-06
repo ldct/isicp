@@ -310,6 +310,13 @@ function scheme_error(msg) {
 }
 _PRIMITIVES["error"] = new PrimitiveProcedure(scheme_error);
 
+function current_miliseconds() {
+    // Returns the number of miliseconds from Jan 1 1970
+    // Not a good way of measuring runtime of a program though
+    return new Date().getTime();
+}
+_PRIMITIVES["current-milliseconds"] = new PrimitiveProcedure(current_miliseconds);
+
 function scheme_exit() {
     throw "EOFError";
 }
