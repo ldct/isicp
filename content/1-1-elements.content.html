@@ -1297,17 +1297,21 @@ makeStatic("scheme-define-good-enough-2");
 <div id="scheme-define-sqrt-full">
 (define (sqrt x)
   (sqrt-iter 1.0 x))
+
 (define (sqrt-iter guess x)
   (if (good-enough? guess x)
       guess
       (sqrt-iter (improve guess x) x)))
+
 (define (good-enough? guess x)
   (< (abs (- (square guess) x)) 0.001))
+
 (define (improve guess x)
   (average guess (/ x guess)))
 </div>
 <script>
-makeStatic("scheme-define-sqrt-full");
+prompt("scheme-define-sqrt-full");
+addDep("scheme-define-sqrt-full", ["scheme-define-square", "scheme-define-average"]);
 </script>
 
 <p> The problem with this program is that the only procedure that is important to users of sqrt is sqrt. The other procedures (sqrt-iter, good-enough?, and improve) only clutter up their minds. They may not define any other procedure called good-enough? as part of another program to work together with the square-root program, because sqrt needs it. The problem is especially severe in the construction of large systems by many separate programmers. For example, in the construction of a large library of numerical procedures, many numerical functions are computed as successive approximations and thus might have procedures named good-enough? and improve as auxiliary procedures. We would like to localize the subprocedures, hiding them inside sqrt so that sqrt could coexist with other successive approximations, each having its own private good-enough? procedure. To make this possible, we allow a procedure to have internal definitions that are local to that procedure. For example, in the square-root problem we can write
@@ -1326,6 +1330,7 @@ makeStatic("scheme-define-sqrt-full");
 </div>
 <script>
 prompt("scheme-define-sqrt-block");
+addDep("scheme-define-sqrt-block", ["scheme-define-square", "scheme-define-average"]);
 </script>
 
 <p> Such nesting of definitions, called block structure, is basically the right solution to the simplest name-packaging problem. But there is a better idea lurking here. In addition to internalizing the definitions of the auxiliary procedures, we can simplify them. Since x is bound in the definition of sqrt, the procedures good-enough?, improve, and sqrt-iter, which are defined internally to sqrt, are in the scope of x. Thus, it is not necessary to pass x explicitly to each of these procedures. Instead, we allow x to be a free variable in the internal definitions, as shown below. Then x gets its value from the argument with which the enclosing procedure sqrt is called. This discipline is called lexical scoping.
@@ -1344,6 +1349,7 @@ prompt("scheme-define-sqrt-block");
 </div>
 <script>
 prompt("scheme-define-sqrt-no-x");
+addDep("scheme-define-sqrt-no-x", ["scheme-define-square", "scheme-define-average"]);
 </script>
 
 <p> We will use block structure extensively to help us break up large programs into tractable pieces. The idea of block structure originated with the programming language Algol 60. It appears in most advanced programming languages and is an important tool for helping to organize the construction of large programs.
