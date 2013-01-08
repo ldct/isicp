@@ -654,10 +654,10 @@ one-through-four
 ; expect 2
 ; expect 2
 
-; very weird
-;(define f (lambda (x y . z) z))
-;(f 1 2 3 4 5)
-;; expect (3 4 5)
+
+(define f (lambda (x y . z) z))
+(f 1 2 3 4 5)
+; expect (3 4 5)
 
 (define (print-and-square x)
   (print x)
@@ -682,8 +682,6 @@ one-through-four
 (len '(1 2 3 4))
 ; expect 4
 
-; Problem 18
-
 ;; Merge two lists LIST1 and LIST2 and returns
 ;; the merged lists.
 (define (merge list1 list2)
@@ -699,17 +697,14 @@ one-through-four
 (merge '(1 5 7 9) '(4 8 10))
 ; expect (1 4 5 7 8 9 10)
 
-; CY
-;(merge '(2 3 4) '(2 3 3 5))
-;; expect (2 2 3 3 3 4 5)
+(merge '(2 3 4) '(2 3 3 5))
+; expect (2 2 3 3 3 4 5)
 
-;(merge '(2 3 4) '(0 1 5))
-;; expect (0 1 2 3 4 5)
+(merge '(2 3 4) '(0 1 5))
+; expect (0 1 2 3 4 5)
 
-;(merge '() '())
-;; expect ()
-
-; Problem A19
+(merge '() '())
+; expect ()
 
 ;; The number of ways to change TOTAL with DENOMS
 ;; At most MAX-COINS total coins can be used.
@@ -730,18 +725,9 @@ one-through-four
 (count-change 20 us-coins 18)
 ; expect 8
 
-; CY
-;(count-change 100 us-coins 100)
-;; expect 292
+(count-change 0 us-coins 1)
+; expect 1
 
-;(count-change 0 us-coins 1)
-;; expect 1
-
-;(count-change 20 us-coins 100)
-;;
-
-
-; Problem B20
 
 ;; The number of ways to partition TOTAL, where
 ;; each partition must be at most MAX-VALUE
@@ -759,20 +745,11 @@ one-through-four
 
 (count-partitions 5 3)
 ; expect 5
-
-; CY
-;(count-partitions 63 4)
-;; expect 2178
-
-;(count-partitions 100 3)
-;; expect 884
-
-;(count-partitions 10 10)
-;; expect 42
-
 ; Note: The 5 partitions are [[3 2] [3 1 1] [2 2 1] [2 1 1 1] [1 1 1 1 1]]
 
-; Problem 21
+(count-partitions 10 10)
+; expect 42
+
 
 ;; A list of all ways to partition TOTAL, where each partition must
 ;; be at most MAX-VALUE and there are at most MAX-PIECES partitions.
@@ -848,6 +825,7 @@ one-through-four
              (add (- n 1) (+ result n)))))
 
 (add 1000 0)
+(newline)
 
 ; expect 1000
 ; expect 800
@@ -855,3 +833,42 @@ one-through-four
 ; expect 400
 ; expect 200
 ; expect answer:500500
+
+
+;;; Tests for eval and apply primitives
+
+(eval '(+ 1 2))
+; expect 3
+
+(apply + '(1 2))
+; expect 3
+
+;;; Tests for dotted parameter lists
+
+(. 'hi)
+; expect hi
+
+(define (foo . args) args)
+
+(foo)           
+(foo 1)         
+(foo 1 '(2 3))
+
+; expect ()
+; expect (1)
+; expect (1 (2 3))
+
+(define (double-minus a b . c)
+  (- (+ a b) (apply + c)))
+
+(double-minus 4 5 1 2 3)
+; expect 3
+
+(double-minus 4 5)
+; expect 9
+
+(double-minus 4)
+; expect SchemeError: Invalid number of arguments
+
+( (lambda a a) 1 . (2) )
+; expect (1 2)
