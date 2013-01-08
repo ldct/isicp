@@ -665,8 +665,17 @@ function scheme_random(n) {
 }
 _PRIMITIVES["random"] = new PrimitiveProcedure(scheme_random);
 
+_PRIMITIVES["abs"] = new PrimitiveProcedure(Math.abs);
+_PRIMITIVES["log"] = new PrimitiveProcedure(Math.log);
+_PRIMITIVES["exp"] = new PrimitiveProcedure(Math.exp);
 _PRIMITIVES["sin"] = new PrimitiveProcedure(Math.sin);
 _PRIMITIVES["cos"] = new PrimitiveProcedure(Math.cos);
+_PRIMITIVES["tan"] = new PrimitiveProcedure(Math.tan);
+_PRIMITIVES["asin"] = new PrimitiveProcedure(Math.asin);
+_PRIMITIVES["acos"] = new PrimitiveProcedure(Math.acos);
+
+//TODO: two-argument version
+_PRIMITIVES["atan"] = new PrimitiveProcedure(Math.atan); 
 
 function scheme_remainder(x, y) {
     return  x % y;
