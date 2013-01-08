@@ -74,6 +74,19 @@ Pair.prototype = {
 	}
 	return y.first;
     },
+    seperate_dotted : function() {
+        // Returns an array; its first element is a well-formed list 
+        // without the last element of the dotted list; its second element 
+        // is the element after the dot.
+        if (! (this.second instanceof Pair)) {
+            return [new Pair(this.first, nil), this.second];
+        } else {
+            var a = this.second.seperate_dotted();
+            var list = a[0];
+            var last = a[1];
+            return [new Pair(this.first, list), last];
+        }
+    },
     map : function(fn) {
 	// Return a Scheme list after mapping JavaScript function FN to THIS
 	var mapped = fn(this.first);

@@ -5,7 +5,7 @@ function test(str, out) {
     var eval_result = "";
     var code = "";
 
-    out.value += "Running Tests...";
+    out.value += "Running Tests...\n";
     
     worker.onmessage = function(e) {
         if (e.data.end) {
@@ -35,8 +35,8 @@ function check_tests(test_cases, eval_result, out) {
         result_num_lines = result.split("\n").length - 1;
         curr_result = eval_lines.slice(0, result_num_lines).join("\n") + "\n";
         if ( curr_result !== result) {
-            out.value +=  "\nFAILED TEST:\n" + code + 
-                "\nEXPECTED:\n\n" + result + "\n\GOT:\n\n" + curr_result;
+            out.value +=  "\n################\n\nFAILED TEST:" + code + 
+                "\nEXPECTED:\n" + result + "\n\GOT:\n" + curr_result;
             failed += 1;
         }
         eval_lines = eval_lines.slice(result_num_lines);
