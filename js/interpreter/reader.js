@@ -20,9 +20,15 @@ would be read to the value, where possible.
 // Data Structures //
 /////////////////////
 
-function Pair(first, second) {    
+function Pair(first, second) {
+    var self = this
     this.first = first;
     this.second = second;
+    this.length = {
+        // hack to avoid having to call a function to get length of a Pair
+        'valueOf' : function() {return self.getlength();},
+        'toString' : function() {return self.getlength().toString()}
+    }
 }
 
 Pair.prototype = {
@@ -41,7 +47,7 @@ Pair.prototype = {
 	}
 	return s + ")";
     },
-    length : function() {
+    getlength : function() {
 	var n = 1;
 	var second = this.second;
 	while (second instanceof Pair) {
@@ -88,9 +94,7 @@ var nil = {
     toString : function() {
 	return '()';
     },
-    length : function() {
-	return 0;
-    },
+    length : 0,
     getitem : function(k) {
         if (k < 0) {
             throw "IndexError: negative index into list";
