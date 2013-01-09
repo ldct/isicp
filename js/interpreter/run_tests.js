@@ -14,7 +14,7 @@ function test(str, out) {
             return;
         }
         eval_result += e.data;
-    }
+    };
     
     for (var i = 0; i < test_cases.length; i++) {
         code += test_cases[i][0];
@@ -47,7 +47,7 @@ function check_tests(test_cases, eval_result, out) {
 }
 
 function split_cases(code) {
-    // Takes in a chunk of code and returns an array containing test cases. 
+    // Takes in a chunk of code and returns an array containing test cases.
     // Each test case is an array, with its first entry the code to run, and the
     // second entry is the result to compare with.
     
@@ -82,5 +82,3 @@ function split_cases(code) {
 
     return test_cases;
 }
-        
-            

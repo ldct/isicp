@@ -1,4 +1,4 @@
-importScripts("reader.js", "tokenizer.js");
+
 
 // This interpreter is based on the Scheme interpreter project for UC Berkeley
 // CS61A course. The starter code and description for the project can be found
@@ -6,15 +6,40 @@ importScripts("reader.js", "tokenizer.js");
 //
 // http://www-inst.eecs.berkeley.edu/~cs61a/fa12/projects/scheme/scheme.html
 //
-// The resulting python code after completing the project is then translated into
-// JavaScript by me (Chenyang Yuan). 
+// The resulting python code after completing the project is then translated
+// into JavaScript by me (Chenyang Yuan).
+
+
+// Scheme Worker //
+
+
+importScripts("reader.js", "tokenizer.js");
+
+onmessage = function(event) {
+    var env = create_global_frame();
+    
+    var codebuffer = new Buffer(tokenize_lines(event.data.split("\n")));
+    while (codebuffer.current() != null) {
+        try {
+            var result = scheme_eval(scheme_read(codebuffer), env);
+            if (! (result === null || result === undefined)) {
+                this.postMessage(result.toString() + "\n");
+            }
+        } catch(e) {
+            this.postMessage(e.toString() + "\n");
+        }
+    }
+    this.postMessage({"end": true});
+};
+
+
 
 //SCHEME.JS//
 
-/*
-This file implements the core Scheme interpreter functions, including the
-eval/apply mutual recurrence, environment model, and read-eval-print loop
-*/
+
+// This file implements the core Scheme interpreter functions, including the
+// eval/apply mutual recurrence, environment model, and read-eval-print loop
+
 
 /////////////////////
 // Data Structures //
@@ -61,7 +86,6 @@ Frame.prototype = {
                 list = a[0];
                 last = a[1];
             }
-            
             var non_dotted_length = list.length;
             var rest = array_to_pair(vals.slice(non_dotted_length));
             formals = scheme_append(list, new Pair(last, nil));
@@ -81,14 +105,14 @@ Frame.prototype = {
         // Define Scheme symbol SYM to have value VAL in SELF
         this.bindings[sym] = val;
     }
-}
+};
 
 // A procedure defined by a lambda expression or the complex define form
 function LambdaProcedure(formals, body, env, dotted) {
     // A procedure whose formal parameter list is FORMALS (a Scheme list or a
-    // one with a dotted last symbol), whose body is the single Scheme expression
+    // one with a dotted last symbol), whose body is a single Scheme expression
     // BODY, and whose parent environment is the Frame ENV. DOTTED is true if
-    // extra parameters need to be passed. A lambda expression containing 
+    // extra parameters need to be passed. A lambda expression containing
     // multiple expressions, such as (lambda (x) (display x) (+ x 1)) can be
     // handled by using (begin (display x) (+ x 1)) as the body
     this.formals = formals;
@@ -102,7 +126,7 @@ LambdaProcedure.prototype = {
         return "(lambda "+ this.formals.toString() +" "+
                this.body.toString() +")" ;
     }
-}
+};
 
 /////////////////////
 // Eval-Apply Loop //
@@ -131,8 +155,6 @@ function scheme_eval(expr, env) {
             expr = LOGIC_FORMS[first](rest, env);
         } else if (first === 'lambda') {
             return do_lambda_form(rest, env);
-        } else if (first === 'mu') {
-            return do_mu_form(rest);
         } else if (first === 'define') {
             return do_define_form(rest, env);
         } else if (first === 'quote') {
@@ -172,7 +194,6 @@ function scheme_apply(procedure, args, env) {
 function apply_primitive(procedure, args, env) {
     // Apply PrimitiveProcedure PROCEDURE to a Scheme list of ARGS in ENV
     args = pair_to_array(args);
-    
     if (procedure.use_env) {
         args.push(env);
     }
@@ -199,9 +220,9 @@ function pair_to_array(list) {
 function array_to_pair(array) {
     // Reverses the output of pair_to_array
     if (array.length == 0) {
-        return nil
+        return nil;
     } else {
-        var first = array.shift()
+        var first = array.shift();
         return new Pair(first, array_to_pair(array));
     }
 }
@@ -213,10 +234,10 @@ function array_to_pair(array) {
 
 function do_lambda_form(vals, env) {
     // Evaluate a lambda form with parameters VALS in environment ENV
-    var value, formals
+    var value, formals;
     check_form(vals, 2);
     formals = vals.getitem(0);
-    dotted = check_formals(formals);
+    var dotted = check_formals(formals);
     if (vals.length == 2) {
         value = vals.getitem(1);
     } else {
@@ -227,7 +248,7 @@ function do_lambda_form(vals, env) {
 
 function do_define_form(vals, env) {
     // Evaluate a define form with parameters VALS in environment ENV
-    var target, value, t, v
+    var target, value, t, v;
     check_form(vals, 2);
     target = vals.getitem(0);
     if (scheme_symbolp(target)) {
@@ -243,7 +264,7 @@ function do_define_form(vals, env) {
         value = do_lambda_form(v, env);
         env.define(t, value);
     } else {
-        throw "SchemeError: bad argument to define"
+        throw "SchemeError: bad argument to define";
     }
 }
 
@@ -262,8 +283,8 @@ function do_let_form(vals, env) {
         throw "SchemeError: bad bindings list in let form";
     }
     // Add a frame containing bindings
-    var names = nil
-    vals = nil
+    var names = nil;
+    vals = nil;
     var new_env = env.make_call_frame(names, vals);
     for (var i = 0; i < bindings.length; i++) {
         var binding = bindings.getitem(i);
@@ -353,12 +374,12 @@ function do_begin_form(vals, env) {
     return vals.getitem(eval_length);
 }
 
-LOGIC_FORMS = {
+var LOGIC_FORMS = {
         "and": do_and_form,
         "or": do_or_form,
         "if": do_if_form,
         "cond": do_cond_form,
-        "begin": do_begin_form,
+        "begin": do_begin_form
         };
 
 //////////////////////
@@ -399,7 +420,7 @@ function check_form(expr, min, max) {
 function check_formals(formals) {
     // Check that FORMALS is a valid parameter list, a Scheme list of symbols
     // in which each symbol is distinct.
-    // FORMALS can also be a single symbol. 
+    // FORMALS can also be a single symbol.
     // Returns false when FORMALS is a well-formed list. Return true otherwise.
     
     var last;
@@ -440,23 +461,6 @@ function check_symbol(symbol, symbols) {
     }
 }
 
-onmessage = function(event) {
-    var env = create_global_frame();
-    
-    var codebuffer = new Buffer(tokenize_lines(event.data.split("\n")));
-    while (codebuffer.current() != null) {
-        try {
-            var result = scheme_eval(scheme_read(codebuffer), env);
-            if (! (result === null || result === undefined)) {
-                this.postMessage(result.toString() + "\n");
-            }
-        } catch(e) {
-            this.postMessage(e.toString() + "\n");
-        }
-    }
-    this.postMessage({"end": true});
-};
-
 //PRIMITIVES.JS//
 
 // This file implements the primitives of the Scheme language
@@ -480,7 +484,7 @@ function check_type(val, predicate, k, name) {
     return val;
 }
 
-_PRIMITIVES = {}
+var _PRIMITIVES = {};
 
 function scheme_booleanp(x) {
     return (x === true) || (x === false);
@@ -675,7 +679,7 @@ _PRIMITIVES["asin"] = new PrimitiveProcedure(Math.asin);
 _PRIMITIVES["acos"] = new PrimitiveProcedure(Math.acos);
 
 //TODO: two-argument version
-_PRIMITIVES["atan"] = new PrimitiveProcedure(Math.atan); 
+_PRIMITIVES["atan"] = new PrimitiveProcedure(Math.atan);
 
 function scheme_remainder(x, y) {
     return  x % y;
@@ -783,7 +787,8 @@ function current_miliseconds() {
     // Not a good way of measuring runtime of a program though
     return new Date().getTime();
 }
-_PRIMITIVES["current-milliseconds"] = new PrimitiveProcedure(current_miliseconds);
+_PRIMITIVES["current-milliseconds"] =
+    new PrimitiveProcedure(current_miliseconds);
 
 function scheme_exit() {
     throw "EOFError";

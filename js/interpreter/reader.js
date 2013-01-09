@@ -21,62 +21,63 @@ would be read to the value, where possible.
 /////////////////////
 
 function Pair(first, second) {
-    var self = this
+    var self = this;
     this.first = first;
     this.second = second;
     this.length = {
         // hack to avoid having to call a function to get length of a Pair
         'valueOf' : function() {return self.getlength();},
-        'toString' : function() {return self.getlength().toString()}
-    }
+        'toString' : function() {return self.getlength().toString();}
+    };
 }
 
 Pair.prototype = {
     valueOf : function() {
-	return "Pair(" + this.first.valueOf() + ", " + this.second.valueOf() + ")";
+        return "Pair(" + this.first.valueOf() + ", "
+                       + this.second.valueOf() + ")";
     },
     toString : function() {
-	var s = "(" + this.first.toString();
-	var second = this.second;
-	while (second instanceof Pair) {
-	    s += " " + second.first.toString();
-	    second = second.second;
-	}
-	if (second !== nil) {
-	    s += " . " + second.toString();
-	}
-	return s + ")";
+        var s = "(" + this.first.toString();
+        var second = this.second;
+        while (second instanceof Pair) {
+            s += " " + second.first.toString();
+            second = second.second;
+        }
+        if (second !== nil) {
+            s += " . " + second.toString();
+        }
+        return s + ")";
     },
     getlength : function() {
-	var n = 1;
-	var second = this.second;
-	while (second instanceof Pair) {
-	    n += 1;
-	    second = second.second;
-	}
-	if (second !== nil) {
-	    throw "TypeError: length attempted on improper list";
-	}
-	return n;
+        var n = 1;
+        var second = this.second;
+        while (second instanceof Pair) {
+            n += 1;
+            second = second.second;
+        }
+        if (second !== nil) {
+            throw "TypeError: length attempted on improper list";
+        }
+        return n;
     },
     getitem : function(k) {
-	if (k < 0) {
-	    throw "IndexError: negative index into list";
-	}
-	var y = this;
-	for (var i = 0; i < k; i++) {
-	    if (y.second === nil) {
-		throw "IndexError: list out of bounds";
-	    } else if (! (y.second instanceof Pair)) {
-		throw "TypeError: ill-formed list";
-	    }
-	    y = y.second;
-	}
-	return y.first;
+        if (k < 0) {
+            throw "IndexError: negative index into list";
+        }
+        var y = this;
+        for (var i = 0; i < k; i++) {
+            if (y.second === nil) {
+                throw "IndexError: list out of bounds";
+            } else if (! (y.second instanceof Pair)) {
+                throw "TypeError: ill-formed list";
+            }
+            y = y.second;
+        }
+        return y.first;
     },
     seperate_dotted : function() {
-        // Returns an array; its first element is a well-formed list 
-        // without the last element of the dotted list; its second element 
+        // Returns an array; its first element is a well-formed list
+        // without the last element of the dotted list; its second element
         // is the element after the dot.
         if (! (this.second instanceof Pair)) {
             return [new Pair(this.first, nil), this.second];
@@ -88,13 +89,13 @@ Pair.prototype = {
         }
     },
     map : function(fn) {
-	// Return a Scheme list after mapping JavaScript function FN to THIS
-	var mapped = fn(this.first);
-	if ((this.second === nil) || (this.second instanceof Pair)) {
-	    return new Pair(mapped, this.second.map(fn)) ;
-	} else {
-	    throw "TypeError : ill-formed list";
-	}
+        // Return a Scheme list after mapping JavaScript function FN to THIS
+        var mapped = fn(this.first);
+        if ((this.second === nil) || (this.second instanceof Pair)) {
+            return new Pair(mapped, this.second.map(fn)) ;
+        } else {
+            throw "TypeError : ill-formed list";
+        }
     }
 }
 
@@ -102,20 +103,20 @@ Pair.prototype = {
 
 var nil = {
     valueOf : function() {
-	return 'nil';
+        return 'nil';
     },
     toString : function() {
-	return '()';
+        return '()';
     },
     length : 0,
     getitem : function(k) {
         if (k < 0) {
             throw "IndexError: negative index into list";
-	}
+        }
         throw "IndexError: list index out of bounds";
     },
     map : function(fn) {
-	return this
+        return this;
     }
 };
 
@@ -144,29 +145,29 @@ function Buffer(source) {
 
 Buffer.prototype = {
     pop : function() {
-	// Remove the next item from self and return it. If self has
+        // Remove the next item from self and return it. If self has
         // exhausted its source, returns null
-	var current = this.current();
-	this.index += 1;
-	return current;
+        var current = this.current();
+        this.index += 1;
+        return current;
     },
     more_on_line : function() {
-	return (this.index < this.current_line.length);
+        return (this.index < this.current_line.length);
     },
     current : function() {
-	while (! this.more_on_line()) {
-	    this.index = 0;
-	    if (this.line_index < this.source.length) {
-		this.current_line = this.source[this.line_index];
-		this.line_index += 1;
-	    } else {
-		this.current_line = [];
-		return null;
-	    }
-	}
-	return this.current_line[this.index];
+        while (! this.more_on_line()) {
+            this.index = 0;
+            if (this.line_index < this.source.length) {
+                this.current_line = this.source[this.line_index];
+                this.line_index += 1;
+            } else {
+                this.current_line = [];
+                return null;
+            }
+        }
+        return this.current_line[this.index];
     }
-}
+};
 
 ////////////////////////
 // Scheme list parser //
@@ -174,9 +175,9 @@ Buffer.prototype = {
 
 function scheme_read(src) {
     // Read the next expression from SRC, a Buffer of tokens
-    var val, quoted
+    var val, quoted;
     if (src.current() == null) {
-	throw "EOFError";
+        throw "EOFError";
     }
     val = src.pop();
     if (val == "nil") {
@@ -189,16 +190,16 @@ function scheme_read(src) {
     } else if (val == "(") {
         return read_tail(src);
     } else {
-        throw "SyntaxError: unexpected token: " + val
+        throw "SyntaxError: unexpected token: " + val;
     }
 }
 
 
 function read_tail(src) {
     // Return the remainder of an array in SRC, starting before an element or )
-    var first, rest, end_token, next_token
+    var first, rest, end_token, next_token;
     if (src.current() == null) {
-        throw "SyntaxError: unexpected end of file"
+        throw "SyntaxError: unexpected end of file";
     }
     if (src.current() == ")") {
         src.pop();
@@ -209,7 +210,7 @@ function read_tail(src) {
         end_token = scheme_read(src);
         next_token = src.pop();
         if (next_token != ")") {
-            throw "SyntaxError: Expected one element after ."
+            throw "SyntaxError: Expected one element after .";
         }
         return end_token;
     }
@@ -217,4 +218,3 @@ function read_tail(src) {
     rest = read_tail(src);
     return new Pair(first, rest);
 }
-
