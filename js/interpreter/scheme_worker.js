@@ -1,5 +1,3 @@
-
-
 // This interpreter is based on the Scheme interpreter project for UC Berkeley
 // CS61A course. The starter code and description for the project can be found
 // at this webpage:
