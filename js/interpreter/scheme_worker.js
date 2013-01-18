@@ -67,7 +67,7 @@ Frame.prototype = {
         return e;
         },
     make_call_frame : function(formals, vals, dotted) {
-        // Return a new local frame whose parent is SELF, in which the symbols
+        // Return a new local frame whose parent is THIS, in which the symbols
         // in the Scheme formal parameter list FORMALS are bound to the Scheme
         // values in the Scheme value list VALS. If optional DOTTED is true,
         // any extra values will be bound to the dotted symbol in FORMALS.
@@ -100,8 +100,20 @@ Frame.prototype = {
         return frame;
         },
     define : function(sym , val) {
-        // Define Scheme symbol SYM to have value VAL in SELF
+        // Define Scheme symbol SYM to have value VAL in THIS
         this.bindings[sym] = val;
+    },
+    sete : function(sym, val) {
+        // Locates the binding of SYM in the first frame in the environment
+        // that contains a binding for SYM and changes that binding to VAL.
+        // Returns an error if SYM does not exist in all frames.
+        if (sym in this.bindings) {
+            this.bindings[sym] = val;
+        } else if (this.parent !== null) {
+            this.parent.sete(sym, val);
+        } else {
+            throw "SchemeError: " + sym.toString() + " not found!";
+        }
     }
 };
 
@@ -153,6 +165,8 @@ function scheme_eval(expr, env) {
             expr = LOGIC_FORMS[first](rest, env);
         } else if (first === 'lambda') {
             return do_lambda_form(rest, env);
+        } else if (first === 'set!') {
+            return do_sete_form(rest, env);
         } else if (first === 'define') {
             return do_define_form(rest, env);
         } else if (first === 'quote') {
@@ -163,8 +177,8 @@ function scheme_eval(expr, env) {
             env = l[1];
         } else {
             var procedure = scheme_eval(first, env);
-        var args = rest.map(function(operand)
-                {return scheme_eval(operand, env);});
+            var args = rest.map(function(operand)
+                                {return scheme_eval(operand, env);});
             if (procedure instanceof LambdaProcedure) {
                 env = procedure.env.make_call_frame(procedure.formals, args,
                                                     procedure.dotted);
@@ -242,6 +256,20 @@ function do_lambda_form(vals, env) {
         value = new Pair('begin', vals.second);
     }
     return new LambdaProcedure(formals, value, env, dotted);
+}
+
+function do_sete_form(vals, env) {
+    // Evaluate a set! form with parameters VALS in environment ENV
+    var target, value;
+    check_form(vals, 2, 2);
+    target = vals.getitem(0);
+    value = scheme_eval(vals.getitem(1), env);
+    if (scheme_symbolp(target)) {
+        env.sete(target, value);
+    } else {
+        throw "SchemeError: cannot set!: " + target.toString()
+            + " is not a variable";
+    }
 }
 
 function do_define_form(vals, env) {
@@ -411,7 +439,7 @@ function check_form(expr, min, max) {
     if (length < min) {
         throw "SchemeError: too few operands in form";
     } else if ( (! (max === undefined)) && (length > max) ) {
-        throw "SchemeError: too many operands in form";
+        throw "SchemeError: too many operands in form: " + expr.toString();
     }
 }
 
