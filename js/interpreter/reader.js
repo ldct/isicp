@@ -176,18 +176,18 @@ Buffer.prototype = {
 function scheme_read(src) {
     // Read the next expression from SRC, a Buffer of tokens
     var val, quoted;
-    if (src.current() == null) {
+    if (src.current() === null) {
         throw "EOFError";
     }
     val = src.pop();
-    if (val == "nil") {
+    if (val === "nil") {
         return nil;
     } else if (! (DELIMITERS.inside(val))) {
         return val;
-    } else if (val == "'") {
+    } else if (val === "'") {
         quoted = scheme_read(src);
         return new Pair('quote', new Pair(quoted, nil));
-    } else if (val == "(") {
+    } else if (val === "(") {
         return read_tail(src);
     } else {
         throw "SyntaxError: unexpected token: " + val;
@@ -198,14 +198,14 @@ function scheme_read(src) {
 function read_tail(src) {
     // Return the remainder of an array in SRC, starting before an element or )
     var first, rest, end_token, next_token;
-    if (src.current() == null) {
+    if (src.current() === null) {
         throw "SyntaxError: unexpected end of file";
     }
-    if (src.current() == ")") {
+    if (src.current() === ")") {
         src.pop();
         return nil;
     }
-    if (src.current() == ".") {
+    if (src.current() === ".") {
         src.pop();
         end_token = scheme_read(src);
         next_token = src.pop();

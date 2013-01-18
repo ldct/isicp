@@ -1,11 +1,12 @@
 <html>
 <head>
   <script src="run_tests.js"></script>
+  <script src="tokenizer.js"></script>
   <!--
   <script src="reader.js"></script>
   <script src="scheme_worker.js"></script>
   
-  <script src="tokenizer.js"></script>
+
   -->
 </head>
 <body>
@@ -15,7 +16,7 @@
 
 <td>
 <form>
-<textarea name="input" rows=30 cols=60></textarea>
+<textarea id="input" name="input" rows=30 cols=60></textarea>
 <br>
 <input type="button" value="Evaluate" onClick="out.value = ''; w.postMessage(this.form.input.value);">
 <input type="button" value="Run Tests" onClick="out.value = ''; test(this.form.input.value, out);">

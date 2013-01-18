@@ -550,7 +550,7 @@ one-through-four
     (if (>= balance amount)
         (begin (set! balance (- balance amount))
                balance)
-        'Insufficient-funds)))
+        "Insufficient funds")))
 
 
 (define W1 (make-withdraw 100))
@@ -562,7 +562,7 @@ one-through-four
 
 ; expect 50
 ; expect 30
-; expect Insufficient-funds
+; expect Insufficient funds
 ; expect 10
 
 (define (make-account balance)
@@ -570,14 +570,14 @@ one-through-four
     (if (>= balance amount)
         (begin (set! balance (- balance amount))
                balance)
-        'Insufficient-funds))
+        "Insufficient funds"))
   (define (deposit amount)
     (set! balance (+ balance amount))
     balance)
   (define (dispatch m)
     (cond ((eq? m 'withdraw) withdraw)
           ((eq? m 'deposit) deposit)
-          (else (error 'Unknown-request-MAKE-ACCOUNT))))
+          (else (error "Unknown request -- MAKE-ACCOUNT"))))
   dispatch)
 
 (define acc (make-account 100))
@@ -588,7 +588,7 @@ one-through-four
 ((acc 'withdraw) 60)
 
 ; expect 50
-; expect Insufficient-funds
+; expect Insufficient funds
 ; expect 90
 ; expect 30
 
@@ -922,6 +922,7 @@ one-through-four
 ( (lambda a a) 1 . (2) )
 ; expect (1 2)
 
+;;; Tests for set! special form
 
 (define x 3)
 
@@ -943,4 +944,22 @@ x
 ; expect 4
 ; expect 4
 
+;;; Quine!
 
+         ((lambda (x) (list x (list (quote quote) x))) (quote (lambda (x) (list x (list (quote quote) x)))))
+
+; expect ((lambda (x) (list x (list (quote quote) x))) (quote (lambda (x) (list x (list (quote quote) x)))))
+
+
+;;; Tests for strings in scheme
+
+(define s "Hello World!")
+s
+; expect Hello World!
+
+(string? s)
+; expect true
+
+(begin (display "Str") (display "") (display "ings!")
+       (display " ") (display "They're real!"))
+; expect Strings! They're real!

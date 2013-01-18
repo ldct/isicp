@@ -1,4 +1,4 @@
-Array.prototype.inside = function (element) {
+Array.prototype.inside = function(element) {
     if (this.indexOf(element) == -1) {
         return false;
     } else {
@@ -15,6 +15,21 @@ Array.prototype.map = function(fun) {
     return res;
 };
 
+function SchemeString(str) {
+    this.str = str;
+    this.length = str.length;
+}
+
+SchemeString.prototype = {
+    valueOf : function() {
+        return 'SchemeString(' + this.str + ')';
+    },
+    toString : function() {
+        return this.str;
+    }    
+};
+
+
 var DIGITS = "0123456789".split('');
 var ASCII_LOWERCASE = "abcdefghijklmnopqrstuvwxyz".split('');
 var ASCII_UPPERCASE = "ABCDEFGHIJKLMNOPQRSTUVWXYZ".split('');
@@ -28,7 +43,7 @@ var _TOKEN_END = _WHITESPACE.concat(_SINGLE_CHAR_TOKENS);
 var DELIMITERS = _SINGLE_CHAR_TOKENS.concat(['.']);
 
 function valid_symbol(s) {
-    //Returns whether s is not a well-formed value.
+    //Returns whether s is a well-formed value.
     if (s.length == 0 || ! _SYMBOL_STARTS.inside(s.charAt(0)) ) {
         return false;
     }
@@ -41,21 +56,24 @@ function valid_symbol(s) {
 }
 
 function next_candidate_token(line, k) {
-    // A tuple (tok, k'), where tok is the next substring of line at or
+    // An array [tok, k'], where tok is the next substring of line at or
     // after position k that could be a token (assuming it passes a validity
     // check), and k' is the position in line following that token.  Returns
-    // (None, len(line)) when there are no more tokens.
+    // [null, line.length] when there are no more tokens.
     while (k < line.length) {
         var c = line[k];
 
-        if (c == ";") {
+        if (c === ";") {
             return [null, line.length];
         } else if (_WHITESPACE.inside(c)) {
             k += 1;
         } else if (_SINGLE_CHAR_TOKENS.inside(c)) {
             return [c, k + 1];
-        } else if (c == '#') { // Boolean values #t and #f
+        } else if (c === '#') { // Boolean values #t and #f
             return [line.slice(k, k+2), Math.min(k+2, line.length)];
+        } else if (c === '\"') { // String Starts
+            var end = line.slice(k+1).indexOf('\"') + k + 2;
+            return [line.slice(k, end-1), end];
         } else {
             var j = k;
             while (j < line.length && (! _TOKEN_END.inside(line[j]))) {
@@ -67,7 +85,7 @@ function next_candidate_token(line, k) {
     return [null, line.length];
 }
 
-function tokenize_line (line) {
+function tokenize_line(line) {
     var result = [];
     var nct_result = next_candidate_token(line, 0);
     var text = nct_result[0];
@@ -75,14 +93,16 @@ function tokenize_line (line) {
     while (text != null) {
         if (DELIMITERS.inside(text)) {
             result.push(text);
-        } else if (text == "+" || text == "-") {
+        } else if (text === "+" || text === "-") {
             result.push(text);
-        } else if (text == "#t" || text.toLowerCase() == "true") {
+        } else if (text === "#t" || text.toLowerCase() === "true") {
             result.push(true);
-        } else if (text == "#f" || text.toLowerCase() == "false") {
+        } else if (text === "#f" || text.toLowerCase() === "false") {
             result.push(false);
-        } else if (text == "nil") {
+        } else if (text === "nil") {
             result.push(text);
+        } else if (text[0] === '\"' && text.length > 0) {
+            result.push( new SchemeString(text.slice(1)) );
         } else if (_NUMERAL_STARTS.inside(text[0])) {
             var r = parseFloat(text);
             if (r == NaN) {
@@ -93,7 +113,7 @@ function tokenize_line (line) {
         } else if (_SYMBOL_STARTS.inside(text[0]) && valid_symbol(text)) {
             result.push(text);
         } else {
-            throw "SyntaxError: invalid token :" + text;
+            throw "SyntaxError: invalid token:" + text;
         }
         nct_result = next_candidate_token(line, i);
         text = nct_result[0];

@@ -624,6 +624,11 @@ function scheme_symbolp(x) {
 }
 _PRIMITIVES["symbol?"] = new PrimitiveProcedure(scheme_symbolp);
 
+function scheme_stringp(x) {
+    return x instanceof SchemeString;
+}
+_PRIMITIVES["string?"] = new PrimitiveProcedure(scheme_stringp);
+
 function scheme_numberp(x) {
     return typeof x === "number";
 }
@@ -785,7 +790,7 @@ _PRIMITIVES["zero?"] = new PrimitiveProcedure(scheme_zerop);
 
 function scheme_atomp(x) {
     return scheme_booleanp(x) || scheme_numberp(x) || scheme_symbolp(x) ||
-           scheme_nullp(x);
+           scheme_nullp(x) || scheme_stringp(x);
 }
 _PRIMITIVES["atom?"] = new PrimitiveProcedure(scheme_atomp);
 
