@@ -543,6 +543,55 @@ one-through-four
 (equal? '(1 2 three) '(1 2 (three)))
 ; expect false
 
+;;; 3.1.1
+
+(define (make-withdraw balance)
+  (lambda (amount)
+    (if (>= balance amount)
+        (begin (set! balance (- balance amount))
+               balance)
+        'Insufficient-funds)))
+
+
+(define W1 (make-withdraw 100))
+(define W2 (make-withdraw 100))
+(W1 50)
+(W2 70)
+(W2 40)
+(W1 40)
+
+; expect 50
+; expect 30
+; expect Insufficient-funds
+; expect 10
+
+(define (make-account balance)
+  (define (withdraw amount)
+    (if (>= balance amount)
+        (begin (set! balance (- balance amount))
+               balance)
+        'Insufficient-funds))
+  (define (deposit amount)
+    (set! balance (+ balance amount))
+    balance)
+  (define (dispatch m)
+    (cond ((eq? m 'withdraw) withdraw)
+          ((eq? m 'deposit) deposit)
+          (else (error 'Unknown-request-MAKE-ACCOUNT))))
+  dispatch)
+
+(define acc (make-account 100))
+
+((acc 'withdraw) 50)
+((acc 'withdraw) 60)
+((acc 'deposit) 40)
+((acc 'withdraw) 60)
+
+; expect 50
+; expect Insufficient-funds
+; expect 90
+; expect 30
+
 ;;; Peter Norvig tests (http://norvig.com/lispy2.html)
 
 (define double (lambda (x) (* 2 x)))
@@ -872,3 +921,26 @@ one-through-four
 
 ( (lambda a a) 1 . (2) )
 ; expect (1 2)
+
+
+(define x 3)
+
+(define (foo)
+  (define x 4)
+  x)
+
+(define (bar)
+  (set! x 4)
+  x)
+
+(foo) 
+x     
+(bar) 
+x
+
+; expect 4
+; expect 3
+; expect 4
+; expect 4
+
+
