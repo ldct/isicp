@@ -16,7 +16,12 @@ importScripts("reader.js", "tokenizer.js");
 onmessage = function(event) {
     var env = create_global_frame();
     
-    var codebuffer = new Buffer(tokenize_lines(event.data.split("\n")));
+    try {
+        var codebuffer = new Buffer(tokenize_lines(event.data.split("\n")));
+    } catch(e) {
+        this.postMessage(e.toString() + "\n");
+    }
+    
     while (codebuffer.current() != null) {
         try {
             var result = scheme_eval(scheme_read(codebuffer), env);
