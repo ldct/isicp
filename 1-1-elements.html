@@ -332,8 +332,7 @@ prompt("scheme-define-size");
 size
 </div>
 <script> 
-prompt("scheme-size");
-addDep("scheme-size", ["scheme-define-size"]);
+promptDep("scheme-size", ["scheme-define-size"]);
 </script>
 
 <p>
@@ -342,8 +341,7 @@ addDep("scheme-size", ["scheme-define-size"]);
 (* 5 size)
 </div>
 <script> 
-prompt("scheme-times-size");
-addDep("scheme-times-size", ["scheme-define-size"]);
+promptDep("scheme-times-size", ["scheme-define-size"]);
 </script>
 
 <p> Here are further examples of the use of <tt>define</tt>:
@@ -351,23 +349,32 @@ addDep("scheme-times-size", ["scheme-define-size"]);
 <div id="scheme-define-radius">
 (define pi 3.14159)
 (define radius 10)
-
-(* pi (* radius radius))
 </div>
 <script> 
 prompt("scheme-define-radius");
 </script>
 
+<div id="scheme-pi-r-squared">
+(* pi (* radius radius))
+</div>
+<script>
+promptDep("scheme-pi-r-squared", ["scheme-define-radius"]);
+</script>
+
 <p>
 
-<div id="scheme-circumference">
+<div id="scheme-define-circumference">
 (define circumference (* 2 pi radius))
+</div>
+<script> 
+promptDep("scheme-define-circumference", ["scheme-define-radius"]);
+</script>
 
+<div id="scheme-circumference">
 circumference
 </div>
 <script> 
-prompt("scheme-circumference"); 
-addDep("scheme-circumference", ["scheme-define-radius"]);
+promptDep("scheme-circumference", ["scheme-define-circumference"]);
 </script>
 
 <p> <tt>define</tt> is our language's simplest means of abstraction, for it allows us to use simple names to refer to the results of compound operations, such as the circumference computed above. In general, computational objects may have very complex structures, and it would be extremely inconvenient to have to remember and repeat their details each time we want to use them. Indeed, complex programs are constructed by building, step by step, computational objects of increasing complexity. The interpreter makes this step-by-step program construction particularly convenient because name-object associations can be created incrementally in successive interactions. This feature encourages the incremental development and testing of programs and is largely responsible for the fact that a Lisp program usually consists of a large number of relatively simple procedures.
@@ -534,9 +541,8 @@ makeStatic("scheme-define-syntax");
 <div id="scheme-square-number">
 (square 21)
 </div>
-<script> 
-prompt("scheme-square-number"); 
-addDep("scheme-square-number", ["scheme-define-square"]);
+<script>
+promptDep("scheme-square-number", ["scheme-define-square"]);
 </script>
 
 <p>
@@ -545,8 +551,7 @@ addDep("scheme-square-number", ["scheme-define-square"]);
 (square (+ 2 5))
 </div>
 <script> 
-prompt("scheme-square-sum"); 
-addDep("scheme-square-sum", ["scheme-define-square"]);
+promptDep("scheme-square-sum", ["scheme-define-square"]);
 </script>
 
 <p>
@@ -555,8 +560,7 @@ addDep("scheme-square-sum", ["scheme-define-square"]);
 (square (square 3))
 </div>
 <script> 
-prompt("scheme-square-square"); 
-addDep("scheme-square-square", ["scheme-define-square"]);
+promptDep("scheme-square-square", ["scheme-define-square"]);
 </script>
 
 
@@ -574,12 +578,16 @@ makeStatic("scheme-sum-square-eg");
 <div id="scheme-define-sum-of-squares">
 (define (sum-of-squares x y)
   (+ (square x) (square y)))
-
-(sum-of-squares 3 4)
 </div>
 <script> 
-prompt("scheme-define-sum-of-squares"); 
-addDep("scheme-define-sum-of-squares", ["scheme-define-square"]);
+promptDep("scheme-define-sum-of-squares", ["scheme-define-square"]);
+</script>
+
+<div id="scheme-sum-of-squares-3-4">
+(sum-of-squares 3 4)
+</div>
+<script>
+promptDep("scheme-sum-of-squares-3-4", ["scheme-define-sum-of-squares"]);
 </script>
 
 <p> Now we can use sum-of-squares as a building block in constructing further procedures:
@@ -591,8 +599,7 @@ addDep("scheme-define-sum-of-squares", ["scheme-define-square"]);
 (f 5)
 </div>
 <script> 
-prompt("scheme-f"); 
-addDep("scheme-f", ["scheme-define-sum-of-squares"]);
+promptDep("scheme-f", ["scheme-define-sum-of-squares"]);
 </script>
 
 <p> Compound procedures are used in exactly the same way as primitive procedures. Indeed, one could not tell by looking at the definition of sum-of-squares given above whether square was built into the interpreter, like + and *, or defined as a compound procedure.
@@ -1051,8 +1058,7 @@ makeMCQ("scheme-ex-15-mcq",
                  x)))
 </div>
 <script> 
-prompt("scheme-define-sqrt-iter"); 
-addDep("scheme-define-sqrt-iter", ["scheme-define-good-enough", "scheme-define-improve"]);
+promptDep("scheme-define-sqrt-iter", ["scheme-define-good-enough", "scheme-define-improve"]);
 </script>
 
 <p> A guess is improved by averaging it with the quotient of the radicand and the old guess:
@@ -1062,8 +1068,7 @@ addDep("scheme-define-sqrt-iter", ["scheme-define-good-enough", "scheme-define-i
   (average guess (/ x guess)))
 </div>
 <script> 
-prompt("scheme-define-improve"); 
-addDep("scheme-define-improve", ["scheme-define-average"]);
+promptDep("scheme-define-improve", ["scheme-define-average"]);
 </script>
 
 <p> where
@@ -1083,8 +1088,7 @@ prompt("scheme-define-average");
   (< (abs (- (square guess) x)) 0.001))
 </div>
 <script> 
-prompt("scheme-define-good-enough");
-addDep("scheme-define-good-enough", ["scheme-define-square"]);
+promptDep("scheme-define-good-enough", ["scheme-define-square"]);
 </script>
 
 <p> Finally, we need a way to get started. For instance, we can always guess that the square root of any number is 1:<a name="footnote_link_1-23" class="footnote_link" href="#footnote_1-23">23</a>
@@ -1094,8 +1098,7 @@ addDep("scheme-define-good-enough", ["scheme-define-square"]);
   (sqrt-iter 1.0 x))
 </div>
 <script> 
-prompt("scheme-define-sqrt");
-addDep("scheme-define-sqrt", ["scheme-define-sqrt-iter"]);
+promptDep("scheme-define-sqrt", ["scheme-define-sqrt-iter"]);
 </script>
 
 <p> If we type these definitions to the interpreter, we can use sqrt just as we can use any procedure:
@@ -1104,8 +1107,7 @@ addDep("scheme-define-sqrt", ["scheme-define-sqrt-iter"]);
 (sqrt 9)
 </div>
 <script> 
-prompt("scheme-sqrt-9");
-addDep("scheme-sqrt-9", ["scheme-define-sqrt"]);
+promptDep("scheme-sqrt-9", ["scheme-define-sqrt"]);
 </script>
 
 <p>
@@ -1114,8 +1116,7 @@ addDep("scheme-sqrt-9", ["scheme-define-sqrt"]);
 (sqrt (+ 100 37))
 </div>
 <script> 
-prompt("scheme-sqrt-plus");
-addDep("scheme-sqrt-plus", ["scheme-define-sqrt"]);
+promptDep("scheme-sqrt-plus", ["scheme-define-sqrt"]);
 </script>
 
 <p>
@@ -1124,8 +1125,7 @@ addDep("scheme-sqrt-plus", ["scheme-define-sqrt"]);
 (sqrt (+ (sqrt 2) (sqrt 3)))
 </div>
 <script> 
-prompt("scheme-sqrt-sqrt");
-addDep("scheme-sqrt-sqrt", ["scheme-define-sqrt"]);
+promptDep("scheme-sqrt-sqrt", ["scheme-define-sqrt"]);
 </script>
 
 <p>
@@ -1134,8 +1134,7 @@ addDep("scheme-sqrt-sqrt", ["scheme-define-sqrt"]);
 (square (sqrt 1000))
 </div>
 <script> 
-prompt("scheme-square-sqrt");
-addDep("scheme-square-sqrt", ["scheme-define-square", "scheme-define-sqrt"]);
+promptDep("scheme-square-sqrt", ["scheme-define-square", "scheme-define-sqrt"]);
 </script>
 
 <p> The sqrt program also illustrates that the simple procedural language we have introduced so far is sufficient for writing any purely numerical program that one could write in, say, C or Pascal. This might seem surprising, since we have not included in our language any iterative (looping) constructs that direct the computer to do something over and over again. Sqrt-iter, on the other hand, demonstrates how iteration can be accomplished using no special construct other than the ordinary ability to call a procedure.<a name="footnote_link_1-24" class="footnote_link" href="#footnote_1-24">24</a> 
@@ -1178,11 +1177,8 @@ addDep("scheme-square-sqrt", ["scheme-define-square", "scheme-define-sqrt"]);
 </div>
 <script>
 prompt("scheme-define-new-if");
-prompt("scheme-new-if-1");
-prompt("scheme-new-if-2");
-
-addDep("scheme-new-if-1", ["scheme-define-new-if"]);
-addDep("scheme-new-if-2", ["scheme-define-new-if"]);
+promptDep("scheme-new-if-1", ["scheme-define-new-if"]);
+promptDep("scheme-new-if-2", ["scheme-define-new-if"]);
 
 makeStatic("scheme-sqrt-iter-new-if");
 
@@ -1217,11 +1213,10 @@ makeMCQ("scheme-new-if-mcq",
 
 <script> 
 
-addDep("scheme-ex-17-input", ["scheme-define-sqrt"]);
-
 makeChangeOnFocusInput("scheme-ex-17-input", 
                        "(define (my-sqrt x)\n  <your code here>)", 
                        "(define (my-sqrt x)\n  ");
+addDep("scheme-ex-17-input", ["scheme-define-sqrt"]);
 addOutput("scheme-ex-17-input");
 linkEditor("scheme-ex-17-input", "scheme-ex-17-input-output", function(x, y) {
   
@@ -1289,9 +1284,7 @@ addDep("scheme-ex-17-my-test", ["scheme-ex-17-input"]);
 </div>
 <script>
 prompt("scheme-ex-18");
-prompt("scheme-ex-18-test");
-
-addDep("scheme-ex-18-test", ["scheme-ex-18"]);
+promptDep("scheme-ex-18-test", ["scheme-ex-18"]);
 
 editorOf["scheme-ex-18-test"].setOption("readOnly", 'nocursor');
 </script>
@@ -1416,8 +1409,7 @@ makeStatic("scheme-define-good-enough-2");
   (average guess (/ x guess)))
 </div>
 <script>
-prompt("scheme-define-sqrt-full");
-addDep("scheme-define-sqrt-full", ["scheme-define-square", "scheme-define-average"]);
+promptDep("scheme-define-sqrt-full", ["scheme-define-square", "scheme-define-average"]);
 </script>
 
 <p> The problem with this program is that the only procedure that is important to users of sqrt is sqrt. The other procedures (sqrt-iter, good-enough?, and improve) only clutter up their minds. They may not define any other procedure called good-enough? as part of another program to work together with the square-root program, because sqrt needs it. The problem is especially severe in the construction of large systems by many separate programmers. For example, in the construction of a large library of numerical procedures, many numerical functions are computed as successive approximations and thus might have procedures named good-enough? and improve as auxiliary procedures. We would like to localize the subprocedures, hiding them inside sqrt so that sqrt could coexist with other successive approximations, each having its own private good-enough? procedure. To make this possible, we allow a procedure to have internal definitions that are local to that procedure. For example, in the square-root problem we can write
@@ -1435,8 +1427,7 @@ addDep("scheme-define-sqrt-full", ["scheme-define-square", "scheme-define-averag
   (sqrt-iter 1.0 x))
 </div>
 <script>
-prompt("scheme-define-sqrt-block");
-addDep("scheme-define-sqrt-block", ["scheme-define-square", "scheme-define-average"]);
+promptDep("scheme-define-sqrt-block", ["scheme-define-square", "scheme-define-average"]);
 </script>
 
 <p> Such nesting of definitions, called block structure, is basically the right solution to the simplest name-packaging problem. But there is a better idea lurking here. In addition to internalizing the definitions of the auxiliary procedures, we can simplify them. Since x is bound in the definition of sqrt, the procedures good-enough?, improve, and sqrt-iter, which are defined internally to sqrt, are in the scope of x. Thus, it is not necessary to pass x explicitly to each of these procedures. Instead, we allow x to be a free variable in the internal definitions, as shown below. Then x gets its value from the argument with which the enclosing procedure sqrt is called. This discipline is called lexical scoping.<a name="footnote_link_1-27" class="footnote_link" href="#footnote_1-27">27</a>
@@ -1454,8 +1445,7 @@ addDep("scheme-define-sqrt-block", ["scheme-define-square", "scheme-define-avera
   (sqrt-iter 1.0))
 </div>
 <script>
-prompt("scheme-define-sqrt-no-x");
-addDep("scheme-define-sqrt-no-x", ["scheme-define-square", "scheme-define-average"]);
+promptDep("scheme-define-sqrt-no-x", ["scheme-define-square", "scheme-define-average"]);
 </script>
 
 <p> We will use block structure extensively to help us break up large programs into tractable pieces.<a name="footnote_link_1-28" class="footnote_link" href="#footnote_1-28">28</a> The idea of block structure originated with the programming language Algol 60. It appears in most advanced programming languages and is an important tool for helping to organize the construction of large programs.

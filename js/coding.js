@@ -10,6 +10,10 @@ function arrayEq(arr1, arr2) {
   return $(arr1).not(arr2).length == 0 && $(arr2).not(arr1).length == 0
 }
 
+function isArray(o) {
+  return Object.prototype.toString.call(o) === '[object Array]';
+}
+
 function cleanCode(code) {
   return code.replace(/^\n/, "").replace(/\n*$/, "").replace(/[ \t]*\n/g, "\n").replace(/\s*$/, "");
 }
@@ -267,10 +271,10 @@ focus_callback = function(s) {
   }
   
 //  ts += "<br> <b>" + s + "</b>";
-  ts += "<br> " + editorOf[s].getValue();
+  ts += "<br> <b>" + editorOf[s].getValue() + "</b>";
 
   for (var i = 0, p = getAllPushes(s); i < p.length; i++) {
-    ts += "<br>" + p[i];
+    ts += "<br>" + p[i] + "<br>";
   }
   $("#currently-editing").html("<tt>" + ts + "</tt>");
 };
@@ -288,6 +292,9 @@ function getPushes(_editor) {
 }
 
 function addDep(_e, deps) {
+  if (!isArray(deps)) {
+    throw "deps is not an array: addDep " + _a
+  }
   depsOf[_e] = deps;
   for (var i in deps) {
     var p = pushesOf[deps[i]];
@@ -297,6 +304,11 @@ function addDep(_e, deps) {
       pushesOf[deps[i]] = [_e];
     }
   }
+}
+
+function promptDep(_a, deps) {
+  prompt(_a);
+  addDep(_a, deps);
 }
 
 ///////////////////////////////////////////////////////////////////////////////

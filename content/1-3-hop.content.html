@@ -76,8 +76,7 @@ prompt("scheme-define-sum-integers");
       (+ (cube a) (sum-cubes (+ a 1) b))))
 </div>
 <script>
-prompt("scheme-define-sum-cubes");
-depsOf["scheme-define-sum-cubes"] = ["scheme-define-cube"];
+promptDep("scheme-define-sum-cubes", ["scheme-define-cube"]);
 </script>
 
 <p> The third computes the sum of a sequence of terms in the series
@@ -421,7 +420,7 @@ depsOf["scheme-apply-lambda"] = ["scheme-define-square"];
 
 <p> <img src='http://mitpress.mit.edu/sicp/full-text/book/ch1-Z-G-32.gif'>
 
-<p> In writing a procedure to compute @i{f}, we would like to include as local variables not only @i{x} and @i{y} but also the names of intermediate quantities like @i{a} and @i{b}.  One way to accomplish this is to use an auxiliary procedure to bind the local variables:
+<p> In writing a procedure to compute <tt>f,</tt> we would like to include as local variables not only <tt>x</tt> and <tt>y</tt> but also the names of intermediate quantities like <tt>a</tt> and <tt>b</tt>.  One way to accomplish this is to use an auxiliary procedure to bind the local variables:
 
 <div id="scheme-define-f-helpers">
 (define (f x y)
@@ -494,11 +493,11 @@ in  &lt;body&gt;
 <p> The first part of the <tt> let </tt> expression is a list of name-expression pairs. When the <tt> let </tt> is evaluated, each name is associated with the value of the corresponding expression.  The body of the <tt> let </tt> is evaluated with these names bound as local variables.  The way this happens is that the <tt> let </tt> expression is interpreted as an alternate syntax for
 
 <div id="scheme-let-expanded-syntax">
-((lambda (&lt;var_1&gt; ... &lt;var_n&gt;)
+((lambda (&lt;var_1&gt; ... &lt;var_n&gt;) 
     &lt;body&gt;)
- &lt;exp_1&gt;
- @dots{}
- &lt;exp_n&gt;)
+  &lt;exp_1&gt;
+  ...
+  &lt;exp_n&gt;)
 </div>
 <script>
 prompt("scheme-let-expanded-syntax");
@@ -591,14 +590,14 @@ depsOf["scheme-define-f-close-define"] = ["scheme-define-square"];
 prompt("scheme-define-f-g2");
 </script>
 
-Then we have
+<p> Then we have
 
 <div id="scheme-f-square">
 (f square)
 </div>
 <script>
 prompt("scheme-f-square");
-depsOf["scheme-f-square"] = ["scheme-define-f-g2"];
+addDep(["scheme-f-square"], ["scheme-define-f-g2", "scheme-define-square"]);
 </script>
 
 <div id="scheme-f-lambda-poly">
@@ -609,7 +608,7 @@ prompt("scheme-f-lambda-poly");
 depsOf["scheme-f-lambda-poly"] = ["scheme-define-f-g2"];
 </script>
 
-What happens if we (perversely) ask the interpreter to evaluate the combination
+<p> What happens if we (perversely) ask the interpreter to evaluate the combination
 <tt> (f f)? </tt>  Explain.
 </div>
 
@@ -752,13 +751,12 @@ depsOf["scheme-fixed-point-sin-cos"] = ["scheme-define-fixed-point"];
 
 <div id="scheme-define-sqrt">
 (define (sqrt x)
-  (do not run)
   (fixed-point (lambda (y) (/ x y))
                1.0))
 </div>
 <script>
 prompt("scheme-define-sqrt");
-depsOf["scheme-define-sqrt"] = ["scheme-define-fixed-point"];
+addDep("scheme-define-sqrt", ["scheme-define-fixed-point"]);
 </script>
 
 <p> Unfortunately, this fixed-point search does not converge. Consider an initial guess y1. The next guess is y2 = x/y1 and the next guess is y3 = x/y2 = x/(x/y1) = y1. This results in an infinite loop in which the two guesses y1 and y2 repeat over and over, oscillating about the answer.
@@ -859,7 +857,7 @@ average of <em> x </em> and <em> f(x </em>).
 </div>
 <script>
 prompt("scheme-define-average-damp");
-
+addDep("scheme-define-average-damp", ["scheme-define-average"]);
 </script>
 
 <p> <tt> average-damp </tt> is a procedure that takes as its argument a procedure f and returns as its value a procedure (produced by the lambda) that, when applied to a number x, produces the average of x and (f x). For example, applying average-damp to the square procedure produces a procedure whose value at some number x is the average of x and x2. Applying this resulting procedure to 10 returns the average of 10 and 100, or 55:<a name="footnote_link_1-59" class="footnote_link" href="#footnote_1-59">59</a>
@@ -869,6 +867,7 @@ prompt("scheme-define-average-damp");
 </div>
 <script>
 prompt("scheme-average-damp-square-10");
+addDep("scheme-average-damp-square-10", ["scheme-define-average-damp", "scheme-define-square"]);
 </script>
 
 <p> Using <tt> average-damp </tt>, we can reformulate the square-root procedure as follows:
@@ -880,6 +879,7 @@ prompt("scheme-average-damp-square-10");
 </div>
 <script>
 prompt("scheme-define-sqrt-average-damp");
+addDep("scheme-define-sqrt-average-damp", ["scheme-define-fixed-point", "scheme-define-average-damp"]);
 </script>
 
 <p> Notice how this formulation makes explicit the three ideas in the method: fixed-point search, average damping, and the function y  x/y. It is instructive to compare this formulation of the square-root method with the original version given in section 1.1.7. Bear in mind that these procedures express the same process, and notice how much clearer the idea becomes when we express the process in terms of these abstractions. In general, there are many ways to formulate a process as a procedure. Experienced programmers know how to choose procedural formulations that are particularly perspicuous, and where useful elements of the process are exposed as separate entities that can be reused in other applications. As a simple example of reuse, notice that the cube root of x is a fixed point of the function y x/y2, so we can immediately generalize our square-root procedure to one that extracts cube roots:<a name="footnote_link_1-60" class="footnote_link" href="#footnote_1-60">60</a>
@@ -891,6 +891,7 @@ prompt("scheme-define-sqrt-average-damp");
 </div>
 <script>
 prompt("scheme-define-cube-root-average-damp");
+addDep("scheme-define-cube-root-average-damp", ["scheme-define-fixed-point", "scheme-define-average-damp", "scheme-define-square"]);
 </script>
 
 <h4> Newton's method </h4>
@@ -982,6 +983,7 @@ function.  We can express this general idea itself as a procedure:
 </div>
 <script>
 prompt("scheme-define-fixed-point-of-transform");
+addDep("scheme-define-fixed-point-of-transform", ["scheme-define-fixed-point"]);
 </script>
 
 <p> This very general procedure takes as its arguments a procedure <tt> g </tt> that computes some function, a procedure that transforms <tt> g </tt>, and an initial guess.  The returned result is a fixed point of the transformed function.
@@ -997,18 +999,20 @@ prompt("scheme-define-fixed-point-of-transform");
 </div>
 <script>
 prompt("scheme-define-sqrt-fixed-point-of-transform");
+addDep("scheme-define-sqrt-fixed-point-of-transform", ["scheme-define-fixed-point-of-transform", "scheme-define-average-damp"]);
 </script>
 
 <p> Similarly, we can express the second square-root computation from this section (an instance of Newton's method that finds a fixed point of the Newton transform of y -&gt; y<sup>2</sup> - x) as
 
-<div id="scheme-defne-sqrt-fixed-point-of-newton-transform">
+<div id="scheme-define-sqrt-fixed-point-of-newton-transform">
 (define (sqrt x)
   (fixed-point-of-transform (lambda (y) (- (square y) x))
                             newton-transform
                             1.0))
 </div>
 <script>
-prompt("scheme-defne-sqrt-fixed-point-of-newton-transform");
+prompt("scheme-define-sqrt-fixed-point-of-newton-transform");
+addDep("scheme-define-sqrt-fixed-point-of-newton-transform", ["scheme-define-fixed-point-of-transform", "scheme-define-square", "scheme-define-newton-transform"]);
 </script>
 
 <p> We began section 1.3 with the observation that compound procedures are a crucial abstraction mechanism, because they permit us to express general methods of computing as explicit elements in our programming language. Now we've seen how higher-order procedures permit us to manipulate these general methods to create further abstractions.
@@ -1026,7 +1030,7 @@ prompt("scheme-defne-sqrt-fixed-point-of-newton-transform");
 
 </ul>
 
-Lisp, unlike other common programming languages, awards procedures full first-class status.  This poses challenges for efficient implementation, but the resulting gain in expressive power is enormous.<a name="footnote_link_1-66" class="footnote_link" href="#footnote_1-66">66</a>
+<p> Lisp, unlike other common programming languages, awards procedures full first-class status.  This poses challenges for efficient implementation, but the resulting gain in expressive power is enormous.<a name="footnote_link_1-66" class="footnote_link" href="#footnote_1-66">66</a>
 
 <div class="exercise">
 

@@ -17,7 +17,7 @@ coming soon!
 
 <hr>
 
-<p> In section @ref{1-1-8}, we noted that a procedure used as an element in creating a more complex procedure could be regarded not only as a collection of particular operations but also as a procedural abstraction.  That is, the details of how the procedure was implemented could be suppressed, and the particular procedure itself could be replaced by any other procedure with the same overall behavior.  In other words, we could make an abstraction that would separate the way the procedure would be used from the details of how the procedure would be implemented in terms of more primitive procedures.  The analogous notion for compound data is called <em> data abstraction </em>.  Data abstraction is a methodology that enables us to isolate how a compound data object is used from the details of how it is constructed from more primitive data objects.
+<p> In section 1.1.8, we noted that a procedure used as an element in creating a more complex procedure could be regarded not only as a collection of particular operations but also as a procedural abstraction.  That is, the details of how the procedure was implemented could be suppressed, and the particular procedure itself could be replaced by any other procedure with the same overall behavior.  In other words, we could make an abstraction that would separate the way the procedure would be used from the details of how the procedure would be implemented in terms of more primitive procedures.  The analogous notion for compound data is called <em> data abstraction </em>.  Data abstraction is a methodology that enables us to isolate how a compound data object is used from the details of how it is constructed from more primitive data objects.
 
 <p> The basic idea of data abstraction is to structure the programs that are to use compound data objects so that they operate on ``abstract data.'' That is, our programs should use data in such a way as to make no assumptions about the data that are not strictly necessary for performing the task at hand.  At the same time, a ``concrete'' data representation is defined independent of the programs that use the data.  The interface between these two parts of our system will be a set of procedures, called <em> selectors </em> and <em> constructors </em>, that implement the abstract data in terms of the concrete representation.  To illustrate this technique, we will consider how to design a set of procedures for manipulating rational numbers.
 
@@ -29,16 +29,13 @@ coming soon!
 
 <ul>
 
-@item
 <tt> (make-rat n d) </tt> returns therational number whose
-numerator is the integer <tt> <@var{n </tt>>} and whose denominator is the integer
-<tt> <@var{d </tt>>}.
+numerator is the integer <tt> n </tt> and whose denominator is the integer
+<tt> d. </tt>
 
-@item
 <tt> (numer x) </tt> returns the numerator of the rational number
-<tt> <@var{x </tt>>}.
+<tt> x. </tt>
 
-@item
 <tt> (denom x)</tt> returns the denominator of the rational number
 <tt> x. </tt>
 
@@ -74,10 +71,10 @@ numerator is the integer <tt> <@var{n </tt>>} and whose denominator is the integ
      (* (numer y) (denom x))))
 </div>
 <script>
-prompt("scheme-define-arith-rat");
+promptDep("scheme-define-arith-rat", ["scheme-define-rat"]);
 </script>
 
-<p> Now we have the operations on rational numbers defined in terms of the selector and constructor procedures <tt> numer </tt>, <tt> denom </tt>, and <tt> make-rat </tt>. But we haven't yet defined these.  What we need is some way to glue together a numerator and a denominator to form a rational number.
+<p> Now we have the operations on rational numbers defined in terms of the selector and constructor procedures <tt> numer, denom, </tt> and <tt> make-rat. </tt> But we haven't yet defined these.  What we need is some way to glue together a numerator and a denominator to form a rational number.
 
 <h4> Pairs </h4> 
 
@@ -85,36 +82,36 @@ prompt("scheme-define-arith-rat");
 
 <div class="footnote"> The name <tt> cons </tt> stands for ``construct.''  The names <tt> car </tt> and <tt> cdr </tt> derive from the original implementation of Lisp on the IBM 704.  That machine had an addressing scheme that allowed one to reference the ``address'' and ``decrement'' parts of a memory location.  <tt> Car </tt> stands for ``Contents of Address part of Register'' and <tt> cdr </tt> (pronounced ``could-er'') stands for ``Contents of Decrement part of Register.'' </div>
 
-<div id="scheme-cons">
+<div id="scheme-define-x-cons-1-2">
 (define x (cons 1 2))
+</div>
+<script>
+prompt("scheme-define-x-cons-1-2");
+</script>
 
+<div id="scheme-car-x">
 (car x)
 </div>
 <script>
-prompt("scheme-cons");
+promptDep("scheme-car-x", ["scheme-define-x-cons-1-2"]);
 </script>
 
-<div id="scheme-cdr">
+<div id="scheme-cdr-x">
 (cdr x)
 </div>
 <script>
-prompt("scheme-cdr");
+promptDep("scheme-cdr-x", ["scheme-define-x-cons-1-2"]);
 </script>
 
 <p> Notice that a pair is a data object that can be given a name and manipulated, just like a primitive data object.  Moreover, <tt> cons </tt> can be used to form pairs whose elements are pairs, and so on:
 
 <div id="scheme-cons-of-cons">
 (define x (cons 1 2))
-
 (define y (cons 3 4))
-
 (define z (cons x y))
 
 (car (car z))
-@i{1}
-
 (car (cdr z))
-@i{3}
 </div>
 <script>
 prompt("scheme-cons-of-cons");
@@ -124,17 +121,15 @@ prompt("scheme-cons-of-cons");
 
 <h4> Representing rational numbers </h4> 
 
-<p> Pairs offer a natural way to complete the rational-number system.  Simply represent a rational number as a pair of two integers: a numerator and a denominator.  Then <tt> make-rat </tt>, <tt> numer </tt>, and <tt> denom </tt> are readily implemented as follows:
+<p> Pairs offer a natural way to complete the rational-number system.  Simply represent a rational number as a pair of two integers: a numerator and a denominator.  Then <tt> make-rat, numer, </tt> and <tt> denom </tt> are readily implemented as follows:
 
 <div id="scheme-define-rat">
 (define (make-rat n d) (cons n d))
-
 (define (numer x) (car x))
-
 (define (denom x) (cdr x))
 </div>
 <script>
-prompt("scheme-define-make-rat");
+prompt("scheme-define-rat");
 </script>
 
 <div class="footnote"> Another way to define the selectors and constructor is
@@ -161,37 +156,47 @@ We have chosen not to use this style of definition in this book.
 (define (print-rat x)
   (newline)
   (display (numer x))
-  (display "/")
+  (display '/)
   (display (denom x)))
 </div>
 <script>
-prompt("scheme-define-print-rat");
+promptDep("scheme-define-print-rat", ["scheme-define-rat"]);
 </script>
 
 <p> Now we can try our rational-number procedures:
 
-<div id="scheme-test-rat">
+<div id="scheme-define-one-half">
 (define one-half (make-rat 1 2))
-
-(print-rat one-half)
-@i{1/2}
-
-(define one-third (make-rat 1 3))
-
-(print-rat (add-rat one-half one-third))
-@i{5/6}
-
-(print-rat (mul-rat one-half one-third))
-@i{1/6}
-
-(print-rat (add-rat one-third one-third))
-@i{6/9}
 </div>
 <script>
-prompt("scheme-test-rat");
+promptDep("scheme-define-one-half", ["scheme-define-rat"]);
 </script>
 
-<p> As the final example shows, our rational-number implementation does not reduce rational numbers to lowest terms.  We can remedy this by changing <tt> make-rat </tt>. If we have a <tt> gcd </tt> procedure like the one in section @ref{1-2-5} that produces the greatest common divisor of two integers, we can use <tt> gcd </tt> to reduce the numerator and the denominator to lowest terms before constructing the pair:
+<div id="scheme-print-one-half">
+(print-rat one-half)
+</div>
+<script>
+promptDep("scheme-print-one-half", ["scheme-define-print-rat", "scheme-define-one-half"]);
+</script>
+
+<div id="scheme-define-one-third">
+(define one-third (make-rat 1 3))
+</div>
+<script>
+promptDep("scheme-define-one-third", ["scheme-define-rat"]);
+</script>
+
+
+<div id="scheme-test-rat">
+(print-rat (add-rat one-half one-third))
+(print-rat (mul-rat one-half one-third))
+(print-rat (add-rat one-third one-third))
+</div>
+<script>
+promptDep("scheme-test-rat", ["scheme-define-one-half", "scheme-define-one-third", "scheme-define-arith-rat", "scheme-define-print-rat"]);
+</script>
+
+<p> As the final example shows, our rational-number implementation does not reduce rational numbers to lowest terms.  We can remedy this by changing <tt> make-rat. </tt> If we have a <tt> gcd </tt> procedure like the one in section @ref{1-2-5} that produces the greatest common divisor of two integers, we can use <tt> gcd </tt> to reduce the numerator and the denominator to lowest terms before constructing the pair:
 
 <div id="scheme-define-make-rat-reduce">
 (define (make-rat n d)
@@ -202,14 +207,13 @@ prompt("scheme-test-rat");
 prompt("scheme-define-make-rat-reduce");
 </script>
 
-Now we have
+<p> Now we have
 
 <div id="scheme-test-rat-reduce">
 (print-rat (add-rat one-third one-third))
-@i{2/3}
 </div>
 <script>
-prompt("scheme-test-rat-reduce");
+promptDep("scheme-test-rat-reduce", ["scheme-define-arith-rat", "scheme-define-one-half", "scheme-define-one-third", "scheme-define-print-rat", "scheme-define-make-rat-reduce"]);
 </script>
 
 <p> as desired.  This modification was accomplished by changing the constructor <tt> make-rat </tt> without changing any of the procedures (such as <tt> add-rat </tt> and <tt> mul-rat </tt>) that implement the actual operations.
@@ -318,7 +322,7 @@ prompt("scheme-define-cons");
   (z (lambda (p q) p)))
 </div>
 <script>
-prompt("scheme-define-cons");
+prompt("scheme-define-cons-lambda");
 </script>
 
 <p> What is the corresponding definition of <tt> cdr </tt>? (Hint: To verify that this works, make use of the substitution model of section @ref{1-1-5}.)
