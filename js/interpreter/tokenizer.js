@@ -26,6 +26,15 @@ SchemeString.prototype = {
     },
     toString : function() {
         return this.str;
+    },
+    substring : function(start, end) {
+        return this.str.slice(start, end);
+    },
+    getchar : function(k) {
+        if (k >= this.length || k < 0) {
+            throw "SchemeError: index " + k + " out of range";
+        }
+        return this.str[k];
     }    
 };
 

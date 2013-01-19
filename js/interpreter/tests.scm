@@ -961,5 +961,26 @@ s
 ; expect true
 
 (begin (display "Str") (display "") (display "ings!")
-       (display " ") (display "They're real!"))
+       (display " ") (display "They're real!") (newline))
 ; expect Strings! They're real!
+
+(string-append "a" "b" "c")
+; expect abc
+
+(string-ref "hello" 4)
+; expect o
+
+(string-ref "hello" 0)
+; expect h
+
+(string-length "")
+; expect 0
+
+(string-length "length 16 string")
+; expect 16
+
+(substring "everything" 0 10)
+; expect everything
+
+(substring "sliced" 1 5)
+;expect lice

@@ -460,7 +460,7 @@ function check_formals(formals) {
     if (scheme_symbolp(formals)) {
         return true;
     }
-    
+
     if (! scheme_listp(formals)) {
         var a = formals.seperate_dotted();
         formals = a[0];
@@ -538,7 +538,10 @@ function scheme_not(x) {
 _PRIMITIVES["not"] = new PrimitiveProcedure(scheme_not);
 
 function scheme_eqp(x, y) {
-    return x === y;
+    if (scheme_stringp(x) && scheme_stringp(y)) {
+        return x.toString() === y.toString();
+    }
+    return x == y;
 }
 _PRIMITIVES["eq?"] = new PrimitiveProcedure(scheme_eqp);
 
@@ -793,6 +796,46 @@ function scheme_atomp(x) {
            scheme_nullp(x) || scheme_stringp(x);
 }
 _PRIMITIVES["atom?"] = new PrimitiveProcedure(scheme_atomp);
+
+function _check_strings(strings) {
+    var x;
+    for (var i = 0; i < strings.length; i++) {
+        x = strings[i];
+        if (! scheme_stringp(x)) {
+            throw "SchemeError: " + x + " is not a string";
+        }
+    }
+}
+
+function scheme_string_append() {
+    _check_strings(arguments);
+    var s = '';
+    for (var i = 0; i < arguments.length; i++) {
+        s += arguments[i].toString();
+    }
+    return s;        
+}
+_PRIMITIVES["string-append"] = new PrimitiveProcedure(scheme_string_append);
+
+function scheme_string_ref(s, k) {
+    _check_strings([s]);
+    _check_nums([k]);
+    return s.getchar(k);
+}
+_PRIMITIVES["string-ref"] = new PrimitiveProcedure(scheme_string_ref);
+
+function scheme_string_length(s) {
+    _check_strings([s]);
+    return s.length;
+}
+_PRIMITIVES["string-length"] = new PrimitiveProcedure(scheme_string_length);
+
+function scheme_substring(s, start, end) {
+    _check_strings([s]);
+    _check_nums([start, end]);
+    return s.substring(start, end);
+}
+_PRIMITIVES["substring"] = new PrimitiveProcedure(scheme_substring);
 
 function scheme_display(val) {
     this.postMessage(val.toString());
