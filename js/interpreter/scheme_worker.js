@@ -838,7 +838,7 @@ function scheme_substring(s, start, end) {
 _PRIMITIVES["substring"] = new PrimitiveProcedure(scheme_substring);
 
 function scheme_display(val) {
-    this.postMessage(val.toString());
+    this.postMessage({'suppress_newline': true, 'value': val.toString()});
 }
 _PRIMITIVES["display"] = new PrimitiveProcedure(scheme_display);
 
@@ -848,7 +848,7 @@ function scheme_print(val) {
 _PRIMITIVES["print"] = new PrimitiveProcedure(scheme_print);
 
 function scheme_newline() {
-    this.postMessage("\n");
+    this.postMessage("");
 }
 _PRIMITIVES["newline"] = new PrimitiveProcedure(scheme_newline);
 

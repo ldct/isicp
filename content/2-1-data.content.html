@@ -154,10 +154,10 @@ We have chosen not to use this style of definition in this book.
 
 <div id="scheme-define-print-rat">
 (define (print-rat x)
-  (newline)
   (display (numer x))
   (display '/)
-  (display (denom x)))
+  (display (denom x))
+  (newline))
 </div>
 <script>
 promptDep("scheme-define-print-rat", ["scheme-define-rat"]);
@@ -178,6 +178,8 @@ promptDep("scheme-define-one-half", ["scheme-define-rat"]);
 <script>
 promptDep("scheme-print-one-half", ["scheme-define-print-rat", "scheme-define-one-half"]);
 </script>
+
+<p>
 
 <div id="scheme-define-one-third">
 (define one-third (make-rat 1 3))
@@ -261,12 +263,12 @@ prompt("scheme-define-rat-reduce-in-constructor");
 
 <div id="scheme-define-print-point">
 (define (print-point p)
-  (newline)
   (display "(")
   (display (x-point p))
   (display ",")
   (display (y-point p))
-  (display ")"))
+  (display ")")
+  (newline))
 </div>
 <script>
 prompt("scheme-define-print-point");

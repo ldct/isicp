@@ -357,10 +357,13 @@ function prompt(s) {
         }
         w.terminate();        
         return;
+      } else if (e.data.suppress_newline) {
+        output_fragment.push($("<span>" + e.data.value + "</span>"));
+        $_(_output).empty().append(output_fragment);
+      } else {
+        output_fragment.push($("<span>" + e.data + "<br> </span>"));
+        $_(_output).empty().append(output_fragment);
       }
-
-      output_fragment.push($("<span>" + e.data + "<br> </span>"));
-      $_(_output).empty().append(output_fragment);
     }
     
     w.postMessage(getDependedOnCode(s));
