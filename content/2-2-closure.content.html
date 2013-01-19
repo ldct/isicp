@@ -1,0 +1,412 @@
+{{title}}
+<title> iSICP 2.2 - Hierarchical Data and the Closure Property </title>
+@@
+
+{{videos}}
+coming soon!
+@@
+
+{{main_text}}
+<a href='index.html' style="float:left"> <img src='images/chevron-up.svg' height=64 width=64> </a>
+<span style="float:right">
+<a href='1-3-hop.html'> <img src='images/chevron-left.svg' height=64 width=64> </a>
+</span>
+
+<br> <br>
+<h2> Hierarchical Data and the Closure Property </h2> 
+
+<p> As we have seen, pairs provide a primitive ``glue'' that we can use to construct compound data objects.  Figure 2-2 shows a standard way to visualize a pair---in this case, the pair formed by <tt> (cons 1 2) </tt>.  In this representation, which is called <tt> box-and-pointer notation </tt>  , each object is shown as a <tt> pointer </tt>  to a box.  The box for a primitive object contains a representation of the object.  For example, the box for a number contains a numeral.  The box for a pair is actually a double box, the left part containing (a pointer to) the <tt> car </tt> of the pair and the right part containing the <tt> cdr </tt>.
+
+<div class="exercise">
+<p> <b>Figure 2.2:</b> Box-and-pointer representation of
+<tt> (cons 1 2) </tt>.
+
+<pre>
+     +---+---+     +---+
+---->| * | *-+---->| 2 |
+     +-|-+---+     +---+
+       |
+       V
+     +---+
+     | 1 |
+     +---+
+</pre>
+</div>
+
+<p> We have already seen that <tt> cons </tt> can be used to combine not only numbers but pairs as well.  (You made use of this fact, or should have, in doing Exercise 2-2 and Exercise 2-3.)  As a consequence, pairs provide a universal building block from which we can construct all sorts of data structures.  Figure 2-3 shows two ways to use pairs to combine the numbers 1, 2, 3, and 4.
+
+<div class="exercise">
+<p> <b>Figure 2.3:</b> Two ways to combine 1, 2, 3, and 4
+using pairs.
+
+<pre>
+     +---+---+     +---+---+         +---+---+     +---+
+---->| * | *-+---->| * | * |    ---->| * | *-+---->| 4 |
+     +-|-+---+     +-|-+-|-+         +-|-+---+     +---+
+       |             |   |             |
+       V             V   V             V
+   +---+---+      +---+ +---+      +---+---+     +---+---+
+   | * | * |      | 3 | | 4 |      | * | *-+---->| * | * |
+   +-|-+-|-+      +---+ +---+      +-|-+---+     +-|-+-|-+
+     |   |                           |             |   |
+     V   V                           V             V   V
+  +---+ +---+                      +---+        +---+ +---+
+  | 1 | | 2 |                      | 1 |        | 2 | | 3 |
+  +---+ +---+                      +---+        +---+ +---+
+
+  (cons (cons 1 2)                 (cons (cons 1
+        (cons 3 4))                            (cons 2 3))
+                                         4)
+</pre>
+</div>
+
+<p> The ability to create pairs whose elements are pairs is the essence of list structure's importance as a representational tool.  We refer to this ability as the <tt> closure property </tt>  of <tt> cons </tt>.  In general, an operation for combining data objects satisfies the closure property if the results of combining things with that operation can themselves be combined using the same operation.@footnote{The use of the word ``closure'' here comes from abstract algebra, where a set of elements is said to be closed under an operation if applying the operation to elements in the set produces an element that is again an element of the set.  The Lisp community also (unfortunately) uses the word ``closure'' to describe a totally unrelated concept: A closure is an implementation technique for representing procedures with free variables.  We do not use the word ``closure'' in this second sense in this book.  } Closure is the key to power in any means of combination because it permits us to create <tt> hierarchical </tt>  structures---structures made up of parts, which themselves are made up of parts, and so on.
+
+<p> From the outset of Chapter 1, we've made essential use of closure in dealing with procedures, because all but the very simplest programs rely on the fact that the elements of a combination can themselves be combinations.  In this section, we take up the consequences of closure for compound data.  We describe some conventional techniques for using pairs to represent sequences and trees, and we exhibit a graphics language that illustrates closure in a vivid way.@footnote{The notion that a means of combination should satisfy closure is a straightforward idea.  Unfortunately, the data combiners provided in many popular programming languages do not satisfy closure, or make closure cumbersome to exploit.  In Fortran or Basic, one typically combines data elements by assembling them into arrays---but one cannot form arrays whose elements are themselves arrays.  Pascal and C admit structures whose elements are structures.  However, this requires that the programmer manipulate pointers explicitly, and adhere to the restriction that each field of a structure can contain only elements of a prespecified form.  Unlike Lisp with its pairs, these languages have no built-in general-purpose glue that makes it easy to manipulate compound data in a uniform way.  This limitation lies behind Alan Perlis's comment in his foreword to this book: ``In Pascal the plethora of declarable data structures induces a specialization within functions that inhibits and penalizes casual cooperation.  It is better to have 100 functions operate on one data structure than to have 10 functions operate on 10 data structures.''}
+
+<h3> Representing Sequences </h3> 
+
+<div class="exercise">
+<p> <b>Figure 2.4:</b> The sequence 1, 2, 3, 4 represented as
+a chain of pairs.
+
+<pre>
+     +---+---+     +---+---+     +---+---+     +---+---+
+---->| * | *-+---->| * | *-+---->| * | *-+---->| * | / |
+     +-|-+---+     +-|-+---+     +-|-+---+     +-|-+---+
+       |             |             |             |
+       V             V             V             V
+     +---+         +---+         +---+         +---+
+     | 1 |         | 2 |         | 3 |         | 4 |
+     +---+         +---+         +---+         +---+
+</pre>
+</div>
+
+<p> One of the useful structures we can build with pairs is a <tt> sequence </tt>  ---an ordered collection of data objects.  There are, of course, many ways to represent sequences in terms of pairs.  One particularly straightforward representation is illustrated in Figure 2-4, where the sequence 1, 2, 3, 4 is represented as a chain of pairs.  The <tt> car </tt> of each pair is the corresponding item in the chain, and the <tt> cdr </tt> of the pair is the next pair in the chain.  The <tt> cdr </tt> of the final pair signals the end of the sequence by pointing to a distinguished value that is not a pair, represented in box-and-pointer diagrams as a diagonal line and in programs as the value of the variable <tt> nil </tt>.  The entire sequence is constructed by nested <tt> cons </tt> operations: 
+
+<div id="scheme-cons-1-2-3-4">
+(cons 1
+      (cons 2
+            (cons 3
+                  (cons 4 nil))))
+</div>
+<script>
+prompt("scheme-cons-1-2-3-4");
+</script>
+
+<p> Such a sequence of pairs, formed by nested <tt> cons </tt>es, is called a <em> list </em>  , and Scheme provides a primitive called <tt> list </tt> to help in constructing lists.@footnote{In this book, we use <tt> list </tt>  to mean a chain of pairs terminated by the end-of-list marker.  In contrast, the term <tt> list structure </tt>  refers to any data structure made out of pairs, not just to lists.}  The above sequence could be produced by <tt> (list 1 2 3 4) </tt>. In general,
+
+<div id="scheme-list-syntax">
+(list <a_1> <a_2> ... <a_n>)
+</div>
+<script>
+makeStatic("scheme-list-syntax");
+</script>
+
+is equivalent to
+
+<div id="scheme-list-syntax-expand">
+(cons <a_1>
+      (cons <a_2>
+            (cons ...
+                  (cons <a_n>
+                        nil)
+...)))
+</div>
+<script>
+makeStatic("scheme-list-syntax-expand");
+</script>
+
+<p> Lisp systems conventionally print lists by printing the sequence of elements, enclosed in parentheses.  Thus, the data object in Figure 2-4 is printed as <tt> (1 2 3 4) </tt>:
+
+<div id="scheme-define-one-through-four">
+(define one-through-four (list 1 2 3 4))
+
+one-through-four
+</div>
+<script>
+prompt("scheme-define-one-through-four");
+</script>
+
+<p> Be careful not to confuse the expression <tt> (list 1 2 3 4) </tt> with the list <tt> (1 2 3 4) </tt>, which is the result obtained when the expression is evaluated.  Attempting to evaluate the expression <tt> (1 2 3 4) </tt> will signal an error when the interpreter tries to apply the procedure <tt> 1 </tt> to arguments <tt> 2 </tt>, <tt> 3 </tt>, and <tt> 4 </tt>.
+
+<p> We can think of <tt> car </tt> as selecting the first item in the list, and of <tt> cdr </tt> as selecting the sublist consisting of all but the first item. Nested applications of <tt> car </tt> and <tt> cdr </tt> can be used to extract the second, third, and subsequent items in the list.@footnote{Since nested applications of <tt> car </tt> and <tt> cdr </tt> are cumbersome to write, Lisp dialects provide abbreviations for them---for instance,
+
+<pre>
+(cadr (arg)) = (car (cdr (arg)))
+</pre>
+
+<p> The names of all such procedures start with <tt> c </tt> and end with <tt> r </tt>. Each <tt> a </tt> between them stands for a <tt> car </tt> operation and each <tt> d </tt> for a <tt> cdr </tt> operation, to be applied in the same order in which they appear in the name.  The names <tt> car </tt> and <tt> cdr </tt> persist because simple combinations like <tt> cadr </tt> are pronounceable.} The constructor <tt> cons </tt> makes a list like the original one, but with an additional item at the beginning.
+
+<div id="scheme-car-one-through-four">
+(car one-through-four)
+1
+
+(cdr one-through-four)
+(2 3 4)
+
+(car (cdr one-through-four))
+2
+
+(cons 10 one-through-four)
+(10 1 2 3 4)
+
+(cons 5 one-through-four)
+(5 1 2 3 4)
+</div>
+<script>
+prompt("scheme-car-one-through-four");
+</script>
+
+<p> The value of <tt> nil </tt>, used to terminate the chain of pairs, can be thought of as a sequence of no elements, the <tt> empty list </tt>  .  The word <tt> nil </tt>  is a contraction of the Latin word <em>nihil</em>, which means ``nothing.''@footnote{It's remarkable how much energy in the standardization of Lisp dialects has been dissipated in arguments that are literally over nothing: Should <tt> nil </tt> be an ordinary name?  Should the value of <tt> nil </tt> be a symbol?  Should it be a list?  Should it be a pair?  In Scheme, <tt> nil </tt> is an ordinary name, which we use in this section as a variable whose value is the end-of-list marker (just as <tt> true </tt> is an ordinary variable that has a true value).  Other dialects of Lisp, including Common Lisp, treat <tt> nil </tt> as a special symbol.  The authors of this book, who have endured too many language standardization brawls, would like to avoid the entire issue.  Once we have introduced quotation in section 2-3, we will denote the empty list as <tt> '() </tt> and dispense with the variable <tt> nil </tt> entirely.}
+
+<h4> List operations </h4> 
+
+<p> The use of pairs to represent sequences of elements as lists is accompanied by conventional programming techniques for manipulating lists by successively ``<tt> cdr </tt>ing down'' the lists.  For example, the procedure <tt> list-ref </tt> takes as arguments a list and a number n and returns the nth item of the list.  It is customary to number the elements of the list beginning with 0. The method for computing <tt> list-ref </tt> is the following:
+
+<ul>
+
+<li>
+For n = 0, <tt> list-ref </tt> should return the <tt> car </tt> of the list.
+</li>
+
+<li>
+Otherwise, <tt> list-ref </tt> should return  the (n - 1)st item of the <tt> cdr </tt> of the list.
+</li>
+</ul>
+
+<div id="scheme-define-list-ref">
+(define (list-ref items n)
+  (if (= n 0)
+      (car items)
+      (list-ref (cdr items) (- n 1))))
+
+(define squares (list 1 4 9 16 25))
+
+(list-ref squares 3)
+</div>
+<script>
+prompt("scheme-define-list-ref");
+</script>
+
+<p> Often we <tt> cdr </tt> down the whole list.  To aid in this, Scheme includes a primitive predicate <tt> null? </tt>, which tests whether its argument is the empty list.  The procedure <tt> length </tt>, which returns the number of items in a list, illustrates this typical pattern of use:
+
+<div id="scheme-define-length">
+(define (length items)
+  (if (null? items)
+      0
+      (+ 1 (length (cdr items)))))
+
+(define odds (list 1 3 5 7))
+
+(length odds)
+4
+</div>
+<script>
+prompt("scheme-define-length");
+</script>
+
+<p> The <tt> length </tt> procedure implements a simple recursive plan. The reduction step is:
+
+<ul>
+
+<li>
+The <tt> length </tt> of any list is 1 plus the <tt> length </tt> of the <tt> cdr </tt> of the list.
+</li>
+
+</ul>
+
+<p> This is applied successively until we reach the base case:
+
+<ul>
+
+<li>
+The <tt> length </tt> of the empty list is 0.
+</li>
+
+</ul>
+
+<p> We could also compute <tt> length </tt> in an iterative style:
+
+<div id="scheme-define-length-iterative">
+(define (length items)
+  (define (length-iter a count)
+    (if (null? a)
+        count
+        (length-iter (cdr a) (+ 1 count))))
+  (length-iter items 0))
+</div>
+<script>
+prompt("scheme-define-length-iterative");
+</script>
+
+<p> Another conventional programming technique is to ``<tt> cons </tt> up'' an answer list while <tt> cdr </tt>ing down a list, as in the procedure <tt> append </tt>, which takes two lists as arguments and combines their elements to make a new list:
+
+<div id="scheme-append">
+(append squares odds)
+(1 4 9 16 25 1 3 5 7)
+
+(append odds squares)
+(1 3 5 7 1 4 9 16 25)
+</div>
+<script>
+prompt("scheme-append");
+</script>
+
+<p> <tt> append </tt> is also implemented using a recursive plan.  To <tt> append </tt> lists <tt> list1 </tt> and <tt> list2 </tt>, do the following:
+
+<ul>
+
+<li>
+If <tt> list1 </tt> is the empty list, then the result is just <tt> list2 </tt>.
+</li>
+
+<li>
+Otherwise, <tt> append </tt> the <tt> cdr </tt> of <tt> list1 </tt> and <tt> list2 </tt>, and <tt> cons </tt> the <tt> car </tt> of <tt> list1 </tt> onto the result:
+</li>
+</ul>
+
+<div id="scheme-define-append">
+(define (append list1 list2)
+  (if (null? list1)
+      list2
+      (cons (car list1) (append (cdr list1) list2))))
+</div>
+<script>
+prompt("scheme-define-append");
+</script>
+
+<div class="exercise">
+<p> <b>Exercise 2.17:</b> Define a procedure <tt> last-pair </tt> that returns the list that contains only the last element of a given (nonempty) list:
+
+<div id="scheme-last-pair">
+(last-pair (list 23 72 149 34))
+(34)
+</div>
+<script>
+prompt("scheme-last-pair");
+</script>
+</div>
+
+<div class="exercise">
+<p> <b>Exercise 2.18:</b> Define a procedure <tt> reverse </tt> that takes a list as argument and returns a list of the same elements in reverse order:
+
+<div id="scheme-reverse">
+(reverse (list 1 4 9 16 25))
+(25 16 9 4 1)
+</div>
+<script>
+prompt("scheme-reverse");
+</script>
+</div>
+
+<div class="exercise">
+<p> <b>Exercise 2.19:</b> Consider the change-counting program of section 1-2-2.  It would be nice to be able to easily change the currency used by the program, so that we could compute the number of ways to change a British pound, for example.  As the program is written, the knowledge of the currency is distributed partly into the procedure <tt> first-denomination </tt> and partly into the procedure <tt> count-change </tt> (which knows that there are five kinds of U.S. coins).  It would be nicer to be able to supply a list of coins to be used for making change.
+
+<p> We want to rewrite the procedure <tt> cc </tt> so that its second argument is a list of the values of the coins to use rather than an integer specifying which coins to use.  We could then have lists that defined each kind of currency:
+
+<div id="scheme-define-coins">
+(define us-coins (list 50 25 10 5 1))
+
+(define uk-coins (list 100 50 20 10 5 2 1 0.5))
+</div>
+<script>
+prompt("scheme-define-coins");
+</script>
+
+We could then call <tt> cc </tt> as follows:
+
+<div id="scheme-cc-coins">
+(cc 100 us-coins)
+292
+</div>
+<script>
+prompt("scheme-cc-coins");
+</script>
+
+<p> To do this will require changing the program <tt> cc </tt> somewhat.  It will still have the same form, but it will access its second argument differently, as follows:
+
+<div id="scheme-define-cc">
+(define (cc amount coin-values)
+  (cond ((= amount 0) 1)
+        ((or (&lt; amount 0) (no-more? coin-values)) 0)
+        (else
+         (+ (cc amount
+                (except-first-denomination coin-values))
+            (cc (- amount
+                   (first-denomination coin-values))
+                coin-values)))))
+</div>
+<script>
+prompt("scheme-define-cc");
+</script>
+
+<p> Define the procedures <tt> first-denomination </tt>, <tt> except-first-denomination </tt>, and <tt> no-more? </tt> in terms of primitive operations on list structures.  Does the order of the list <tt> coin-values </tt> affect the answer produced by <tt> cc </tt>?  Why or why not?
+</div>
+
+<div class="exercise">
+<p> <b>Exercise 2.20:</b> The procedures <tt> + </tt>, <tt> * </tt>, and <tt> list </tt> take arbitrary numbers of arguments. One way to define such procedures is to use <tt> define </tt> with <tt> dotted-tail notation </tt>  .  In a procedure definition, a parameter list that has a dot before the last parameter name indicates that, when the procedure is called, the initial parameters (if any) will have as values the initial arguments, as usual, but the final parameter's value will be a <tt> list </tt>  of any remaining arguments.  For instance, given the definition
+
+<div id="scheme-dotted-tail-syntax">
+(define (f x y . z) <body>)
+</div>
+<script>
+makeStatic("scheme-dotted-tail-syntax");
+</script>
+
+<p> the procedure <tt> f </tt> can be called with two or more arguments.  If we evaluate
+
+<div id="scheme-dotted-tail-application">
+(f 1 2 3 4 5 6)
+</div>
+<script>
+makeStatic("scheme-dotted-tail-application");
+</script>
+
+<p> then in the body of <tt> f </tt>, <tt> x </tt> will be 1, <tt> y </tt> will be 2, and <tt> z </tt> will be the list <tt> (3 4 5 6) </tt>.  Given the definition
+
+<div id="scheme-define-dotted-tail-syntax-one">
+(define (g . w) <body>)
+</div>
+<script>
+makeStatic("scheme-define-dotted-tail-syntax-one");
+</script>
+
+<p> the procedure <tt> g </tt> can be called with zero or more arguments.  If we evaluate
+
+<div id="scheme-g">
+(g 1 2 3 4 5 6)
+</div>
+<script>
+prompt("scheme-g");
+</script>
+
+<p> then in the body of <tt> g </tt>, <tt> w </tt> will be the list <tt> (1 2 3 4 5 6) </tt>.@footnote{To define <tt> f </tt> and <tt> g </tt> using <tt> lambda </tt> we would write
+
+<div id="scheme-lambda-dotted-tail-syntax">
+(define f (lambda (x y . z) <body>))
+(define g (lambda w <body>))
+</div>
+<script>
+prompt("scheme-lambda-dotted-tail-syntax");
+</script>
+
+<p> Use this notation to write a procedure <tt> same-parity </tt> that takes one or more integers and returns a list of all the arguments that have the same even-odd parity as the first argument.  For example,
+
+<div id="scheme-same-parity">
+(same-parity 1 2 3 4 5 6 7)
+(1 3 5 7)
+
+(same-parity 2 3 4 5 6 7)
+(2 4 6)
+</div>
+<script>
+prompt("scheme-same-parity");
+</script>
+</div>
+
+
+@@
+
+{{footnotes}}
+@@
