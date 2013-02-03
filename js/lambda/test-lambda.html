@@ -7,25 +7,25 @@
 <body>
 
 <script>
-I = new lambdaTerm(1);
-K = new lambdaTerm(new lambdaTerm(2));
-Cr = new lambdaTerm("r");
-S = new lambdaTerm(new lambdaTerm(new lambdaTerm(new applicationTerm(new applicationTerm(3, 1), new applicationTerm(2, 1)))));
+I = l(1);
+K = l(l(2));
+Cr = l("r");
+S = l(l(l(a(a(3, 1), a(2, 1)))));
 
-zero = new lambdaTerm(new lambdaTerm(1));
-one = new lambdaTerm(new lambdaTerm(new applicationTerm(2,1)));
+zero = l(l(1));
+one = l(l(a(2,1)));
+two = l(l(a(2, a(2, 1))));
 
-succ = new lambdaTerm(new lambdaTerm(new lambdaTerm(new applicationTerm(2, new applicationTerm(new applicationTerm(3, 2), 1))))) 
+ω = l(a(1,1));
+
+Y = l(a(l(a(2, a(1, 1))), l(a(2, a(1, 1)))));
+var YF = apply_lambda(Y, "F");
+console.log(to_named_string(simplify(simplify(simplify(YF)))));
+
+succ = l(l(l(a(2, a(a(3, 2), 1))))) 
 
 wf = new lambdaTerm(new lambdaTerm(new applicationTerm(new applicationTerm(4, 2), new lambdaTerm(new applicationTerm(1, 3)))));
 wa = new lambdaTerm(new applicationTerm(5, 1));
-/*
-(λ λ 4 2 (λ 1 3)) 
-(λ 5 1)
-*/
-console.log(wf.toString());
-console.log(wa.toString());
-console.log(apply_lambda(wf, wa).toString());
 </script>
 
 </body>
