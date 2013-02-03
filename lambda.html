@@ -2,19 +2,132 @@
 <head>
 <meta charset="UTF-8">
 
-<link rel="stylesheet" type="text/css" href="codemirror.css" />
-<link rel="stylesheet" type="text/css" href="isicp.css" />
+<link rel="stylesheet" type="text/css" href="css/codemirror.css" />
+<link rel="stylesheet" type="text/css" href="css/isicp.css" />
 
-<script src="codemirror/lib/codemirror.js"></script>
-<script src="codemirror/mode/scheme/scheme.js"></script>
+<script src="js/codemirror/lib/codemirror.js"></script>
+<script src="js/codemirror/mode/scheme/scheme.js"></script>
 
-<script type="text/javascript" src="https://files.nyu.edu/cb125/public/Lambda/lambda.js"></script>
+<script src="https://files.nyu.edu/cb125/public/Lambda/lambda.js"></script>
 
-<script src="biwascheme.js"></script>
-<script src="coding.js"></script>
+<script src="js/biwascheme.js"></script>
+<script src="js/coding.js"></script>
+
+<script>
+function lprompt(s) {
+  makeEditable(s);
+  linkEditor(s, s + "-output", function(x,y) {
+    var f = formatTree(fixedPoint(stringToTree(y)));
+    console.log(f);
+    return f;
+  });
+}
+</script>
+
 </head>
 
 <body>
+
+<h2> Introduction: how to write down functions </h2>
+
+<p> We'll begin our introduction to the lambda calculus by asking how we might write down a function. There are standard ways to notate numbers,
+
+<blockquote>
+42 <br>
+0x2a
+</blockquote>
+
+<p> sets,
+
+<blockquote>
+{0,1,2} <br>
+{x | x > 0, x &in; R}
+</blockquote>
+
+<p> etc, but there doesn't seem to be a way to write down functions. 
+
+<p> "But there is a way!" you say. "for example to write down the function <em> f </em> that triples its argument - f(1) = 3, f(4) = 12, etc - we can just write:
+
+<blockquote> f(x) = 3x </blockquote>
+
+<p> ."
+
+<p> Well, this approach suffers the drawback that you must give the function a name. What if your function returns another function? And you're not really writing down the function as much as writing down an equation that it satisfies. We need a notation for anonymous functions - functions that don't have names.
+
+<p> In lambda calculus, we would write <em> f </em> as 
+
+<blockquote> &lambda;x.3x </blockquote>
+
+<p> Where, in general, a function that takes an argument and returns something is written as 
+
+<blockquote> &lambda;[argument].[return value] </blockquote>
+
+<h2> Simple examples </h2>
+
+<p> Now we have a universe of functions that we can talk about. The next logical step would be to introduce something for the functions to act on - perhaps numbers. Lists might be useful, for building data structures.
+
+<p> I'm not going to do that. Our universe of discourse will only contain functions. What do they act on? Other functions. Let's see how far we can take this idea. It might seem at first that there aren't any interesting functions to write down. How about one that does nothing?
+
+<p> The identity function is a function <em> I </em> that always returns its argument
+
+<blockquote> 
+I = &lambda;t.t
+
+<div id="id">
+((lambda t t) y)
+</div>
+<div id="id-output">
+</div>
+<script>
+lprompt("id");
+</script>
+
+</blockquote>
+
+<p> The constant function, denoted by <em> C<sub>r</sub> </em>, is a function that always returns <em> r </em>, is defined by
+
+<blockquote>
+C<sub>r</sub> = &lambda;t.r
+
+<div id="c_r">
+((lambda t r) x)
+</div>
+<div id="c_r-output">
+</div>
+<script>
+lprompt("c_r");
+</script>
+</blockquote>
+
+<p> What does the function 
+<blockquote>
+K = &lambda;r.(&lambda;t.r)
+</blockquote>
+
+<p> do? It returns the constant function of its argument - Kr = C<sub>r</sub>.
+
+<h2> More notation </h2>
+
+<p> Application (drop brackets), currying, reasoning
+
+<h2> Numbers </h2>
+
+<p> Church came up with a way of encoding numbers as functions.
+
+derivation
+
+<blockquote>
+<div id="numbers">
+(lambda f x (f (f x)))
+</div>
+<div id="numbers-output">
+</div>
+<script>
+lprompt("numbers");
+</script>
+</blockquote>
+
+<h2> addenum </h2>
 
 <div id="lambda">
 (((lambda x (lambda Q (Q x))) j) P)
@@ -22,12 +135,7 @@
 <div id="lambda-output">
 </div>
 <script>
-makeEditable("lambda");
-linkEditor("lambda", "lambda-output", function(x,y) {
-  var f = formatTree(fixedPoint(stringToTree(y)));
-  console.log(f);
-  return f;
-});
+lprompt("lambda");
 </script>
 
 </body>
