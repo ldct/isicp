@@ -266,17 +266,12 @@ function getAllPushes(s) {
 focus_callback = function(s) {
   var ts = "";
   for (var i = 0, d = getAllDeps(s); i < d.length; i++) {  //TODO list all deps
-//    ts += "<br>" + d[i];
-    ts += "<br>" + editorOf[d[i]].getValue() + "<br>";
+    ts += editorOf[d[i]].getValue() + "\n\n";
   }
   
-//  ts += "<br> <b>" + s + "</b>";
-  ts += "<br> <b>" + editorOf[s].getValue() + "</b>";
+  ts += "<b>" + editorOf[s].getValue() + "</b>";
 
-  for (var i = 0, p = getAllPushes(s); i < p.length; i++) {
-    ts += "<br>" + p[i] + "<br>";
-  }
-  $("#currently-editing").html("<tt>" + ts + "</tt>");
+  $("#currently-editing").html("<pre>" + ts + "</pre>");
 };
 
 ////////////////////////////////////////////////////////////////////////////////

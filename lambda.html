@@ -26,7 +26,7 @@ function lprompt(s) {
 
 </head>
 
-<body>
+<body style="width:66%">
 
 <h2> Introduction: how to write down functions </h2>
 
@@ -52,7 +52,7 @@ function lprompt(s) {
 
 <p> ."
 
-<p> Well, this approach suffers the drawback that you must give the function a name. What if your function returns another function? And you're not really writing down the function as much as writing down an equation that it satisfies. We need a notation for anonymous functions - functions that don't have names.
+<p> Well, this approach suffers the drawback that you must give the function a name. This becomes a crippling handicap if we want to write higher-order functions, functions that return other functions. We need a notation for anonymous functions - functions that don't have names.
 
 <p> In lambda calculus, we would write <em> f </em> as 
 
@@ -66,7 +66,7 @@ function lprompt(s) {
 
 <p> Now we have a universe of functions that we can talk about. The next logical step would be to introduce something for the functions to act on - perhaps numbers. Lists might be useful, for building data structures.
 
-<p> I'm not going to do that. Our universe of discourse will only contain functions. What do they act on? Other functions. Let's see how far we can take this idea. It might seem at first that there aren't any interesting functions to write down. How about one that does nothing?
+<p> I'm not going to do that. Our universe of will only contain functions. What do they act on? Other functions. Let's see how far we can take this idea. It might seem at first that there aren't any interesting functions to write down. How about one that does nothing?
 
 <p> The identity function is a function <em> I </em> that always returns its argument
 

@@ -11,7 +11,7 @@ function format(s) {
 
 /*
 Unbound variables ("constants") are represented as strings
-Bound variables are represented as numbers, interpreted as de brujin indexes
+Bound variables are represented as numbers, interpreted as de brujin indices
 */
 
 function lambdaTerm(body) {

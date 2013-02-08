@@ -39,9 +39,8 @@
     <p> 
     
     <a href="index.html" class="navlink"> <img src='images/home.svg' width=32 height=32> </a>
-    <span id="currently-editing-link" class="navlink"> <img src='images/file-edit.svg' width=32 height=32> </span>
     <span id="toc-link" class="navlink"> <img src='images/list.svg' width=32 height=32> </span>
-    <span id="video-link" class="navlink"> <img src='images/video.svg' width=32 height=32> </span>
+    <span id="currently-editing-link" class="navlink"> <img src='images/file-edit.svg' width=32 height=32> </span>
     
     <p>
     
@@ -52,7 +51,6 @@
     function hideAll() {
       $("#currently-editing").hide();
       $("#toc").hide();
-      $("#video").hide();
     }
     
     $("#currently-editing-link").click(function() {
@@ -65,22 +63,9 @@
       $("#toc").show();
     });
     
-    $("#video-link").click(function() {
-      hideAll();
-      $("#video").show();
-    });
-    
     </script>
     
     <div id="toc"> </div>
-    
-    <div id="video">
-    <p> Video Lectures: 
-
-    <a href='http://www.youtube.com/watch?v=2Op3QLzMgSY' title="Overview and Introduction to Lisp" target="_blank"> 1A </a> &nbsp;
-    <a href='http://www.youtube.com/watch?v=dlbMuv-jix8' title="Procedures and Processes; Substitution Model" target="_blank"> 1B  </a>
-    <!--TODO!-->
-    </div>
     
     <p style='font-size:12px'> (Click on the left edge of this green box to hide it!)
     
@@ -177,8 +162,7 @@ prompt("scheme-define-sum-integers");
       (+ (cube a) (sum-cubes (+ a 1) b))))
 </div>
 <script>
-prompt("scheme-define-sum-cubes");
-depsOf["scheme-define-sum-cubes"] = ["scheme-define-cube"];
+promptDep("scheme-define-sum-cubes", ["scheme-define-cube"]);
 </script>
 
 <p> The third computes the sum of a sequence of terms in the series

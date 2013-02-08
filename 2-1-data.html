@@ -39,9 +39,8 @@
     <p> 
     
     <a href="index.html" class="navlink"> <img src='images/home.svg' width=32 height=32> </a>
-    <span id="currently-editing-link" class="navlink"> <img src='images/file-edit.svg' width=32 height=32> </span>
     <span id="toc-link" class="navlink"> <img src='images/list.svg' width=32 height=32> </span>
-    <span id="video-link" class="navlink"> <img src='images/video.svg' width=32 height=32> </span>
+    <span id="currently-editing-link" class="navlink"> <img src='images/file-edit.svg' width=32 height=32> </span>
     
     <p>
     
@@ -52,7 +51,6 @@
     function hideAll() {
       $("#currently-editing").hide();
       $("#toc").hide();
-      $("#video").hide();
     }
     
     $("#currently-editing-link").click(function() {
@@ -65,20 +63,9 @@
       $("#toc").show();
     });
     
-    $("#video-link").click(function() {
-      hideAll();
-      $("#video").show();
-    });
-    
     </script>
     
     <div id="toc"> </div>
-    
-    <div id="video">
-    <p> Video Lectures: 
-
-coming soon!
-    </div>
     
     <p style='font-size:12px'> (Click on the left edge of this green box to hide it!)
     
