@@ -50,6 +50,7 @@ var _WHITESPACE = ' \t\n\r'.split('');
 var _SINGLE_CHAR_TOKENS = "()'".split('');
 var _TOKEN_END = _WHITESPACE.concat(_SINGLE_CHAR_TOKENS);
 var DELIMITERS = _SINGLE_CHAR_TOKENS.concat(['.']);
+var ESCAPE = "\\";
 
 function valid_symbol(s) {
     //Returns whether s is a well-formed value.
@@ -80,9 +81,21 @@ function next_candidate_token(line, k) {
             return [c, k + 1];
         } else if (c === '#') { // Boolean values #t and #f
             return [line.slice(k, k+2), Math.min(k+2, line.length)];
-        } else if (c === '\"') { // String Starts
-            var end = line.slice(k+1).indexOf('\"') + k + 2;
-            return [line.slice(k, end-1), end];
+        } else if (c === '\"') {
+            // Returns a representation of a string with a '"' charcter at the
+            // start
+            var end = k;
+            var string = "";
+            while (end < line.length) {
+                string += line[end];
+                end += 1;                
+                if (line[end] === '\"') {
+                    break;
+                } else if (line[end] === ESCAPE) {
+                    end += 1;
+                }
+            }            
+            return [string, end + 1];
         } else {
             var j = k;
             while (j < line.length && (! _TOKEN_END.inside(line[j]))) {
