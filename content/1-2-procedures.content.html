@@ -43,13 +43,6 @@ There are many ways to compute factorials. One way is to make use of the observa
       1
       (* n (factorial (- n 1)))))
 </div>
-<script>
-var deferDraw = (location.hash == "");
-if (deferDraw) {
-  $("body").hide();
-}
-prompt("scheme-define-factorial");
-</script>
 
 <p> We can use the substitution model of section 1.1.5 to watch this procedure in action computing 6!, as shown in figure 1.3.
 

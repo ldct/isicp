@@ -86,11 +86,6 @@ $('#sidebox .tab').toggle(function(){
 
 $(document).ready(createTOC);
 
-var deferDraw = (location.hash == "");
-if (deferDraw) {
-  $("body").hide();
-}
-
 </script>
 
 <div id="main">
@@ -1286,34 +1281,20 @@ Hint: You may find it convenient to use @code{compose} from @ref{Exercise
 
 <script> 
 
+var todo = [];
+
 for (var _e in editorOf) {
-  editorOf[_e].getOption("onBlur")();
+  todo.push(_e);
 }
 
-if (deferDraw) {
-  $("body").show();
-  var todo = [];
-  for (var _e in editorOf) {
-    todo.push(editorOf[_e]);
+setTimeout(function() {
+  var e = todo.shift();
+  editorOf[e].getOption("onBlur")();
+  
+  if (todo.length > 0) {
+    setTimeout(arguments.callee, 25);
   }
-
-  setTimeout(function() {
-    var e = todo.shift();
-    e.refresh();
-    
-    if (todo.length > 0) {
-      setTimeout(arguments.callee, 25);
-    }
-  }, 25);
-}
-
-if (!deferDraw) {
-  $(function () {
-    $('html, body').animate({
-      scrollTop: $(location.hash).offset().top
-   }, 500);
- });
-}
+}, 25);
 
 </script>
 

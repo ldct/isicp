@@ -331,6 +331,7 @@ function promptSync(s) {
   });
 }
 
+
 function prompt(s) {
 
   makeEditable(s);
@@ -338,9 +339,10 @@ function prompt(s) {
   
   var editor = editorOf[s];
   var _output = s + "-output";
+
     
   editor.setOption('onBlur', function() {
-
+    console.log("onblur called with _output as", _output)
     var output_fragment = [];
 
     var w = new Worker("js/interpreter/scheme_worker.js");
