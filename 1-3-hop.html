@@ -1287,14 +1287,23 @@ for (var _e in editorOf) {
   todo.push(_e);
 }
 
-setTimeout(function() {
+console.log(todo);
+
+function proc() {
   var e = todo.shift();
-  editorOf[e].getOption("onBlur")();
-  
+  console.log("computing", e, todo);
   if (todo.length > 0) {
-    setTimeout(arguments.callee, 25);
+    try {
+      editorOf[e].getOption("onBlur")().then(proc);
+    } catch (e) {
+      proc();
+    }
+  } else {
+    editorOf[e].getOption("onBlur")();
   }
-}, 25);
+}
+
+proc();
 
 </script>
 

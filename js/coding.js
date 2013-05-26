@@ -172,35 +172,6 @@ function eval_editor(_editor) {
 
 ////////////////////////////////////////////////////////////////////////////////
 
-function fakeEditor(_editor) {
-
-  if (editorOf[_editor]) {
-    throw "Error: makeFakeEditor called with " + _editor + " which already exists!";
-    return;
-  }
-
-  var $editor = $_(_editor);
-  this.code = cleanCode($editor.text());
-  
-  $editor.empty();
-  
-  editorOf[_editor] = this;
-}
-
-fakeEditor.prototype.getValue = function() {
-  return this.code;
-}
-
-fakeEditor.prototype.getOption = function() {
-  return function() {return;};
-}
-
-fakeEditor.prototype.refresh = function() {
-  return;
-}
-
-////////////////////////////////////////////////////////////////////////////////
-
 var editorOf = {};
 
 function makeEditable(_editor) {
@@ -234,7 +205,7 @@ function makeStatic(_static) {
   editorOf[_static].setOption("onBlur", function() {});
 }
 
-function linkEditor(_editor, _output, func) {
+function linkEditor(_editor, _output, func) { //sync
 
   var editor = editorOf[_editor];
 
@@ -312,25 +283,37 @@ function addOutput(_e) {
   $_(_e).after($('<div>', {'id': _e + "-output", 'class': "output"}));
 }
 
-function promptSync(s) {
+function compute(s) {
+  var def = $.Deferred();
 
-  makeEditable(s);
-  addOutput(s);
-  linkEditor(s, s + "-output", function(x, y) {
-    
-    var ret = eval_editor(x);
-    
-    for (var pushes = getPushes(s), i = 0; i < pushes.length; i++) {
-      editorOf[pushes[i]].getOption("onBlur")();
+  var _output = s + "-output";
+  var output_fragment = [];
+
+  var w = new Worker("js/interpreter/scheme_worker.js");
+  w.onmessage = function(e) {
+    if (e.data.end) {
+      if (output_fragment.length == 0) {
+        $_(_output).empty();
+      }
+      w.terminate();
+      def.resolve();      
+      return;
+    } else if (e.data.suppress_newline) {
+      output_fragment.push($("<span>" + e.data.value + "</span>"));
+      $_(_output).empty().append(output_fragment);
+    } else {
+      output_fragment.push($("<span>" + e.data + "<br> </span>"));
+      $_(_output).empty().append(output_fragment);
     }
-    
-    if (ret && ret.toString && ret.toString() == "#<undef>") {
-      return "";
-    }
-    return ret;
-  });
+  }
+  
+  w.postMessage(getDependedOnCode(s));
+  
+  for (var pushes = getPushes(s), i = 0; i < pushes.length; i++) {
+    compute(pushes[i]);
+  }
+  return def.promise();
 }
-
 
 function prompt(s) {
 
@@ -338,37 +321,9 @@ function prompt(s) {
   addOutput(s);
   
   var editor = editorOf[s];
-  var _output = s + "-output";
 
-    
   editor.setOption('onBlur', function() {
-    console.log("onblur called with _output as", _output)
-    var output_fragment = [];
-
-    var w = new Worker("js/interpreter/scheme_worker.js");
-    w.onmessage = function(e) {
-
-      if (e.data.end) {
-        if (output_fragment.length == 0) {
-          $_(_output).empty();
-        }
-        w.terminate();        
-        return;
-      } else if (e.data.suppress_newline) {
-        output_fragment.push($("<span>" + e.data.value + "</span>"));
-        $_(_output).empty().append(output_fragment);
-      } else {
-        output_fragment.push($("<span>" + e.data + "<br> </span>"));
-        $_(_output).empty().append(output_fragment);
-      }
-    }
-    
-    w.postMessage(getDependedOnCode(s));
-    
-    for (var pushes = getPushes(s), i = 0; i < pushes.length; i++) {
-      editorOf[pushes[i]].getOption("onBlur")();
-    }
-
+    return compute(s);
   });
 }
 
