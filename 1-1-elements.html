@@ -8,7 +8,8 @@
 <link rel="stylesheet" type="text/css" href="css/footnotes.css" />
 <link rel="stylesheet" type="text/css" href="css/theme.css" />
 
-<script src="js/biwascheme.js"> </script>
+<script src="js/helper.js"></script>
+<script src="js/biwascheme.js"></script>
 <script src="js/codemirror/lib/codemirror.js"></script>
 <script src="js/codemirror/mode/scheme/scheme.js"></script>
 <script src="js/jquery.min.js"></script>
@@ -427,6 +428,72 @@ answer("scheme-ex-112-eq", "false");
 <div id="scheme-tree-eg-output" class="output"> </div>    
 <div id="gout"> </div>
 <script> 
+
+function tokenize(sexp) {
+  return eval(sexp.replace(/\n/g, " ")
+                  .replace(/\(/g, "[")
+                  .replace(/\)/g, "]")
+                  .replace(/\*+/g,"'*'") //stupid gedit doesn't
+                  .replace(/\/+/g,"'/'") //recognise regexps
+                  .replace(/\+/g, "'+'")
+                  .replace(/\-/g, "'-'")
+                  .replace(/\s+/g,","));
+}
+
+function process(array) {
+  var counter = 0;
+  function iter(e) {
+    if (isarray(e)) {
+      var ret = e.map(iter);
+      ret.id = counter++;
+      return ret;
+    } else {
+      return String(e) + "id" + counter++;
+    }
+  }
+  return iter(array);
+}
+
+function id(e) {
+  if (isarray(e)) {
+    return e.id;
+  } else {
+    return e.split('id')[1];
+  }
+}
+
+function evaluate_a(a) {
+
+  return ""; //TODO
+
+  if (isarray(a)) {
+    var op = a[0].split('id')[0];
+    
+    if (op == '+') {
+      return;
+    }
+    
+  }
+}
+
+function dot(a) {
+  var s = "";
+  
+  if (isarray(a)) {
+  
+    s = s + id(a) + ' [label="' + evaluate_a(a) +'"];\n';
+  
+    for (var i = 0; i < a.length; i++) {
+      s = s + dot(a[i]);
+      s = s + id(a) + '->' + id(a[i]) + ';\n';
+    }
+  } else {
+    s = s + id(a) + ' [label="' + a.split('id')[0] + '"];\n';
+  }
+  
+  return s;
+}
+
 var tripped = false;
 makeEditable("scheme-tree-eg");
 addOutput("scheme-tree-eg");

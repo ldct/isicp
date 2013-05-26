@@ -4,120 +4,19 @@ function focus_callback() {
   //for clients to override
 }
 
-//functional functions
-
-function arrayEq(arr1, arr2) {
-  return $(arr1).not(arr2).length == 0 && $(arr2).not(arr1).length == 0
-}
-
-function isArray(o) {
-  return Object.prototype.toString.call(o) === '[object Array]';
-}
-
 function cleanCode(code) {
+  //cleans extra newlines that exist to make in-html code look better
   return code.replace(/^\n/, "").replace(/\n*$/, "").replace(/[ \t]*\n/g, "\n").replace(/\s*$/, "");
 }
 
-function check(result) {
-  if (result == undefined) {
-    return false;
-  }
-  if (typeof(result) == "object" && result.toString && result.toString() == "#<undef>") {
-    return false;
-  }
-  return true;
-}
-
-function $_(s) { // _ to $. _: div id's $: jQuery objects; read _ as #, $_ consumes a hash and adds a $
+function $_(s) { 
+  // _ to $ where _ = div id's, $ = jQuery objects; read _ as #, $_ consumes a hash and adds a $
   var ret = $("#" + s);
   if (!ret[0]) {
     throw "#" + s + " did not match anything";
   } else {
     return ret;
   }
-}
-
-////////////////////////////////////////////////////////////////////////////////
-
-function tokenize(sexp) {
-  return eval(sexp.replace(/\n/g, " ")
-                  .replace(/\(/g, "[")
-                  .replace(/\)/g, "]")
-                  .replace(/\*+/g,"'*'") //stupid gedit doesn't
-                  .replace(/\/+/g,"'/'") //recognise regexps
-                  .replace(/\+/g, "'+'")
-                  .replace(/\-/g, "'-'")
-                  .replace(/\s+/g,","));
-}
-
-function isarray(e) {
-  return (e.length && typeof e !== "string");
-}
-
-function process(array) {
-  var counter = 0;
-  function iter(e) {
-    if (isarray(e)) {
-      var ret = e.map(iter);
-      ret.id = counter++;
-      return ret;
-    } else {
-      return String(e) + "id" + counter++;
-    }
-  }
-  return iter(array);
-}
-
-function id(e) {
-  if (isarray(e)) {
-    return e.id;
-  } else {
-    return e.split('id')[1];
-  }
-}
-
-function evaluate_a(a) {
-
-  return ""; //TODO
-
-  if (isarray(a)) {
-    var op = a[0].split('id')[0];
-    
-    if (op == '+') {
-      return;
-    }
-    
-  }
-}
-
-function dot(a) {
-  var s = "";
-  
-  if (isarray(a)) {
-  
-    s = s + id(a) + ' [label="' + evaluate_a(a) +'"];\n';
-  
-    for (var i = 0; i < a.length; i++) {
-      s = s + dot(a[i]);
-      s = s + id(a) + '->' + id(a[i]) + ';\n';
-    }
-  } else {
-    s = s + id(a) + ' [label="' + a.split('id')[0] + '"];\n';
-  }
-  
-  return s;
-}
-
-function shuffle(myArray) {
-  var i = myArray.length;
-  if ( i == 0 ) return false;
-  while ( --i ) {
-     var j = Math.floor( Math.random() * ( i + 1 ) );
-     var tempi = myArray[i];
-     var tempj = myArray[j];
-     myArray[i] = tempj;
-     myArray[j] = tempi;
-   }
 }
 
 ////////////////////////////////////////////////////////////////////////////////
