@@ -117,7 +117,7 @@ prompt("scheme-define-cube");
   (* x x))
 </div>
 <script>
-new fakeEditor("scheme-define-square");
+hidden_prompt("scheme-define-square");
 </script>
 
 <p> we are not talking about the cube of a particular number, but rather about a method for obtaining the cube of any number. Of course we could get along without ever defining this procedure, by always writing expressions such as
@@ -608,7 +608,7 @@ prompt("scheme-let-expanded-syntax");
 <p> is  <span id="scheme-let-close-output" class="output"> </span>
 
 <script>
-new fakeEditor("scheme-let-close-prelude");
+hidden_prompt("scheme-let-close-prelude");
 
 makeEditable("scheme-let-close");
 linkEditor("scheme-let-close", "scheme-let-close-output", function(x, y) {return eval_editor(x) + ".";});
@@ -625,6 +625,9 @@ depsOf["scheme-let-close"] = ["scheme-let-close-prelude"];
 <div id="scheme-let-shadow-prelude">
 (define x 2)
 </div>
+<script>
+hidden_prompt("scheme-let-shadow-prelude");
+</script>
 
 <div id="scheme-let-shadow">
 (let ((x 3)
@@ -632,8 +635,6 @@ depsOf["scheme-let-close"] = ["scheme-let-close-prelude"];
   (* x y))
 </div>
 <script>
-new fakeEditor("scheme-let-shadow-prelude");
-
 makeEditable("scheme-let-shadow");
 linkEditor("scheme-let-shadow", "scheme-let-shadow-output", function(x, y) {return eval_editor(x);});
 
@@ -708,7 +709,7 @@ depsOf["scheme-f-lambda-poly"] = ["scheme-define-f-g2"];
      2))
 </div>
 <script>
-new fakeEditor("scheme-define-average");
+hidden_prompt("scheme-define-average");
 </script>
 
 <div id="scheme-define-search">
@@ -1292,7 +1293,7 @@ console.log(todo);
 
 function proc() {
   var e = todo.shift();
-  console.log("computing", e, todo);
+  //console.log("computing", e, todo);
   if (todo.length > 0) {
     try {
       editorOf[e].getOption("onBlur")().then(proc);

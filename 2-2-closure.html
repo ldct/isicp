@@ -510,7 +510,7 @@ console.log(todo);
 
 function proc() {
   var e = todo.shift();
-  console.log("computing", e, todo);
+  //console.log("computing", e, todo);
   if (todo.length > 0) {
     try {
       editorOf[e].getOption("onBlur")().then(proc);

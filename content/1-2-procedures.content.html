@@ -125,7 +125,7 @@ prompt("scheme-define-factorial-iterative");
 <script>
 prompt("scheme-define-plus");
 prompt("scheme-define-plus-dec-inc");
-new fakeEditor("scheme-define-inc-dec");
+hidden_prompt("scheme-define-inc-dec");
 addDep("scheme-define-plus", ["scheme-define-inc-dec"]);
 addDep("scheme-define-plus-dec-inc", ["scheme-define-inc-dec"]);
 </script>
@@ -594,7 +594,7 @@ prompt("scheme-define-expt-iterative");
   (* x x))
 </div>
 <script>
-new fakeEditor("scheme-define-square");
+hidden_prompt("scheme-define-square");
 </script>
 
 <div id="scheme-define-fast-expt">

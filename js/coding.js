@@ -226,6 +226,11 @@ function prompt(s) {
   });
 }
 
+function hidden_prompt(s) {
+  prompt(s);
+  $_(s).hide()
+}
+
 ////////////////////////////////////////////////////////////////////////////////
 
 function answer(s, a) {
