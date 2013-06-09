@@ -94,8 +94,8 @@ $(document).ready(createTOC);
 <a href='index.html' style="float:left"> <img src='images/chevron-up.svg' height=64 width=64> </a>
 <span style="float:right">
 <a href='1-3-hop.html'> <img src='images/chevron-left.svg' height=64 width=64> </a>
+<a href='2-2-closure.html'> <img src='images/chevron-right.svg' height=64 width=64> </a>
 </span>
-
 <br> <br>
 <h2> Introduction to Data Abstraction </h2>
 
@@ -284,13 +284,23 @@ promptDep("scheme-test-rat", ["scheme-define-one-half", "scheme-define-one-third
 
 <p> As the final example shows, our rational-number implementation does not reduce rational numbers to lowest terms.  We can remedy this by changing <tt> make-rat. </tt> If we have a <tt> gcd </tt> procedure like the one in section 1-2-5 that produces the greatest common divisor of two integers, we can use <tt> gcd </tt> to reduce the numerator and the denominator to lowest terms before constructing the pair:
 
+<div id="scheme-define-gcd">
+(define (gcd a b)
+  (if (= b 0)
+      a
+      (gcd b (remainder a b))))
+</div>
+<script>
+hidden_prompt("scheme-define-gcd");
+</script>
+
 <div id="scheme-define-make-rat-reduce">
 (define (make-rat n d)
   (let ((g (gcd n d)))
     (cons (/ n g) (/ d g))))
 </div>
 <script>
-prompt("scheme-define-make-rat-reduce");
+promptDep("scheme-define-make-rat-reduce", ["scheme-define-gcd"]);
 </script>
 
 <p> Now we have
@@ -335,7 +345,7 @@ promptDep("scheme-test-rat-reduce", ["scheme-define-arith-rat", "scheme-define-o
     (/ (cdr x) g)))
 </div>
 <script>
-prompt("scheme-define-rat-reduce-in-constructor");
+promptDep("scheme-define-rat-reduce-in-constructor", ["scheme-define-gcd"]);
 </script>
 
 <p> The difference between this implementation and the previous one lies in when we compute the <tt> gcd </tt>.  If in our typical use of rational numbers we access the numerators and denominators of the same rational numbers many times, it would be preferable to compute the <tt> gcd </tt> when the rational numbers are constructed.  If not, we may be better off waiting until access time to compute the <tt> gcd </tt>.  In any case, when we change from one representation to the other, the procedures <tt> add-rat </tt>, <tt> sub-rat </tt>, and so on do not have to be modified at all.

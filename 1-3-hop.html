@@ -128,7 +128,7 @@ hidden_prompt("scheme-define-square");
 (* y y y)
 </div>
 <script>
-prompt("scheme-cube-ex");
+no_output_prompt("scheme-cube-ex");
 </script>
 
 <p> and never mentioning cube explicitly. This would place us at a serious disadvantage, forcing us to work always at the level of the particular operations that happen to be primitives in the language (multiplication, in this case) rather than in terms of higher-level operations. Our programs would be able to compute cubes, but our language would lack the ability to express the concept of cubing. One of the things we should demand from a powerful programming language is the ability to build abstractions by assigning names to common patterns and then to work in terms of the abstractions directly. Procedures provide this ability. This is why all but the most primitive programming languages include mechanisms for defining procedures.
@@ -452,7 +452,7 @@ depsOf["scheme-define-integral-lambda"] = ["scheme-define-sum"];
 (lambda (&lt;formal-parameters&gt;) &lt;body&gt;)
 </div>
 <script>
-prompt("scheme-lambda-syntax");
+makeStatic("scheme-lambda-syntax");
 </script>
 
 <p> The resulting procedure is just as much a procedure as one that is created using define. The only difference is that it has not been associated with any name in the environment. In fact,
@@ -559,7 +559,7 @@ depsOf["scheme-define-f-let"] = ["scheme-define-square"];
    &lt;body&gt;)
 </div>
 <script>
-prompt("scheme-let-syntax");
+makeStatic("scheme-let-syntax");
 </script>
 
 <p> which can be thought of as saying
@@ -582,7 +582,7 @@ in  &lt;body&gt;
   &lt;exp_n&gt;)
 </div>
 <script>
-prompt("scheme-let-expanded-syntax");
+makeStatic("scheme-let-expanded-syntax");
 </script>
 
 <p> No new mechanism is required in the interpreter in order to provide local variables.  A <tt> let </tt> expression is simply syntactic sugar for the underlying <tt> lambda </tt> application.
@@ -701,7 +701,7 @@ depsOf["scheme-f-lambda-poly"] = ["scheme-define-f-g2"];
 
 <h4> Finding roots of equations by the half-interval method </h4>
 
-<p> The <em> half-interval method </em> is a simple but powerful technique for finding roots of an equation <em> f(x) = 0 </em>, where <em> f </em> is a continuous function.  The idea is that, if we are given points <em> a </em> and <em> b </em> such that <em> f(a) &lt; 0 &lt; f (b) </em>, then <em> f </em> must have at least one zero between <em> a </em> and <em> b </em>.  To locate a zero, let <em> x </em> be the average of <em> a </em> and <em> b </em> and compute <em> f(x) </em>.  If <em> f(x) &gt; 0  </em>, then <em> f </em> must have a zero between <em> a </em> and <em> x </em>.  If <em> f(x) &lt; 0</em>, then <em> f </em> must have a zero between <em> x </em> and <em> b </em>.  Continuing in this way, we can identify smaller and smaller intervals on which <em> f </em> must have a zero.  When we reach a point where the interval is small enough, the process stops.  Since the interval of uncertainty is reduced by half at each step of the process, the number of steps required grows as @i{[theta]}(@code{log}( @i{L}/@i{T})), where @i{L} is the length of the original interval and @i{T} is the error tolerance (that is, the size of the interval we will consider &ldquo;small enough&rdquo;).  Here is a procedure that implements this strategy:
+<p> The <em> half-interval method </em> is a simple but powerful technique for finding roots of an equation <em> f(x) = 0 </em>, where <em> f </em> is a continuous function.  The idea is that, if we are given points <em> a </em> and <em> b </em> such that <em> f(a) &lt; 0 &lt; f (b) </em>, then <em> f </em> must have at least one zero between <em> a </em> and <em> b </em>.  To locate a zero, let <em> x </em> be the average of <em> a </em> and <em> b </em> and compute <em> f(x) </em>.  If <em> f(x) &gt; 0  </em>, then <em> f </em> must have a zero between <em> a </em> and <em> x </em>.  If <em> f(x) &lt; 0</em>, then <em> f </em> must have a zero between <em> x </em> and <em> b </em>.  Continuing in this way, we can identify smaller and smaller intervals on which <em> f </em> must have a zero.  When we reach a point where the interval is small enough, the process stops.  Since the interval of uncertainty is reduced by half at each step of the process, the number of steps required grows as &Theta;(log(L/T)), where <em>L</em> is the length of the original interval and <em>T</em> is the error tolerance (that is, the size of the interval we will consider &ldquo;small enough&rdquo;).  Here is a procedure that implements this strategy:
 
 <div id="scheme-define-average">
 (define (average x y)
@@ -731,7 +731,7 @@ depsOf["scheme-define-search"] = ["scheme-define-average", "scheme-define-close-
 
 <p> We assume that we are initially given the function <em> f </em> together with points at which its values are negative and positive.  We first compute the midpoint of the two given points.  Next we check to see if the given interval is small enough, and if so we simply return the midpoint as our answer.  Otherwise, we compute as a test value the value of <em> f </em> at the midpoint.  If the test value is positive, then we continue the process with a new interval running from the original negative point to the midpoint.  If the test value is negative, we continue with the interval from the midpoint to the positive point.  Finally, there is the possibility that the test value is 0, in which case the midpoint is itself the root we are searching for.
 
-<p> To test whether the endpoints are &ldquo;close enough&rdquo; we can use a procedure similar to the one used in section @ref{1-1-7} for computing square roots:<a name="footnote_link_1-55" class="footnote_link" href="#footnote_1-55">55</a>
+<p> To test whether the endpoints are &ldquo;close enough&rdquo; we can use a procedure similar to the one used in section 1-1-7 for computing square roots:<a name="footnote_link_1-55" class="footnote_link" href="#footnote_1-55">55</a>
 
 <div id="scheme-define-close-enough">
 (define (close-enough? x y)
@@ -742,6 +742,17 @@ prompt("scheme-define-close-enough");
 </script>
 
 <p> <tt> search </tt> is awkward to use directly, because we can accidentally give it points at which <em> f </em>'s values do not have the required sign, in which case we get a wrong answer.  Instead we will use <tt> search </tt> via the following procedure, which checks to see which of the endpoints has a negative function value and which has a positive value, and calls the <tt> search </tt> procedure accordingly.  If the function has the same sign on the two given points, the half-interval method cannot be used, in which case the procedure signals an error.<a name="footnote_link_1-56" class="footnote_link" href="#footnote_1-56">56</a>
+
+<div id="scheme-define-negative-positive">
+(define (negative? x)
+  (< x 0))
+
+(define (positive? x)
+  (> x 0))
+</div>
+<script>
+hidden_prompt("scheme-define-negative-positive")
+</script>
 
 <div id="scheme-define-half-interval-method">
 (define (half-interval-method f a b)
@@ -756,7 +767,7 @@ prompt("scheme-define-close-enough");
 </div>
 <script>
 prompt("scheme-define-half-interval-method");
-depsOf["scheme-define-half-interval-method"] = ["scheme-define-search"];
+depsOf["scheme-define-half-interval-method"] = ["scheme-define-search", "scheme-define-negative-positive"];
 </script>
 
 <p> The following example uses the half-interval method to approximate pi as the root between 2 and 4 of sin(x) = 0:
@@ -861,13 +872,13 @@ depsOf["scheme-define-sqrt-average"] = ["scheme-define-fixed-point", "scheme-def
 <p> With this modification, the square-root procedure works. In fact, if we unravel the definitions, we can see that the sequence of approximations to the square root generated here is precisely the same as the one generated by our original square-root procedure of section 1.1.7. This approach of averaging successive approximations to a solution, a technique we that we call average damping, often aids the convergence of fixed-point searches.
 
 <div class="exercise">
-<p> Exercise 1.35.  Show that the golden ratio  (section 1.2.2) is a fixed point of the transformation x   1 + 1/x, and use this fact to compute  by means of the fixed-point procedure.
+<p> <b> Exercise 1.35. </b> Show that the golden ratio  (section 1.2.2) is a fixed point of the transformation x   1 + 1/x, and use this fact to compute  by means of the fixed-point procedure.
 </div>
 
 <p>
 
 <div class="exercise">
-<p> Exercise 1.36.  Modify fixed-point so that it prints the sequence of approximations it generates, using the newline and display primitives shown in exercise 1.22. Then find a solution to xx = 1000 by finding a fixed point of x  log(1000)/log(x). (Use Scheme's primitive log procedure, which computes natural logarithms.) Compare the number of steps this takes with and without average damping. (Note that you cannot start fixed-point with a guess of 1, as this would cause division by log(1) = 0.)
+<p> <b> Exercise 1.36. </b> Modify fixed-point so that it prints the sequence of approximations it generates, using the newline and display primitives shown in exercise 1.22. Then find a solution to xx = 1000 by finding a fixed point of x  log(1000)/log(x). (Use Scheme's primitive log procedure, which computes natural logarithms.) Compare the number of steps this takes with and without average damping. (Note that you cannot start fixed-point with a guess of 1, as this would cause division by log(1) = 0.)
 </div> 
 
 <p>
@@ -1102,7 +1113,7 @@ addDep("scheme-define-sqrt-fixed-point-of-newton-transform", ["scheme-define-fix
 
 <p> As programmers, we should be alert to opportunities to identify the underlying abstractions in our programs and to build upon them and generalize them to create more powerful abstractions. This is not to say that one should always write programs in the most abstract way possible; expert programmers know how to choose the level of abstraction appropriate to their task. But it is important to be able to think in terms of these abstractions, so that we can be ready to apply them in new contexts. The significance of higher-order procedures is that they enable us to represent these abstractions explicitly as elements in our programming language, so that they can be handled just like other computational elements.
 
-<p> In general, programming languages impose restrictions on the ways in which computational elements can be manipulated.  Elements with the fewest restrictions are said to have @newterm{first-class} status.  Some of the &ldquo;rights and privileges&rdquo; of first-class elements are:<a name="footnote_link_1-64" class="footnote_link" href="#footnote_1-64">64</a>
+<p> In general, programming languages impose restrictions on the ways in which computational elements can be manipulated.  Elements with the fewest restrictions are said to have <em> first-class </em> status.  Some of the &ldquo;rights and privileges&rdquo; of first-class elements are:<a name="footnote_link_1-64" class="footnote_link" href="#footnote_1-64">64</a>
 
 <ul>
 
@@ -1117,8 +1128,8 @@ addDep("scheme-define-sqrt-fixed-point-of-newton-transform", ["scheme-define-fix
 
 <div class="exercise">
 
-<p> Exercise 1.40. Define a procedure @code{cubic}
-that can be used together with the @code{newtons-method} procedure in
+<p> <b> Exercise 1.40. </b> Define a procedure <tt> cubic </tt>
+that can be used together with the <tt> newtons-method </tt> procedure in
 expressions of the form
 
 <div id="scheme-newtons-method-cubic">
@@ -1132,6 +1143,8 @@ prompt("scheme-newtons-method-cubic");
 
 </div>
 
+<p>
+
 <div class="exercise">
 <p> <b> Exercise 1.41. </b> Define a procedure <tt> double </tt> that takes a procedure of one argument as argument and returns a procedure that applies the original procedure twice.  For example, if <tt> inc </tt> is a procedure that adds 1 to its argument, then @code{(double inc)} should be a procedure that adds 2.  What value is returned by
 
@@ -1143,9 +1156,12 @@ prompt("scheme-double-itered-inc");
 </script>
 </div>
 
+<p>
+
 <div class="exercise">
 <p> <b> Exercise 1.42. </b> Let f and g be two one-argument functions. The composition f after g is defined to be the function x f(g(x)). Define a procedure compose that implements composition. For example, if inc is a procedure that adds 1 to its argument,
 
+<p>
 
 <div id="scheme-compose-square-inc">
 ((compose square inc) 6)
@@ -1153,29 +1169,42 @@ prompt("scheme-double-itered-inc");
 <script>
 prompt("scheme-compose-square-inc");
 </script>
-
 </div>
 
+<p>
+
 <div class="exercise">
-<p> Exercise 1.43.  If f is a numerical function and n is a positive integer, then we can form the nth repeated application of f, which is defined to be the function whose value at x is f(f(...(f(x))...)). For example, if f is the function x   x + 1, then the nth repeated application of f is the function x   x + n. If f is the operation of squaring a number, then the nth repeated application of f is the function that raises its argument to the 2nth power. Write a procedure that takes as inputs a procedure that computes f and a positive integer n and returns the procedure that computes the nth repeated application of f. Your procedure should be able to be used as follows:
+<p> <b> Exercise 1.43. </b> If f is a numerical function and n is a positive integer, then we can form the nth repeated application of f, which is defined to be the function whose value at x is f(f(...(f(x))...)). For example, if f is the function x   x + 1, then the nth repeated application of f is the function x   x + n. If f is the operation of squaring a number, then the nth repeated application of f is the function that raises its argument to the 2nth power. Write a procedure that takes as inputs a procedure that computes f and a positive integer n and returns the procedure that computes the nth repeated application of f. Your procedure should be able to be used as follows:
 
 
-<div id="">
+<div id="scheme-repeated-square-2-5">
 ((repeated square 2) 5)
 </div>
 <script>
+prompt("scheme-repeated-square-2-5");
 </script>
 
-Hint: You may find it convenient to use @code{compose} from @ref{Exercise
-1-42}.
+Hint: You may find it convenient to use <tt> compose </tt> from Exercise
+1-42.
 </div>
 
-<p> Exercise 1.44.  The idea of smoothing a function is an important concept in signal processing. If f is a function and dx is some small number, then the smoothed version of f is the function whose value at a point x is the average of f(x - dx), f(x), and f(x + dx). Write a procedure smooth that takes as input a procedure that computes f and returns a procedure that computes the smoothed f. It is sometimes valuable to repeatedly smooth a function (that is, smooth the smoothed function, and so on) to obtained the n-fold smoothed function. Show how to generate the n-fold smoothed function of any given function using smooth and repeated from exercise 1.43.
+<p>
 
-<p> Exercise 1.45.  We saw in section 1.3.3 that attempting to compute square roots by naively finding a fixed point of y x/y does not converge, and that this can be fixed by average damping. The same method works for finding cube roots as fixed points of the average-damped y  x/y2. Unfortunately, the process does not work for fourth roots &mdash; a single average damp is not enough to make a fixed-point search for y  x/y3 converge. On the other hand, if we average damp twice (i.e., use the average damp of the average damp of y  x/y3) the fixed-point search does converge. Do some experiments to determine how many average damps are required to compute nth roots as a fixed-point search based upon repeated average damping of y  x/yn-1. Use this to implement a simple procedure for computing nth roots using fixed-point, average-damp, and the repeated procedure of exercise 1.43. Assume that any arithmetic operations you need are available as primitives.
+<div class="exercise">
+<p> <b> Exercise 1.44. </b> The idea of smoothing a function is an important concept in signal processing. If f is a function and dx is some small number, then the smoothed version of f is the function whose value at a point x is the average of f(x - dx), f(x), and f(x + dx). Write a procedure smooth that takes as input a procedure that computes f and returns a procedure that computes the smoothed f. It is sometimes valuable to repeatedly smooth a function (that is, smooth the smoothed function, and so on) to obtained the n-fold smoothed function. Show how to generate the n-fold smoothed function of any given function using smooth and repeated from exercise 1.43.
+</div>
 
-<p> Exercise 1.46.  Several of the numerical methods described in this chapter are instances of an extremely general computational strategy known as iterative improvement. Iterative improvement says that, to compute something, we start with an initial guess for the answer, test if the guess is good enough, and otherwise improve the guess and continue the process using the improved guess as the new guess. Write a procedure iterative-improve that takes two procedures as arguments: a method for telling whether a guess is good enough and a method for improving a guess. Iterative-improve should return as its value a procedure that takes a guess as argument and keeps improving the guess until it is good enough. Rewrite the sqrt procedure of section 1.1.7 and the fixed-point procedure of section 1.3.3 in terms of iterative-improve.
+<p>
 
+<div class="exercise">
+<p> <b> Exercise 1.45. </b> We saw in section 1.3.3 that attempting to compute square roots by naively finding a fixed point of y x/y does not converge, and that this can be fixed by average damping. The same method works for finding cube roots as fixed points of the average-damped y  x/y2. Unfortunately, the process does not work for fourth roots &mdash; a single average damp is not enough to make a fixed-point search for y  x/y3 converge. On the other hand, if we average damp twice (i.e., use the average damp of the average damp of y  x/y3) the fixed-point search does converge. Do some experiments to determine how many average damps are required to compute nth roots as a fixed-point search based upon repeated average damping of y  x/yn-1. Use this to implement a simple procedure for computing nth roots using fixed-point, average-damp, and the repeated procedure of exercise 1.43. Assume that any arithmetic operations you need are available as primitives.
+</div>
+
+<p>
+
+<div class="exercise">
+<p> <b> Exercise 1.46. </b> Several of the numerical methods described in this chapter are instances of an extremely general computational strategy known as iterative improvement. Iterative improvement says that, to compute something, we start with an initial guess for the answer, test if the guess is good enough, and otherwise improve the guess and continue the process using the improved guess as the new guess. Write a procedure iterative-improve that takes two procedures as arguments: a method for telling whether a guess is good enough and a method for improving a guess. Iterative-improve should return as its value a procedure that takes a guess as argument and keeps improving the guess until it is good enough. Rewrite the sqrt procedure of section 1.1.7 and the fixed-point procedure of section 1.3.3 in terms of iterative-improve.
+</div>
 
 
 <hr>

@@ -98,7 +98,7 @@ function makeEditable(_editor) {
   editorOf[_editor] = editor;
 }
 
-function makeStatic(_static) {
+function makeStatic(_static) { //and no output
   makeEditable(_static);
   editorOf[_static].setOption("readOnly", 'nocursor');
   editorOf[_static].setOption("onBlur", function() {});
@@ -227,8 +227,14 @@ function prompt(s) {
 }
 
 function hidden_prompt(s) {
-  prompt(s);
+  makeEditable(s);
+  var editor = editorOf[s];
   $_(s).hide()
+}
+
+function no_output_prompt(s) {
+  makeEditable(s);
+  var editor = editorOf[s];
 }
 
 ////////////////////////////////////////////////////////////////////////////////
