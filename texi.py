@@ -28,6 +28,8 @@ with open("sicp.texi") as sicp:
   
   r = re.sub("@strong{(.*?)}", "<b>\\1</b>", r, flags=re.DOTALL)
   
+  r = re.sub("@footnote{(.*?)}", "<div class='footnote'> \\1 </div>", r, flags=re.DOTALL)
+
   r = re.sub("@lisp", '<div id="">', r)
   r = re.sub("@end lisp", "</div>\n<script>\nprompt();\n</script>", r)
   
@@ -38,6 +40,8 @@ with open("sicp.texi") as sicp:
   
   r = re.sub("@itemize @bullet", "<ul>", r)
   r = re.sub("@end itemize", "</ul>", r)
+
+  r = re.sub("@item", "<li>", r)
   
   r = re.sub("@enumerate .*?\n", "<ul>", r)
   r = re.sub("@end enumerate", "</ul>", r)
