@@ -1,20 +1,108 @@
-{{title}}
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.1//EN" "http://www.w3.org/TR/xhtml11/DTD/xhtml11.dtd">
+<html>
+<head>
+<meta charset="UTF-8">
+
+<link rel="stylesheet" type="text/css" href="css/codemirror.css" />
+<link rel="stylesheet" type="text/css" href="css/isicp.css" />
+<link rel="stylesheet" type="text/css" href="css/footnotes.css" />
+<link rel="stylesheet" type="text/css" href="css/theme.css" />
+
+<script src="js/helper.js"></script>
+<script src="js/biwascheme.js"></script>
+<script src="js/codemirror/lib/codemirror.js"></script>
+<script src="js/codemirror/mode/scheme/scheme.js"></script>
+<script src="js/jquery.min.js"></script>
+<script src="js/coding.js"> </script>
+<script src="js/footnotes.js"></script>
+
 <title> iSICP 2.3 - Symbolic Data </title>
-@@
+<script type="text/javascript">
 
-{{main_text}}
-<a href='index.html' style="float:left"> <img src='images/chevron-up.svg' height=64 width=64> </a>
-<span style="float:right">
-<a href='2-2-closure.html'> <img src='images/chevron-left.svg' height=64 width=64> </a>
-<a href='2-4-representation.html'> <img src='images/chevron-right.svg' height=64 width=64> </a>
-</span>
+  var _gaq = _gaq || [];
+  _gaq.push(['_setAccount', 'UA-36868476-1']);
+  _gaq.push(['_trackPageview']);
 
-<br> <br>
+  (function() {
+    var ga = document.createElement('script'); ga.type = 'text/javascript'; ga.async = true;
+    ga.src = ('https:' == document.location.protocol ? 'https://ssl' : 'http://www') + '.google-analytics.com/ga.js';
+    var s = document.getElementsByTagName('script')[0]; s.parentNode.insertBefore(ga, s);
+  })();
+
+</script>
+</head>
+<body>
+
+<div id="sidebox">
+  <div class="tab"></div>
+  <div class="content">
+    
+    <p> 
+    
+    <a href="index.html" class="navlink"> <img src='images/home.svg' width=32 height=32> </a>
+    <span id="toc-link" class="navlink"> <img src='images/list.svg' width=32 height=32> </span>
+    <span id="currently-editing-link" class="navlink"> <img src='images/file-edit.svg' width=32 height=32> </span>
+    
+    <p>
+    
+    <div id="currently-editing"> </div>
+    
+    <script>
+    
+    function hideAll() {
+      $("#currently-editing").hide();
+      $("#toc").hide();
+    }
+    
+    $("#currently-editing-link").click(function() {
+      hideAll();
+      $("#currently-editing").show();
+    });
+    
+    $("#toc-link").click(function() {
+      hideAll();
+      $("#toc").show();
+    });
+    
+    </script>
+    
+    <div id="toc"> </div>
+    
+    <p style='font-size:12px'> (Click on the left edge of this green box to hide it!)
+    
+    <script>
+    hideAll();
+    $("#toc").show();
+    </script>
+  
+  </div>
+</div>
+
+<script> 
+$('#sidebox .tab').toggle(function(){
+    $('#sidebox').animate({'right':'0%'});
+}, function(){
+    $('#sidebox').animate({'right':'-30%'});
+});
+
+$(document).ready(createTOC);
+
+</script>
+
+<div id="main">
+
 <h2> Symbolic Data </h2> 
 
 All the compound data objects we have used so far were constructed ultimately
 from numbers.  In this section we extend the representational capability of our
 language by introducing the ability to work with arbitrary symbols as data.
+
+@menu
+* 2-3-1::            Quotation
+* 2-3-2::            Example: Symbolic Differentiation
+* 2-3-3::            Example: Representing Sets
+* 2-3-4::            Example: Huffman Encoding Trees
+@end menu
 
 <h3> Quotation </h3> 
 
@@ -1620,7 +1708,43 @@ relative frequencies of the n symbols are as described in Exercise
 steps needed to encode the most frequent and least frequent symbols in the
 alphabet.
 </div>
-@@
 
-{{footnotes}}
-@@
+ 
+<hr>
+
+<p> <a rel="license" href="http://creativecommons.org/licenses/by-sa/3.0/deed.en_US" target="_blank"><img alt="Creative Commons License" style="border-width:0" src="http://i.creativecommons.org/l/by-sa/3.0/88x31.png" /></a><br /> Based on Structure and Interpretation of Computer Programs, a work at <a xmlns:dct="http://purl.org/dc/terms/" href="http://mitpress.mit.edu/sicp/" rel="dct:source" target="_blank">http://mitpress.mit.edu/sicp/</a>.
+
+</div>
+
+<script> 
+
+var todo = [];
+
+for (var _e in editorOf) {
+  todo.push(_e);
+}
+
+console.log(todo);
+
+function proc() {
+  var e = todo.shift();
+  //console.log("computing", e, todo);
+  if (todo.length > 0) {
+    try {
+      editorOf[e].getOption("onBlur")().then(proc);
+    } catch (e) {
+      proc();
+    }
+  } else {
+    editorOf[e].getOption("onBlur")();
+  }
+}
+
+proc();
+
+</script>
+
+<a href="https://github.com/zodiac/appspot-grading/tree/master/isicp" target="_blank"><img style="position: absolute; top: 0; right: 0; border: 0;" src="https://s3.amazonaws.com/github/ribbons/forkme_right_green_007200.png" alt="Fork me on GitHub"></a>
+
+</body>
+</html>
