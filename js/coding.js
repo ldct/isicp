@@ -98,12 +98,6 @@ function makeEditable(_editor) {
   editorOf[_editor] = editor;
 }
 
-function makeStatic(_static) { //and no output
-  makeEditable(_static);
-  editorOf[_static].setOption("readOnly", 'nocursor');
-  editorOf[_static].setOption("onBlur", function() {});
-}
-
 function linkEditor(_editor, _output, func) { //sync
 
   var editor = editorOf[_editor];
@@ -219,22 +213,30 @@ function prompt(s) {
   makeEditable(s);
   addOutput(s);
   
-  var editor = editorOf[s];
-
-  editor.setOption('onBlur', function() {
+  editorOf[s].setOption('onBlur', function() {
     return compute(s);
   });
 }
 
 function hidden_prompt(s) {
   makeEditable(s);
-  var editor = editorOf[s];
+
   $_(s).hide()
 }
 
 function no_output_prompt(s) {
   makeEditable(s);
-  var editor = editorOf[s];
+}
+
+function no_output_frozen_prompt(s) {
+  makeEditable(s);
+
+  editorOf[s].setOption("readOnly", 'nocursor');
+}
+
+function makeStatic(_static) { //and no output
+  no_output_frozen_prompt(s);
+
 }
 
 ////////////////////////////////////////////////////////////////////////////////

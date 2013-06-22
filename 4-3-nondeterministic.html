@@ -91,7 +91,1553 @@ $(document).ready(createTOC);
 
 <div id="main">
 
+<h2> Variations on a Scheme -- Nondeterministic Computing </h2> 
 
+In this section, we extend the Scheme evaluator to support a programming
+paradigm called <tt> nondeterministic computing </tt> 
+ by building into the
+evaluator a facility to support automatic search.  This is a much more profound
+change to the language than the introduction of lazy evaluation in section
+4-2.
+
+Nondeterministic computing, like stream processing, is useful for ``generate
+and test'' applications.  Consider the task of starting with two lists of
+positive integers and finding a pair of integers---one from the first list and
+one from the second list---whose sum is prime.  We saw how to handle this with
+finite sequence operations in section 2-2-3 and with infinite streams in
+section 3-5-3.  Our approach was to generate the sequence of all possible
+pairs and filter these to select the pairs whose sum is prime.  Whether we
+actually generate the entire sequence of pairs first as in Chapter 2, or
+interleave the generating and filtering as in Chapter 3, is immaterial to
+the essential image of how the computation is organized.
+
+The nondeterministic approach evokes a different image.  Imagine simply that we
+choose (in some way) a number from the first list and a number from the second
+list and require (using some mechanism) that their sum be prime.  This is
+expressed by following procedure:
+
+<div id="">
+(define (prime-sum-pair list1 list2)
+  (let ((a (an-element-of list1))
+        (b (an-element-of list2)))
+    (require (prime? (+ a b)))
+    (list a b)))
+</div>
+<script>
+prompt();
+</script>
+
+It might seem as if this procedure merely restates the problem, rather than
+specifying a way to solve it.  Nevertheless, this is a legitimate
+nondeterministic program.@footnote{We assume that we have previously defined a
+procedure <tt> prime? </tt> that tests whether numbers are prime.  Even with
+<tt> prime? </tt> defined, the <tt> prime-sum-pair </tt> procedure may look
+suspiciously like the unhelpful ``pseudo-Lisp'' attempt to define the
+square-root function, which we described at the beginning of section
+1-1-7.  In fact, a square-root procedure along those lines can actually
+be formulated as a nondeterministic program.  By incorporating a search
+mechanism into the evaluator, we are eroding the distinction between purely
+declarative descriptions and imperative specifications of how to compute
+answers.  We'll go even farther in this direction in section 4-4.}
+
+The key idea here is that expressions in a nondeterministic language can have
+more than one possible value.  For instance, <tt> an-element-of </tt> might return
+any element of the given list.  Our nondeterministic program evaluator will
+work by automatically choosing a possible value and keeping track of the
+choice.  If a subsequent requirement is not met, the evaluator will try a
+different choice, and it will keep trying new choices until the evaluation
+succeeds, or until we run out of choices.  Just as the lazy evaluator freed the
+programmer from the details of how values are delayed and forced, the
+nondeterministic program evaluator will free the programmer from the details of
+how choices are made.
+
+It is instructive to contrast the different images of time evoked by
+nondeterministic evaluation and stream processing.  Stream processing uses lazy
+evaluation to decouple the time when the stream of possible answers is
+assembled from the time when the actual stream elements are produced.  The
+evaluator supports the illusion that all the possible answers are laid out
+before us in a timeless sequence.  With nondeterministic evaluation, an
+expression represents the exploration of a set of possible worlds, each
+determined by a set of choices.  Some of the possible worlds lead to dead ends,
+while others have useful values.  The nondeterministic program evaluator
+supports the illusion that time branches, and that our programs have different
+possible execution histories.  When we reach a dead end, we can revisit a
+previous choice point and proceed along a different branch.
+
+The nondeterministic program evaluator implemented below is called the
+<tt> amb </tt> evaluator because it is based on a new special form called
+<tt> amb </tt>.  We can type the above definition of <tt> prime-sum-pair </tt> at the
+<tt> amb </tt> evaluator driver loop (along with definitions of <tt> prime? </tt>,
+<tt> an-element-of </tt>, and <tt> require </tt>) and run the procedure as follows:
+
+<div id="">
+;;; Amb-Eval input:
+(prime-sum-pair '(1 3 5 8) '(20 35 110))
+;;; Starting a new problem
+;;; Amb-Eval value:
+(3 20)
+</div>
+<script>
+prompt();
+</script>
+
+The value returned was obtained after the evaluator repeatedly chose elements
+from each of the lists, until a successful choice was made.
+
+Section 4-3-1 introduces <tt> amb </tt> and explains how it supports
+nondeterminism through the evaluator's automatic search mechanism.  Section
+4-3-2 presents examples of nondeterministic programs, and section
+4-3-3 gives the details of how to implement the <tt> amb </tt> evaluator by
+modifying the ordinary Scheme evaluator.
+
+@menu
+* 4-3-1::            Amb and Search
+* 4-3-2::            Examples of Nondeterministic Programs
+* 4-3-3::            Implementing the <tt> Amb </tt> Evaluator
+@end menu
+
+<h3> Amb and Search </h3> 
+
+To extend Scheme to support nondeterminism, we introduce a new special form
+called <tt> amb </tt>.@footnote{The idea of <tt> amb </tt> for nondeterministic
+programming was first described in 1961 by John McCarthy (see McCarthy 1967).}
+The expression
+
+<div id="">
+(amb <e_1> <e_2> ... <e_@i{n}>)
+</div>
+<script>
+prompt();
+</script>
+
+
+returns the value of one of the n expressions <e_@i{i}>
+``ambiguously.''  For example, the expression
+
+<div id="">
+(list (amb 1 2 3) (amb 'a 'b))
+</div>
+<script>
+prompt();
+</script>
+
+
+can have six possible values:
+
+<pre>
+<tt> (1 a) </tt> <tt> (1 b) </tt> <tt> (2 a) </tt> <tt> (2 b) </tt> <tt> (3 a) </tt> <tt> (3 b) </tt>
+</pre>
+
+<tt> Amb </tt> with a single choice produces an ordinary (single) value.
+
+<tt> Amb </tt> with no choices---the expression <tt> (amb) </tt>---is an expression
+with no acceptable values.  Operationally, we can think of <tt> (amb) </tt> as an
+expression that when evaluated causes the computation to ``fail'': The
+computation aborts and no value is produced.  Using this idea, we can express
+the requirement that a particular predicate expression <tt> p </tt> must be true as
+follows:
+
+<div id="">
+(define (require p)
+  (if (not p) (amb)))
+</div>
+<script>
+prompt();
+</script>
+
+With <tt> amb </tt> and <tt> require </tt>, we can implement the <tt> an-element-of </tt>
+procedure used above:
+
+<div id="">
+(define (an-element-of items)
+  (require (not (null? items)))
+  (amb (car items) (an-element-of (cdr items))))
+</div>
+<script>
+prompt();
+</script>
+
+<tt> An-element-of </tt> fails if the list is empty.  Otherwise it ambiguously
+returns either the first element of the list or an element chosen from the rest
+of the list.
+
+We can also express infinite ranges of choices.  The following procedure
+potentially returns any integer greater than or equal to some given n:
+
+<div id="">
+(define (an-integer-starting-from n)
+  (amb n (an-integer-starting-from (+ n 1))))
+</div>
+<script>
+prompt();
+</script>
+
+This is like the stream procedure <tt> integers-starting-from </tt> described in
+section 3-5-2, but with an important difference: The stream procedure
+returns an object that represents the sequence of all integers beginning with
+n, whereas the <tt> amb </tt> procedure returns a single integer.@footnote{In
+actuality, the distinction between nondeterministically returning a single
+choice and returning all choices depends somewhat on our point of view.  From
+the perspective of the code that uses the value, the nondeterministic choice
+returns a single value.  From the perspective of the programmer designing the
+code, the nondeterministic choice potentially returns all possible values, and
+the computation branches so that each value is investigated separately.}
+
+Abstractly, we can imagine that evaluating an <tt> amb </tt> expression causes time
+to split into branches, where the computation continues on each branch with one
+of the possible values of the expression.  We say that <tt> amb </tt> represents a
+<tt> nondeterministic choice point </tt> 
+.  If we had a machine with a sufficient
+number of processors that could be dynamically allocated, we could implement
+the search in a straightforward way.  Execution would proceed as in a
+sequential machine, until an <tt> amb </tt> expression is encountered.  At this
+point, more processors would be allocated and initialized to continue all of
+the parallel executions implied by the choice.  Each processor would proceed
+sequentially as if it were the only choice, until it either terminates by
+encountering a failure, or it further subdivides, or it finishes.@footnote{One
+might object that this is a hopelessly inefficient mechanism.  It might require
+millions of processors to solve some easily stated problem this way, and most
+of the time most of those processors would be idle.  This objection should be
+taken in the context of history.  Memory used to be considered just such an
+expensive commodity.  In 1964 a megabyte of RAM cost about $400,000.  Now every
+personal computer has many megabytes of RAM, and most of the time most of that
+RAM is unused.  It is hard to underestimate the cost of mass-produced
+electronics.}
+
+On the other hand, if we have a machine that can execute only one process (or a
+few concurrent processes), we must consider the alternatives sequentially.  One
+could imagine modifying an evaluator to pick at random a branch to follow
+whenever it encounters a choice point.  Random choice, however, can easily lead
+to failing values.  We might try running the evaluator over and over, making
+random choices and hoping to find a non-failing value, but it is better to
+<tt> systematically search </tt> 
+ all possible execution paths.  The <tt> amb </tt>
+evaluator that we will develop and work with in this section implements a
+systematic search as follows: When the evaluator encounters an application of
+<tt> amb </tt>, it initially selects the first alternative.  This selection may
+itself lead to a further choice.  The evaluator will always initially choose
+the first alternative at each choice point.  If a choice results in a failure,
+then the evaluator automagically@footnote{Automagically: ``Automatically, but
+in a way which, for some reason (typically because it is too complicated, or
+too ugly, or perhaps even too trivial), the speaker doesn't feel like
+explaining.''  (Steele 1983, Raymond 1993)} <tt> backtracks </tt> 
+ to the most
+recent choice point and tries the next alternative.  If it runs out of
+alternatives at any choice point, the evaluator will back up to the previous
+choice point and resume from there.  This process leads to a search strategy
+known as <tt> depth-first search </tt> 
+ or <tt> chronological
+backtracking </tt> 
+.@footnote{[Footnote 4.47] The integration
+of automatic search strategies into programming languages has had a long and
+checkered history.  The first suggestions that nondeterministic algorithms
+might be elegantly encoded in a programming language with search and automatic
+backtracking came from Robert Floyd (1967).  Carl Hewitt (1969) invented a
+programming language called Planner that explicitly supported automatic
+chronological backtracking, providing for a built-in depth-first search
+strategy.  Sussman, Winograd, and Charniak (1971) implemented a subset of this
+language, called MicroPlanner, which was used to support work in problem
+solving and robot planning.  Similar ideas, arising from logic and theorem
+proving, led to the genesis in Edinburgh and Marseille of the elegant language
+Prolog (which we will discuss in section 4-4).  After sufficient
+frustration with automatic search, McDermott and Sussman (1972) developed a
+language called Conniver, which included mechanisms for placing the search
+strategy under programmer control.  This proved unwieldy, however, and Sussman
+and Stallman (1975) found a more tractable approach while investigating methods
+of symbolic analysis for electrical circuits.  They developed a
+non-chronological backtracking scheme that was based on tracing out the logical
+dependencies connecting facts, a technique that has come to be known as
+<tt> dependency-directed backtracking </tt> 
+.  Although their method was complex,
+it produced reasonably efficient programs because it did little redundant
+search.  Doyle (1979) and McAllester (1978, 1980) generalized and clarified the
+methods of Stallman and Sussman, developing a new paradigm for formulating
+search that is now called <tt> truth maintenance </tt> 
+.  Modern problem-solving
+systems all use some form of truth-maintenance system as a substrate.  See
+Forbus and deKleer 1993 for a discussion of elegant ways to build
+truth-maintenance systems and applications using truth maintenance.  Zabih,
+McAllester, and Chapman 1987 describes a nondeterministic extension to Scheme
+that is based on <tt> amb </tt>; it is similar to the interpreter described in this
+section, but more sophisticated, because it uses dependency-directed
+backtracking rather than chronological backtracking.  Winston 1992 gives an
+introduction to both kinds of backtracking.}
+
+<h4> Driver loop </h4> 
+
+The driver loop for the <tt> amb </tt> evaluator has some unusual properties.  It
+reads an expression and prints the value of the first non-failing execution, as
+in the <tt> prime-sum-pair </tt> example shown above.  If we want to see the value
+of the next successful execution, we can ask the interpreter to backtrack and
+attempt to generate a second non-failing execution.  This is signaled by typing
+the symbol <tt> try-again </tt>.  If any expression except <tt> try-again </tt> is
+given, the interpreter will start a new problem, discarding the unexplored
+alternatives in the previous problem.  Here is a sample interaction:
+
+<div id="">
+;;; Amb-Eval input:
+(prime-sum-pair '(1 3 5 8) '(20 35 110))
+;;; Starting a new problem
+;;; Amb-Eval value:
+(3 20)
+
+;;; Amb-Eval input:
+try-again
+;;; Amb-Eval value:
+(3 110)
+
+;;; Amb-Eval input:
+try-again
+;;; Amb-Eval value:
+(8 35)
+
+;;; Amb-Eval input:
+try-again
+;;; There are no more values of
+(prime-sum-pair (quote (1 3 5 8)) (quote (20 35 110)))
+
+;;; Amb-Eval input:
+(prime-sum-pair '(19 27 30) '(11 36 58))
+;;; Starting a new problem
+;;; Amb-Eval value:
+(30 11)
+</div>
+<script>
+prompt();
+</script>
+
+<div class="exercise">
+<b>Exercise 4.35:</b> Write a procedure
+<tt> an-integer-between </tt> that returns an integer between two given bounds.
+This can be used to implement a procedure that finds Pythagorean triples, i.e.,
+triples of integers (i,j,k) between the given bounds such that
+i <= j and i^2 + j^2 = k^2, as follows:
+
+<div id="">
+(define (a-pythagorean-triple-between low high)
+  (let ((i (an-integer-between low high)))
+    (let ((j (an-integer-between i high)))
+      (let ((k (an-integer-between j high)))
+        (require (= (+ (* i i) (* j j)) (* k k)))
+        (list i j k)))))
+</div>
+<script>
+prompt();
+</script>
+</div>
+
+<div class="exercise">
+<b>Exercise 4.36:</b> Exercise 3-69 discussed how
+to generate the stream of <em>all</em> Pythagorean triples, with no upper bound
+on the size of the integers to be searched.  Explain why simply replacing
+<tt> an-integer-between </tt> by <tt> an-integer-starting-from </tt> in the procedure
+in Exercise 4-35 is not an adequate way to generate arbitrary Pythagorean
+triples.  Write a procedure that actually will accomplish this.  (That is,
+write a procedure for which repeatedly typing <tt> try-again </tt> would in
+principle eventually generate all Pythagorean triples.)
+</div>
+
+<div class="exercise">
+<b>Exercise 4.37:</b> Ben Bitdiddle claims that the
+following method for generating Pythagorean triples is more efficient than the
+one in Exercise 4-35.  Is he correct?  (Hint: Consider the number of
+possibilities that must be explored.)
+
+<div id="">
+(define (a-pythagorean-triple-between low high)
+  (let ((i (an-integer-between low high))
+        (hsq (* high high)))
+    (let ((j (an-integer-between i high)))
+      (let ((ksq (+ (* i i) (* j j))))
+        (require (>= hsq ksq))
+        (let ((k (sqrt ksq)))
+          (require (integer? k))
+          (list i j k))))))
+</div>
+<script>
+prompt();
+</script>
+</div>
+
+<h3> Examples of Nondeterministic Programs </h3> 
+
+Section 4-3-3 describes the implementation of the <tt> amb </tt> evaluator.
+First, however, we give some examples of how it can be used.  The advantage of
+nondeterministic programming is that we can suppress the details of how search
+is carried out, thereby expressing our programs at a higher level of
+abstraction.
+
+<h4> Logic Puzzles </h4> 
+
+The following puzzle (taken from Dinesman 1968) is typical of a large class of
+simple logic puzzles:
+
+<div class="exercise">
+Baker, Cooper, Fletcher, Miller, and Smith live on different floors of an
+apartment house that contains only five floors.  Baker does not live on the top
+floor.  Cooper does not live on the bottom floor.  Fletcher does not live on
+either the top or the bottom floor.  Miller lives on a higher floor than does
+Cooper.  Smith does not live on a floor adjacent to Fletcher's.  Fletcher does
+not live on a floor adjacent to Cooper's.  Where does everyone live?
+</div>
+
+We can determine who lives on each floor in a straightforward way by
+enumerating all the possibilities and imposing the given
+restrictions:@footnote{Our program uses the following procedure to determine if
+the elements of a list are distinct:
+
+<div id="">
+(define (distinct? items)
+  (cond ((null? items) true)
+        ((null? (cdr items)) true)
+        ((member (car items) (cdr items)) false)
+        (else (distinct? (cdr items)))))
+</div>
+<script>
+prompt();
+</script>
+
+<tt> Member </tt> is like <tt> memq </tt> except that it uses <tt> equal? </tt> instead
+of <tt> eq? </tt> to test for equality.}
+
+<div id="">
+(define (multiple-dwelling)
+  (let ((baker (amb 1 2 3 4 5))
+        (cooper (amb 1 2 3 4 5))
+        (fletcher (amb 1 2 3 4 5))
+        (miller (amb 1 2 3 4 5))
+        (smith (amb 1 2 3 4 5)))
+    (require
+     (distinct? (list baker cooper fletcher miller smith)))
+    (require (not (= baker 5)))
+    (require (not (= cooper 1)))
+    (require (not (= fletcher 5)))
+    (require (not (= fletcher 1)))
+    (require (> miller cooper))
+    (require (not (= (abs (- smith fletcher)) 1)))
+    (require (not (= (abs (- fletcher cooper)) 1)))
+    (list (list 'baker baker)
+          (list 'cooper cooper)
+          (list 'fletcher fletcher)
+          (list 'miller miller)
+          (list 'smith smith))))
+</div>
+<script>
+prompt();
+</script>
+
+Evaluating the expression <tt> (multiple-dwelling) </tt> produces the result
+
+<div id="">
+((baker 3) (cooper 2) (fletcher 4) (miller 5) (smith 1))
+</div>
+<script>
+prompt();
+</script>
+
+Although this simple procedure works, it is very slow.  Exercise 4-39 and
+Exercise 4-40 discuss some possible improvements.
+
+<div class="exercise">
+<b>Exercise 4.38:</b> Modify the multiple-dwelling
+procedure to omit the requirement that Smith and Fletcher do not live on
+adjacent floors.  How many solutions are there to this modified puzzle?
+</div>
+
+<div class="exercise">
+<b>Exercise 4.39:</b> Does the order of the
+restrictions in the multiple-dwelling procedure affect the answer? Does it
+affect the time to find an answer?  If you think it matters, demonstrate a
+faster program obtained from the given one by reordering the restrictions.  If
+you think it does not matter, argue your case.
+</div>
+
+<div class="exercise">
+<b>Exercise 4.40:</b> In the multiple dwelling problem,
+how many sets of assignments are there of people to floors, both before and
+after the requirement that floor assignments be distinct?  It is very
+inefficient to generate all possible assignments of people to floors and then
+leave it to backtracking to eliminate them.  For example, most of the
+restrictions depend on only one or two of the person-floor variables, and can
+thus be imposed before floors have been selected for all the people.  Write and
+demonstrate a much more efficient nondeterministic procedure that solves this
+problem based upon generating only those possibilities that are not already
+ruled out by previous restrictions.  (Hint: This will require a nest of
+<tt> let </tt> expressions.)
+</div>
+
+<div class="exercise">
+<b>Exercise 4.41:</b> Write an ordinary Scheme program
+to solve the multiple dwelling puzzle.
+</div>
+
+<div class="exercise">
+<b>Exercise 4.42:</b> Solve the following ``Liars''
+puzzle (from Phillips 1934):
+
+Five schoolgirls sat for an examination.  Their parents---so they
+thought---showed an undue degree of interest in the result.  They therefore
+agreed that, in writing home about the examination, each girl should make one
+true statement and one untrue one.  The following are the relevant passages
+from their letters:
+
+<ul>
+
+@item
+Betty: ``Kitty was second in the examination.  I was only third.''
+
+@item
+Ethel: ``You'll be glad to hear that I was on top.  Joan was second.''
+
+@item
+Joan: ``I was third, and poor old Ethel was bottom.''
+
+@item
+Kitty: ``I came out second.  Mary was only fourth.''
+
+@item
+Mary: ``I was fourth.  Top place was taken by Betty.''
+
+</ul>
+
+What in fact was the order in which the five girls were placed?
+</div>
+
+<div class="exercise">
+<b>Exercise 4.43:</b> Use the <tt> amb </tt> evaluator to
+solve the following puzzle:@footnote{This is taken from a booklet called
+``Problematical Recreations,'' published in the 1960s by Litton Industries,
+where it is attributed to the @cite{Kansas State Engineer}.}
+
+<div class="exercise">
+Mary Ann Moore's father has a yacht and so has each of his four friends:
+Colonel Downing, Mr. Hall, Sir Barnacle Hood, and Dr.  Parker.  Each of the
+five also has one daughter and each has named his yacht after a daughter of one
+of the others.  Sir Barnacle's yacht is the Gabrielle, Mr. Moore owns the
+Lorna; Mr. Hall the Rosalind.  The Melissa, owned by Colonel Downing, is named
+after Sir Barnacle's daughter.  Gabrielle's father owns the yacht that is named
+after Dr.  Parker's daughter.  Who is Lorna's father?
+</div>
+
+Try to write the program so that it runs efficiently (see Exercise 4-40).
+Also determine how many solutions there are if we are not told that Mary Ann's
+last name is Moore.
+</div>
+
+<div class="exercise">
+<b>Exercise 4.44:</b> Exercise 2-42 described the
+``eight-queens puzzle'' of placing queens on a chessboard so that no two attack
+each other.  Write a nondeterministic program to solve this puzzle.
+</div>
+
+<h4> Parsing natural language </h4> 
+
+Programs designed to accept natural language as input usually start by
+attempting to <tt> parse </tt> 
+ the input, that is, to match the input against
+some grammatical structure.  For example, we might try to recognize simple
+sentences consisting of an article followed by a noun followed by a verb, such
+as ``The cat eats.''  To accomplish such an analysis, we must be able to
+identify the parts of speech of individual words.  We could start with some
+lists that classify various words:@footnote{Here we use the convention that the
+first element of each list designates the part of speech for the rest of the
+words in the list.}
+
+<div id="">
+(define nouns '(noun student professor cat class))
+
+(define verbs '(verb studies lectures eats sleeps))
+
+(define articles '(article the a))
+</div>
+<script>
+prompt();
+</script>
+
+We also need a <tt> grammar </tt> 
+, that is, a set of rules describing how
+grammatical elements are composed from simpler elements.  A very simple grammar
+might stipulate that a sentence always consists of two pieces---a noun phrase
+followed by a verb---and that a noun phrase consists of an article followed by
+a noun.  With this grammar, the sentence ``The cat eats'' is parsed as follows:
+
+<div id="">
+(sentence (noun-phrase (article the) (noun cat))
+          (verb eats))
+</div>
+<script>
+prompt();
+</script>
+
+We can generate such a parse with a simple program that has separate procedures
+for each of the grammatical rules.  To parse a sentence, we identify its two
+constituent pieces and return a list of these two elements, tagged with the
+symbol <tt> sentence </tt>:
+
+<div id="">
+(define (parse-sentence)
+  (list 'sentence
+         (parse-noun-phrase)
+         (parse-word verbs)))
+</div>
+<script>
+prompt();
+</script>
+
+A noun phrase, similarly, is parsed by finding an article followed by a
+noun:
+
+<div id="">
+(define (parse-noun-phrase)
+  (list 'noun-phrase
+        (parse-word articles)
+        (parse-word nouns)))
+</div>
+<script>
+prompt();
+</script>
+
+At the lowest level, parsing boils down to repeatedly checking that the next
+unparsed word is a member of the list of words for the required part of speech.
+To implement this, we maintain a global variable <tt> *unparsed* </tt>, which is
+the input that has not yet been parsed.  Each time we check a word, we require
+that <tt> *unparsed* </tt> must be non-empty and that it should begin with a word
+from the designated list.  If so, we remove that word from <tt> *unparsed* </tt>
+and return the word together with its part of speech (which is found at the
+head of the list):@footnote{Notice that <tt> parse-word </tt> uses <tt> set! </tt> to
+modify the unparsed input list.  For this to work, our <tt> amb </tt> evaluator
+must undo the effects of <tt> set! </tt> operations when it backtracks.}
+
+<div id="">
+(define (parse-word word-list)
+  (require (not (null? *unparsed*)))
+  (require (memq (car *unparsed*) (cdr word-list)))
+  (let ((found-word (car *unparsed*)))
+    (set! *unparsed* (cdr *unparsed*))
+    (list (car word-list) found-word)))
+</div>
+<script>
+prompt();
+</script>
+
+To start the parsing, all we need to do is set <tt> *unparsed* </tt> to be the
+entire input, try to parse a sentence, and check that nothing is left over:
+
+<div id="">
+(define *unparsed* '())
+
+(define (parse input)
+  (set! *unparsed* input)
+  (let ((sent (parse-sentence)))
+    (require (null? *unparsed*))
+    sent))
+</div>
+<script>
+prompt();
+</script>
+
+We can now try the parser and verify that it works for our simple test
+sentence:
+
+<div id="">
+;;; Amb-Eval input:
+(parse '(the cat eats))
+;;; Starting a new problem
+;;; Amb-Eval value:
+(sentence (noun-phrase (article the) (noun cat)) (verb eats))
+</div>
+<script>
+prompt();
+</script>
+
+The <tt> amb </tt> evaluator is useful here because it is convenient to express the
+parsing constraints with the aid of <tt> require </tt>.  Automatic search and
+backtracking really pay off, however, when we consider more complex grammars
+where there are choices for how the units can be decomposed.
+
+Let's add to our grammar a list of prepositions:
+
+<div id="">
+(define prepositions '(prep for to in by with))
+</div>
+<script>
+prompt();
+</script>
+
+
+and define a prepositional phrase (e.g., ``for the cat'') to be a preposition
+followed by a noun phrase:
+
+<div id="">
+(define (parse-prepositional-phrase)
+  (list 'prep-phrase
+        (parse-word prepositions)
+        (parse-noun-phrase)))
+</div>
+<script>
+prompt();
+</script>
+
+Now we can define a sentence to be a noun phrase followed by a verb phrase,
+where a verb phrase can be either a verb or a verb phrase extended by a
+prepositional phrase:@footnote{Observe that this definition is recursive---a
+verb may be followed by any number of prepositional phrases.}
+
+<div id="">
+(define (parse-sentence)
+  (list 'sentence
+         (parse-noun-phrase)
+         (parse-verb-phrase)))
+
+(define (parse-verb-phrase)
+  (define (maybe-extend verb-phrase)
+    (amb verb-phrase
+         (maybe-extend (list 'verb-phrase
+                             verb-phrase
+                             (parse-prepositional-phrase)))))
+  (maybe-extend (parse-word verbs)))
+</div>
+<script>
+prompt();
+</script>
+
+While we're at it, we can also elaborate the definition of noun phrases to
+permit such things as ``a cat in the class.''  What we used to call a noun
+phrase, we'll now call a simple noun phrase, and a noun phrase will now be
+either a simple noun phrase or a noun phrase extended by a prepositional
+phrase:
+
+<div id="">
+(define (parse-simple-noun-phrase)
+  (list 'simple-noun-phrase
+        (parse-word articles)
+        (parse-word nouns)))
+
+(define (parse-noun-phrase)
+  (define (maybe-extend noun-phrase)
+    (amb noun-phrase
+         (maybe-extend (list 'noun-phrase
+                             noun-phrase
+                             (parse-prepositional-phrase)))))
+  (maybe-extend (parse-simple-noun-phrase)))
+</div>
+<script>
+prompt();
+</script>
+
+Our new grammar lets us parse more complex sentences.  For example
+
+<div id="">
+(parse '(the student with the cat sleeps in the class))
+</div>
+<script>
+prompt();
+</script>
+
+
+produces
+
+<div id="">
+(sentence
+ (noun-phrase
+  (simple-noun-phrase (article the) (noun student))
+  (prep-phrase (prep with)
+               (simple-noun-phrase
+                (article the) (noun cat))))
+ (verb-phrase
+  (verb sleeps)
+  (prep-phrase (prep in)
+               (simple-noun-phrase
+                (article the) (noun class)))))
+</div>
+<script>
+prompt();
+</script>
+
+Observe that a given input may have more than one legal parse.  In the sentence
+``The professor lectures to the student with the cat,'' it may be that the
+professor is lecturing with the cat, or that the student has the cat.  Our
+nondeterministic program finds both possibilities:
+
+<div id="">
+(parse '(the professor lectures to the student with the cat))
+</div>
+<script>
+prompt();
+</script>
+
+
+produces
+
+<div id="">
+(sentence
+ (simple-noun-phrase (article the) (noun professor))
+ (verb-phrase
+  (verb-phrase
+   (verb lectures)
+   (prep-phrase (prep to)
+                (simple-noun-phrase
+                 (article the) (noun student))))
+  (prep-phrase (prep with)
+               (simple-noun-phrase
+                (article the) (noun cat)))))
+</div>
+<script>
+prompt();
+</script>
+
+Asking the evaluator to try again yields
+
+<div id="">
+(sentence
+ (simple-noun-phrase (article the) (noun professor))
+ (verb-phrase
+  (verb lectures)
+  (prep-phrase (prep to)
+               (noun-phrase
+                (simple-noun-phrase
+                 (article the) (noun student))
+                (prep-phrase (prep with)
+                             (simple-noun-phrase
+                              (article the) (noun cat)))))))
+</div>
+<script>
+prompt();
+</script>
+
+<div class="exercise">
+<b>Exercise 4.45:</b> With the grammar given above, the
+following sentence can be parsed in five different ways: ``The professor
+lectures to the student in the class with the cat.''  Give the five parses and
+explain the differences in shades of meaning among them.
+</div>
+
+<div class="exercise">
+<b>Exercise 4.46:</b> The evaluators in sections
+4-1 and 4-2 do not determine what order operands are evaluated in.
+We will see that the <tt> amb </tt> evaluator evaluates them from left to right.
+Explain why our parsing program wouldn't work if the operands were evaluated in
+some other order.
+</div>
+
+<div class="exercise">
+<b>Exercise 4.47:</b> Louis Reasoner suggests that,
+since a verb phrase is either a verb or a verb phrase followed by a
+prepositional phrase, it would be much more straightforward to define the
+procedure <tt> parse-verb-phrase </tt> as follows (and similarly for noun phrases):
+
+<div id="">
+(define (parse-verb-phrase)
+  (amb (parse-word verbs)
+       (list 'verb-phrase
+             (parse-verb-phrase)
+             (parse-prepositional-phrase))))
+</div>
+<script>
+prompt();
+</script>
+
+Does this work?  Does the program's behavior change if we interchange the order
+of expressions in the <tt> amb </tt>
+</div>
+
+<div class="exercise">
+<b>Exercise 4.48:</b> Extend the grammar given above to
+handle more complex sentences.  For example, you could extend noun phrases and
+verb phrases to include adjectives and adverbs, or you could handle compound
+sentences.@footnote{This kind of grammar can become arbitrarily complex, but it
+is only a toy as far as real language understanding is concerned.  Real
+natural-language understanding by computer requires an elaborate mixture of
+syntactic analysis and interpretation of meaning.  On the other hand, even toy
+parsers can be useful in supporting flexible command languages for programs
+such as information-retrieval systems.  Winston 1992 discusses computational
+approaches to real language understanding and also the applications of simple
+grammars to command languages.}
+</div>
+
+<div class="exercise">
+<b>Exercise 4.49:</b> Alyssa P. Hacker is more
+interested in generating interesting sentences than in parsing them.  She
+reasons that by simply changing the procedure <tt> parse-word </tt> so that it
+ignores the ``input sentence'' and instead always succeeds and generates an
+appropriate word, we can use the programs we had built for parsing to do
+generation instead.  Implement Alyssa's idea, and show the first half-dozen or
+so sentences generated.@footnote{Although Alyssa's idea works just fine (and is
+surprisingly simple), the sentences that it generates are a bit boring---they
+don't sample the possible sentences of this language in a very interesting way.
+In fact, the grammar is highly recursive in many places, and Alyssa's technique
+``falls into'' one of these recursions and gets stuck.  See Exercise 4-50
+for a way to deal with this.}
+</div>
+
+<h3> Implementing the <tt> Amb </tt> Evaluator </h3> 
+
+The evaluation of an ordinary Scheme expression may return a value, may never
+terminate, or may signal an error.  In nondeterministic Scheme the evaluation
+of an expression may in addition result in the discovery of a dead end, in
+which case evaluation must backtrack to a previous choice point.  The
+interpretation of nondeterministic Scheme is complicated by this extra case.
+
+We will construct the <tt> amb </tt> evaluator for nondeterministic Scheme by
+modifying the analyzing evaluator of section 4-1-7.@footnote{We chose to
+implement the lazy evaluator in section 4-2 as a modification of the
+ordinary metacircular evaluator of section 4-1-1.  In contrast, we will
+base the <tt> amb </tt> evaluator on the analyzing evaluator of section
+4-1-7, because the execution procedures in that evaluator provide a
+convenient framework for implementing backtracking.}  As in the analyzing
+evaluator, evaluation of an expression is accomplished by calling an execution
+procedure produced by analysis of that expression.  The difference between the
+interpretation of ordinary Scheme and the interpretation of nondeterministic
+Scheme will be entirely in the execution procedures.
+
+<h4> Execution procedures and continuations </h4> 
+
+Recall that the execution procedures for the ordinary evaluator take one
+argument: the environment of execution.  In contrast, the execution procedures
+in the <tt> amb </tt> evaluator take three arguments: the environment, and two
+procedures called <tt> continuation procedures </tt> 
+.  The evaluation of an
+expression will finish by calling one of these two continuations: If the
+evaluation results in a value, the <tt> success continuation </tt> 
+ is called
+with that value; if the evaluation results in the discovery of a dead end, the
+<tt> failure continuation </tt> 
+ is called.  Constructing and calling appropriate
+continuations is the mechanism by which the nondeterministic evaluator
+implements backtracking.
+
+It is the job of the success continuation to receive a value and proceed with
+the computation.  Along with that value, the success continuation is passed
+another failure continuation, which is to be called subsequently if the use of
+that value leads to a dead end.
+
+It is the job of the failure continuation to try another branch of the
+nondeterministic process.  The essence of the nondeterministic language is in
+the fact that expressions may represent choices among alternatives.  The
+evaluation of such an expression must proceed with one of the indicated
+alternative choices, even though it is not known in advance which choices will
+lead to acceptable results.  To deal with this, the evaluator picks one of the
+alternatives and passes this value to the success continuation.  Together with
+this value, the evaluator constructs and passes along a failure continuation
+that can be called later to choose a different alternative.
+
+A failure is triggered during evaluation (that is, a failure continuation is
+called) when a user program explicitly rejects the current line of attack (for
+example, a call to <tt> require </tt> may result in execution of <tt> (amb) </tt>, an
+expression that always fails---see section 4-3-1).  The failure
+continuation in hand at that point will cause the most recent choice point to
+choose another alternative.  If there are no more alternatives to be considered
+at that choice point, a failure at an earlier choice point is triggered, and so
+on.  Failure continuations are also invoked by the driver loop in response to a
+<tt> try-again </tt> request, to find another value of the expression.
+
+In addition, if a side-effect operation (such as assignment to a variable)
+occurs on a branch of the process resulting from a choice, it may be necessary,
+when the process finds a dead end, to undo the side effect before making a new
+choice.  This is accomplished by having the side-effect operation produce a
+failure continuation that undoes the side effect and propagates the failure.
+
+In summary, failure continuations are constructed by
+
+<ul>
+
+@item
+<tt> amb </tt> expressions---to provide a mechanism to make alternative choices if
+the current choice made by the <tt> amb </tt> expression leads to a dead end;
+
+@item
+the top-level driver---to provide a mechanism to report failure when the
+choices are exhausted;
+
+@item
+assignments---to intercept failures and undo assignments during backtracking.
+
+</ul>
+
+Failures are initiated only when a dead end is encountered.  This occurs
+
+<ul>
+
+@item
+if the user program executes <tt> (amb) </tt>;
+
+@item
+if the user types <tt> try-again </tt> at the top-level driver.
+
+</ul>
+
+Failure continuations are also called during processing of a failure:
+
+<ul>
+
+@item
+When the failure continuation created by an assignment finishes undoing a side
+effect, it calls the failure continuation it intercepted, in order to propagate
+the failure back to the choice point that led to this assignment or to the top
+level.
+
+@item
+When the failure continuation for an <tt> amb </tt> runs out of choices, it calls
+the failure continuation that was originally given to the <tt> amb </tt>, in order
+to propagate the failure back to the previous choice point or to the top level.
+
+</ul>
+
+<h4> Structure of the evaluator </h4> 
+
+The syntax- and data-representation procedures for the <tt> amb </tt> evaluator,
+and also the basic <tt> analyze </tt> procedure, are identical to those in the
+evaluator of section 4-1-7, except for the fact that we need additional
+syntax procedures to recognize the <tt> amb </tt> special form:@footnote{We assume
+that the evaluator supports <tt> let </tt> (see Exercise 4-22), which we have
+used in our nondeterministic programs.}
+
+<div id="">
+(define (amb? exp) (tagged-list? exp 'amb))
+
+(define (amb-choices exp) (cdr exp))
+</div>
+<script>
+prompt();
+</script>
+
+We must also add to the dispatch in <tt> analyze </tt> a clause that will recognize
+this special form and generate an appropriate execution procedure:
+
+<div id="">
+((amb? exp) (analyze-amb exp))
+</div>
+<script>
+prompt();
+</script>
+
+The top-level procedure <tt> ambeval </tt> (similar to the version of <tt> eval </tt>
+given in section 4-1-7) analyzes the given expression and applies the
+resulting execution procedure to the given environment, together with two given
+continuations:
+
+<div id="">
+(define (ambeval exp env succeed fail)
+  ((analyze exp) env succeed fail))
+</div>
+<script>
+prompt();
+</script>
+
+A success continuation is a procedure of two arguments: the value just obtained
+and another failure continuation to be used if that value leads to a subsequent
+failure. A failure continuation is a procedure of no arguments.  So the general
+form of an execution procedure is
+
+<div id="">
+(lambda (env succeed fail)
+  ;; <tt> succeed </tt> is <tt> (lambda (value fail) ...) </tt>
+  ;; <tt> fail </tt> is <tt> (lambda () ...) </tt>
+  ...)
+</div>
+<script>
+prompt();
+</script>
+
+For example, executing
+
+<div id="">
+(ambeval <exp>
+         the-global-environment
+         (lambda (value fail) value)
+         (lambda () 'failed))
+</div>
+<script>
+prompt();
+</script>
+
+
+will attempt to evaluate the given expression and will return either the
+expression's value (if the evaluation succeeds) or the symbol <tt> failed </tt> (if
+the evaluation fails).  The call to <tt> ambeval </tt> in the driver loop shown
+below uses much more complicated continuation procedures, which continue the
+loop and support the <tt> try-again </tt> request.
+
+Most of the complexity of the <tt> amb </tt> evaluator results from the mechanics
+of passing the continuations around as the execution procedures call each
+other.  In going through the following code, you should compare each of the
+execution procedures with the corresponding procedure for the ordinary
+evaluator given in section 4-1-7.
+
+<h4> Simple expressions </h4> 
+
+The execution procedures for the simplest kinds of expressions are essentially
+the same as those for the ordinary evaluator, except for the need to manage the
+continuations.  The execution procedures simply succeed with the value of the
+expression, passing along the failure continuation that was passed to them.
+
+<div id="">
+(define (analyze-self-evaluating exp)
+  (lambda (env succeed fail)
+    (succeed exp fail)))
+
+(define (analyze-quoted exp)
+  (let ((qval (text-of-quotation exp)))
+    (lambda (env succeed fail)
+      (succeed qval fail))))
+
+(define (analyze-variable exp)
+  (lambda (env succeed fail)
+    (succeed (lookup-variable-value exp env)
+             fail)))
+
+(define (analyze-lambda exp)
+  (let ((vars (lambda-parameters exp))
+        (bproc (analyze-sequence (lambda-body exp))))
+    (lambda (env succeed fail)
+      (succeed (make-procedure vars bproc env)
+               fail))))
+</div>
+<script>
+prompt();
+</script>
+
+Notice that looking up a variable always ``succeeds.''  If
+<tt> lookup-variable-value </tt> fails to find the variable, it signals an error,
+as usual.  Such a ``failure'' indicates a program bug---a reference to an
+unbound variable; it is not an indication that we should try another
+nondeterministic choice instead of the one that is currently being tried.
+
+<h4> Conditionals and sequences </h4> 
+
+Conditionals are also handled in a similar way as in the ordinary evaluator.
+The execution procedure generated by <tt> analyze-if </tt> invokes the predicate
+execution procedure <tt> pproc </tt> with a success continuation that checks
+whether the predicate value is true and goes on to execute either the
+consequent or the alternative.  If the execution of <tt> pproc </tt> fails, the
+original failure continuation for the <tt> if </tt> expression is called.
+
+<div id="">
+(define (analyze-if exp)
+  (let ((pproc (analyze (if-predicate exp)))
+        (cproc (analyze (if-consequent exp)))
+        (aproc (analyze (if-alternative exp))))
+    (lambda (env succeed fail)
+      (pproc env
+             ;; success continuation for evaluating the predicate
+             ;; to obtain <tt> pred-value </tt>
+             (lambda (pred-value fail2)
+               (if (true? pred-value)
+                   (cproc env succeed fail2)
+                   (aproc env succeed fail2)))
+             ;; failure continuation for evaluating the predicate
+             fail))))
+</div>
+<script>
+prompt();
+</script>
+
+Sequences are also handled in the same way as in the previous evaluator, except
+for the machinations in the subprocedure <tt> sequentially </tt> that are required
+for passing the continuations.  Namely, to sequentially execute <tt> a </tt> and
+then <tt> b </tt>, we call <tt> a </tt> with a success continuation that calls
+<tt> b </tt>.
+
+<div id="">
+(define (analyze-sequence exps)
+  (define (sequentially a b)
+    (lambda (env succeed fail)
+      (a env
+         ;; success continuation for calling <tt> a </tt>
+         (lambda (a-value fail2)
+           (b env succeed fail2))
+         ;; failure continuation for calling <tt> a </tt>
+         fail)))
+  (define (loop first-proc rest-procs)
+    (if (null? rest-procs)
+        first-proc
+        (loop (sequentially first-proc (car rest-procs))
+              (cdr rest-procs))))
+  (let ((procs (map analyze exps)))
+    (if (null? procs)
+        (error "Empty sequence -- ANALYZE"))
+    (loop (car procs) (cdr procs))))
+</div>
+<script>
+prompt();
+</script>
+
+<h4> Definitions and assignments </h4> 
+
+Definitions are another case where we must go to some trouble to manage the
+continuations, because it is necessary to evaluate the definition-value
+expression before actually defining the new variable.  To accomplish this, the
+definition-value execution procedure <tt> vproc </tt> is called with the
+environment, a success continuation, and the failure continuation.  If the
+execution of <tt> vproc </tt> succeeds, obtaining a value <tt> val </tt> for the
+defined variable, the variable is defined and the success is propagated:
+
+<div id="">
+(define (analyze-definition exp)
+  (let ((var (definition-variable exp))
+        (vproc (analyze (definition-value exp))))
+    (lambda (env succeed fail)
+      (vproc env
+             (lambda (val fail2)
+               (define-variable! var val env)
+               (succeed 'ok fail2))
+             fail))))
+</div>
+<script>
+prompt();
+</script>
+
+Assignments are more interesting.  This is the first place where we really use
+the continuations, rather than just passing them around.  The execution
+procedure for assignments starts out like the one for definitions.  It first
+attempts to obtain the new value to be assigned to the variable. If this
+evaluation of <tt> vproc </tt> fails, the assignment fails.
+
+If <tt> vproc </tt> succeeds, however, and we go on to make the assignment, we must
+consider the possibility that this branch of the computation might later fail,
+which will require us to backtrack out of the assignment.  Thus, we must
+arrange to undo the assignment as part of the backtracking process.@footnote{We
+didn't worry about undoing definitions, since we can assume that internal
+definitions are scanned out (section 4-1-6).}
+
+This is accomplished by giving <tt> vproc </tt> a success continuation (marked with
+the comment ``*1*'' below) that saves the old value of the variable before
+assigning the new value to the variable and proceeding from the assignment.
+The failure continuation that is passed along with the value of the assignment
+(marked with the comment ``*2*'' below) restores the old value of the variable
+before continuing the failure.  That is, a successful assignment provides a
+failure continuation that will intercept a subsequent failure; whatever failure
+would otherwise have called <tt> fail2 </tt> calls this procedure instead, to undo
+the assignment before actually calling <tt> fail2 </tt>.
+
+<div id="">
+(define (analyze-assignment exp)
+  (let ((var (assignment-variable exp))
+        (vproc (analyze (assignment-value exp))))
+    (lambda (env succeed fail)
+      (vproc env
+             (lambda (val fail2)        ; *1*
+               (let ((old-value
+                      (lookup-variable-value var env)))
+                 (set-variable-value! var val env)
+                 (succeed 'ok
+                          (lambda ()    ; *2*
+                            (set-variable-value! var
+                                                 old-value
+                                                 env)
+                            (fail2)))))
+             fail))))
+</div>
+<script>
+prompt();
+</script>
+
+<h4> Procedure applications </h4> 
+
+The execution procedure for applications contains no new ideas except for the
+technical complexity of managing the continuations.  This complexity arises in
+<tt> analyze-application </tt>, due to the need to keep track of the success and
+failure continuations as we evaluate the operands.  We use a procedure
+<tt> get-args </tt> to evaluate the list of operands, rather than a simple
+<tt> map </tt> as in the ordinary evaluator.
+
+<div id="">
+(define (analyze-application exp)
+  (let ((fproc (analyze (operator exp)))
+        (aprocs (map analyze (operands exp))))
+    (lambda (env succeed fail)
+      (fproc env
+             (lambda (proc fail2)
+               (get-args aprocs
+                         env
+                         (lambda (args fail3)
+                           (execute-application
+                            proc args succeed fail3))
+                         fail2))
+             fail))))
+</div>
+<script>
+prompt();
+</script>
+
+In <tt> get-args </tt>, notice how <tt> cdr </tt>ing down the list of <tt> aproc </tt>
+execution procedures and <tt> cons </tt>ing up the resulting list of <tt> args </tt> is
+accomplished by calling each <tt> aproc </tt> in the list with a success
+continuation that recursively calls <tt> get-args </tt>.  Each of these recursive
+calls to <tt> get-args </tt> has a success continuation whose value is the
+<tt> cons </tt> of the newly obtained argument onto the list of accumulated
+arguments:
+
+<div id="">
+(define (get-args aprocs env succeed fail)
+  (if (null? aprocs)
+      (succeed '() fail)
+      ((car aprocs) env
+                    ;; success continuation for this <tt> aproc </tt>
+                    (lambda (arg fail2)
+                      (get-args (cdr aprocs)
+                                env
+                                ;; success continuation for recursive
+                                ;; call to <tt> get-args </tt>
+                                (lambda (args fail3)
+                                  (succeed (cons arg args)
+                                           fail3))
+                                fail2))
+                    fail)))
+</div>
+<script>
+prompt();
+</script>
+
+The actual procedure application, which is performed by
+<tt> execute-application </tt>, is accomplished in the same way as for the ordinary
+evaluator, except for the need to manage the continuations.
+
+<div id="">
+(define (execute-application proc args succeed fail)
+  (cond ((primitive-procedure? proc)
+         (succeed (apply-primitive-procedure proc args)
+                  fail))
+        ((compound-procedure? proc)
+         ((procedure-body proc)
+          (extend-environment (procedure-parameters proc)
+                              args
+                              (procedure-environment proc))
+          succeed
+          fail))
+        (else
+         (error
+          "Unknown procedure type -- EXECUTE-APPLICATION"
+          proc))))
+</div>
+<script>
+prompt();
+</script>
+
+<h4> Evaluating <tt> amb </tt> expressions </h4> 
+
+The <tt> amb </tt> special form is the key element in the nondeterministic
+language.  Here we see the essence of the interpretation process and the reason
+for keeping track of the continuations.  The execution procedure for <tt> amb </tt>
+defines a loop <tt> try-next </tt> that cycles through the execution procedures for
+all the possible values of the <tt> amb </tt> expression.  Each execution procedure
+is called with a failure continuation that will try the next one.  When there
+are no more alternatives to try, the entire <tt> amb </tt> expression fails.
+
+<div id="">
+(define (analyze-amb exp)
+  (let ((cprocs (map analyze (amb-choices exp))))
+    (lambda (env succeed fail)
+      (define (try-next choices)
+        (if (null? choices)
+            (fail)
+            ((car choices) env
+                           succeed
+                           (lambda ()
+                             (try-next (cdr choices))))))
+      (try-next cprocs))))
+</div>
+<script>
+prompt();
+</script>
+
+<h4> Driver loop </h4> 
+
+The driver loop for the <tt> amb </tt> evaluator is complex, due to the mechanism
+that permits the user to try again in evaluating an expression.  The driver
+uses a procedure called <tt> internal-loop </tt>, which takes as argument a
+procedure <tt> try-again </tt>.  The intent is that calling <tt> try-again </tt> should
+go on to the next untried alternative in the nondeterministic evaluation.
+<tt> Internal-loop </tt> either calls <tt> try-again </tt> in response to the user
+typing <tt> try-again </tt> at the driver loop, or else starts a new evaluation by
+calling <tt> ambeval </tt>.
+
+The failure continuation for this call to <tt> ambeval </tt> informs the user that
+there are no more values and re-invokes the driver loop.
+
+The success continuation for the call to <tt> ambeval </tt> is more subtle.  We
+print the obtained value and then invoke the internal loop again with a
+<tt> try-again </tt> procedure that will be able to try the next alternative.  This
+<tt> next-alternative </tt> procedure is the second argument that was passed to the
+success continuation.  Ordinarily, we think of this second argument as a
+failure continuation to be used if the current evaluation branch later fails.
+In this case, however, we have completed a successful evaluation, so we can
+invoke the ``failure'' alternative branch in order to search for additional
+successful evaluations.
+
+<div id="">
+(define input-prompt ";;; Amb-Eval input:")
+(define output-prompt ";;; Amb-Eval value:")
+
+(define (driver-loop)
+  (define (internal-loop try-again)
+    (prompt-for-input input-prompt)
+    (let ((input (read)))
+      (if (eq? input 'try-again)
+          (try-again)
+          (begin
+            (newline)
+            (display ";;; Starting a new problem ")
+            (ambeval input
+                     the-global-environment
+                     ;; <tt> ambeval </tt> success
+                     (lambda (val next-alternative)
+                       (announce-output output-prompt)
+                       (user-print val)
+                       (internal-loop next-alternative))
+                     ;; <tt> ambeval </tt> failure
+                     (lambda ()
+                       (announce-output
+                        ";;; There are no more values of")
+                       (user-print input)
+                       (driver-loop)))))))
+  (internal-loop
+   (lambda ()
+     (newline)
+     (display ";;; There is no current problem")
+     (driver-loop))))
+</div>
+<script>
+prompt();
+</script>
+
+The initial call to <tt> internal-loop </tt> uses a <tt> try-again </tt> procedure that
+complains that there is no current problem and restarts the driver loop.  This
+is the behavior that will happen if the user types <tt> try-again </tt> when there
+is no evaluation in progress.
+
+<div class="exercise">
+<b>Exercise 4.50:</b> Implement a new special form
+<tt> ramb </tt> that is like <tt> amb </tt> except that it searches alternatives in a
+random order, rather than from left to right.  Show how this can help with
+Alyssa's problem in Exercise 4-49.
+</div>
+
+<div class="exercise">
+<b>Exercise 4.51:</b> Implement a new kind of
+assignment called <tt> permanent-set! </tt> that is not undone upon failure.  For
+example, we can choose two distinct elements from a list and count the number
+of trials required to make a successful choice as follows:
+
+<div id="">
+(define count 0)
+
+(let ((x (an-element-of '(a b c)))
+      (y (an-element-of '(a b c))))
+  (permanent-set! count (+ count 1))
+  (require (not (eq? x y)))
+  (list x y count))
+;;; Starting a new problem
+;;; Amb-Eval value:
+(a b 2)
+
+;;; Amb-Eval input:
+try-again
+;;; Amb-Eval value:
+(a c 3)
+</div>
+<script>
+prompt();
+</script>
+
+What values would have been displayed if we had used <tt> set! </tt> here
+rather than <tt> permanent-set! </tt> ?
+</div>
+
+<div class="exercise">
+<b>Exercise 4.52:</b> Implement a new construct called
+<tt> if-fail </tt> that permits the user to catch the failure of an expression.
+<tt> If-fail </tt> takes two expressions.  It evaluates the first expression as
+usual and returns as usual if the evaluation succeeds.  If the evaluation
+fails, however, the value of the second expression is returned, as in the
+following example:
+
+<div id="">
+;;; Amb-Eval input:
+(if-fail (let ((x (an-element-of '(1 3 5))))
+           (require (even? x))
+           x)
+         'all-odd)
+;;; Starting a new problem
+;;; Amb-Eval value:
+all-odd
+
+;;; Amb-Eval input:
+(if-fail (let ((x (an-element-of '(1 3 5 8))))
+           (require (even? x))
+           x)
+         'all-odd)
+;;; Starting a new problem
+;;; Amb-Eval value:
+8
+</div>
+<script>
+prompt();
+</script>
+</div>
+
+<div class="exercise">
+<b>Exercise 4.53:</b> With <tt> permanent-set! </tt> as
+described in Exercise 4-51 and <tt> if-fail </tt> as in Exercise 4-52,
+what will be the result of evaluating
+
+<div id="">
+(let ((pairs '()))
+  (if-fail (let ((p (prime-sum-pair '(1 3 5 8) '(20 35 110))))
+             (permanent-set! pairs (cons p pairs))
+             (amb))
+           pairs))
+</div>
+<script>
+prompt();
+</script>
+</div>
+
+<div class="exercise">
+<b>Exercise 4.54:</b> If we had not realized that
+<tt> require </tt> could be implemented as an ordinary procedure that uses
+<tt> amb </tt>, to be defined by the user as part of a nondeterministic program, we
+would have had to implement it as a special form.  This would require syntax
+procedures
+
+<div id="">
+(define (require? exp) (tagged-list? exp 'require))
+
+(define (require-predicate exp) (cadr exp))
+</div>
+<script>
+prompt();
+</script>
+
+
+and a new clause in the dispatch in <tt> analyze </tt>
+
+<div id="">
+((require? exp) (analyze-require exp))
+</div>
+<script>
+prompt();
+</script>
+
+
+as well the procedure <tt> analyze-require </tt> that handles <tt> require </tt>
+expressions.  Complete the following definition of <tt> analyze-require </tt>.
+
+<div id="">
+(define (analyze-require exp)
+  (let ((pproc (analyze (require-predicate exp))))
+    (lambda (env succeed fail)
+      (pproc env
+             (lambda (pred-value fail2)
+               (if <??>
+                   <??>
+                   (succeed 'ok fail2)))
+             fail))))
+</div>
+<script>
+prompt();
+</script>
+</div>
 
  
 <hr>

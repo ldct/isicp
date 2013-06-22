@@ -590,6 +590,16 @@ function scheme_cdr(x) {
 }
 _PRIMITIVES["cdr"] = new PrimitiveProcedure(scheme_cdr);
 
+function scheme_cadr(x) {
+    return scheme_car(scheme_cdr(x));
+}
+_PRIMITIVES["cadr"] = new PrimitiveProcedure(scheme_cadr);
+
+function scheme_caddr(x) {
+    return scheme_car(scheme_cdr(scheme_cdr(x)));
+}
+_PRIMITIVES["caddr"] = new PrimitiveProcedure(scheme_caddr);
+
 function scheme_list() {
     var result = nil;
     for (var i = arguments.length - 1; i >= 0; i--) {

@@ -93,10 +93,12 @@ $(document).ready(createTOC);
 
 <a href='index.html' style="float:left"> <img src='images/chevron-up.svg' height=64 width=64> </a>
 <span style="float:right">
-<a href='1-3-hop.html'> <img src='images/chevron-left.svg' height=64 width=64> </a>
+<a href='2-1-data.html'> <img src='images/chevron-left.svg' height=64 width=64> </a>
+<a href='2-3-symbolic.html'> <img src='images/chevron-right.svg' height=64 width=64> </a>
 </span>
 
 <br> <br>
+
 <h2> Hierarchical Data and the Closure Property </h2> 
 
 <p> As we have seen, pairs provide a primitive ``glue'' that we can use to construct compound data objects.  Figure 2-2 shows a standard way to visualize a pair---in this case, the pair formed by <tt> (cons 1 2) </tt>.  In this representation, which is called <tt> box-and-pointer notation </tt>  , each object is shown as a <tt> pointer </tt>  to a box.  The box for a primitive object contains a representation of the object.  For example, the box for a number contains a numeral.  The box for a pair is actually a double box, the left part containing (a pointer to) the <tt> car </tt> of the pair and the right part containing the <tt> cdr </tt>.
