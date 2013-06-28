@@ -172,27 +172,27 @@ plane.
 
 <p> To design such a system, we can follow the same data-abstraction strategy we followed in designing the rational-number package in section 2-1-1. Assume that the operations on complex numbers are implemented in terms of four selectors: <tt> real-part </tt>, <tt> imag-part </tt>, <tt> magnitude </tt>, and <tt> angle </tt>.  Also assume that we have two procedures for constructing complex numbers: <tt> make-from-real-imag </tt> returns a complex number with specified real and imaginary parts, and <tt> make-from-mag-ang </tt> returns a complex number with specified magnitude and angle.  These procedures have the property that, for any complex number <tt> z </tt>, both
 
-<div id="">
+<div id="scheme-reconstruct-real-imag">
 (make-from-real-imag (real-part z) (imag-part z))
 </div>
 <script>
-prompt();
+no_output_prompt("scheme-reconstruct-real-imag");
 </script>
 
-and
+<p> and
 
-<div id="">
+<div id="scheme-reconstruct-magnitude-angle">
 (make-from-mag-ang (magnitude z) (angle z))
 </div>
 <script>
-prompt();
+no_output_prompt("scheme-reconstruct-magnitude-angle");
 </script>
 
 <p> produce complex numbers that are equal to <tt> z </tt>.
 
 <p> Using these constructors and selectors, we can implement arithmetic on complex numbers using the ``abstract data'' specified by the constructors and selectors, just as we did for rational numbers in section 2-1-1.  As shown in the formulas above, we can add and subtract complex numbers in terms of real and imaginary parts while multiplying and dividing complex numbers in terms of magnitudes and angles:
 
-<div id="">
+<div id="scheme-define-complex-arith">
 (define (add-complex z1 z2)
   (make-from-real-imag (+ (real-part z1) (real-part z2))
                        (+ (imag-part z1) (imag-part z2))))
@@ -210,7 +210,7 @@ prompt();
                      (- (angle z1) (angle z2))))
 </div>
 <script>
-prompt();
+prompt("scheme-define-complex-arith");
 </script>
 
 <p> To complete the complex-number package, we must choose a representation and we must implement the constructors and selectors in terms of primitive numbers and primitive list structure.  There are two obvious ways to do this: We can represent a complex number in ``rectangular form'' as a pair (real part, imaginary part) or in ``polar form'' as a pair (magnitude, angle).  Which shall we choose?
@@ -227,7 +227,7 @@ y = r sin A     A = arctan(y,x)
 
 <p> which relate the real and imaginary parts (x, y) to the magnitude and the angle (r, A).@footnote{The arctangent function referred to here, computed by Scheme's <tt> atan </tt> procedure, is defined so as to take two arguments y and x and to return the angle whose tangent is y/x. The signs of the arguments determine the quadrant of the angle.}  Ben's representation is therefore given by the following selectors and constructors:
 
-<div id="">
+<div id="scheme-define-rectangular-selectors">
 (define (real-part z) (car z))
 
 (define (imag-part z) (cdr z))
@@ -244,12 +244,12 @@ y = r sin A     A = arctan(y,x)
   (cons (* r (cos a)) (* r (sin a))))
 </div>
 <script>
-prompt();
+prompt("scheme-define-rectangular-selectors");
 </script>
 
 <p> Alyssa, in contrast, chooses to represent complex numbers in polar form.  For her, selecting the magnitude and angle is straightforward, but she has to use the trigonometric relations to obtain the real and imaginary parts.  Alyssa's representation is:
 
-<div id="">
+<div id="scheme-define-polar-selectors">
 (define (real-part z)
   (* (magnitude z) (cos (angle z))))
 
@@ -267,7 +267,7 @@ prompt();
 (define (make-from-mag-ang r a) (cons r a))
 </div>
 <script>
-prompt();
+prompt("scheme-define-polar-selectors");
 </script>
 
 <p> The discipline of data abstraction ensures that the same implementation of <tt> add-complex </tt>, <tt> sub-complex </tt>, <tt> mul-complex </tt>, and <tt> div-complex </tt> will work with either Ben's representation or Alyssa's representation.
@@ -280,7 +280,7 @@ prompt();
 
 <p> In order to manipulate tagged data, we will assume that we have procedures <tt> type-tag </tt> and <tt> contents </tt> that extract from a data object the tag and the actual contents (the polar or rectangular coordinates, in the case of a complex number).  We will also postulate a procedure <tt> attach-tag </tt> that takes a tag and contents and produces a tagged data object.  A straightforward way to implement this is to use ordinary list structure:
 
-<div id="">
+<div id="scheme-define-type-tag">
 (define (attach-tag type-tag contents)
   (cons type-tag contents))
 
@@ -295,12 +295,12 @@ prompt();
       (error "Bad tagged datum -- CONTENTS" datum)))
 </div>
 <script>
-prompt();
+prompt("scheme-define-type-tag");
 </script>
 
 <p> Using these procedures, we can define predicates <tt> rectangular? </tt>  and <tt> polar? </tt>, which recognize polar and rectangular numbers, respectively:
 
-<div id="">
+<div id="scheme-define-recognise-rectangular-polar-tags">
 (define (rectangular? z)
   (eq? (type-tag z) 'rectangular))
 
@@ -308,12 +308,12 @@ prompt();
   (eq? (type-tag z) 'polar))
 </div>
 <script>
-prompt();
+promptDep("scheme-define-recognise-rectangular-polar-tags", ["scheme-define-type-tag"]);
 </script>
 
 <p> With type tags, Ben and Alyssa can now modify their code so that their two different representations can coexist in the same system.  Whenever Ben constructs a complex number, he tags it as rectangular.  Whenever Alyssa constructs a complex number, she tags it as polar.  In addition, Ben and Alyssa must make sure that the names of their procedures do not conflict.  One way to do this is for Ben to append the suffix <tt> rectangular </tt> to the name of each of his representation procedures and for Alyssa to append <tt> polar </tt> to the names of hers.  Here is Ben's revised rectangular representation from section 2-4-1:
 
-<div id="">
+<div id="scheme-define-rectangular-tagged-selectors">
 (define (real-part-rectangular z) (car z))
 
 (define (imag-part-rectangular z) (cdr z))
@@ -334,13 +334,12 @@ prompt();
               (cons (* r (cos a)) (* r (sin a)))))
 </div>
 <script>
-prompt();
+promptDep("scheme-define-rectangular-tagged-selectors", ["scheme-define-type-tag"]);
 </script>
 
+<p> and here is Alyssa's revised polar representation:
 
-and here is Alyssa's revised polar representation:
-
-<div id="">
+<div id="scheme-define-polar-tagged-selectors">
 (define (real-part-polar z)
   (* (magnitude-polar z) (cos (angle-polar z))))
 
@@ -360,12 +359,12 @@ and here is Alyssa's revised polar representation:
   (attach-tag 'polar (cons r a)))
 </div>
 <script>
-prompt();
+promptDep("scheme-define-polar-tagged-selectors", ["scheme-define-type-tag"]);
 </script>
 
 <p> Each generic selector is implemented as a procedure that checks the tag of its argument and calls the appropriate procedure for handling data of that type. For example, to obtain the real part of a complex number, <tt> real-part </tt> examines the tag to determine whether to use Ben's <tt> real-part-rectangular </tt> or Alyssa's <tt> real-part-polar </tt>.  In either case, we use <tt> contents </tt> to extract the bare, untagged datum and send this to the rectangular or polar procedure as required:
 
-<div id="">
+<div id="scheme-define-tagged-complex-selectors">
 (define (real-part z)
   (cond ((rectangular? z)
          (real-part-rectangular (contents z)))
@@ -395,18 +394,18 @@ prompt();
         (else (error "Unknown type -- ANGLE" z))))
 </div>
 <script>
-prompt();
+promptDep("scheme-define-tagged-complex-selectors", ["scheme-define-recognise-rectangular-polar-tags", "scheme-define-rectangular-tagged-selectors", "scheme-define-polar-tagged-selectors"]);
 </script>
 
 <p> To implement the complex-number arithmetic operations, we can use the same procedures <tt> add-complex </tt>, <tt> sub-complex </tt>, <tt> mul-complex </tt>, and <tt> div-complex </tt> from section 2-4-1, because the selectors they call are generic, and so will work with either representation.  For example, the procedure <tt> add-complex </tt> is still
 
-<div id="">
+<div id="scheme-define-tagged-add-complex">
 (define (add-complex z1 z2)
   (make-from-real-imag (+ (real-part z1) (real-part z2))
                        (+ (imag-part z1) (imag-part z2))))
 </div>
 <script>
-prompt();
+promptDep("scheme-define-tagged-add-complex", ["scheme-define-tagged-complex-selectors"]);
 </script>
 
 <p> Finally, we must choose whether to construct complex numbers using Ben's
@@ -414,7 +413,7 @@ representation or Alyssa's representation.  One reasonable choice is to
 construct rectangular numbers whenever we have real and imaginary parts and to
 construct polar numbers whenever we have magnitudes and angles:
 
-<div id="">
+<div id="scheme-define-tagged-constructors">
 (define (make-from-real-imag x y)
   (make-from-real-imag-rectangular x y))
 
@@ -422,7 +421,7 @@ construct polar numbers whenever we have magnitudes and angles:
   (make-from-mag-ang-polar r a))
 </div>
 <script>
-prompt();
+prompt("scheme-define-tagged-constructors");
 </script>
 
 <div class="exercise">
@@ -498,7 +497,7 @@ returns the item found there.  If no item is found, <tt> get </tt> returns false
 
 <p> Here is how data-directed programming can be used in the complex-number system. Ben, who developed the rectangular representation, implements his code just as he did originally.  He defines a collection of procedures, or a <tt> package </tt> , and interfaces these to the rest of the system by adding entries to the table that tell the system how to operate on rectangular numbers.  This is accomplished by calling the following procedure:
 
-<div id="">
+<div id="scheme-define-install-rectangular-package">
 (define (install-rectangular-package)
   ;; internal procedures
   (define (real-part z) (car z))
@@ -525,14 +524,14 @@ returns the item found there.  If no item is found, <tt> get </tt> returns false
   'done)
 </div>
 <script>
-prompt();
+prompt("scheme-define-install-rectangular-package");
 </script>
 
 <p> Notice that the internal procedures here are the same procedures from section 2-4-1 that Ben wrote when he was working in isolation.  No changes are necessary in order to interface them to the rest of the system.  Moreover, since these procedure definitions are internal to the installation procedure, Ben needn't worry about name conflicts with other procedures outside the rectangular package.  To interface these to the rest of the system, Ben installs his <tt> real-part </tt> procedure under the operation name <tt> real-part </tt> and the type <tt> (rectangular) </tt>, and similarly for the other selectors.@footnote{We use the list <tt> (rectangular) </tt> rather than the symbol <tt> rectangular </tt> to allow for the possibility of operations with multiple arguments, not all of the same type.}  The interface also defines the constructors to be used by the external system.@footnote{The type the constructors are installed under needn't be a list because a constructor is always used to make an object of one particular type.}  These are identical to Ben's internally defined constructors, except that they attach the tag.
 
 <p> Alyssa's polar package is analogous:
 
-<div id="">
+<div id="scheme-define-install-polar-package">
 (define (install-polar-package)
   ;; internal procedures
   (define (magnitude z) (car z))
@@ -559,7 +558,7 @@ prompt();
   'done)
 </div>
 <script>
-prompt();
+prompt("scheme-define-install-polar-package");
 </script>
 
 <p> Even though Ben and Alyssa both still use their original procedures defined with the same names as each other's (e.g., <tt> real-part </tt>), these definitions are now internal to different procedures (see section 1-1-8), so there is no name conflict.
@@ -568,17 +567,17 @@ prompt();
 
 <p> <tt> Apply-generic </tt> also uses the primitive procedure <tt> apply </tt>, which takes two arguments, a procedure and a list.  <tt> Apply </tt> applies the procedure, using the elements in the list as arguments.  For example,
 
-<div id="">
+<div id="scheme-define-plus-1234">
 (apply + (list 1 2 3 4))
 </div>
 <script>
-prompt();
+prompt("scheme-define-plus-1234");
 </script>
 
 
 <p> returns 10.}
 
-<div id="">
+<div id="scheme-defne-apply-generic">
 (define (apply-generic op . args)
   (let ((type-tags (map type-tag args)))
     (let ((proc (get op type-tags)))
@@ -589,26 +588,26 @@ prompt();
             (list op type-tags))))))
 </div>
 <script>
-prompt();
+prompt("scheme-defne-apply-generic");
 </script>
 
 <p> Using <tt> apply-generic </tt>, we can define our generic selectors as follows:
 
-<div id="">
+<div id="scheme-define-generic-selectors">
 (define (real-part z) (apply-generic 'real-part z))
 (define (imag-part z) (apply-generic 'imag-part z))
 (define (magnitude z) (apply-generic 'magnitude z))
 (define (angle z) (apply-generic 'angle z))
 </div>
 <script>
-prompt();
+prompt("scheme-define-generic-selectors");
 </script>
 
 <p> Observe that these do not change at all if a new representation is added to the system.
 
 <p> We can also extract from the table the constructors to be used by the programs external to the packages in making complex numbers from real and imaginary parts and from magnitudes and angles.  As in section 2-4-2, we construct rectangular numbers whenever we have real and imaginary parts, and polar numbers whenever we have magnitudes and angles:
 
-<div id="">
+<div id="scheme-define-generic-constructors">
 (define (make-from-real-imag x y)
   ((get 'make-from-real-imag 'rectangular) x y))
 
@@ -616,7 +615,7 @@ prompt();
   ((get 'make-from-mag-ang 'polar) r a))
 </div>
 <script>
-prompt();
+prompt("scheme-define-generic-constructors");
 </script>
 
 <div class="exercise">
@@ -645,7 +644,7 @@ prompt();
 
 <p> We can regard this program as performing a dispatch on the type of the expression to be differentiated.  In this situation the ``type tag'' of the datum is the algebraic operator symbol (such as <tt> + </tt>) and the operation being performed is <tt> deriv </tt>.  We can transform this program into data-directed style by rewriting the basic derivative procedure as
 
-<div id="">
+<div id="scheme-define-generic-deriv">
 (define (deriv exp var)
    (cond ((number? exp) 0)
          ((variable? exp) (if (same-variable? exp var) 1 0))
@@ -657,7 +656,7 @@ prompt();
 (define (operands exp) (cdr exp))
 </div>
 <script>
-prompt();
+prompt("scheme-define-generic-deriv");
 </script>
 
 <ul>
@@ -719,7 +718,7 @@ When Insatiable takes over a new company, what changes must be made in order to 
 
 <p> An alternative implementation strategy is to decompose the table into columns and, instead of using ``intelligent operations'' that dispatch on data types, to work with ``intelligent data objects'' that dispatch on operation names.  We can do this by arranging things so that a data object, such as a rectangular number, is represented as a procedure that takes as input the required operation name and performs the operation indicated.  In such a discipline, <tt> make-from-real-imag </tt> could be written as
 
-<div id="">
+<div id="scheme-define-make-intelligent-complex-from-real-imag">
 (define (make-from-real-imag x y)
   (define (dispatch op)
     (cond ((eq? op 'real-part) x)
@@ -732,16 +731,16 @@ When Insatiable takes over a new company, what changes must be made in order to 
   dispatch)
 </div>
 <script>
-prompt();
+prompt("scheme-define-make-intelligent-complex-from-real-imag");
 </script>
 
 <p> The corresponding <tt> apply-generic </tt> procedure, which applies a generic operation to an argument, now simply feeds the operation's name to the data object and lets the object do the work:@footnote{One limitation of this organization is it permits only generic procedures of one argument.}
 
-<div id="">
+<div id="scheme-define-message-passing-apply-generic">
 (define (apply-generic op arg) (arg op))
 </div>
 <script>
-prompt();
+prompt("scheme-define-message-passing-apply-generic");
 </script>
 
 <p> Note that the value returned by <tt> make-from-real-imag </tt> is a procedure---the internal <tt> dispatch </tt> procedure.  This is the procedure that is invoked when <tt> apply-generic </tt> requests an operation to be performed.
