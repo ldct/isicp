@@ -93,21 +93,7 @@ $(document).ready(createTOC);
 
 <h2> Modeling with Mutable Data </h2> 
 
-Chapter 2 dealt with compound data as a means for constructing computational
-objects that have several parts, in order to model real-world objects that have
-several aspects.  In that chapter we introduced the discipline of data
-abstraction, according to which data structures are specified in terms of
-constructors, which create data objects, and selectors, which access the parts
-of compound data objects.  But we now know that there is another aspect of data
-that Chapter 2 did not address.  The desire to model systems composed of
-objects that have changing state leads us to the need to modify compound data
-objects, as well as to construct and select from them.  In order to model
-compound objects with changing state, we will design data abstractions to
-include, in addition to selectors and constructors, operations called
-<tt> mutators </tt> 
-, which modify data objects.  For instance, modeling a
-banking system requires us to change account balances.  Thus, a data structure
-for representing bank accounts might admit an operation
+Chapter 2 dealt with compound data as a means for constructing computational objects that have several parts, in order to model real-world objects that have several aspects.  In that chapter we introduced the discipline of data abstraction, according to which data structures are specified in terms of constructors, which create data objects, and selectors, which access the parts of compound data objects.  But we now know that there is another aspect of data that Chapter 2 did not address.  The desire to model systems composed of objects that have changing state leads us to the need to modify compound data objects, as well as to construct and select from them.  In order to model compound objects with changing state, we will design data abstractions to include, in addition to selectors and constructors, operations called <tt> mutators </tt> , which modify data objects.  For instance, modeling a banking system requires us to change account balances.  Thus, a data structure for representing bank accounts might admit an operation
 
 <div id="">
 (set-balance! <account> <new-value>)
@@ -116,40 +102,16 @@ for representing bank accounts might admit an operation
 prompt();
 </script>
 
+that changes the balance of the designated account to the designated new value. Data objects for which mutators are defined are known as <tt> mutable data objects </tt>.
 
-that changes the balance of the designated account to the designated new value.
-Data objects for which mutators are defined are known as <tt> mutable data
-objects </tt> 
-.
-
-Chapter 2 introduced pairs as a general-purpose ``glue'' for synthesizing
-compound data.  We begin this section by defining basic mutators for pairs, so
-that pairs can serve as building blocks for constructing mutable data objects.
-These mutators greatly enhance the representational power of pairs, enabling us
-to build data structures other than the sequences and trees that we worked with
-in section 2-2.  We also present some examples of simulations in which
-complex systems are modeled as collections of objects with local state.
-
-@menu
-* 3-3-1::            Mutable List Structure
-* 3-3-2::            Representing Queues
-* 3-3-3::            Representing Tables
-* 3-3-4::            A Simulator for Digital Circuits
-* 3-3-5::            Propagation of Constraints
-@end menu
+Chapter 2 introduced pairs as a general-purpose ``glue'' for synthesizing compound data.  We begin this section by defining basic mutators for pairs, so that pairs can serve as building blocks for constructing mutable data objects. These mutators greatly enhance the representational power of pairs, enabling us to build data structures other than the sequences and trees that we worked with in section 2-2.  We also present some examples of simulations in which complex systems are modeled as collections of objects with local state.
 
 <h3> Mutable List Structure </h3> 
 
-The basic operations on pairs---<tt> cons </tt>, <tt> car </tt>, and <tt> cdr </tt>---can
-be used to construct list structure and to select parts from list structure,
-but they are incapable of modifying list structure.  The same is true of the
-list operations we have used so far, such as <tt> append </tt> and <tt> list </tt>,
-since these can be defined in terms of <tt> cons </tt>, <tt> car </tt>, and <tt> cdr </tt>.
-To modify list structures we need new operations.
+The basic operations on pairs---<tt> cons </tt>, <tt> car </tt>, and <tt> cdr </tt>---can be used to construct list structure and to select parts from list structure, but they are incapable of modifying list structure.  The same is true of the list operations we have used so far, such as <tt> append </tt> and <tt> list </tt>, since these can be defined in terms of <tt> cons </tt>, <tt> car </tt>, and <tt> cdr </tt>. To modify list structures we need new operations.
 
 <div class="exercise">
-<b>Figure 3.12:</b> Lists <tt> x </tt>: <tt> ((a b) c d) </tt>
-and <tt> y </tt>: <tt> (e f) </tt>.
+<b>Figure 3.12:</b> Lists <tt> x </tt>: <tt> ((a b) c d) </tt> and <tt> y </tt>: <tt> (e f) </tt>.
 
 <pre>
      +---+---+     +---+---+     +---+---+
@@ -177,8 +139,7 @@ x -->| * | *-+---->| * | *-+---->| * | / |
 </div>
 
 <div class="exercise">
-<b>Figure 3.13:</b> Effect of <tt> (set-car! x y) </tt> on
-the lists in Figure 3-12.
+<b>Figure 3.13:</b> Effect of <tt> (set-car! x y) </tt> on the lists in Figure 3-12.
 
 <pre>
      +---+---+     +---+---+     +---+---+
@@ -206,8 +167,7 @@ x -->| * | *-+---->| * | *-+---->| * | / |
 </div>
 
 <div class="exercise">
-<b>Figure 3.14:</b> Effect of <tt> (define z (cons y
-(cdr x))) </tt> on the lists in Figure 3-12.
+<b>Figure 3.14:</b> Effect of <tt> (define z (cons y (cdr x))) </tt> on the lists in Figure 3-12.
 
 <pre>
      +---+---+     +---+---+     +---+---+
@@ -235,8 +195,7 @@ z -->| * | *-+-+   +---+         +---+
 </div>
 
 <div class="exercise">
-<b>Figure 3.15:</b> Effect of <tt> (set-cdr! x y) </tt> on
-the lists in Figure 3-12.
+<b>Figure 3.15:</b> Effect of <tt> (set-cdr! x y) </tt> on the lists in Figure 3-12.
 
 <pre>
      +---+---+     +---+---+     +---+---+
@@ -263,50 +222,15 @@ x -->| * | * |     | * | *-+---->| * | / |
 </pre>
 </div>
 
-The primitive mutators for pairs are <tt> set-car! </tt> and
-<tt> set-cdr! </tt>. <tt> Set-car! </tt> takes two arguments, the first of which must
-be a pair.  It modifies this pair, replacing the <tt> car </tt> pointer by a
-pointer to the second argument of <tt> set-car! </tt>.@footnote{<tt> Set-car! </tt> and
-<tt> set-cdr! </tt> return implementation-dependent values.  Like <tt> set! </tt>, they
-should be used only for their effect.}
+The primitive mutators for pairs are <tt> set-car! </tt> and <tt> set-cdr! </tt>. <tt> Set-car! </tt> takes two arguments, the first of which must be a pair.  It modifies this pair, replacing the <tt> car </tt> pointer by a pointer to the second argument of <tt> set-car! </tt>.@footnote{<tt> Set-car! </tt> and <tt> set-cdr! </tt> return implementation-dependent values.  Like <tt> set! </tt>, they should be used only for their effect.}
 
-As an example, suppose that <tt> x </tt> is bound to the list <tt> ((a b) c d) </tt>
-and <tt> y </tt> to the list <tt> (e f) </tt> as illustrated in Figure 3-12.
-Evaluating the expression <tt>  (set-car!  x y) </tt> modifies the pair to which
-<tt> x </tt> is bound, replacing its <tt> car </tt> by the value of <tt> y </tt>.  The
-result of the operation is shown in Figure 3-13.  The structure <tt> x </tt>
-has been modified and would now be printed as <tt> ((e f) c d) </tt>.  The pairs
-representing the list <tt> (a b) </tt>, identified by the pointer that was
-replaced, are now detached from the original structure.@footnote{We see from
-this that mutation operations on lists can create ``garbage'' that is not part
-of any accessible structure.  We will see in section 5-3-2 that Lisp
-memory-management systems include a <tt> garbage collector </tt> 
-, which
-identifies and recycles the memory space used by unneeded pairs.}
+As an example, suppose that <tt> x </tt> is bound to the list <tt> ((a b) c d) </tt> and <tt> y </tt> to the list <tt> (e f) </tt> as illustrated in Figure 3-12. Evaluating the expression <tt>  (set-car!  x y) </tt> modifies the pair to which <tt> x </tt> is bound, replacing its <tt> car </tt> by the value of <tt> y </tt>.  The result of the operation is shown in Figure 3-13.  The structure <tt> x </tt> has been modified and would now be printed as <tt> ((e f) c d) </tt>.  The pairs representing the list <tt> (a b) </tt>, identified by the pointer that was replaced, are now detached from the original structure.@footnote{We see from this that mutation operations on lists can create ``garbage'' that is not part of any accessible structure.  We will see in section 5-3-2 that Lisp memory-management systems include a <tt> garbage collector </tt> , which identifies and recycles the memory space used by unneeded pairs.}
 
-Compare Figure 3-13 with Figure 3-14, which illustrates the result
-of executing <tt> (define z (cons y (cdr x))) </tt> with <tt> x </tt> and <tt> y </tt>
-bound to the original lists of Figure 3-12.  The variable <tt> z </tt> is now
-bound to a new pair created by the <tt> cons </tt> operation; the list to which
-<tt> x </tt> is bound is unchanged.
+Compare Figure 3-13 with Figure 3-14, which illustrates the result of executing <tt> (define z (cons y (cdr x))) </tt> with <tt> x </tt> and <tt> y </tt> bound to the original lists of Figure 3-12.  The variable <tt> z </tt> is now bound to a new pair created by the <tt> cons </tt> operation; the list to which <tt> x </tt> is bound is unchanged.
 
-The <tt> set-cdr! </tt> operation is similar to <tt> set-car! </tt>.  The only
-difference is that the <tt> cdr </tt> pointer of the pair, rather than the
-<tt> car </tt> pointer, is replaced.  The effect of executing <tt> (set-cdr! x y) </tt>
-on the lists of Figure 3-12 is shown in Figure 3-15.  Here the
-<tt> cdr </tt> pointer of <tt> x </tt> has been replaced by the pointer to <tt> (e
-f) </tt>.  Also, the list <tt> (c d) </tt>, which used to be the <tt> cdr </tt> of <tt> x </tt>,
-is now detached from the structure.
+The <tt> set-cdr! </tt> operation is similar to <tt> set-car! </tt>.  The only difference is that the <tt> cdr </tt> pointer of the pair, rather than the <tt> car </tt> pointer, is replaced.  The effect of executing <tt> (set-cdr! x y) </tt> on the lists of Figure 3-12 is shown in Figure 3-15.  Here the <tt> cdr </tt> pointer of <tt> x </tt> has been replaced by the pointer to <tt> (e f) </tt>.  Also, the list <tt> (c d) </tt>, which used to be the <tt> cdr </tt> of <tt> x </tt>, is now detached from the structure.
 
-<tt> Cons </tt> builds new list structure by creating new pairs, while
-<tt> set-car! </tt> and <tt> set-cdr! </tt> modify existing pairs.  Indeed, we could
-implement <tt> cons </tt> in terms of the two mutators, together with a procedure
-<tt> get-new-pair </tt>, which returns a new pair that is not part of any existing
-list structure.  We obtain the new pair, set its <tt> car </tt> and <tt> cdr </tt>
-pointers to the designated objects, and return the new pair as the result of
-the <tt> cons </tt>.@footnote{<tt> Get-new-pair </tt> is one of the operations that
-must be implemented as part of the memory management required by a Lisp
-implementation.  We will discuss this in section 5-3-1.}
+<tt> Cons </tt> builds new list structure by creating new pairs, while <tt> set-car! </tt> and <tt> set-cdr! </tt> modify existing pairs.  Indeed, we could implement <tt> cons </tt> in terms of the two mutators, together with a procedure <tt> get-new-pair </tt>, which returns a new pair that is not part of any existing list structure.  We obtain the new pair, set its <tt> car </tt> and <tt> cdr </tt> pointers to the designated objects, and return the new pair as the result of the <tt> cons </tt>.@footnote{<tt> Get-new-pair </tt> is one of the operations that must be implemented as part of the memory management required by a Lisp implementation.  We will discuss this in section 5-3-1.}
 
 <div id="">
 (define (cons x y)
@@ -320,8 +244,7 @@ prompt();
 </script>
 
 <div class="exercise">
-<b>Exercise 3.12:</b> The following procedure for
-appending lists was introduced in section 2-2-1:
+<b>Exercise 3.12:</b> The following procedure for appending lists was introduced in section 2-2-1:
 
 <div id="">
 (define (append x y)
@@ -333,12 +256,7 @@ appending lists was introduced in section 2-2-1:
 prompt();
 </script>
 
-<tt> Append </tt> forms a new list by successively <tt> cons </tt>ing the elements of
-<tt> x </tt> onto <tt> y </tt>.  The procedure <tt> append! </tt> is similar to
-<tt> append </tt>, but it is a mutator rather than a constructor.  It appends the
-lists by splicing them together, modifying the final pair of <tt> x </tt> so that
-its <tt> cdr </tt> is now <tt> y </tt>.  (It is an error to call <tt> append! </tt> with an
-empty <tt> x </tt>.)
+<tt> Append </tt> forms a new list by successively <tt> cons </tt>ing the elements of <tt> x </tt> onto <tt> y </tt>.  The procedure <tt> append! </tt> is similar to <tt> append </tt>, but it is a mutator rather than a constructor.  It appends the lists by splicing them together, modifying the final pair of <tt> x </tt> so that its <tt> cdr </tt> is now <tt> y </tt>.  (It is an error to call <tt> append! </tt> with an empty <tt> x </tt>.)
 
 <div id="">
 (define (append! x y)
@@ -349,8 +267,7 @@ empty <tt> x </tt>.)
 prompt();
 </script>
 
-Here <tt> last-pair </tt> is a procedure that returns the last pair in its
-argument:
+Here <tt> last-pair </tt> is a procedure that returns the last pair in its argument:
 
 <div id="">
 (define (last-pair x)
@@ -389,14 +306,11 @@ w
 prompt();
 </script>
 
-What are the missing <response>s?  Draw box-and-pointer diagrams to
-explain your answer.
+What are the missing <response>s?  Draw box-and-pointer diagrams to explain your answer. 
 </div>
 
 <div class="exercise">
-<b>Exercise 3.13:</b> Consider the following
-<tt> make-cycle </tt> procedure, which uses the <tt> last-pair </tt> procedure defined
-in Exercise 3-12:
+<b>Exercise 3.13:</b> Consider the following <tt> make-cycle </tt> procedure, which uses the <tt> last-pair </tt> procedure defined in Exercise 3-12:
 
 <div id="">
 (define (make-cycle x)
@@ -420,8 +334,7 @@ What happens if we try to compute <tt> (last-pair z) </tt>?
 </div>
 
 <div class="exercise">
-<b>Exercise 3.14:</b> The following procedure is quite
-useful, although obscure:
+<b>Exercise 3.14:</b> The following procedure is quite useful, although obscure:
 
 <div id="">
 (define (mystery x)
@@ -437,24 +350,11 @@ useful, although obscure:
 prompt();
 </script>
 
-<tt> Loop </tt> uses the ``temporary'' variable <tt> temp </tt> to hold the old value
-of the <tt> cdr </tt> of <tt> x </tt>, since the <tt> set-cdr! </tt>  on the next line
-destroys the <tt> cdr </tt>.  Explain what <tt> mystery </tt> does in general.  Suppose
-<tt> v </tt> is defined by <tt> (define v (list 'a 'b 'c 'd)) </tt>. Draw the
-box-and-pointer diagram that represents the list to which <tt> v </tt> is bound.
-Suppose that we now evaluate <tt> (define w (mystery v)) </tt>. Draw
-box-and-pointer diagrams that show the structures <tt> v </tt> and <tt> w </tt> after
-evaluating this expression.  What would be printed as the values of <tt> v </tt>
-and <tt> w </tt>?
-</div>
+<tt> Loop </tt> uses the ``temporary'' variable <tt> temp </tt> to hold the old value of the <tt> cdr </tt> of <tt> x </tt>, since the <tt> set-cdr! </tt>  on the next line destroys the <tt> cdr </tt>.  Explain what <tt> mystery </tt> does in general.  Suppose <tt> v </tt> is defined by <tt> (define v (list 'a 'b 'c 'd)) </tt>. Draw the box-and-pointer diagram that represents the list to which <tt> v </tt> is bound. Suppose that we now evaluate <tt> (define w (mystery v)) </tt>. Draw box-and-pointer diagrams that show the structures <tt> v </tt> and <tt> w </tt> after evaluating this expression.  What would be printed as the values of <tt> v </tt> and <tt> w </tt>? </div>
 
 <h4> Sharing and identity </h4> 
 
-We mentioned in section 3-1-3 the theoretical issues of ``sameness'' and
-``change'' raised by the introduction of assignment.  These issues arise in
-practice when individual pairs are <tt> shared </tt> 
- among different data
-objects.  For example, consider the structure formed by
+We mentioned in section 3-1-3 the theoretical issues of ``sameness'' and ``change'' raised by the introduction of assignment.  These issues arise in practice when individual pairs are <tt> shared </tt> among different data objects.  For example, consider the structure formed by
 
 <div id="">
 (define x (list 'a 'b))
@@ -464,12 +364,7 @@ objects.  For example, consider the structure formed by
 prompt();
 </script>
 
-As shown in Figure 3-16, <tt> z1 </tt> is a pair whose <tt> car </tt> and
-<tt> cdr </tt> both point to the same pair <tt> x </tt>.  This sharing of <tt> x </tt> by
-the <tt> car </tt> and <tt> cdr </tt> of <tt> z1 </tt> is a consequence of the
-straightforward way in which <tt> cons </tt> is implemented.  In general, using
-<tt> cons </tt> to construct lists will result in an interlinked structure of pairs
-in which many individual pairs are shared by many different structures.
+As shown in Figure 3-16, <tt> z1 </tt> is a pair whose <tt> car </tt> and <tt> cdr </tt> both point to the same pair <tt> x </tt>.  This sharing of <tt> x </tt> by the <tt> car </tt> and <tt> cdr </tt> of <tt> z1 </tt> is a consequence of the straightforward way in which <tt> cons </tt> is implemented.  In general, using <tt> cons </tt> to construct lists will result in an interlinked structure of pairs in which many individual pairs are shared by many different structures.
 
 <div class="exercise">
 <b>Figure 3.16:</b> The list <tt> z1 </tt> formed by
@@ -491,8 +386,7 @@ z1 -->| * | * |
 </div>
 
 <div class="exercise">
-<b>Figure 3.17:</b> The list <tt> z2 </tt> formed by
-<tt> (cons (list 'a 'b) (list 'a 'b)) </tt>.
+<b>Figure 3.17:</b> The list <tt> z2 </tt> formed by <tt> (cons (list 'a 'b) (list 'a 'b)) </tt>.
 
 <pre>
       +---+---+     +---+---+     +---+---+
@@ -510,8 +404,7 @@ z2 -->| * | *-+---->| * | *-+---->| * | / |
 </pre>
 </div>
 
-In contrast to Figure 3-16, Figure 3-17 shows the structure created
-by
+In contrast to Figure 3-16, Figure 3-17 shows the structure created by
 
 <div id="">
 (define z2 (cons (list 'a 'b) (list 'a 'b)))
@@ -520,21 +413,9 @@ by
 prompt();
 </script>
 
-In this structure, the pairs in the two <tt> (a b) </tt> lists are distinct,
-although the actual symbols are shared.@footnote{The two pairs are distinct
-because each call to <tt> cons </tt> returns a new pair.  The symbols are shared;
-in Scheme there is a unique symbol with any given name.  Since Scheme provides
-no way to mutate a symbol, this sharing is undetectable.  Note also that the
-sharing is what enables us to compare symbols using <tt> eq? </tt>, which simply
-checks equality of pointers.}
+In this structure, the pairs in the two <tt> (a b) </tt> lists are distinct, although the actual symbols are shared.@footnote{The two pairs are distinct because each call to <tt> cons </tt> returns a new pair.  The symbols are shared; in Scheme there is a unique symbol with any given name.  Since Scheme provides no way to mutate a symbol, this sharing is undetectable.  Note also that the sharing is what enables us to compare symbols using <tt> eq? </tt>, which simply checks equality of pointers.}
 
-When thought of as a list, <tt> z1 </tt> and <tt> z2 </tt> both represent ``the same''
-list, <tt> ((a b) a b) </tt>.  In general, sharing is completely undetectable if we
-operate on lists using only <tt> cons </tt>, <tt> car </tt>, and <tt> cdr </tt>.  However,
-if we allow mutators on list structure, sharing becomes significant.  As an
-example of the difference that sharing can make, consider the following
-procedure, which modifies the <tt> car </tt> of the structure to which it is
-applied:
+When thought of as a list, <tt> z1 </tt> and <tt> z2 </tt> both represent ``the same''list, <tt> ((a b) a b) </tt>.  In general, sharing is completely undetectable if we operate on lists using only <tt> cons </tt>, <tt> car </tt>, and <tt> cdr </tt>.  However, if we allow mutators on list structure, sharing becomes significant.  As an example of the difference that sharing can make, consider the following procedure, which modifies the <tt> car </tt> of the structure to which it is applied:
 
 <div id="">
 (define (set-to-wow! x)
@@ -545,11 +426,7 @@ applied:
 prompt();
 </script>
 
-Even though <tt> z1 </tt> and <tt> z2 </tt> are ``the same'' structure, applying
-<tt> set-to-wow! </tt> to them yields different results.  With <tt> z1 </tt>, altering
-the <tt> car </tt> also changes the <tt> cdr </tt>, because in <tt> z1 </tt> the <tt> car </tt>
-and the <tt> cdr </tt> are the same pair.  With <tt> z2 </tt>, the <tt> car </tt> and
-<tt> cdr </tt> are distinct, so <tt> set-to-wow! </tt> modifies only the <tt> car </tt>:
+Even though <tt> z1 </tt> and <tt> z2 </tt> are ``the same'' structure, applying <tt> set-to-wow! </tt> to them yields different results.  With <tt> z1 </tt>, altering the <tt> car </tt> also changes the <tt> cdr </tt>, because in <tt> z1 </tt> the <tt> car </tt> and the <tt> cdr </tt> are the same pair.  With <tt> z2 </tt>, the <tt> car </tt> and <tt> cdr </tt> are distinct, so <tt> set-to-wow! </tt> modifies only the <tt> car </tt>:
 
 <div id="">
 z1
@@ -568,46 +445,16 @@ z2
 prompt();
 </script>
 
-One way to detect sharing in list structures is to use the predicate
-<tt> eq? </tt>, which we introduced in section 2-3-1 as a way to test whether
-two symbols are equal.  More generally, <tt> (eq?  x y) </tt> tests whether
-<tt> x </tt> and <tt> y </tt> are the same object (that is, whether <tt> x </tt> and
-<tt> y </tt> are equal as pointers).  Thus, with <tt> z1 </tt> and <tt> z2 </tt> as defined
-in figures Figure 3-16 and Figure 3-17, <tt> (eq?  (car z1) (cdr
-z1)) </tt> is true and <tt> (eq? (car z2) (cdr z2)) </tt> is false.
+One way to detect sharing in list structures is to use the predicate <tt> eq? </tt>, which we introduced in section 2-3-1 as a way to test whether two symbols are equal.  More generally, <tt> (eq?  x y) </tt> tests whether <tt> x </tt> and <tt> y </tt> are the same object (that is, whether <tt> x </tt> and <tt> y </tt> are equal as pointers).  Thus, with <tt> z1 </tt> and <tt> z2 </tt> as defined in figures Figure 3-16 and Figure 3-17, <tt> (eq?  (car z1) (cdr z1)) </tt> is true and <tt> (eq? (car z2) (cdr z2)) </tt> is false.
 
-As will be seen in the following sections, we can exploit sharing to greatly
-extend the repertoire of data structures that can be represented by pairs.  On
-the other hand, sharing can also be dangerous, since modifications made to
-structures will also affect other structures that happen to share the modified
-parts.  The mutation operations <tt> set-car! </tt> and <tt> set-cdr! </tt> should be
-used with care; unless we have a good understanding of how our data objects are
-shared, mutation can have unanticipated results.@footnote{The subtleties of
-dealing with sharing of mutable data objects reflect the underlying issues of
-``sameness'' and ``change'' that were raised in section 3-1-3.  We
-mentioned there that admitting change to our language requires that a compound
-object must have an ``identity'' that is something different from the pieces
-from which it is composed.  In Lisp, we consider this ``identity'' to be the
-quality that is tested by <tt> eq? </tt>, i.e., by equality of pointers.  Since in
-most Lisp implementations a pointer is essentially a memory address, we are
-``solving the problem'' of defining the identity of objects by stipulating that
-a data object ``itself'' is the information stored in some particular set of
-memory locations in the computer.  This suffices for simple Lisp programs, but
-is hardly a general way to resolve the issue of ``sameness'' in computational
-models.}
+As will be seen in the following sections, we can exploit sharing to greatly extend the repertoire of data structures that can be represented by pairs.  On the other hand, sharing can also be dangerous, since modifications made to structures will also affect other structures that happen to share the modified parts.  The mutation operations <tt> set-car! </tt> and <tt> set-cdr! </tt> should be used with care; unless we have a good understanding of how our data objects are shared, mutation can have unanticipated results.@footnote{The subtleties of dealing with sharing of mutable data objects reflect the underlying issues of ``sameness'' and ``change'' that were raised in section 3-1-3.  We mentioned there that admitting change to our language requires that a compound object must have an ``identity'' that is something different from the pieces from which it is composed.  In Lisp, we consider this ``identity'' to be the quality that is tested by <tt> eq? </tt>, i.e., by equality of pointers.  Since in most Lisp implementations a pointer is essentially a memory address, we are ``solving the problem'' of defining the identity of objects by stipulating that a data object ``itself'' is the information stored in some particular set of memory locations in the computer.  This suffices for simple Lisp programs, but is hardly a general way to resolve the issue of ``sameness'' in computational models.}
 
 <div class="exercise">
-<b>Exercise 3.15:</b> Draw box-and-pointer diagrams to
-explain the effect of <tt> set-to-wow! </tt> on the structures <tt> z1 </tt> and
-<tt> z2 </tt> above.
+<b>Exercise 3.15:</b> Draw box-and-pointer diagrams to explain the effect of <tt> set-to-wow! </tt> on the structures <tt> z1 </tt> and <tt> z2 </tt> above.
 </div>
 
 <div class="exercise">
-<b>Exercise 3.16:</b> Ben Bitdiddle decides to write a
-procedure to count the number of pairs in any list structure.  ``It's easy,''
-he reasons.  ``The number of pairs in any structure is the number in the
-<tt> car </tt> plus the number in the <tt> cdr </tt> plus one more to count the current
-pair.''  So Ben writes the following procedure:
+<b>Exercise 3.16:</b> Ben Bitdiddle decides to write a procedure to count the number of pairs in any list structure.  ``It's easy,''he reasons.  ``The number of pairs in any structure is the number in the <tt> car </tt> plus the number in the <tt> cdr </tt> plus one more to count the current pair.''  So Ben writes the following procedure:
 
 <div id="">
 (define (count-pairs x)
@@ -621,36 +468,24 @@ pair.''  So Ben writes the following procedure:
 prompt();
 </script>
 
-Show that this procedure is not correct.  In particular, draw box-and-pointer
-diagrams representing list structures made up of exactly three pairs for which
-Ben's procedure would return 3; return 4; return 7; never return at all.
+Show that this procedure is not correct.  In particular, draw box-and-pointer diagrams representing list structures made up of exactly three pairs for which Ben's procedure would return 3; return 4; return 7; never return at all.
 </div>
 
 <div class="exercise">
-<b>Exercise 3.17:</b> Devise a correct version of the
-<tt> count-pairs </tt> procedure of Exercise 3-16 that returns the number of
-distinct pairs in any structure.  (Hint: Traverse the structure, maintaining an
-auxiliary data structure that is used to keep track of which pairs have already
-been counted.)
+<b>Exercise 3.17:</b> Devise a correct version of the <tt> count-pairs </tt> procedure of Exercise 3-16 that returns the number of distinct pairs in any structure.  (Hint: Traverse the structure, maintaining an auxiliary data structure that is used to keep track of which pairs have already been counted.) 
 </div>
 
 <div class="exercise">
-<b>Exercise 3.18:</b> Write a procedure that examines a
-list and determines whether it contains a cycle, that is, whether a program
-that tried to find the end of the list by taking successive <tt> cdr </tt>s would
-go into an infinite loop.  Exercise 3-13 constructed such lists.
+<b>Exercise 3.18:</b> Write a procedure that examines a list and determines whether it contains a cycle, that is, whether a program that tried to find the end of the list by taking successive <tt> cdr </tt>s would go into an infinite loop.  Exercise 3-13 constructed such lists. 
 </div>
 
 <div class="exercise">
-<b>Exercise 3.19:</b> Redo Exercise 3-18 using an
-algorithm that takes only a constant amount of space.  (This requires a very
-clever idea.)
+<b>Exercise 3.19:</b> Redo Exercise 3-18 using an algorithm that takes only a constant amount of space.  (This requires a very clever idea.) 
 </div>
 
 <h4> Mutation is just assignment </h4> 
 
-When we introduced compound data, we observed in section 2-1-3 that pairs
-can be represented purely in terms of procedures:
+When we introduced compound data, we observed in section 2-1-3 that pairs can be represented purely in terms of procedures:
 
 <div id="">
 (define (cons x y)
@@ -668,11 +503,7 @@ can be represented purely in terms of procedures:
 prompt();
 </script>
 
-The same observation is true for mutable data.  We can implement mutable data
-objects as procedures using assignment and local state.  For instance, we can
-extend the above pair implementation to handle <tt> set-car! </tt> and
-<tt> set-cdr! </tt> in a manner analogous to the way we implemented bank accounts
-using <tt> make-account </tt> in section 3-1-1:
+The same observation is true for mutable data.  We can implement mutable data objects as procedures using assignment and local state.  For instance, we can extend the above pair implementation to handle <tt> set-car! </tt> and <tt> set-cdr! </tt> in a manner analogous to the way we implemented bank accounts using <tt> make-account </tt> in section 3-1-1:
 
 <div id="">
 (define (cons x y)
@@ -702,17 +533,10 @@ using <tt> make-account </tt> in section 3-1-1:
 prompt();
 </script>
 
-Assignment is all that is needed, theoretically, to account for the behavior of
-mutable data.  As soon as we admit <tt> set! </tt> to our language, we raise all
-the issues, not only of assignment, but of mutable data in general.@footnote{On
-the other hand, from the viewpoint of implementation, assignment requires us to
-modify the environment, which is itself a mutable data structure.  Thus,
-assignment and mutation are equipotent: Each can be implemented in terms of the
-other.}
+Assignment is all that is needed, theoretically, to account for the behavior of mutable data.  As soon as we admit <tt> set! </tt> to our language, we raise all the issues, not only of assignment, but of mutable data in general.@footnote{On the other hand, from the viewpoint of implementation, assignment requires us to modify the environment, which is itself a mutable data structure.  Thus, assignment and mutation are equipotent: Each can be implemented in terms of the other.}
 
 <div class="exercise">
-<b>Exercise 3.20:</b> Draw environment diagrams to
-illustrate the evaluation of the sequence of expressions
+<b>Exercise 3.20:</b> Draw environment diagrams to illustrate the evaluation of the sequence of expressions
 
 <div id="">
 (define x (cons 1 2))
@@ -726,30 +550,14 @@ illustrate the evaluation of the sequence of expressions
 prompt();
 </script>
 
-
-using the procedural implementation of pairs given above.  (Compare
-Exercise 3-11.)
+using the procedural implementation of pairs given above.  (Compare Exercise 3-11.)
 </div>
 
 <h3> Representing Queues </h3> 
 
-The mutators <tt> set-car! </tt> and <tt> set-cdr! </tt> enable us to use pairs to
-construct data structures that cannot be built with <tt> cons </tt>, <tt> car </tt>,
-and <tt> cdr </tt> alone.  This section shows how to use pairs to represent a data
-structure called a queue.  Section 3-3-3 will show how to represent data
-structures called tables.
+The mutators <tt> set-car! </tt> and <tt> set-cdr! </tt> enable us to use pairs to construct data structures that cannot be built with <tt> cons </tt>, <tt> car </tt>, and <tt> cdr </tt> alone.  This section shows how to use pairs to represent a data structure called a queue.  Section 3-3-3 will show how to represent data structures called tables.
 
-A <tt> queue </tt> 
- is a sequence in which items are inserted at one end (called
-the <tt> rear </tt> 
- of the queue) and deleted from the other end (the
-<tt> front </tt> 
-).  Figure 3-18 shows an initially empty queue in which
-the items <tt> a </tt> and <tt> b </tt> are inserted.  Then <tt> a </tt> is removed,
-<tt> c </tt> and <tt> d </tt> are inserted, and <tt> b </tt> is removed.  Because items are
-always removed in the order in which they are inserted, a queue is sometimes
-called a <tt> FIFO </tt> 
- (first in, first out) buffer.
+A <tt> queue </tt> is a sequence in which items are inserted at one end (called the <tt> rear </tt> of the queue) and deleted from the other end (the <tt> front </tt> ).  Figure 3-18 shows an initially empty queue in which the items <tt> a </tt> and <tt> b </tt> are inserted.  Then <tt> a </tt> is removed, <tt> c </tt> and <tt> d </tt> are inserted, and <tt> b </tt> is removed.  Because items are always removed in the order in which they are inserted, a queue is sometimes called a <tt> FIFO </tt> (first in, first out) buffer.
 
 <div class="exercise">
 <b>Figure 3.18:</b> Queue operations.
