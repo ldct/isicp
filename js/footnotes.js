@@ -16,18 +16,18 @@ $(document).ready(function() {
   var Footnotes = {
       footnotetimeout: false,
       setup: function() {
-	var footnotelinks = $("a[class='footnote_link']");
+        var footnotelinks = $("a[class='footnote_link']");
           
-	footnotelinks.unbind('mouseover',Footnotes.footnoteover);
-	footnotelinks.unbind('mouseout',Footnotes.footnoteout);
+        footnotelinks.unbind('mouseover',Footnotes.footnoteover);
+        footnotelinks.unbind('mouseout',Footnotes.footnoteout);
           
-	footnotelinks.bind('mouseover',Footnotes.footnoteover);
-	footnotelinks.bind('mouseout',Footnotes.footnoteout);
+        footnotelinks.bind('mouseover',Footnotes.footnoteover);
+        footnotelinks.bind('mouseout',Footnotes.footnoteout);
       },
 
       footnoteover: function() {
-	clearTimeout(Footnotes.footnotetimeout);
-	$(popup).stop();
+        clearTimeout(Footnotes.footnotetimeout);
+        $(popup).stop();
         $(popup).remove();
           
         var id = $(this).attr('href').substr(1);
@@ -41,7 +41,7 @@ $(document).ready(function() {
         var el = document.getElementById(id);
         div.html($(el).html());
           
-	var popup_width = $("#main").width() * 0.96;
+        var popup_width = $("#main").width() * 0.96;
         div.css({
           position:'absolute',
           width: popup_width,
@@ -52,19 +52,19 @@ $(document).ready(function() {
   
         var left = $("#main").offset().left - 10;
 
-	// Popup opens below the link unless there's 
-	// not enough room below and enough above.
-	var top = position.top + 33;
-	if ((top + div.height() + 18 > 
-	      $(window).height() + $(window).scrollTop()) 
-	    &&
-	    (top - div.height() - 40 > $(window).scrollTop())) {
-	      top = position.top - div.height() - 5;
-	}
-	div.css({ left: left, 
-		  top: top, 
-		  background: new_popup_bg });
-//  	$(doc).css({ background: new_doc_bg });
+        // Popup opens below the link unless there's 
+        // not enough room below and enough above.
+        var top = position.top + 33;
+        if ((top + div.height() + 18 > 
+              $(window).height() + $(window).scrollTop()) 
+            &&
+            (top - div.height() - 40 > $(window).scrollTop())) {
+              top = position.top - div.height() - 5;
+        }
+        div.css({ left: left, 
+                  top: top, 
+                  background: new_popup_bg });
+//      $(doc).css({ background: new_doc_bg });
       },
 
       footnoteout: function() {
@@ -72,9 +72,9 @@ $(document).ready(function() {
           $(popup).animate({
             opacity: 0
           }, 600, function() {
-	    $(popup).remove();
-//	    $(doc).css({ background: old_doc_bg });
-	    $(popup).css({ background: old_popup_bg });
+            $(popup).remove();
+//          $(doc).css({ background: old_doc_bg });
+            $(popup).css({ background: old_popup_bg });
           });
         },400);
       },
@@ -85,8 +85,8 @@ $(document).ready(function() {
         $(popup).css({
           opacity: 1
         });
-//  	$(doc).css({ background: new_doc_bg });
-	$(popup).css({ background: new_popup_bg });
+//      $(doc).css({ background: new_doc_bg });
+        $(popup).css({ background: new_popup_bg });
       }
   }
 

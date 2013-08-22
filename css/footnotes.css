@@ -1,7 +1,8 @@
-/*hack to hide the autogened footnotes*/
+/*hack to hide the autogened footnotes
 div.footnote {
   display:none;
 }
+*/
 
 a.footnote_link, a.footnote_backlink {
   color: #841;

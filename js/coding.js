@@ -76,7 +76,7 @@ var editorOf = {};
 function makeEditable(_editor) {
 
   if (editorOf[_editor]) {
-    throw "Error: makeEditable called with " + _editor + " which already exists!";
+    //throw "Error: makeEditable called with " + _editor + " which already exists!";
     return;
   }
 
@@ -333,7 +333,7 @@ function makeMCQ(_mcq, right_entries, wrong_entries) {
 
 ////////////////////////////////////////////////////////////////////////////////
 function createTOC() {
-  $("h3, h4, .exercise").each(function(i) {
+  $("h3, h4").each(function(i) {
   
       var current = $(this);
       

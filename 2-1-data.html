@@ -113,19 +113,19 @@ $(document).ready(createTOC);
 
 <ul>
 
-<tt> (make-rat n d) </tt> returns therational number whose
-numerator is the integer <tt> n </tt> and whose denominator is the integer
-<tt> d. </tt>
+<tt>(make-rat n d)</tt> returns therational number whose
+numerator is the integer <tt>n</tt> and whose denominator is the integer
+<tt>d.</tt>
 
-<tt> (numer x) </tt> returns the numerator of the rational number
-<tt> x. </tt>
+<tt>(numer x)</tt> returns the numerator of the rational number
+<tt>x.</tt>
 
-<tt> (denom x)</tt> returns the denominator of the rational number
-<tt> x. </tt>
+<tt>(denom x)</tt> returns the denominator of the rational number
+<tt>x.</tt>
 
 </ul>
 
-<p> We are using here a powerful strategy of synthesis: <em> wishful thinking </em>. We haven't yet said how a rational number is represented, or how the procedures <tt> numer </tt>, <tt> denom </tt>, and <tt> make-rat </tt> should be implemented.  Even so, if we did have these three procedures, we could then add, subtract, multiply, divide, and test equality by using the following relations:
+<p> We are using here a powerful strategy of synthesis: <em> wishful thinking </em>. We haven't yet said how a rational number is represented, or how the procedures <tt>numer</tt>, <tt>denom</tt>, and <tt>make-rat</tt> should be implemented.  Even so, if we did have these three procedures, we could then add, subtract, multiply, divide, and test equality by using the following relations:
 
 <p> <img src="http://mitpress.mit.edu/sicp/full-text/book/ch2-Z-G-2.gif">
 
@@ -158,13 +158,11 @@ numerator is the integer <tt> n </tt> and whose denominator is the integer
 promptDep("scheme-define-arith-rat", ["scheme-define-rat"]);
 </script>
 
-<p> Now we have the operations on rational numbers defined in terms of the selector and constructor procedures <tt> numer, denom, </tt> and <tt> make-rat. </tt> But we haven't yet defined these.  What we need is some way to glue together a numerator and a denominator to form a rational number.
+<p> Now we have the operations on rational numbers defined in terms of the selector and constructor procedures <tt>numer, denom,</tt> and <tt>make-rat.</tt> But we haven't yet defined these.  What we need is some way to glue together a numerator and a denominator to form a rational number.
 
 <h4> Pairs </h4> 
 
-<p> To enable us to implement the concrete level of our data abstraction, our language provides a compound structure called a <em> pair </em>, which can be constructed with the primitive procedure <tt> cons </tt>.  This procedure takes two arguments and returns a compound data object that contains the two arguments as parts.  Given a pair, we can extract the parts using the primitive procedures <tt> car </tt> and <tt> cdr </tt>. Thus, we can use <tt> cons </tt>, <tt> car </tt>, and <tt> cdr </tt> as follows:
-
-<div class="footnote"> The name <tt> cons </tt> stands for ``construct.''  The names <tt> car </tt> and <tt> cdr </tt> derive from the original implementation of Lisp on the IBM 704.  That machine had an addressing scheme that allowed one to reference the ``address'' and ``decrement'' parts of a memory location.  <tt> Car </tt> stands for ``Contents of Address part of Register'' and <tt> cdr </tt> (pronounced ``could-er'') stands for ``Contents of Decrement part of Register.'' </div>
+<p> To enable us to implement the concrete level of our data abstraction, our language provides a compound structure called a <em> pair </em>, which can be constructed with the primitive procedure <tt>cons</tt>.  This procedure takes two arguments and returns a compound data object that contains the two arguments as parts.  Given a pair, we can extract the parts using the primitive procedures <tt>car</tt> and <tt>cdr.</tt> <a name="footnote_link_2-2" class="footnote_link" href="#footnote_2-2">2</a> Thus, we can use <tt>cons</tt>, <tt>car</tt>, and <tt>cdr</tt> as follows:
 
 <div id="scheme-define-x-cons-1-2">
 (define x (cons 1 2))
@@ -187,7 +185,7 @@ promptDep("scheme-car-x", ["scheme-define-x-cons-1-2"]);
 promptDep("scheme-cdr-x", ["scheme-define-x-cons-1-2"]);
 </script>
 
-<p> Notice that a pair is a data object that can be given a name and manipulated, just like a primitive data object.  Moreover, <tt> cons </tt> can be used to form pairs whose elements are pairs, and so on:
+<p> Notice that a pair is a data object that can be given a name and manipulated, just like a primitive data object.  Moreover, <tt>cons</tt> can be used to form pairs whose elements are pairs, and so on:
 
 <div id="scheme-cons-of-cons">
 (define x (cons 1 2))
@@ -201,11 +199,11 @@ promptDep("scheme-cdr-x", ["scheme-define-x-cons-1-2"]);
 prompt("scheme-cons-of-cons");
 </script>
 
-<p> In section 2-2 we will see how this ability to combine pairs means that pairs can be used as general-purpose building blocks to create all sorts of complex data structures.  The single compound-data primitive <em> pair </em>, implemented by the procedures <tt> cons </tt>, <tt> car </tt>, and <tt> cdr </tt>, is the only glue we need.  Data objects constructed from pairs are called <em> list-structured </em> data.
+<p> In section 2-2 we will see how this ability to combine pairs means that pairs can be used as general-purpose building blocks to create all sorts of complex data structures.  The single compound-data primitive <em> pair </em>, implemented by the procedures <tt>cons</tt>, <tt>car</tt>, and <tt>cdr</tt>, is the only glue we need.  Data objects constructed from pairs are called <em> list-structured </em> data.
 
 <h4> Representing rational numbers </h4> 
 
-<p> Pairs offer a natural way to complete the rational-number system.  Simply represent a rational number as a pair of two integers: a numerator and a denominator.  Then <tt> make-rat, numer, </tt> and <tt> denom </tt> are readily implemented as follows:
+<p> Pairs offer a natural way to complete the rational-number system.  Simply represent a rational number as a pair of two integers: a numerator and a denominator.  Then <tt>make-rat, numer,</tt> and <tt>denom</tt> are readily implemented as follows:<a name="footnote_link_2-3" class="footnote_link" href="#footnote_2-3">3</a>
 
 <div id="scheme-define-rat">
 (define (make-rat n d) (cons n d))
@@ -216,25 +214,7 @@ prompt("scheme-cons-of-cons");
 prompt("scheme-define-rat");
 </script>
 
-<div class="footnote"> Another way to define the selectors and constructor is
-
-<div id="scheme-define-rat-pointless">
-(define make-rat cons)
-(define numer car)
-(define denom cdr)
-</div>
-<script>
-prompt("scheme-define-rat-pointless");
-</script>
-
-<p> The first definition associates the name <tt> make-rat </tt> with the value of the expression <tt> cons </tt>, which is the primitive procedure that constructs pairs. Thus <tt> make-rat </tt> and <tt> cons </tt> are names for the same primitive constructor.
-
-<p> Defining selectors and constructors in this way is efficient: Instead of <tt> make-rat </tt> <em>calling</em> <tt> cons </tt>, <tt> make-rat </tt> <em>is</em> <tt> cons </tt>, so there is only one procedure called, not two, when <tt> make-rat </tt> is called.  On the other hand, doing this defeats debugging aids that trace procedure calls or put breakpoints on procedure calls: You may want to watch <tt> make-rat </tt> being called, but you certainly don't want to watch every call to <tt> cons </tt>.
-
-We have chosen not to use this style of definition in this book.
-</div>
-
-<p> Also, in order to display the results of our computations, we can print rational numbers by printing the numerator, a slash, and the denominator:<div class="footnote"> <tt> Display </tt> is the Scheme primitive for printing data. The Scheme primitive <tt> newline </tt> starts a new line for printing.  Neither of these procedures returns a useful value, so in the uses of <tt> print-rat </tt> below, we show only what <tt> print-rat </tt> prints, not what the interpreter prints as the value returned by <tt> print-rat </tt>. </div>
+<p> Also, in order to display the results of our computations, we can print rational numbers by printing the numerator, a slash, and the denominator:<a name="footnote_link_2-4" class="footnote_link" href="#footnote_2-4">4</a>
 
 <div id="scheme-define-print-rat">
 (define (print-rat x)
@@ -282,7 +262,7 @@ promptDep("scheme-define-one-third", ["scheme-define-rat"]);
 promptDep("scheme-test-rat", ["scheme-define-one-half", "scheme-define-one-third", "scheme-define-arith-rat", "scheme-define-print-rat"]);
 </script>
 
-<p> As the final example shows, our rational-number implementation does not reduce rational numbers to lowest terms.  We can remedy this by changing <tt> make-rat. </tt> If we have a <tt> gcd </tt> procedure like the one in section 1-2-5 that produces the greatest common divisor of two integers, we can use <tt> gcd </tt> to reduce the numerator and the denominator to lowest terms before constructing the pair:
+<p> As the final example shows, our rational-number implementation does not reduce rational numbers to lowest terms.  We can remedy this by changing <tt>make-rat.</tt> If we have a <tt>gcd</tt> procedure like the one in section 1-2-5 that produces the greatest common divisor of two integers, we can use <tt>gcd</tt> to reduce the numerator and the denominator to lowest terms before constructing the pair:
 
 <div id="scheme-define-gcd">
 (define (gcd a b)
@@ -312,17 +292,17 @@ promptDep("scheme-define-make-rat-reduce", ["scheme-define-gcd"]);
 promptDep("scheme-test-rat-reduce", ["scheme-define-arith-rat", "scheme-define-one-half", "scheme-define-one-third", "scheme-define-print-rat", "scheme-define-make-rat-reduce"]);
 </script>
 
-<p> as desired.  This modification was accomplished by changing the constructor <tt> make-rat </tt> without changing any of the procedures (such as <tt> add-rat </tt> and <tt> mul-rat </tt>) that implement the actual operations.
+<p> as desired.  This modification was accomplished by changing the constructor <tt>make-rat</tt> without changing any of the procedures (such as <tt>add-rat</tt> and <tt>mul-rat</tt>) that implement the actual operations.
 
 <div class="exercise">
-<p> Exercise 2.1. Define a better version of <tt> make-rat </tt> that handles both positive and negative arguments. <tt> Make-rat </tt> should normalize the sign so that if the rational number is positive, both the numerator and denominator are positive, and if the rational number is negative, only the numerator is negative.
+<p> Exercise 2.1. Define a better version of <tt>make-rat</tt> that handles both positive and negative arguments. <tt>Make-rat</tt> should normalize the sign so that if the rational number is positive, both the numerator and denominator are positive, and if the rational number is negative, only the numerator is negative.
 </div>
 
 <h3> Abstraction Barriers </h3> 
 
-<p> Before continuing with more examples of compound data and data abstraction, let us consider some of the issues raised by the rational-number example.  We defined the rational-number operations in terms of a constructor <tt> make-rat </tt> and selectors <tt> numer </tt> and <tt> denom </tt>.  In general, the underlying idea of data abstraction is to identify for each type of data object a basic set of operations in terms of which all manipulations of data objects of that type will be expressed, and then to use only those operations in manipulating the data.
+<p> Before continuing with more examples of compound data and data abstraction, let us consider some of the issues raised by the rational-number example.  We defined the rational-number operations in terms of a constructor <tt>make-rat</tt> and selectors <tt>numer</tt> and <tt>denom</tt>.  In general, the underlying idea of data abstraction is to identify for each type of data object a basic set of operations in terms of which all manipulations of data objects of that type will be expressed, and then to use only those operations in manipulating the data.
 
-<p> We can envision the structure of the rational-number system as shown in figure Figure 2-1.  The horizontal lines represent <em>abstraction barriers</em> that isolate different ``levels'' of the system.  At each level, the barrier separates the programs (above) that use the data abstraction from the programs (below) that implement the data abstraction.  Programs that use rational numbers manipulate them solely in terms of the procedures supplied ``for public use'' by the rational-number package: <tt> add-rat </tt>, <tt> sub-rat </tt>, <tt> mul-rat </tt>, <tt> div-rat </tt>, and <tt> equal-rat? </tt>. These, in turn, are implemented solely in terms of the constructor and selectors <tt> make-rat </tt>, <tt> numer </tt>, and <tt> denom </tt>, which themselves are implemented in terms of pairs.  The details of how pairs are implemented are irrelevant to the rest of the rational-number package so long as pairs can be manipulated by the use of <tt> cons </tt>, <tt> car </tt>, and <tt> cdr </tt>.  In effect, procedures at each level are the interfaces that define the abstraction barriers and connect the different levels.
+<p> We can envision the structure of the rational-number system as shown in figure Figure 2-1.  The horizontal lines represent <em>abstraction barriers</em> that isolate different ``levels'' of the system.  At each level, the barrier separates the programs (above) that use the data abstraction from the programs (below) that implement the data abstraction.  Programs that use rational numbers manipulate them solely in terms of the procedures supplied ``for public use'' by the rational-number package: <tt>add-rat</tt>, <tt>sub-rat</tt>, <tt>mul-rat</tt>, <tt>div-rat</tt>, and <tt>equal-rat?</tt>. These, in turn, are implemented solely in terms of the constructor and selectors <tt>make-rat</tt>, <tt>numer</tt>, and <tt>denom</tt>, which themselves are implemented in terms of pairs.  The details of how pairs are implemented are irrelevant to the rest of the rational-number package so long as pairs can be manipulated by the use of <tt>cons</tt>, <tt>car</tt>, and <tt>cdr</tt>.  In effect, procedures at each level are the interfaces that define the abstraction barriers and connect the different levels.
 
 <p> <img src='http://mitpress.mit.edu/sicp/full-text/book/ch2-Z-G-6.gif'>
 
@@ -348,12 +328,12 @@ promptDep("scheme-test-rat-reduce", ["scheme-define-arith-rat", "scheme-define-o
 promptDep("scheme-define-rat-reduce-in-constructor", ["scheme-define-gcd"]);
 </script>
 
-<p> The difference between this implementation and the previous one lies in when we compute the <tt> gcd </tt>.  If in our typical use of rational numbers we access the numerators and denominators of the same rational numbers many times, it would be preferable to compute the <tt> gcd </tt> when the rational numbers are constructed.  If not, we may be better off waiting until access time to compute the <tt> gcd </tt>.  In any case, when we change from one representation to the other, the procedures <tt> add-rat </tt>, <tt> sub-rat </tt>, and so on do not have to be modified at all.
+<p> The difference between this implementation and the previous one lies in when we compute the <tt>gcd</tt>.  If in our typical use of rational numbers we access the numerators and denominators of the same rational numbers many times, it would be preferable to compute the <tt>gcd</tt> when the rational numbers are constructed.  If not, we may be better off waiting until access time to compute the <tt>gcd</tt>.  In any case, when we change from one representation to the other, the procedures <tt>add-rat</tt>, <tt>sub-rat</tt>, and so on do not have to be modified at all.
 
-<p> Constraining the dependence on the representation to a few interface procedures helps us design programs as well as modify them, because it allows us to maintain the flexibility to consider alternate implementations.  To continue with our simple example, suppose we are designing a rational-number package and we can't decide initially whether to perform the <tt> gcd </tt> at construction time or at selection time.  The data-abstraction methodology gives us a way to defer that decision without losing the ability to make progress on the rest of the system.
+<p> Constraining the dependence on the representation to a few interface procedures helps us design programs as well as modify them, because it allows us to maintain the flexibility to consider alternate implementations.  To continue with our simple example, suppose we are designing a rational-number package and we can't decide initially whether to perform the <tt>gcd</tt> at construction time or at selection time.  The data-abstraction methodology gives us a way to defer that decision without losing the ability to make progress on the rest of the system.
 
 <div class="exercise">
-<p> Exercise 2.2. Consider the problem of representing line segments in a plane.  Each segment is represented as a pair of points: a starting point and an ending point.  Define a constructor <tt> make-segment </tt> and selectors <tt> start-segment </tt> and <tt> end-segment </tt> that define the representation of segments in terms of points.  Furthermore, a point can be represented as a pair of numbers: the x coordinate and the y coordinate.  Accordingly, specify a constructor <tt> make-point </tt> and selectors <tt> x-point </tt> and <tt> y-point </tt> that define this representation. Finally, using your selectors and constructors, define a procedure <tt> midpoint-segment </tt> that takes a line segment as argument and returns its midpoint (the point whose coordinates are the average of the coordinates of the endpoints).  To try your procedures, you'll need a way to print points:
+<p> Exercise 2.2. Consider the problem of representing line segments in a plane.  Each segment is represented as a pair of points: a starting point and an ending point.  Define a constructor <tt>make-segment</tt> and selectors <tt>start-segment</tt> and <tt>end-segment</tt> that define the representation of segments in terms of points.  Furthermore, a point can be represented as a pair of numbers: the x coordinate and the y coordinate.  Accordingly, specify a constructor <tt>make-point</tt> and selectors <tt>x-point</tt> and <tt>y-point</tt> that define this representation. Finally, using your selectors and constructors, define a procedure <tt>midpoint-segment</tt> that takes a line segment as argument and returns its midpoint (the point whose coordinates are the average of the coordinates of the endpoints).  To try your procedures, you'll need a way to print points:
 
 <div id="scheme-define-print-point">
 (define (print-point p)
@@ -375,15 +355,15 @@ prompt("scheme-define-print-point");
 
 <h3> What Is Meant by Data? </h3> 
 
-<p> We began the rational-number implementation in section 2-1-1 by implementing the rational-number operations <tt> add-rat </tt>, <tt> sub-rat </tt>, and so on in terms of three unspecified procedures: <tt> make-rat </tt>, <tt> numer </tt>, and <tt> denom </tt>.  At that point, we could think of the operations as being defined in terms of data objects---numerators, denominators, and rational numbers---whose behavior was specified by the latter three procedures. 
+<p> We began the rational-number implementation in section 2-1-1 by implementing the rational-number operations <tt>add-rat</tt>, <tt>sub-rat</tt>, and so on in terms of three unspecified procedures: <tt>make-rat</tt>, <tt>numer</tt>, and <tt>denom</tt>.  At that point, we could think of the operations as being defined in terms of data objects---numerators, denominators, and rational numbers---whose behavior was specified by the latter three procedures. 
 
-<p> But exactly what is meant by <em> data </em>  ?  It is not enough to say ``whatever is implemented by the given selectors and constructors.''  Clearly, not every arbitrary set of three procedures can serve as an appropriate basis for the rational-number implementation.  We need to guarantee that, if we construct a rational number <tt> x </tt> from a pair of integers <tt> n </tt> and <tt> d </tt>, then extracting the <tt> numer </tt> and the <tt> denom </tt> of <tt> x </tt> and dividing them should yield the same result as dividing <tt> n </tt> by <tt> d </tt>. In other words, <tt> make-rat </tt>, <tt> numer </tt>, and <tt> denom </tt> must satisfy the condition that, for any integer <tt> n </tt> and any non-zero integer <tt> d </tt>, if <tt> x </tt> is (<tt> make-rat n d </tt>), then
+<p> But exactly what is meant by <em> data </em>  ?  It is not enough to say ``whatever is implemented by the given selectors and constructors.''  Clearly, not every arbitrary set of three procedures can serve as an appropriate basis for the rational-number implementation.  We need to guarantee that, if we construct a rational number <tt>x</tt> from a pair of integers <tt>n</tt> and <tt>d</tt>, then extracting the <tt>numer</tt> and the <tt>denom</tt> of <tt>x</tt> and dividing them should yield the same result as dividing <tt>n</tt> by <tt>d</tt>. In other words, <tt>make-rat</tt>, <tt>numer</tt>, and <tt>denom</tt> must satisfy the condition that, for any integer <tt>n</tt> and any non-zero integer <tt>d</tt>, if <tt>x</tt> is (<tt>make-rat n d</tt>), then
 
 <p> <img src='http://mitpress.mit.edu/sicp/full-text/book/ch2-Z-G-7.gif'>
 
-<p> In fact, this is the only condition <tt> make-rat </tt>, <tt> numer </tt>, and <tt> denom </tt> must fulfill in order to form a suitable basis for a rational-number representation.  In general, we can think of data as defined by some collection of selectors and constructors, together with specified conditions that these procedures must fulfill in order to be a valid representation.@footnote{Surprisingly, this idea is very difficult to formulate rigorously. There are two approaches to giving such a formulation.  One, pioneered by C. A. R. Hoare (1972), is known as the method of <em> abstract models </em>.  It formalizes the ``procedures plus conditions'' specification as outlined in the rational-number example above.  Note that the condition on the rational-number representation was stated in terms of facts about integers (equality and division).  In general, abstract models define new kinds of data objects in terms of previously defined types of data objects.  Assertions about data objects can therefore be checked by reducing them to assertions about previously defined data objects.  Another approach, introduced by Zilles at MIT, by Goguen, Thatcher, Wagner, and Wright at IBM (see Thatcher, Wagner, and Wright 1978), and by Guttag at Toronto (see Guttag 1977), is called <em> algebraic specification </em>  .  It regards the ``procedures'' as elements of an abstract algebraic system whose behavior is specified by axioms that correspond to our ``conditions,'' and uses the techniques of abstract algebra to check assertions about data objects.  Both methods are surveyed in the paper by Liskov and Zilles (1975).}
+<p> In fact, this is the only condition <tt>make-rat</tt>, <tt>numer</tt>, and <tt>denom</tt> must fulfill in order to form a suitable basis for a rational-number representation.  In general, we can think of data as defined by some collection of selectors and constructors, together with specified conditions that these procedures must fulfill in order to be a valid representation.@footnote{Surprisingly, this idea is very difficult to formulate rigorously. There are two approaches to giving such a formulation.  One, pioneered by C. A. R. Hoare (1972), is known as the method of <em> abstract models </em>.  It formalizes the ``procedures plus conditions'' specification as outlined in the rational-number example above.  Note that the condition on the rational-number representation was stated in terms of facts about integers (equality and division).  In general, abstract models define new kinds of data objects in terms of previously defined types of data objects.  Assertions about data objects can therefore be checked by reducing them to assertions about previously defined data objects.  Another approach, introduced by Zilles at MIT, by Goguen, Thatcher, Wagner, and Wright at IBM (see Thatcher, Wagner, and Wright 1978), and by Guttag at Toronto (see Guttag 1977), is called <em> algebraic specification </em>  .  It regards the ``procedures'' as elements of an abstract algebraic system whose behavior is specified by axioms that correspond to our ``conditions,'' and uses the techniques of abstract algebra to check assertions about data objects.  Both methods are surveyed in the paper by Liskov and Zilles (1975).}
 
-<p> This point of view can serve to define not only ``high-level'' data objects, such as rational numbers, but lower-level objects as well.  Consider the notion of a pair, which we used in order to define our rational numbers.  We never actually said what a pair was, only that the language supplied procedures <tt> cons </tt>, <tt> car </tt>, and <tt> cdr </tt> for operating on pairs.  But the only thing we need to know about these three operations is that if we glue two objects together using <tt> cons </tt> we can retrieve the objects using <tt> car </tt> and <tt> cdr </tt>.  That is, the operations satisfy the condition that, for any objects <tt> x </tt> and <tt> y </tt>, if <tt> z </tt> is <tt> (cons x y) </tt> then <tt>(car z)</tt> is <tt> x </tt> and <tt> (cdr z) </tt> is <tt> y </tt>.  Indeed, we mentioned that these three procedures are included as primitives in our language.  However, any triple of procedures that satisfies the above condition can be used as the basis for implementing pairs.  This point is illustrated strikingly by the fact that we could implement <tt> cons </tt>, <tt> car </tt>, and <tt> cdr </tt> without using any data structures at all but only using procedures.  Here are the definitions:
+<p> This point of view can serve to define not only ``high-level'' data objects, such as rational numbers, but lower-level objects as well.  Consider the notion of a pair, which we used in order to define our rational numbers.  We never actually said what a pair was, only that the language supplied procedures <tt>cons</tt>, <tt>car</tt>, and <tt>cdr</tt> for operating on pairs.  But the only thing we need to know about these three operations is that if we glue two objects together using <tt>cons</tt> we can retrieve the objects using <tt>car</tt> and <tt>cdr</tt>.  That is, the operations satisfy the condition that, for any objects <tt>x</tt> and <tt>y</tt>, if <tt>z</tt> is <tt>(cons x y)</tt> then <tt>(car z)</tt> is <tt>x</tt> and <tt>(cdr z)</tt> is <tt>y</tt>.  Indeed, we mentioned that these three procedures are included as primitives in our language.  However, any triple of procedures that satisfies the above condition can be used as the basis for implementing pairs.  This point is illustrated strikingly by the fact that we could implement <tt>cons</tt>, <tt>car</tt>, and <tt>cdr</tt> without using any data structures at all but only using procedures.  Here are the definitions:
 
 <div id="scheme-define-cons">
 (define (cons x y)
@@ -403,12 +383,12 @@ prompt("scheme-define-cons");
 
 <p> This use of procedures corresponds to nothing like our intuitive notion of what data should be.  Nevertheless, all we need to do to show that this is a valid way to represent pairs is to verify that these procedures satisfy the condition given above. 
 
-<p> The subtle point to notice is that the value returned by <tt> (cons x y) </tt> is a procedure---namely the internally defined procedure <tt> dispatch </tt>, which takes one argument and returns either <tt> x </tt> or <tt> y </tt> depending on whether the argument is 0 or 1.  Correspondingly, <tt> (car z) </tt> is defined to apply <tt> z </tt> to 0.  Hence, if <tt> z </tt> is the procedure formed by <tt>(cons x y)</tt>, then <tt> z </tt> applied to 0 will yield <tt> x </tt>. Thus, we have shown that <tt> (car (cons x y)) </tt> yields <tt> x </tt>, as desired.  Similarly, <tt>(cdr (cons x y))</tt> applies the procedure returned by <tt> (cons x y) </tt> to 1, which returns <tt> y </tt>.  Therefore, this procedural implementation of pairs is a valid implementation, and if we access pairs using only <tt> cons </tt>, <tt> car </tt>, and <tt> cdr </tt> we cannot distinguish this implementation from one that uses ``real'' data structures.
+<p> The subtle point to notice is that the value returned by <tt>(cons x y)</tt> is a procedure---namely the internally defined procedure <tt>dispatch</tt>, which takes one argument and returns either <tt>x</tt> or <tt>y</tt> depending on whether the argument is 0 or 1.  Correspondingly, <tt>(car z)</tt> is defined to apply <tt>z</tt> to 0.  Hence, if <tt>z</tt> is the procedure formed by <tt>(cons x y)</tt>, then <tt>z</tt> applied to 0 will yield <tt>x</tt>. Thus, we have shown that <tt>(car (cons x y))</tt> yields <tt>x</tt>, as desired.  Similarly, <tt>(cdr (cons x y))</tt> applies the procedure returned by <tt>(cons x y)</tt> to 1, which returns <tt>y</tt>.  Therefore, this procedural implementation of pairs is a valid implementation, and if we access pairs using only <tt>cons</tt>, <tt>car</tt>, and <tt>cdr</tt> we cannot distinguish this implementation from one that uses ``real'' data structures.
 
 <p> The point of exhibiting the procedural representation of pairs is not that our language works this way (Scheme, and Lisp systems in general, implement pairs directly, for efficiency reasons) but that it could work this way.  The procedural representation, although obscure, is a perfectly adequate way to represent pairs, since it fulfills the only conditions that pairs need to fulfill.  This example also demonstrates that the ability to manipulate procedures as objects automatically provides the ability to represent compound data.  This may seem a curiosity now, but procedural representations of data will play a central role in our programming repertoire.  This style of programming is often called <em> message passing </em>  , and we will be using it as a basic tool in Chapter 3 when we address the issues of modeling and simulation.
 
 <div class="exercise">
-<p> Exercise 2.4. Here is an alternative procedural representation of pairs.  For this representation, verify that <tt> (car (cons x y)) </tt> yields <tt> x </tt> for any objects <tt> x </tt> and <tt> y </tt>. 
+<p> Exercise 2.4. Here is an alternative procedural representation of pairs.  For this representation, verify that <tt>(car (cons x y))</tt> yields <tt>x</tt> for any objects <tt>x</tt> and <tt>y</tt>. 
 
 <div id="scheme-define-cons-lambda">
 (define (cons x y)
@@ -421,11 +401,11 @@ prompt("scheme-define-cons");
 prompt("scheme-define-cons-lambda");
 </script>
 
-<p> What is the corresponding definition of <tt> cdr </tt>? (Hint: To verify that this works, make use of the substitution model of section 1-1-5.)
+<p> What is the corresponding definition of <tt>cdr</tt>? (Hint: To verify that this works, make use of the substitution model of section 1-1-5.)
 </div>
 
 <div class="exercise">
-<p> Exercise 2.5. Show that we can represent pairs of nonnegative integers using only numbers and arithmetic operations if we represent the pair a and b as the integer that is the product 2^a 3^b.  Give the corresponding definitions of the procedures <tt> cons </tt>, <tt> car </tt>, and <tt> cdr </tt>.
+<p> Exercise 2.5. Show that we can represent pairs of nonnegative integers using only numbers and arithmetic operations if we represent the pair a and b as the integer that is the product 2^a 3^b.  Give the corresponding definitions of the procedures <tt>cons</tt>, <tt>car</tt>, and <tt>cdr</tt>.
 </div>
 
 <div class="exercise">
@@ -443,7 +423,7 @@ prompt("scheme-define-church-numeral");
 
 <p> This representation is known as <em> Church numerals </em>  , after its inventor, Alonzo Church, the logician who invented the lambda calculus. 
 
-<p> Define <tt> one </tt> and <tt> two </tt> directly (not in terms of <tt> zero </tt> and <tt> add-1 </tt>).  (Hint: Use substitution to evaluate <tt> (add-1 zero) </tt>).  Give a direct definition of the addition procedure <tt> + </tt> (not in terms of repeated application of <tt> add-1 </tt>).
+<p> Define <tt>one</tt> and <tt>two</tt> directly (not in terms of <tt>zero</tt> and <tt>add-1</tt>).  (Hint: Use substitution to evaluate <tt>(add-1 zero)</tt>).  Give a direct definition of the addition procedure <tt>+</tt> (not in terms of repeated application of <tt>add-1</tt>).
 </div>
 
 <h3> Extended Exercise: Interval Arithmetic </h3> 
@@ -462,7 +442,7 @@ R_p = -------------
 
 <p> Alyssa's idea is to implement ``interval arithmetic'' as a set of arithmetic operations for combining ``intervals'' (objects that represent the range of possible values of an inexact quantity).  The result of adding, subtracting, multiplying, or dividing two intervals is itself an interval, representing the range of the result.
 
-<p> Alyssa postulates the existence of an abstract object called an ``interval'' that has two endpoints: a lower bound and an upper bound.  She also presumes that, given the endpoints of an interval, she can construct the interval using the data constructor <tt> make-interval </tt>.  Alyssa first writes a procedure for adding two intervals.  She reasons that the minimum value the sum could be is the sum of the two lower bounds and the maximum value it could be is the sum of the two upper bounds:
+<p> Alyssa postulates the existence of an abstract object called an ``interval'' that has two endpoints: a lower bound and an upper bound.  She also presumes that, given the endpoints of an interval, she can construct the interval using the data constructor <tt>make-interval</tt>.  Alyssa first writes a procedure for adding two intervals.  She reasons that the minimum value the sum could be is the sum of the two lower bounds and the maximum value it could be is the sum of the two upper bounds:
 
 <div id="scheme-define-add-interval">
 (define (add-interval x y)
@@ -473,7 +453,7 @@ R_p = -------------
 prompt("scheme-define-add-interval");
 </script>
 
-<p> Alyssa also works out the product of two intervals by finding the minimum and the maximum of the products of the bounds and using them as the bounds of the resulting interval.  (<tt> Min </tt> and <tt> max </tt> are primitives that find the minimum or maximum of any number of arguments.)
+<p> Alyssa also works out the product of two intervals by finding the minimum and the maximum of the products of the bounds and using them as the bounds of the resulting interval.  (<tt>Min</tt> and <tt>max</tt> are primitives that find the minimum or maximum of any number of arguments.)
 
 <div id="scheme-define-mul-interval">
 (define (mul-interval x y)
@@ -510,15 +490,15 @@ prompt("scheme-define-div-interval");
 prompt("scheme-define-make-interval");
 </script>
 
-<p> Define selectors <tt> upper-bound </tt> and <tt> lower-bound </tt> to complete the implementation.
+<p> Define selectors <tt>upper-bound</tt> and <tt>lower-bound</tt> to complete the implementation.
 </div>
 
 <div class="exercise">
-<p> <b>Exercise 2.8:</b> Using reasoning analogous to Alyssa's, describe how the difference of two intervals may be computed.  Define a corresponding subtraction procedure, called <tt> sub-interval </tt>.
+<p> <b>Exercise 2.8:</b> Using reasoning analogous to Alyssa's, describe how the difference of two intervals may be computed.  Define a corresponding subtraction procedure, called <tt>sub-interval</tt>.
 </div>
 
 <div class="exercise">
-<p> <b>Exercise 2.9:</b> The <tt> width </tt>  of an interval is half of the difference between its upper and lower bounds.  The width is a measure of the uncertainty of the number specified by the interval.  For some arithmetic operations the width of the result of combining two intervals is a function only of the widths of the argument intervals, whereas for others the width of the combination is not a function of the widths of the argument intervals.  Show that the width of the sum (or difference) of two intervals is a function only of the widths of the intervals being added (or subtracted). Give examples to show that this is not true for multiplication or division.
+<p> <b>Exercise 2.9:</b> The <tt>width</tt>  of an interval is half of the difference between its upper and lower bounds.  The width is a measure of the uncertainty of the number specified by the interval.  For some arithmetic operations the width of the result of combining two intervals is a function only of the widths of the argument intervals, whereas for others the width of the combination is not a function of the widths of the argument intervals.  Show that the width of the sum (or difference) of two intervals is a function only of the widths of the intervals being added (or subtracted). Give examples to show that this is not true for multiplication or division.
 </div>
 
 <div class="exercise">
@@ -526,7 +506,7 @@ prompt("scheme-define-make-interval");
 </div>
 
 <div class="exercise">
-<p> <b>Exercise 2.11:</b> In passing, Ben also cryptically comments: ``By testing the signs of the endpoints of the intervals, it is possible to break <tt> mul-interval </tt> into nine cases, only one of which requires more than two multiplications.''  Rewrite this procedure using Ben's suggestion.
+<p> <b>Exercise 2.11:</b> In passing, Ben also cryptically comments: ``By testing the signs of the endpoints of the intervals, it is possible to break <tt>mul-interval</tt> into nine cases, only one of which requires more than two multiplications.''  Rewrite this procedure using Ben's suggestion.
 
 <p> After debugging her program, Alyssa shows it to a potential user, who complains that her program solves the wrong problem.  He wants a program that can deal with numbers represented as a center value and an additive tolerance; for example, he wants to work with intervals such as 3.5 +/- 0.15 rather than [3.35, 3.65].  Alyssa returns to her desk and fixes this problem by supplying an alternate constructor and alternate selectors: 
 
@@ -548,7 +528,7 @@ prompt("scheme-define-make-center-width");
 </div>
 
 <div class="exercise">
-<p> <b>Exercise 2.12:</b> Define a constructor <tt> make-center-percent </tt> that takes a center and a percentage tolerance and produces the desired interval.  You must also define a selector <tt> percent </tt> that produces the percentage tolerance for a given interval.  The <tt> center </tt> selector is the same as the one shown above.
+<p> <b>Exercise 2.12:</b> Define a constructor <tt>make-center-percent</tt> that takes a center and a percentage tolerance and produces the desired interval.  You must also define a selector <tt>percent</tt> that produces the percentage tolerance for a given interval.  The <tt>center</tt> selector is the same as the one shown above.
 </div>
 
 <div class="exercise">
@@ -596,7 +576,7 @@ prompt("scheme-define-par");
 </div>
 
 <div class="exercise">
-<p> <b>Exercise 2.15:</b> Eva Lu Ator, another user, has also noticed the different intervals computed by different but algebraically equivalent expressions. She says that a formula to compute with intervals using Alyssa's system will produce tighter error bounds if it can be written in such a form that no variable that represents an uncertain number is repeated.  Thus, she says, <tt> par2 </tt> is a ``better'' program for parallel resistances than <tt> par1 </tt>.  Is she right?  Why?
+<p> <b>Exercise 2.15:</b> Eva Lu Ator, another user, has also noticed the different intervals computed by different but algebraically equivalent expressions. She says that a formula to compute with intervals using Alyssa's system will produce tighter error bounds if it can be written in such a form that no variable that represents an uncertain number is repeated.  Thus, she says, <tt>par2</tt> is a ``better'' program for parallel resistances than <tt>par1</tt>.  Is she right?  Why?
 </div>
 
 <div class="exercise">
@@ -605,7 +585,33 @@ prompt("scheme-define-par");
 
 
 
- 
+<h3> Notes </h3>
+
+<div id="footnote_2-2" class="footnote"> 
+<p> <a href="#footnote_link_2-2" class="footnote_backlink">2</a> The name <tt>cons</tt> stands for ``construct.''  The names <tt>car</tt> and <tt>cdr</tt> derive from the original implementation of Lisp on the IBM 704.  That machine had an addressing scheme that allowed one to reference the ``address'' and ``decrement'' parts of a memory location.  <tt>Car</tt> stands for ``Contents of Address part of Register'' and <tt>cdr</tt> (pronounced ``could-er'') stands for ``Contents of Decrement part of Register.'' 
+</div>
+
+<div id="footnote_2-3" class="footnote"> 
+<p> <a href="#footnote_link_2-3" class="footnote_backlink">3</a> Another way to define the selectors and constructor is
+
+<div id="scheme-define-rat-pointless">
+(define make-rat cons)
+(define numer car)
+(define denom cdr)
+</div>
+<script>
+prompt("scheme-define-rat-pointless"); //
+</script>
+
+<p> The first definition associates the name <tt>make-rat</tt> with the value of the expression <tt>cons</tt>, which is the primitive procedure that constructs pairs. Thus <tt>make-rat</tt> and <tt>cons</tt> are names for the same primitive constructor.
+
+<p> Defining selectors and constructors in this way is efficient: Instead of <tt>make-rat</tt> <em>calling</em> <tt>cons</tt>, <tt>make-rat</tt> <em>is</em> <tt>cons</tt>, so there is only one procedure called, not two, when <tt>make-rat</tt> is called.  On the other hand, doing this defeats debugging aids that trace procedure calls or put breakpoints on procedure calls: You may want to watch <tt>make-rat</tt> being called, but you certainly don't want to watch every call to <tt>cons</tt>.
+
+We have chosen not to use this style of definition in this book.
+</div>
+
+<div id="footnote_2-4" class="footnote"> 
+<p> <a href="#footnote_link_2-4" class="footnote_backlink">4</a> <tt>display</tt> is the Scheme primitive for printing data. The Scheme primitive <tt>newline</tt> starts a new line for printing.  Neither of these procedures returns a useful value, so in the uses of <tt>print-rat</tt> below, we show only what <tt>print-rat</tt> prints, not what the interpreter prints as the value returned by <tt>print-rat</tt>. </div> 
 <hr>
 
 <p> <a rel="license" href="http://creativecommons.org/licenses/by-sa/3.0/deed.en_US" target="_blank"><img alt="Creative Commons License" style="border-width:0" src="http://i.creativecommons.org/l/by-sa/3.0/88x31.png" /></a><br /> Based on Structure and Interpretation of Computer Programs, a work at <a xmlns:dct="http://purl.org/dc/terms/" href="http://mitpress.mit.edu/sicp/" rel="dct:source" target="_blank">http://mitpress.mit.edu/sicp/</a>.
