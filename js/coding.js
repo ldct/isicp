@@ -235,7 +235,7 @@ function no_output_frozen_prompt(s) {
 }
 
 function makeStatic(_static) { //and no output
-  no_output_frozen_prompt(s);
+  no_output_frozen_prompt(_static);
 
 }
 

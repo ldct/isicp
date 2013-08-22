@@ -93,74 +93,30 @@ $(document).ready(createTOC);
 
 <h2> The Metacircular Evaluator </h2> 
 
-Our evaluator for Lisp will be implemented as a Lisp program.  It may seem
-circular to think about evaluating Lisp programs using an evaluator that is
-itself implemented in Lisp.  However, evaluation is a process, so it is
-appropriate to describe the evaluation process using Lisp, which, after all, is
-our tool for describing processes.@footnote{Even so, there will remain
-important aspects of the evaluation process that are not elucidated by our
-evaluator.  The most important of these are the detailed mechanisms by which
-procedures call other procedures and return values to their callers.  We will
-address these issues in Chapter 5, where we take a closer look at the
-evaluation process by implementing the evaluator as a simple register machine.}
-An evaluator that is written in the same language that it evaluates is said to
-be <tt> metacircular </tt> 
-.
-
+Our evaluator for Lisp will be implemented as a Lisp program.  It may seem circular to think about evaluating Lisp programs using an evaluator that is itself implemented in Lisp.  However, evaluation is a process, so it is appropriate to describe the evaluation process using Lisp, which, after all, is our tool for describing processes.@footnote{Even so, there will remain important aspects of the evaluation process that are not elucidated by our evaluator.  The most important of these are the detailed mechanisms by which procedures call other procedures and return values to their callers.  We will address these issues in Chapter 5, where we take a closer look at the evaluation process by implementing the evaluator as a simple register machine.} An evaluator that is written in the same language that it evaluates is said to be <tt> metacircular </tt>  . 
 The metacircular evaluator is essentially a Scheme formulation of the
 environment model of evaluation described in section 3-2.  Recall that
 the model has two basic parts:
 
 <ul>
 @item
-To evaluate a combination (a compound expression other than a special form),
-evaluate the subexpressions and then apply the value of the operator
-subexpression to the values of the operand subexpressions.
+<p> To evaluate a combination (a compound expression other than a special form), evaluate the subexpressions and then apply the value of the operator subexpression to the values of the operand subexpressions. 
 
 @item
-To apply a compound procedure to a set of arguments, evaluate the body of the
-procedure in a new environment.  To construct this environment, extend the
-environment part of the procedure object by a frame in which the formal
-parameters of the procedure are bound to the arguments to which the procedure
-is applied.
-
+<p> To apply a compound procedure to a set of arguments, evaluate the body of the procedure in a new environment. To construct this environment, extend the environment part of the procedure object by a frame in which the formal parameters of the procedure are bound to the arguments to which the procedure is applied. 
 </ul>
 
-These two rules describe the essence of the evaluation process, a basic cycle
-in which expressions to be evaluated in environments are reduced to procedures
-to be applied to arguments, which in turn are reduced to new expressions to be
-evaluated in new environments, and so on, until we get down to symbols, whose
-values are looked up in the environment, and to primitive procedures, which are
-applied directly (see Figure 4-1).@footnote{If we grant ourselves the
-ability to apply primitives, then what remains for us to implement in the
-evaluator?  The job of the evaluator is not to specify the primitives of the
-language, but rather to provide the connective tissue---the means of
-combination and the means of abstraction---that binds a collection of
-primitives to form a language.  Specifically:
-
+These two rules describe the essence of the evaluation process, a basic cycle in which expressions to be evaluated in environments are reduced to procedures to be applied to arguments, which in turn are reduced to new expressions to be evaluated in new environments, and so on, until we get down to symbols, whose values are looked up in the environment, and to primitive procedures, which are applied directly (see Figure 4-1).@footnote{If we grant ourselves the ability to apply primitives, then what remains for us to implement in the evaluator?  The job of the evaluator is not to specify the primitives of the language, but rather to provide the connective tissue---the means of combination and the means of abstraction---that binds a collection of primitives to form a language.  Specifically:
 <ul>
 
 @item
-The evaluator enables us to deal with nested expressions.  For example,
-although simply applying primitives would suffice for evaluating the expression
-<tt> (+ 1 6) </tt>, it is not adequate for handling <tt> (+ 1 (* 2 3)) </tt>.  As far
-as the primitive procedure <tt> + </tt> is concerned, its arguments must be
-numbers, and it would choke if we passed it the expression <tt> (* 2 3) </tt> as an
-argument.  One important role of the evaluator is to choreograph procedure
-composition so that <tt> (* 2 3) </tt> is reduced to 6 before being passed as an
-argument to <tt> + </tt>.
+The evaluator enables us to deal with nested expressions.  For example, although simply applying primitives would suffice for evaluating the expression <tt> (+ 1 6) </tt>, it is not adequate for handling <tt> (+ 1 (* 2 3)) </tt>.  As far as the primitive procedure <tt> + </tt> is concerned, its arguments must be numbers, and it would choke if we passed it the expression <tt> (* 2 3) </tt> as an argument.  One important role of the evaluator is to choreograph procedure composition so that <tt> (* 2 3) </tt> is reduced to 6 before being passed as an argument to <tt> + </tt>.
 
 @item
-The evaluator allows us to use variables.  For example, the primitive procedure
-for addition has no way to deal with expressions such as <tt> (+ x 1) </tt>.  We
-need an evaluator to keep track of variables and obtain their values before
-invoking the primitive procedures.
+The evaluator allows us to use variables.  For example, the primitive procedure for addition has no way to deal with expressions such as <tt> (+ x 1) </tt>.  We need an evaluator to keep track of variables and obtain their values before invoking the primitive procedures.
 
 @item
-The evaluator allows us to define compound procedures.  This involves keeping
-track of procedure definitions, knowing how to use these definitions in
-evaluating expressions, and providing a mechanism that enables procedures to
-accept arguments.
+The evaluator allows us to define compound procedures.  This involves keeping track of procedure definitions, knowing how to use these definitions in evaluating expressions, and providing a mechanism that enables procedures to accept arguments.
 
 @item
 The evaluator provides the special forms, which must be evaluated differently
@@ -171,21 +127,7 @@ from procedure calls.
 critical procedures in the evaluator, <tt> eval </tt> and <tt> apply </tt>, which are
 described in section 4-1-1 (see Figure 4-1).
 
-The implementation of the evaluator will depend upon procedures that define the
-<tt> syntax </tt> 
- of the expressions to be evaluated.  We will use data
-abstraction to make the evaluator independent of the representation of the
-language.  For example, rather than committing to a choice that an assignment
-is to be represented by a list beginning with the symbol <tt> set! </tt> we use an
-abstract predicate <tt> assignment? </tt> to test for an assignment, and we use
-abstract selectors <tt> assignment-variable </tt> and <tt> assignment-value </tt> to
-access the parts of an assignment.  Implementation of expressions will be
-described in detail in section 4-1-2.  There are also operations,
-described in section 4-1-3, that specify the representation of procedures
-and environments.  For example, <tt> make-procedure </tt> constructs compound
-procedures, <tt> lookup-variable-value </tt> accesses the values of variables, and
-<tt> apply-primitive-procedure </tt> applies a primitive procedure to a given list
-of arguments.
+<p> The implementation of the evaluator will depend upon procedures that define the <tt> syntax </tt> of the expressions to be evaluated.  We will use data abstraction to make the evaluator independent of the representation of the language.  For example, rather than committing to a choice that an assignment is to be represented by a list beginning with the symbol <tt> set! </tt> we use an abstract predicate <tt> assignment? </tt> to test for an assignment, and we use abstract selectors <tt> assignment-variable </tt> and <tt> assignment-value </tt> to access the parts of an assignment.  Implementation of expressions will be described in detail in section 4-1-2.  There are also operations, described in section 4-1-3, that specify the representation of procedures and environments.  For example, <tt> make-procedure </tt> constructs compound procedures, <tt> lookup-variable-value </tt> accesses the values of variables, and <tt> apply-primitive-procedure </tt> applies a primitive procedure to a given list of arguments.
 
 @menu
 * 4-1-1::            The Core of the Evaluator
@@ -233,17 +175,7 @@ procedures: <tt> eval </tt> and <tt> apply </tt>.
 
 <h4> Eval </h4> 
 
-<tt> Eval </tt> takes as arguments an expression and an environment.  It classifies
-the expression and directs its evaluation.  <tt> Eval </tt> is structured as a case
-analysis of the syntactic type of the expression to be evaluated.  In order to
-keep the procedure general, we express the determination of the type of an
-expression abstractly, making no commitment to any particular representation
-for the various types of expressions.  Each type of expression has a predicate
-that tests for it and an abstract means for selecting its parts.  This
-<tt> abstract syntax </tt> 
- makes it easy to see how we can change the syntax of
-the language by using the same evaluator, but with a different collection of
-syntax procedures.
+<p> <tt> Eval </tt> takes as arguments an expression and an environment.  It classifies the expression and directs its evaluation.  <tt> Eval </tt> is structured as a case analysis of the syntactic type of the expression to be evaluated.  In order to keep the procedure general, we express the determination of the type of an expression abstractly, making no commitment to any particular representation for the various types of expressions.  Each type of expression has a predicate that tests for it and an abstract means for selecting its parts.  This <tt> abstract syntax </tt> makes it easy to see how we can change the syntax of the language by using the same evaluator, but with a different collection of syntax procedures.
 
 
 @b{Primitive expressions}
@@ -273,14 +205,10 @@ An assignment to (or a definition of) a variable must recursively call
 environment must be modified to change (or create) the binding of the variable.
 
 @item
-An <tt> if </tt> expression requires special processing of its parts, so as to
-evaluate the consequent if the predicate is true, and otherwise to evaluate the
-alternative.
+<p> An <tt> if </tt> expression requires special processing of its parts, so as to evaluate the consequent if the predicate is true, and otherwise to evaluate the alternative.
 
 @item
-A <tt> lambda </tt> expression must be transformed into an applicable procedure by
-packaging together the parameters and body specified by the <tt> lambda </tt>
-expression with the environment of the evaluation.
+<p> A <tt> lambda </tt> expression must be transformed into an applicable procedure by packaging together the parameters and body specified by the <tt> lambda </tt> expression with the environment of the evaluation.
 
 @item
 A <tt> begin </tt> expression requires evaluating its sequence of expressions in
