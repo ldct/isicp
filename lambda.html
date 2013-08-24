@@ -26,97 +26,203 @@ function lprompt(s) {
 
 </head>
 
-<body style="width:66%">
+<body style="width:66%; margin:0 auto">
 
-<h2> Introduction: how to write down functions </h2>
+<style>
+.lambda {
+	font-style: italic;
+	margin: 1em 1em 1em 3em;
+	font-size: 1.2em;
+}
+</style>
 
-<p> We'll begin our introduction to the lambda calculus by asking how we might write down a function. There are standard ways to notate numbers,
+<h1 style="margin:0; text-align:center">From Church Numerals to Y Combinators</h1>
+<h2 style="margin:0; text-align:center">An Interactive Tour of the Lambda Calculus</h2>
 
-<blockquote>
+<h2> Introduction: How to Write Functions </h2>
+
+<p> We'll begin our introduction to the lambda calculus by considering the question of how we might write down a function. There are standard ways to notate numbers,
+
+<div class="lambda">
 42 <br>
 0x2a
-</blockquote>
+</div>
 
 <p> sets,
 
-<blockquote>
+<div class="lambda">
 {0,1,2} <br>
 {x | x > 0, x &in; R}
-</blockquote>
+</div>
 
-<p> etc, but there doesn't seem to be a way to write down functions. 
+<p> etc, but there doesn't seem to be a way to write down functions. How should we write down a function, for example, that takes a natural number and triples it?
 
-<p> "But there is a way!" you say. "for example to write down the function <em> f </em> that triples its argument - f(1) = 3, f(4) = 12, etc - we can just write:
+<p> "Easy!" you say. "Just call that function <em>f</em> and write
 
-<blockquote> f(x) = 3x </blockquote>
+<div class="lambda"> f(x) = 3x </div>
 
-<p> ."
+<p>
 
-<p> Well, this approach suffers the drawback that you must give the function a name. This becomes a crippling handicap if we want to write higher-order functions, functions that return other functions. We need a notation for anonymous functions - functions that don't have names.
+<p> to define it."
+
+<p> Well, this approach suffers the drawback that you must give the function a name. I want a way to write down anonymous functions - functions that do not have a name. I want to be able to say
+
+<div class="lambda"> f = something </div>
+
+Why might I want this? This is indispensible in writing higher-order functions, functions that return other functions.
 
 <p> In lambda calculus, we would write <em> f </em> as 
 
-<blockquote> &lambda;x.3x </blockquote>
+<div class="lambda"> &lambda;x.3x </div>
 
 <p> Where, in general, a function that takes an argument and returns something is written as 
 
-<blockquote> &lambda;[argument].[return value] </blockquote>
+<div class="lambda"> &lambda;[argument].[return value] </div>
 
-<h2> Simple examples </h2>
+<p> By the way, function application will be denoted simply by writing the function next to its operand, like so
 
-<p> Now we have a universe of functions that we can talk about. The next logical step would be to introduce something for the functions to act on - perhaps numbers. Lists might be useful, for building data structures.
+<div class="lambda">
+fx
+</div>
 
-<p> I'm not going to do that. Our universe of will only contain functions. What do they act on? Other functions. Let's see how far we can take this idea. It might seem at first that there aren't any interesting functions to write down. How about one that does nothing?
+<p> Because, as you will see later, there are more important things for parentheses to do than denote function application.
 
-<p> The identity function is a function <em> I </em> that always returns its argument
+<h2> Simple Beginnings </h2>
 
-<blockquote> 
+<p> Let's now create a universe for our functions to live in. Mathematically inclined readers might now point out that this universe must be incomplete - after all, functions must act on something, so surely we must include something else in the universe for them to act on, for example integers. 
+
+<p> To which we say, functions can very well act on other functions. Our universe of will only contain functions. Let's see how far we can take this idea. It might seem at first that there aren't any interesting functions to write down. I present as my first counterexample a function that does absolutely nothing, the identity function.
+
+<div class="lambda"> 
 I = &lambda;t.t
-
-<div id="id">
-((lambda t t) y)
 </div>
-<div id="id-output">
+
+<p> "You got lucky," I hear you say. "Your universe can only contain silly functions like these - I don't think you can come up with many more."
+
+<p> To which I say, how about this?
+
+<div class="lambda">
+C<sub>I</sub> = &lambda;r.(&lambda;t.t)
 </div>
-<script>
-lprompt("id");
-</script>
 
-</blockquote>
+<p> This function <em>C<sub>I</sub></em> will always return the identity function that we defined above. Here we see clearly why lambda notation is superior; without it, we would have to do this to define <em>C<sub>I</sub></em>
 
-<p> The constant function, denoted by <em> C<sub>r</sub> </em>, is a function that always returns <em> r </em>, is defined by
+<div class="lambda">
+for all x, C<sub>I</sub>x = I where for all t, It = t
+</div>
 
-<blockquote>
+<p> I hope you got the hint that <em>C<sub>I</sub></em> is so named because it is the <b>constant function of I</b>; we can generalise to a whole class of <b>constant functions of r</b>
+
+<div class="lambda">
 C<sub>r</sub> = &lambda;t.r
-
-<div id="c_r">
-((lambda t r) x)
 </div>
-<div id="c_r-output">
-</div>
-<script>
-lprompt("c_r");
-</script>
-</blockquote>
 
-<p> What does the function 
-<blockquote>
+<p> heck, let's create a function that creates these <em>C<sub>r</sub></em>'s
+
+<div class="lambda">
 K = &lambda;r.(&lambda;t.r)
-</blockquote>
+</div>
 
-<p> do? It returns the constant function of its argument - Kr = C<sub>r</sub>.
+<p> with <em>Kr = C<sub>r</sub></em>. The rabbit hole goes deeper and deeper.
 
-<h2> More notation </h2>
+<h2> Multiple Arguments </h2>
 
-<p> Application (drop brackets), currying, reasoning
+<p> Let's take a slight detour. So far, all our functions have only accepted one argument - what happens if we want them to take two or more arguments? For example, think of the two-argument functions <em>F</em> and <em>S</em>
 
-<h2> Numbers </h2>
+<div class="lambda">
+H(x,y) = x<br>
+T(x,y) = y
+</div>
 
-<p> Church came up with a way of encoding numbers as functions.
+<p> The solution is to make the function take only the first argument <em>x</em> and return a partially evaluated function, which then takes the second argument and processes it.
+
+<div class="lambda">
+H = &lambda;x.(&lambda;y.x)
+</div>
+
+<p> So <em>H</em> is just <em>K</em> in disguise. As you can see, when we feed H the first argument...
+
+<div class="lambda">
+Hx = &lambda;y.x
+</div>
+
+we get a partially applied function, and when we feed that the second argument...
+
+<div class="lambda">
+(Hx)y = y
+</div>
+
+<p> We get back the finished computation. This strategy is called <b>currying</b> and should be familiar to Haskell and ML programmers, among others.
+
+<h2> A Note on Notation </h2>
+
+<p> You can see why we reserved brackets earlier on; in general, these are two different functions
+
+<div class="lambda">
+(FI)I = I&nbsp;&nbsp; = &lambda;t.t<br>
+F(II) = FI = &lambda;r.(&lambda;t.t)<br>
+</div>
+
+<p> Since the first one is much more common, we will often drop the brackets. Hence our convention is that <b>brackets are implicitly placed from the left</b>; when we write <em>FII</em>, it is to be understood as <em>(FI)I</em>.
+
+<p> In a similar vein, let's simplify this
+
+<div class="lambda">
+F = &lambda;x.(&lambda;y.x)
+</div>
+
+<p> to this
+
+<div class="lambda">
+F = &lambda;xy.y
+</div>
+
+<h2> One, Two, Three... </h2>
+
+<p> There are many ways to represent numbers via functions, to say that this function represents one, that one represents two, etc. As an exercise, try thinking of one of them.
+
+<p> We'll focus on a classic encoding devised by Alonzo Church. The Church encoding of a number <em>n</em> is a function that maps functions to their n-fold compositions.
+
+<div class="lambda">
+nf = f<sup>n</sup> = f &#8728; f &#8728; ... &#8728; f
+</div>
+
+<p> we can derive an explicit form for <em>f</em>
+
+<div class="lambda">
+nfx = f<sup>n</sup>x<br>
+n &nbsp;&nbsp; = &lambda;fx.f<sup>n</sup>x
+</div>
+
+<p> with some examples
+
+<div class="lambda">
+0 = &lambda;fx.x <br>
+1 = &lambda;fx.fx <br>
+2 = &lambda;fx.f(fx) <br>
+3 = &lambda;fx.f(f(fx))
+</div>
+
+<p> Let's derive the successor function that adds one to a number.
+
+<div class="lambda">
+Sn = &lambda;fx.f<sup>(n+1)</sup>x<br>
+&nbsp;&nbsp;&nbsp; = &lambda;fx.f(f<sup>n</sup>x)<br>
+&nbsp;&nbsp;&nbsp; = &lambda;fx.f(nfx)<br>
+S &nbsp; = &lambda;nfx.f(nfx)
+</div>
+
+<h2> Cons </h2>
+
+<h2> Booleans and Control Flow </h2>
+
+<h2> Recursion? </h2>
+
+<h2> Y Combinator </h2>
 
 derivation
 
-<blockquote>
+<div class="lambda">
 <div id="numbers">
 (lambda f x (f (f x)))
 </div>
@@ -125,7 +231,7 @@ derivation
 <script>
 lprompt("numbers");
 </script>
-</blockquote>
+</div>
 
 <h2> addenum </h2>
 
