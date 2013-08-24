@@ -25,17 +25,6 @@ var biwascheme = new BiwaScheme.Interpreter( function(e){
   console.log("Biwascheme ", e.message);
 });
 
-function eval_scheme(s) {
-
-  resetTopEnv();
-
-  try {
-    return biwascheme.evaluate(s);
-  } catch (e) {
-    return;// e.toString(); 
-  }
-}
-
 function resetTopEnv() {
   BiwaScheme.TopEnv = {};
   
@@ -76,7 +65,7 @@ var editorOf = {};
 function makeEditable(_editor) {
 
   if (editorOf[_editor]) {
-    //throw "Error: makeEditable called with " + _editor + " which already exists!";
+    console.log("Error: makeEditable called with " + _editor + " which already exists!");
     return;
   }
 
@@ -189,7 +178,7 @@ function compute(s) {
         $_(_output).empty();
       }
       w.terminate();
-      def.resolve();      
+      def.resolve(); //todo: switch    
       return;
     } else if (e.data.suppress_newline) {
       output_fragment.push($("<span>" + e.data.value + "</span>"));
@@ -205,7 +194,32 @@ function compute(s) {
   for (var pushes = getPushes(s), i = 0; i < pushes.length; i++) {
     compute(pushes[i]);
   }
-  return def.promise();
+  return def; //for template code to chain
+}
+
+function eval_scheme(code) { //deferred
+
+  var def = $.Deferred();
+
+  var w = new Worker("js/interpreter/scheme_worker.js");
+  var out = "";
+  w.onmessage = function(e) {
+    if (e.data.end) {
+      def.resolve(out); //using eval here might throw errors
+      w.terminate();
+    } else if (e.data.suppress_newline) { //eval_scheme should not be used with
+      return; //e.data.value actually contains something
+    } else {
+      out += e.data;
+      return;
+    }
+  }
+  
+  console.log(code)
+  w.postMessage(code);
+
+  return def;
+
 }
 
 function prompt(s) {

@@ -16,12 +16,8 @@ importScripts("reader.js", "tokenizer.js");
 onmessage = function(event) {
     var env = create_global_frame();
     
-    try {
-        var codebuffer = new Buffer(tokenize_lines(event.data.split("\n")));
-    } catch(e) {
-        this.postMessage(e.toString() + "\n");
-    }
-    
+    var codebuffer = new Buffer(tokenize_lines(event.data.split("\n")));
+
     while (codebuffer.current() != null) {
         try {
             var result = scheme_eval(scheme_read(codebuffer), env);
@@ -539,11 +535,16 @@ _PRIMITIVES["not"] = new PrimitiveProcedure(scheme_not);
 
 function scheme_eqp(x, y) {
     if (scheme_stringp(x) && scheme_stringp(y)) {
-        return x.toString() === y.toString();
+        return x.toString() === y.toString(); //is this correct?
     }
     return x == y;
 }
 _PRIMITIVES["eq?"] = new PrimitiveProcedure(scheme_eqp);
+
+function scheme_equalp(x, y) {
+    return x.toString() === y.toString();
+}
+_PRIMITIVES["equal?"] = new PrimitiveProcedure(scheme_equalp);
 
 function scheme_pairp(x) {
     return x instanceof Pair;

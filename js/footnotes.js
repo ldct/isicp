@@ -64,7 +64,6 @@ $(document).ready(function() {
         div.css({ left: left, 
                   top: top, 
                   background: new_popup_bg });
-//      $(doc).css({ background: new_doc_bg });
       },
 
       footnoteout: function() {

@@ -125,13 +125,17 @@ $(document).ready(createTOC);
 <div id="scheme-number">
 486
 </div>
+<script>
+makeEditable("scheme-number");
+</script>
 
 <p> the interpreter will respond by printing<a name="footnote_link_1-5" class="footnote_link" href="#footnote_1-5">5</a>
 
 <div id="scheme-number-output" class="output"> </div>
 <script>
-makeEditable("scheme-number");
-linkEditor("scheme-number", "scheme-number-output", function(x, y) {return eval_editor(x);});
+editorOf["scheme-number"].setOption('onBlur', function() {
+  return compute("scheme-number");
+});
 </script>
 
 <p> Expressions representing numbers may be combined with an expression representing a primitive procedure (such as <tt>+</tt> or <tt>*</tt>) to form a compound expression that represents the application of the procedure to those numbers. For example:
@@ -281,17 +285,28 @@ answer("scheme-ex-111-nested", 6);
 <script> 
 makePromptingInput("scheme-ex-12-input");
 addOutput("scheme-ex-12-input");
-linkEditor("scheme-ex-12-input", "scheme-ex-12-input-output", function(x, y) {
-
-  var code = "(equal? (quote " + y + ") " + 
+var editor = editorOf["scheme-ex-12-input"];
+editor.setOption('onBlur', function() {
+  var code = "(equal? (quote " + editor.getValue() + ") " + 
       "'(/ (+ 5 4 (- 2 (- 3 (+ 6 (/ 4 5))))) (* 3 (- 6 2) (- 2 7))))";
 
-  if (eval_scheme(code) == true) {
-    return "<div class='right-answer'> \u2713 </div>";
-  } else {
-    return "<div class='wrong-answer'> \u2717 </div>";
-  }
+  eval_scheme(code).then(function(res){
+    console.log(res);
+    if (res == "true\n") {
+      $_("scheme-ex-12-input-output").empty().append($("<div class='right-answer'> \u2713 </div>"));
+    } else {
+      $_("scheme-ex-12-input-output").empty().append($("<div class='wrong-answer'> \u2717 </div>"));
+    }
+    
+  })
+
+  
 });
+
+/*
+
+*/
+
 </script>
 </div>
 
@@ -567,7 +582,7 @@ prompt("scheme-define-square");
 <p> We can understand this in the following way:
 
 <p><p><tt>(define&nbsp;(square&nbsp;&nbsp;x)&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;(*&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;x&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;x))<br>
-&nbsp;&nbsp;&#8593&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&#8593&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&#8593&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&#8593&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&#8593&nbsp;&nbsp;&nbsp;&nbsp;&#8593<br>
+&nbsp;&nbsp;&#8593;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&#8593;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&#8593;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&#8593;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&#8593;&nbsp;&nbsp;&nbsp;&nbsp;&#8593;<br>
 &nbsp;To&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;square&nbsp;something,&nbsp;multiply&nbsp;&nbsp;&nbsp;it&nbsp;by&nbsp;&nbsp;itself.<br>
 </tt><p><p>
 
@@ -576,7 +591,7 @@ prompt("scheme-define-square");
 <p> The general form of a procedure definition is
 
 <div id="scheme-define-syntax" class='static'>
-(define (&ltname&gt &ltformal parameters&gt) &ltbody&gt)
+(define (&lt;name&gt; &lt;formal parameters&gt;) &lt;body&gt;)
 </div>
 <script> 
 makeStatic("scheme-define-syntax"); 
@@ -872,13 +887,13 @@ makeStatic("scheme-cond-syntax");
 <p> This uses the special form if, a restricted type of conditional that can be used when there are precisely two cases in the case analysis. The general form of an if expression is
 
 <div id="scheme-if-syntax" class='static'>
-(if &ltpredicate&gt &ltconsequent&gt &ltalternative&gt)
+(if &lt;predicate&gt; &lt;consequent&gt; &lt;alternative&gt;)
 </div>
-<script> prompt("scheme-if-syntax"); </script>
+<script> no_output_frozen_prompt("scheme-if-syntax"); </script>
 
 <p> To evaluate an if expression, the interpreter starts by evaluating the <tt>&lt;predicate&gt;</tt> part of the expression. If the <tt>&lt;predicate&gt;</tt> evaluates to a true value, the interpreter then evaluates the <tt>&lt;consequent&gt;</tt> and returns its value. Otherwise it evaluates the <tt>&lt;alternative&gt;</tt> and returns its value.<a name="footnote_link_1-19" class="footnote_link" href="#footnote_1-19">19</a>
 
-<p> In addition to primitive predicates such as <tt>&lt;, =</tt> and <tt>&gt;,</tt> there are logical composition operations, which enable us to construct compound predicates. The three most frequently used are these:
+<p> In addition to primitive predicates such as <tt>&lt;</tt>, <tt>=</tt> and <tt>&gt;</tt>, there are logical composition operations, which enable us to construct compound predicates. The three most frequently used are these:
 
 <ul>
 
@@ -892,24 +907,24 @@ makeStatic("scheme-cond-syntax");
 
 <tt>(or &lt;e1&gt; ... &lt;en&gt;)</tt>
 
-<p> The interpreter evaluates the expressions <tt>&lt;e&gt;</tt> one at a time, in left-to-right order. If any <tt>&lt;e&gt;</tt> evaluates to a true value, that value is returned as the value of the or expression, and the rest of the &lte&gt's are not evaluated. If all &lte&gt's evaluate to false, the value of the or expression is false.
+<p> The interpreter evaluates the expressions <tt>&lt;e&gt;</tt> one at a time, in left-to-right order. If any <tt>&lt;e&gt;</tt> evaluates to a true value, that value is returned as the value of the or expression, and the rest of the <tt>&lt;e&gt;</tt>'s are not evaluated. If all <tt>&lt;e&gt;</tt>'s evaluate to false, the value of the or expression is false.
 
 <li> 
 
-<tt>(not &lte&gt)</tt>
+<tt>(not &lt;e&gt;)</tt>
 
-<p> The value of a not expression is true when the expression &lte&gt evaluates to false, and false otherwise. 
+<p> The value of a not expression is true when the expression <tt>&lt;e&gt;</tt> evaluates to false, and false otherwise. 
 
 </ul>
 
 <p> Notice that and and or are special forms, not procedures, because the subexpressions are not necessarily all evaluated. Not is an ordinary procedure.
 
-As an example of how these are used, the condition that a number x be in the range 5 &lt x &lt 10 may be expressed as
+As an example of how these are used, the condition that a number x be in the range 5 &lt; x &lt; 10 may be expressed as
 
 <div id="scheme-between">
-(and (> x 5) (< x 10))
+(and (> x 5) (&lt; x 10))
 </div>
-<script> prompt("scheme-between"); </script>
+<script> no_output_frozen_prompt("scheme-between"); </script>
 
 <p> As another example, we can define a predicate to test whether one number is greater than or equal to another as
 
