@@ -110,16 +110,6 @@ h2 {
   margin-bottom: 3em;
 }
 
-/*identifying editable portions*/
-
-.CodeMirror:hover {
-  background: #f8f8f8;
-}
-
-.CodeMirror-focused {
-  background: #E2FCF7;
-}
-
 /*autoscroll*/
 .CodeMirror-scroll {
   height: auto;
@@ -128,24 +118,40 @@ h2 {
   overflow-x: auto;
 }
 
+/*identifying editable portions*/
+
+.static .CodeMirror-scroll:hover {
+  background-color: rgba(0,0,0,0.01);
+}
+
+.CodeMirror-scroll:hover {
+  background: rgba(0,0,0,0.05);
+}
+
+.CodeMirror-focused:not(:hover) {
+  background: rgba(0,0,0,0.07);
+}
+
+.CodeMirror-focused:hover {
+  background: rgba(0,0,0,0.075);
+}
+
+/**/
+
 .exercise .CodeMirror:hover {
-  background-color: rgba(180, 207, 219, 0.5);
+  background: rgba(180, 207, 219, 0.5);
 }
 
 .exercise .CodeMirror-focused {
-  background: rgba(220, 239, 247, 0.5);
-}
-
-.static .CodeMirror:hover {
-  background-color: transparent;
+  background: rgba(180, 207, 219, 0.5);
 }
 
 .CodeMirror-matchingbracket {
-  background: lightblue;
+  background: #a8a8a8;
 }
 
 div.CodeMirror span.CodeMirror-matchingbracket {
-    color: #869CEB; /*why can't we use .CodeMirror-matchingbracket? */
+    color: #5f5f5f; /*#869CEB; /*why can't we use .CodeMirror-matchingbracket? */
 }
 
 #toc .h3 { 

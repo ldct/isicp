@@ -244,7 +244,7 @@ function no_output_prompt(s) {
 
 function no_output_frozen_prompt(s) {
   makeEditable(s);
-
+  $_(s).children("CodeMirror-scroll").addClass("static")
   editorOf[s].setOption("readOnly", 'nocursor');
 }
 

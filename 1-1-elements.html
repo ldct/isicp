@@ -840,21 +840,21 @@ makeStatic("scheme-x");
 (define (abs x)
   (cond ((> x 0) x)
         ((= x 0) 0)
-        ((< x 0) (- x))))
+        ((&lt; x 0) (- x))))
 </div>
 <script> prompt("scheme-cond"); </script>
 
 <p> The general form of a conditional expression is
 
-<div id="scheme-cond-syntax" class='static'>
-(cond (&ltp1&gt &lte1&gt)
-      (&ltp2&gt &lte2&gt)
+<div id="scheme-cond-syntax">
+(cond (&lt;p1&gt; &lt;e1&gt;)
+      (&lt;p2&gt; &lt;e2&gt;)
       ...
-      (&ltpn&gt &lten&gt))
+      (&lt;pn&gt; &lt;en&gt;))
 
 </div>
 <script> 
-makeStatic("scheme-cond-syntax"); 
+no_output_frozen_prompt("scheme-cond-syntax"); 
 </script>
 
 <p> consisting of the symbol cond followed by parenthesized pairs of expressions <tt>(&lt;p&gt; &lt;e&gt;)</tt> called clauses. The first expression in each pair is a predicate &mdash; that is, an expression whose value is interpreted as either true or false.<a name="footnote_link_1-17" class="footnote_link" href="#footnote_1-17">17</a>
