@@ -150,6 +150,8 @@ h2 {
   background: #a8a8a8;
 }
 
+/**/
+
 div.CodeMirror span.CodeMirror-matchingbracket {
     color: #5f5f5f; /*#869CEB; /*why can't we use .CodeMirror-matchingbracket? */
 }

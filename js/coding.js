@@ -21,18 +21,6 @@ function $_(s) {
 
 ////////////////////////////////////////////////////////////////////////////////
 
-var biwascheme = new BiwaScheme.Interpreter( function(e){
-  console.log("Biwascheme ", e.message);
-});
-
-function resetTopEnv() {
-  BiwaScheme.TopEnv = {};
-  
-  for (var s in ["define", "begin", "quote", "lambda", "if", "set!"]) {
-    BiwaScheme.TopEnv[s] = new BiwaScheme.Syntax(s);
-  }
-}
-
 var depsOf = {}
 
 function getDeps(_editor) {

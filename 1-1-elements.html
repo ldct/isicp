@@ -529,7 +529,9 @@ linkEditor("scheme-tree-eg", "scheme-tree-eg-output", function(x, y) {
     tripped = true;
   }
   
-  return eval_editor(x);
+  eval_editor(x).then(function(res){
+    $_("scheme-tree-eg-output").empty().append(res);
+  })
 });
 </script>
 
@@ -937,8 +939,8 @@ As an example of how these are used, the condition that a number x be in the ran
 <p> or alternatively as
 
 <div id="scheme-le-2">
-(define (>= x y)
-  (not (< x y)))
+(define (&gt;= x y)
+  (not (&lt; x y)))
 </div>
 <script> prompt("scheme-le-2"); </script>
 
