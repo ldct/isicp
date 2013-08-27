@@ -120,11 +120,11 @@ h2 {
 
 /*identifying editable portions*/
 
-.CodeMirror-scroll:hover:not(.static) {
+.CodeMirror-scroll:hover:not(.static):not(.CodeMirror-focused) {
   background: rgba(0,0,0,0.05);
 }
 
-.CodeMirror-scroll:hover.static {
+.CodeMirror-scroll:hover.static:not(.CodeMirror-focused) {
   background-color: rgba(0,0,0,0.01);
 }
 
@@ -138,16 +138,26 @@ h2 {
 
 /**/
 
-.exercise .CodeMirror:hover {
-  background: rgba(180, 207, 219, 0.5);
+.exercise .CodeMirror-scroll:hover:not(.static):not(.CodeMirror-focused) {
+  background: rgba(38, 92, 115, 0.05);
 }
 
-.exercise .CodeMirror-focused {
-  background: rgba(180, 207, 219, 0.5);
+.exercise .CodeMirror-scroll:hover.static:not(.CodeMirror-focused) {
+  background-color: rgba(38, 92, 115, 0.01);
 }
+
+.exercise .CodeMirror-focused:not(:hover) {
+  background: rgba(38, 92, 115, 0.07);
+}
+
+.exercise .CodeMirror-focused:hover {
+  background: rgba(38, 92, 115, 0.075);
+}
+
+/**/
 
 .CodeMirror-matchingbracket {
-  background: #a8a8a8;
+  background: rgba(0,0,0,0.1);
 }
 
 /**/
