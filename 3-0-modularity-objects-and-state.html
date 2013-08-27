@@ -1,0 +1,157 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.1//EN" "http://www.w3.org/TR/xhtml11/DTD/xhtml11.dtd">
+<html>
+<head>
+<meta charset="UTF-8">
+
+<link rel="stylesheet" type="text/css" href="css/codemirror.css" />
+<link rel="stylesheet" type="text/css" href="css/isicp.css" />
+<link rel="stylesheet" type="text/css" href="css/footnotes.css" />
+<link rel="stylesheet" type="text/css" href="css/theme.css" />
+
+<script src="js/helper.js"></script>
+<script src="js/codemirror/lib/codemirror.js"></script>
+<script src="js/codemirror/mode/scheme/scheme.js"></script>
+<script src="js/jquery.min.js"></script>
+<script src="js/coding.js"> </script>
+<script src="js/footnotes.js"></script>
+
+<title>Chapter 3 - Modularity, Objects, and State</title>
+<script type="text/javascript">
+
+  var _gaq = _gaq || [];
+  _gaq.push(['_setAccount', 'UA-36868476-1']);
+  _gaq.push(['_trackPageview']);
+
+  (function() {
+    var ga = document.createElement('script'); ga.type = 'text/javascript'; ga.async = true;
+    ga.src = ('https:' == document.location.protocol ? 'https://ssl' : 'http://www') + '.google-analytics.com/ga.js';
+    var s = document.getElementsByTagName('script')[0]; s.parentNode.insertBefore(ga, s);
+  })();
+
+</script>
+</head>
+<body>
+
+<div id="sidebox">
+  <div class="tab"></div>
+  <div class="content">
+    
+    <p> 
+    
+    <a href="index.html" class="navlink"> <img src='images/home.svg' width=32 height=32> </a>
+    <span id="toc-link" class="navlink"> <img src='images/list.svg' width=32 height=32> </span>
+    <span id="currently-editing-link" class="navlink"> <img src='images/file-edit.svg' width=32 height=32> </span>
+    
+    <p>
+    
+    <div id="currently-editing"> </div>
+    
+    <script>
+    
+    function hideAll() {
+      $("#currently-editing").hide();
+      $("#toc").hide();
+    }
+    
+    $("#currently-editing-link").click(function() {
+      hideAll();
+      $("#currently-editing").show();
+    });
+    
+    $("#toc-link").click(function() {
+      hideAll();
+      $("#toc").show();
+    });
+    
+    </script>
+    
+    <div id="toc"> </div>
+    
+    <p style='font-size:12px'> (Click on the left edge of this green box to hide it!)
+    
+    <script>
+    hideAll();
+    $("#toc").show();
+    </script>
+  
+  </div>
+</div>
+
+<script> 
+$('#sidebox .tab').toggle(function(){
+    $('#sidebox').animate({'right':'0%'});
+}, function(){
+    $('#sidebox').animate({'right':'-30%'});
+});
+
+$(document).ready(createTOC);
+
+</script>
+
+<div id="main">
+
+<a href='index.html' style="float:left"> <img src='images/chevron-up.svg' height=64 width=64> </a>
+<span style="float:right">
+<a href='1-1-elements.html'> <img src='images/chevron-right.svg' height=64 width=64> </a>
+</span>
+<br> <br>
+<h2> Modularity, Objects, and State </h2>
+
+<hr>
+
+<blockquote style="font-size:0.8em;">
+<img src="http://mitpress.mit.edu/sicp/full-text/book/ch3-Z-G-1.gif" />
+<br> (Even while it changes, it stands still.)
+
+<p> Heraclitus
+
+<p> Plus ça change, plus c'est la même chose.
+
+<p> Alphonse Karr
+</blockquote>
+
+<p> The preceding chapters introduced the basic elements from which programs are made. We saw how primitive procedures and primitive data are combined to construct compound entities, and we learned that abstraction is vital in helping us to cope with the complexity of large systems. But these tools are not sufficient for designing programs. Effective program synthesis also requires organizational principles that can guide us in formulating the overall design of a program. In particular, we need strategies to help us structure large systems so that they will be modular, that is, so that they can be divided ``naturally'' into coherent parts that can be separately developed and maintained.
+
+<p> One powerful design strategy, which is particularly appropriate to the construction of programs for modeling physical systems, is to base the structure of our programs on the structure of the system being modeled. For each object in the system, we construct a corresponding computational object. For each system action, we define a symbolic operation in our computational model. Our hope in using this strategy is that extending the model to accommodate new objects or new actions will require no strategic changes to the program, only the addition of the new symbolic analogs of those objects or actions. If we have been successful in our system organization, then to add a new feature or debug an old one we will have to work on only a localized part of the system.
+
+<p> To a large extent, then, the way we organize a large program is dictated by our perception of the system to be modeled. In this chapter we will investigate two prominent organizational strategies arising from two rather different ``world views'' of the structure of systems. The first organizational strategy concentrates on objects, viewing a large system as a collection of distinct objects whose behaviors may change over time. An alternative organizational strategy concentrates on the streams of information that flow in the system, much as an electrical engineer views a signal-processing system.
+
+<p> Both the object-based approach and the stream-processing approach raise significant linguistic issues in programming. With objects, we must be concerned with how a computational object can change and yet maintain its identity. This will force us to abandon our old substitution model of computation (section 1.1.5) in favor of a more mechanistic but less theoretically tractable environment model of computation. The difficulties of dealing with objects, change, and identity are a fundamental consequence of the need to grapple with time in our computational models. These difficulties become even greater when we allow the possibility of concurrent execution of programs. The stream approach can be most fully exploited when we decouple simulated time in our model from the order of the events that take place in the computer during evaluation. We will accomplish this using a technique known as delayed evaluation.
+
+<br>
+<br>
+
+<hr>
+
+<div id="footnotes">
+<h3 id='Notes'> Notes </h3>
+ </div>
+
+<hr>
+
+<p> <a rel="license" href="http://creativecommons.org/licenses/by-sa/3.0/deed.en_US" target="_blank"><img alt="Creative Commons License" style="border-width:0" src="http://i.creativecommons.org/l/by-sa/3.0/88x31.png" /></a><br /> Based on Structure and Interpretation of Computer Programs, a work at <a xmlns:dct="http://purl.org/dc/terms/" href="http://mitpress.mit.edu/sicp/" rel="dct:source" target="_blank">http://mitpress.mit.edu/sicp/</a>.
+
+</div>
+
+<script> 
+
+var todo = Object.keys(editorOf);
+
+(function proc() {
+  if (todo.length == 0) {
+    return;
+  }
+  try {
+    editorOf[todo.shift()].getOption("onBlur")().then(proc);
+  } catch (err) {
+    proc();
+  }    
+})();
+
+
+</script>
+
+<a href="https://github.com/zodiac/appspot-grading/tree/master/isicp" target="_blank"><img style="position: absolute; top: 0; right: 0; border: 0;" src="https://s3.amazonaws.com/github/ribbons/forkme_right_green_007200.png" alt="Fork me on GitHub"></a>
+
+</body>
+</html>
