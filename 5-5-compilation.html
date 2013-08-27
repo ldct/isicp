@@ -1708,29 +1708,19 @@ prompt();
 
 <script> 
 
-var todo = [];
+var todo = Object.keys(editorOf);
 
-for (var _e in editorOf) {
-  todo.push(_e);
-}
-
-console.log(todo);
-
-function proc() {
-  var e = todo.shift();
-  //console.log("computing", e, todo);
-  if (todo.length > 0) {
-    try {
-      editorOf[e].getOption("onBlur")().then(proc);
-    } catch (e) {
-      proc();
-    }
-  } else {
-    editorOf[e].getOption("onBlur")();
+(function proc() {
+  if (todo.length == 0) {
+    return;
   }
-}
+  try {
+    editorOf[todo.shift()].getOption("onBlur")().then(proc);
+  } catch (err) {
+    proc();
+  }    
+})();
 
-proc();
 
 </script>
 

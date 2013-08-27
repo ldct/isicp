@@ -73,6 +73,7 @@ function makeEditable(_editor) {
   }});
   
   editorOf[_editor] = editor;
+  return editor;
 }
 
 function linkEditor(_editor, _output, func) { //sync
@@ -210,14 +211,24 @@ function eval_scheme(code) { //deferred
 
 }
 
-function prompt(s) {
+function prompt(s, deps) {
 
-  makeEditable(s);
+  makeEditable(s).setOption('onBlur', function() {
+    return compute(s);
+  });
   addOutput(s);
-  
+  addDep(s, (deps || []));
+
+}
+
+function frozen_prompt(s, deps) {
+
+  makeEditable(s).setOption("readOnly", 'nocursor');  
   editorOf[s].setOption('onBlur', function() {
     return compute(s);
   });
+  addOutput(s);
+  addDep(s, (deps || []));
 }
 
 function hidden_prompt(s) {
