@@ -243,13 +243,12 @@ function no_output_prompt(s) {
 
 function no_output_frozen_prompt(s) {
   makeEditable(s);
-  $_(s).children("CodeMirror-scroll").addClass("static")
+  $_(s).find(".CodeMirror-scroll").addClass("static")
   editorOf[s].setOption("readOnly", 'nocursor');
 }
 
 function makeStatic(_static) { //and no output
   no_output_frozen_prompt(_static);
-
 }
 
 ////////////////////////////////////////////////////////////////////////////////

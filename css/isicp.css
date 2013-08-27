@@ -120,12 +120,12 @@ h2 {
 
 /*identifying editable portions*/
 
-.static .CodeMirror-scroll:hover {
-  background-color: rgba(0,0,0,0.01);
+.CodeMirror-scroll:hover:not(.static) {
+  background: rgba(0,0,0,0.05);
 }
 
-.CodeMirror-scroll:hover {
-  background: rgba(0,0,0,0.05);
+.CodeMirror-scroll:hover.static {
+  background-color: rgba(0,0,0,0.01);
 }
 
 .CodeMirror-focused:not(:hover) {
