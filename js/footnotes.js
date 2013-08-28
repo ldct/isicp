@@ -39,7 +39,7 @@ $(document).ready(function() {
         div.bind('mouseout',Footnotes.footnoteout);
   
         var el = document.getElementById(id);
-        div.html($(el).html());
+        div.html($.parseHTML($(el).html()));
           
         var popup_width = $("#main").width() * 0.96;
         div.css({

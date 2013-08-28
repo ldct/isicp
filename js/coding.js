@@ -53,8 +53,7 @@ var editorOf = {};
 function makeEditable(_editor) {
 
   if (editorOf[_editor]) {
-    console.log("Error: makeEditable called with " + _editor + " which already exists!");
-    return;
+    throw "Error: makeEditable called with " + _editor + " which already exists!";
   }
 
   var $editor = $_(_editor);
@@ -212,7 +211,6 @@ function eval_scheme(code) { //deferred
 }
 
 function prompt(s, deps) {
-
   makeEditable(s).setOption('onBlur', function() {
     return compute(s);
   });
@@ -222,8 +220,8 @@ function prompt(s, deps) {
 }
 
 function frozen_prompt(s, deps) {
-
-  makeEditable(s).setOption("readOnly", 'nocursor');  
+  makeEditable(s);
+  editorOf[s].setOption("readOnly", 'nocursor');  
   editorOf[s].setOption('onBlur', function() {
     return compute(s);
   });
@@ -231,10 +229,11 @@ function frozen_prompt(s, deps) {
   addDep(s, (deps || []));
 }
 
-function hidden_prompt(s) {
+function hidden_prompt(s, deps) {
   makeEditable(s);
 
   $_(s).hide()
+  addDep(s, (deps || []));
 }
 
 function no_output_prompt(s) {

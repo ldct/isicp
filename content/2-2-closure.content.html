@@ -11,74 +11,37 @@
 
 <br> <br>
 
+<div id="scheme-define-square">
+(define (square x)
+  (* x x))
+</div>
+<script>
+hidden_prompt("scheme-define-square");
+</script>
+
 <h2> Hierarchical Data and the Closure Property </h2> 
 
 <p> As we have seen, pairs provide a primitive ``glue'' that we can use to construct compound data objects. Figure 2-2 shows a standard way to visualize a pair---in this case, the pair formed by <tt>(cons 1 2)</tt>. In this representation, which is called <tt>box-and-pointer notation</tt>  , each object is shown as a <tt>pointer</tt>  to a box. The box for a primitive object contains a representation of the object. For example, the box for a number contains a numeral. The box for a pair is actually a double box, the left part containing (a pointer to) the <tt>car</tt> of the pair and the right part containing the <tt>cdr</tt>.
 
-<div class="exercise">
-<p> <b>Figure 2.2:</b> Box-and-pointer representation of
-<tt>(cons 1 2)</tt>.
+<p> <img class='center' src='http://mitpress.mit.edu/sicp/full-text/book/ch2-Z-G-11.gif'>
 
-<pre>
-     +---+---+     +---+
----->| * | *-+---->| 2 |
-     +-|-+---+     +---+
-       |
-       V
-     +---+
-     | 1 |
-     +---+
-</pre>
-</div>
+<p style="text-align:center"> <b> Figure 2.2: </b> Box-and-pointer representation of <tt>(cons 1 2)</tt>.
 
 <p> We have already seen that <tt>cons</tt> can be used to combine not only numbers but pairs as well. (You made use of this fact, or should have, in doing Exercise 2-2 and Exercise 2-3.)  As a consequence, pairs provide a universal building block from which we can construct all sorts of data structures. Figure 2-3 shows two ways to use pairs to combine the numbers 1, 2, 3, and 4.
 
-<div class="exercise">
-<p> <b>Figure 2.3:</b> Two ways to combine 1, 2, 3, and 4
-using pairs.
+<p> <img class='center' src='http://mitpress.mit.edu/sicp/full-text/book/ch2-Z-G-12.gif'>
 
-<pre>
-     +---+---+     +---+---+         +---+---+     +---+
----->| * | *-+---->| * | * |    ---->| * | *-+---->| 4 |
-     +-|-+---+     +-|-+-|-+         +-|-+---+     +---+
-       |             |   |             |
-       V             V   V             V
-   +---+---+      +---+ +---+      +---+---+     +---+---+
-   | * | * |      | 3 | | 4 |      | * | *-+---->| * | * |
-   +-|-+-|-+      +---+ +---+      +-|-+---+     +-|-+-|-+
-     |   |                           |             |   |
-     V   V                           V             V   V
-  +---+ +---+                      +---+        +---+ +---+
-  | 1 | | 2 |                      | 1 |        | 2 | | 3 |
-  +---+ +---+                      +---+        +---+ +---+
+<p style="text-align:center"> <b>Figure 2.3:</b> Two ways to combine 1, 2, 3, and 4 using pairs.
 
-  (cons (cons 1 2)                 (cons (cons 1
-        (cons 3 4))                            (cons 2 3))
-                                         4)
-</pre>
-</div>
+<p> The ability to create pairs whose elements are pairs is the essence of list structure's importance as a representational tool. We refer to this ability as the <tt>closure property</tt>  of <tt>cons</tt>. In general, an operation for combining data objects satisfies the closure property if the results of combining things with that operation can themselves be combined using the same operation.<a name="footnote_link_2-6" class="footnote_link" href="#footnote_2-6">6</a> Closure is the key to power in any means of combination because it permits us to create <tt>hierarchical</tt>  structures---structures made up of parts, which themselves are made up of parts, and so on.
 
-<p> The ability to create pairs whose elements are pairs is the essence of list structure's importance as a representational tool. We refer to this ability as the <tt>closure property</tt>  of <tt>cons</tt>. In general, an operation for combining data objects satisfies the closure property if the results of combining things with that operation can themselves be combined using the same operation. <a name="footnote_link_2-6" class="footnote_link" href="#footnote_2-6">6</a> Closure is the key to power in any means of combination because it permits us to create <tt>hierarchical</tt>  structures---structures made up of parts, which themselves are made up of parts, and so on.
-
-<p> From the outset of Chapter 1, we've made essential use of closure in dealing with procedures, because all but the very simplest programs rely on the fact that the elements of a combination can themselves be combinations. In this section, we take up the consequences of closure for compound data. We describe some conventional techniques for using pairs to represent sequences and trees, and we exhibit a graphics language that illustrates closure in a vivid way. <a name="footnote_link_2-7" class="footnote_link" href="#footnote_2-7">7</a>
+<p> From the outset of Chapter 1, we've made essential use of closure in dealing with procedures, because all but the very simplest programs rely on the fact that the elements of a combination can themselves be combinations. In this section, we take up the consequences of closure for compound data. We describe some conventional techniques for using pairs to represent sequences and trees, and we exhibit a graphics language that illustrates closure in a vivid way.<a name="footnote_link_2-7" class="footnote_link" href="#footnote_2-7">7</a>
 
 <h3> Representing Sequences </h3> 
 
-<div class="exercise">
-<p> <b>Figure 2.4:</b> The sequence 1, 2, 3, 4 represented as
-a chain of pairs.
+<p> <img class='center' src='http://mitpress.mit.edu/sicp/full-text/book/ch2-Z-G-13.gif'>
 
-<pre>
-     +---+---+     +---+---+     +---+---+     +---+---+
----->| * | *-+---->| * | *-+---->| * | *-+---->| * | / |
-     +-|-+---+     +-|-+---+     +-|-+---+     +-|-+---+
-       |             |             |             |
-       V             V             V             V
-     +---+         +---+         +---+         +---+
-     | 1 |         | 2 |         | 3 |         | 4 |
-     +---+         +---+         +---+         +---+
-</pre>
-</div>
+<p style="text-align:center"> <b>Figure 2.4:</b> The sequence 1, 2, 3, 4 represented as a chain of pairs.
 
 <p> One of the useful structures we can build with pairs is a <tt>sequence</tt>  ---an ordered collection of data objects. There are, of course, many ways to represent sequences in terms of pairs. One particularly straightforward representation is illustrated in Figure 2-4, where the sequence 1, 2, 3, 4 is represented as a chain of pairs. The <tt>car</tt> of each pair is the corresponding item in the chain, and the <tt>cdr</tt> of the pair is the next pair in the chain. The <tt>cdr</tt> of the final pair signals the end of the sequence by pointing to a distinguished value that is not a pair, represented in box-and-pointer diagrams as a diagonal line and in programs as the value of the variable <tt>nil</tt>. The entire sequence is constructed by nested <tt>cons</tt> operations: 
 
@@ -92,7 +55,7 @@ a chain of pairs.
 prompt("scheme-cons-1-2-3-4");
 </script>
 
-<p> Such a sequence of pairs, formed by nested <tt>cons</tt>es, is called a <em> list </em>  , and Scheme provides a primitive called <tt>list</tt> to help in constructing lists.@footnote{In this book, we use <tt>list</tt>  to mean a chain of pairs terminated by the end-of-list marker. In contrast, the term <tt>list structure</tt>  refers to any data structure made out of pairs, not just to lists.}  The above sequence could be produced by <tt>(list 1 2 3 4)</tt>. In general,
+<p> Such a sequence of pairs, formed by nested <tt>cons</tt>es, is called a <em> list </em>  , and Scheme provides a primitive called <tt>list</tt> to help in constructing lists.<a name="footnote_link_2-8" class="footnote_link" href="#footnote_2-8">8</a> The above sequence could be produced by <tt>(list 1 2 3 4)</tt>. In general,
 
 <div id="scheme-list-syntax">
 (list &lt;a_1&gt; &lt;a_2&gt; ... &lt;a_n&gt;)
@@ -135,13 +98,7 @@ promptDep("scheme-test-one-through-four", ["scheme-define-one-through-four"]);
 
 <p> Be careful not to confuse the expression <tt>(list 1 2 3 4)</tt> with the list <tt>(1 2 3 4)</tt>, which is the result obtained when the expression is evaluated. Attempting to evaluate the expression <tt>(1 2 3 4)</tt> will signal an error when the interpreter tries to apply the procedure <tt>1</tt> to arguments <tt>2</tt>, <tt>3</tt>, and <tt>4</tt>.
 
-<p> We can think of <tt>car</tt> as selecting the first item in the list, and of <tt>cdr</tt> as selecting the sublist consisting of all but the first item. Nested applications of <tt>car</tt> and <tt>cdr</tt> can be used to extract the second, third, and subsequent items in the list.@footnote{Since nested applications of <tt>car</tt> and <tt>cdr</tt> are cumbersome to write, Lisp dialects provide abbreviations for them---for instance,
-
-<pre>
-(cadr (arg)) = (car (cdr (arg)))
-</pre>
-
-<p> The names of all such procedures start with <tt>c</tt> and end with <tt>r</tt>. Each <tt>a</tt> between them stands for a <tt>car</tt> operation and each <tt>d</tt> for a <tt>cdr</tt> operation, to be applied in the same order in which they appear in the name. The names <tt>car</tt> and <tt>cdr</tt> persist because simple combinations like <tt>cadr</tt> are pronounceable.} The constructor <tt>cons</tt> makes a list like the original one, but with an additional item at the beginning.
+<p> We can think of <tt>car</tt> as selecting the first item in the list, and of <tt>cdr</tt> as selecting the sublist consisting of all but the first item. Nested applications of <tt>car</tt> and <tt>cdr</tt> can be used to extract the second, third, and subsequent items in the list.<a name="footnote_link_2-9" class="footnote_link" href="#footnote_2-9">9</a> The constructor <tt>cons</tt> makes a list like the original one, but with an additional item at the beginning.
 
 <div id="scheme-car-one-through-four">
 (car one-through-four)
@@ -186,7 +143,7 @@ promptDep("scheme-cons-10-one-through-four", ["scheme-define-one-through-four"])
 promptDep("scheme-cons-5-one-through-four", ["scheme-define-one-through-four"]);
 </script>
 
-<p> The value of <tt>nil</tt>, used to terminate the chain of pairs, can be thought of as a sequence of no elements, the <tt>empty list</tt>  . The word <tt>nil</tt>  is a contraction of the Latin word <em>nihil</em>, which means ``nothing.''@footnote{It's remarkable how much energy in the standardization of Lisp dialects has been dissipated in arguments that are literally over nothing: Should <tt>nil</tt> be an ordinary name?  Should the value of <tt>nil</tt> be a symbol?  Should it be a list?  Should it be a pair?  In Scheme, <tt>nil</tt> is an ordinary name, which we use in this section as a variable whose value is the end-of-list marker (just as <tt>true</tt> is an ordinary variable that has a true value). Other dialects of Lisp, including Common Lisp, treat <tt>nil</tt> as a special symbol. The authors of this book, who have endured too many language standardization brawls, would like to avoid the entire issue. Once we have introduced quotation in section 2-3, we will denote the empty list as <tt>'()</tt> and dispense with the variable <tt>nil</tt> entirely.}
+<p> The value of <tt>nil</tt>, used to terminate the chain of pairs, can be thought of as a sequence of no elements, the <tt>empty list</tt>  . The word <tt>nil</tt>  is a contraction of the Latin word <em>nihil</em>, which means ``nothing.''<a name="footnote_link_2-10" class="footnote_link" href="#footnote_2-10">10</a>
 
 <h4> List operations </h4> 
 
@@ -311,7 +268,6 @@ promptDep("scheme-append-odds-squares", ["scheme-define-squares", "scheme-define
 <p> <tt>append</tt> is also implemented using a recursive plan. To <tt>append</tt> lists <tt>list1</tt> and <tt>list2</tt>, do the following:
 
 <ul>
-
 <li>
 If <tt>list1</tt> is the empty list, then the result is just <tt>list2</tt>.
 </li>
@@ -320,6 +276,8 @@ If <tt>list1</tt> is the empty list, then the result is just <tt>list2</tt>.
 Otherwise, <tt>append</tt> the <tt>cdr</tt> of <tt>list1</tt> and <tt>list2</tt>, and <tt>cons</tt> the <tt>car</tt> of <tt>list1</tt> onto the result:
 </li>
 </ul>
+
+<p>
 
 <div id="scheme-define-append">
 (define (append list1 list2)
@@ -331,29 +289,37 @@ Otherwise, <tt>append</tt> the <tt>cdr</tt> of <tt>list1</tt> and <tt>list2</tt>
 prompt("scheme-define-append");
 </script>
 
+<p>
+
 <div class="exercise">
 <p> <b>Exercise 2.17:</b> Define a procedure <tt>last-pair</tt> that returns the list that contains only the last element of a given (nonempty) list:
 
 <div id="scheme-last-pair">
+(define (last-pair l)
+  'your-code-here)
 (last-pair (list 23 72 149 34))
-(34)
 </div>
 <script>
 prompt("scheme-last-pair");
 </script>
 </div>
 
+<p>
+
 <div class="exercise">
 <p> <b>Exercise 2.18:</b> Define a procedure <tt>reverse</tt> that takes a list as argument and returns a list of the same elements in reverse order:
 
 <div id="scheme-reverse">
+(define (reverse l)
+  'your-code-here)
 (reverse (list 1 4 9 16 25))
-(25 16 9 4 1)
 </div>
 <script>
 prompt("scheme-reverse");
 </script>
 </div>
+
+<p>
 
 <div class="exercise">
 <p> <b>Exercise 2.19:</b> Consider the change-counting program of section 1-2-2. It would be nice to be able to easily change the currency used by the program, so that we could compute the number of ways to change a British pound, for example. As the program is written, the knowledge of the currency is distributed partly into the procedure <tt>first-denomination</tt> and partly into the procedure <tt>count-change</tt> (which knows that there are five kinds of U.S. coins). It would be nicer to be able to supply a list of coins to be used for making change.
@@ -369,7 +335,7 @@ prompt("scheme-reverse");
 prompt("scheme-define-coins");
 </script>
 
-We could then call <tt>cc</tt> as follows:
+<p> We could then call <tt>cc</tt> as follows:
 
 <div id="scheme-cc-coins">
 (cc 100 us-coins)
@@ -399,11 +365,13 @@ prompt("scheme-define-cc");
 <p> Define the procedures <tt>first-denomination</tt>, <tt>except-first-denomination</tt>, and <tt>no-more?</tt> in terms of primitive operations on list structures. Does the order of the list <tt>coin-values</tt> affect the answer produced by <tt>cc</tt>?  Why or why not?
 </div>
 
+<p>
+
 <div class="exercise">
 <p> <b>Exercise 2.20:</b> The procedures <tt>+</tt>, <tt>*</tt>, and <tt>list</tt> take arbitrary numbers of arguments. One way to define such procedures is to use <tt>define</tt> with <tt>dotted-tail notation</tt>  . In a procedure definition, a parameter list that has a dot before the last parameter name indicates that, when the procedure is called, the initial parameters (if any) will have as values the initial arguments, as usual, but the final parameter's value will be a <tt>list</tt>  of any remaining arguments. For instance, given the definition
 
 <div id="scheme-dotted-tail-syntax">
-(define (f x y . z) <body>)
+(define (f x y . z) &lt;body&gt;)
 </div>
 <script>
 makeStatic("scheme-dotted-tail-syntax");
@@ -421,7 +389,7 @@ makeStatic("scheme-dotted-tail-application");
 <p> then in the body of <tt>f</tt>, <tt>x</tt> will be 1, <tt>y</tt> will be 2, and <tt>z</tt> will be the list <tt>(3 4 5 6)</tt>. Given the definition
 
 <div id="scheme-define-dotted-tail-syntax-one">
-(define (g . w) <body>)
+(define (g . w) &lt;body&gt;)
 </div>
 <script>
 makeStatic("scheme-define-dotted-tail-syntax-one");
@@ -433,27 +401,21 @@ makeStatic("scheme-define-dotted-tail-syntax-one");
 (g 1 2 3 4 5 6)
 </div>
 <script>
-prompt("scheme-g");
+no_output_frozen_prompt("scheme-g");
 </script>
 
-<p> then in the body of <tt>g</tt>, <tt>w</tt> will be the list <tt>(1 2 3 4 5 6)</tt>.@footnote{To define <tt>f</tt> and <tt>g</tt> using <tt>lambda</tt> we would write
-
-<div id="scheme-lambda-dotted-tail-syntax">
-(define f (lambda (x y . z) <body>))
-(define g (lambda w <body>))
-</div>
-<script>
-prompt("scheme-lambda-dotted-tail-syntax");
-</script>
+<p> then in the body of <tt>g</tt>, <tt>w</tt> will be the list <tt>(1 2 3 4 5 6)</tt>.<a name="footnote_link_2-11" class="footnote_link" href="#footnote_2-11">11</a>
 
 <p> Use this notation to write a procedure <tt>same-parity</tt> that takes one or more integers and returns a list of all the arguments that have the same even-odd parity as the first argument. For example,
 
 <div id="scheme-same-parity">
+(define (same-parity x . y)
+  'your-code-here)
 (same-parity 1 2 3 4 5 6 7)
-(1 3 5 7)
+'(1 3 5 7)
 
 (same-parity 2 3 4 5 6 7)
-(2 4 6)
+'(2 4 6)
 </div>
 <script>
 prompt("scheme-same-parity");
@@ -462,9 +424,9 @@ prompt("scheme-same-parity");
 
 <h4> Mapping over lists </h4> 
 
-One extremely useful operation is to apply some transformation to each element in a list and generate the list of results. For instance, the following procedure scales each number in a list by a given factor:
+<p> One extremely useful operation is to apply some transformation to each element in a list and generate the list of results. For instance, the following procedure scales each number in a list by a given factor:
 
-<div id="">
+<div id="scheme-define-scale-list">
 (define (scale-list items factor)
   (if (null? items)
       nil
@@ -472,92 +434,90 @@ One extremely useful operation is to apply some transformation to each element i
             (scale-list (cdr items) factor))))
 
 (scale-list (list 1 2 3 4 5) 10)
-(10 20 30 40 50)
 </div>
 <script>
-prompt();
+prompt("scheme-define-scale-list");
 </script>
 
-We can abstract this general idea and capture it as a common pattern expressed as a higher-order procedure, just as in section 1-3. The higher-order procedure here is called <tt>map</tt>. <tt>Map</tt> takes as arguments a procedure of one argument and a list, and returns a list of the results produced by applying the procedure to each element in the list:<div class='footnote'> [Footnote 12] Scheme standardly provides a <tt>map</tt> procedure that is more general than the one described here. This more general <tt>map</tt> takes a procedure of n arguments, together with n lists, and applies the procedure to all the first elements of the lists, all the second elements of the lists, and so on, returning a list of the results. For example:
+<p> We can abstract this general idea and capture it as a common pattern expressed as a higher-order procedure, just as in section 1-3. The higher-order procedure here is called <tt>map</tt>. <tt>map</tt> takes as arguments a procedure of one argument and a list, and returns a list of the results produced by applying the procedure to each element in the list:<a name="footnote_link_2-12" class="footnote_link" href="#footnote_2-12">12</a>
 
-<div id="">
-(map + (list 1 2 3) (list 40 50 60) (list 700 800 900))
-(741 852 963)
-
-(map (lambda (x y) (+ x (* 2 y)))
-     (list 1 2 3)
-     (list 4 5 6))
-(9 12 15)
-</div>
-<script>
-prompt();
-</script>
- </div>
-
-<div id="">
+<div id="scheme-define-map">
 (define (map proc items)
   (if (null? items)
       nil
       (cons (proc (car items))
             (map proc (cdr items)))))
+</div>
+<script>
+prompt("scheme-define-map");
+</script>
 
+<p>
+
+<div id="scheme-test-map">
 (map abs (list -10 2.5 -11.6 17))
-(10 2.5 11.6 17)
 
 (map (lambda (x) (* x x))
      (list 1 2 3 4))
-(1 4 9 16)
 </div>
 <script>
-prompt();
+prompt("scheme-test-map");
 </script>
 
-Now we can give a new definition of <tt>scale-list</tt> in terms of <tt>map</tt>:
+<p> Now we can give a new definition of <tt>scale-list</tt> in terms of <tt>map</tt>:
 
-<div id="">
+<div id="scheme-define-scale-list-with-map">
 (define (scale-list items factor)
   (map (lambda (x) (* x factor))
        items))
 </div>
 <script>
-prompt();
+prompt("scheme-define-scale-list-with-map");
 </script>
 
-<tt>Map</tt> is an important construct, not only because it captures a common pattern, but because it establishes a higher level of abstraction in dealing with lists. In the original definition of <tt>scale-list</tt>, the recursive structure of the program draws attention to the element-by-element processing of the list. Defining <tt>scale-list</tt> in terms of <tt>map</tt> suppresses that level of detail and emphasizes that scaling transforms a list of elements to a list of results. The difference between the two definitions is not that the computer is performing a different process (it isn't) but that we think about the process differently. In effect, <tt>map</tt> helps establish an abstraction barrier that isolates the implementation of procedures that transform lists from the details of how the elements of the list are extracted and combined. Like the barriers shown in Figure 2-1, this abstraction gives us the flexibility to change the low-level details of how sequences are implemented, while preserving the conceptual framework of operations that transform sequences to sequences. Section 2-2-3 expands on this use of sequences as a framework for organizing programs.
+<p> <tt>map</tt> is an important construct, not only because it captures a common pattern, but because it establishes a higher level of abstraction in dealing with lists. In the original definition of <tt>scale-list</tt>, the recursive structure of the program draws attention to the element-by-element processing of the list. Defining <tt>scale-list</tt> in terms of <tt>map</tt> suppresses that level of detail and emphasizes that scaling transforms a list of elements to a list of results. The difference between the two definitions is not that the computer is performing a different process (it isn't) but that we think about the process differently. In effect, <tt>map</tt> helps establish an abstraction barrier that isolates the implementation of procedures that transform lists from the details of how the elements of the list are extracted and combined. Like the barriers shown in Figure 2-1, this abstraction gives us the flexibility to change the low-level details of how sequences are implemented, while preserving the conceptual framework of operations that transform sequences to sequences. Section 2-2-3 expands on this use of sequences as a framework for organizing programs.
 
 <div class="exercise">
-<b>Exercise 2.21:</b> The procedure <tt>square-list</tt>
-takes a list of numbers as argument and returns a list of the squares of those
-numbers.
+<p> <b>Exercise 2.21:</b> The procedure <tt>square-list</tt> takes a list of numbers as argument and returns a list of the squares of those numbers.
 
-<div id="">
-(square-list (list 1 2 3 4))
-(1 4 9 16)
+<div id="scheme-hidden-define-square-list">
+(define (square-list items)
+  (map (lambda (x) (* x x))
+       items))
 </div>
 <script>
-prompt();
+hidden_prompt("scheme-hidden-define-square-list", ["scheme-define-map"]);
 </script>
 
-Here are two different definitions of <tt>square-list</tt>. Complete both of them by filling in the missing expressions:
+<div id="scheme-test-square-list">
+(square-list (list 1 2 3 4))
+</div>
+<script>
+prompt("scheme-test-square-list", ["scheme-hidden-define-square-list"]);
+</script>
 
-<div id="">
+<p> Here are two different definitions of <tt>square-list</tt>. Complete both of them by filling in the missing expressions:
+
+<div id="scheme-square-list-input">
 (define (square-list items)
   (if (null? items)
       nil
-      (cons <??> <??>)))
+      (cons &lt;??&gt; &lt;??&gt;))
 
 (define (square-list items)
-  (map <??> <??>))
+  (map &lt;??&gt; &lt;??&gt;)
 </div>
 <script>
-prompt();
+prompt("scheme-square-list-input");
 </script>
 </div>
 
-<div class="exercise">
-<b>Exercise 2.22:</b> Louis Reasoner tries to rewrite the first <tt>square-list</tt> procedure of Exercise 2-21 so that it evolves an iterative process:
+<p>
 
-<div id="">
+<div class="exercise">
+<p> <b>Exercise 2.22:</b> Louis Reasoner tries to rewrite the first <tt>square-list</tt> procedure of Exercise 2-21 so that it evolves an iterative process:
+
+<div id="scheme-define-louise-square-list">
 (define (square-list items)
   (define (iter things answer)
     (if (null? things)
@@ -568,14 +528,14 @@ prompt();
   (iter items nil))
 </div>
 <script>
-prompt();
+prompt("scheme-define-louise-square-list", ["scheme-define-square"]);
 </script>
 
-Unfortunately, defining <tt>square-list</tt> this way produces the answer list in the reverse order of the one desired. Why?
+<p> Unfortunately, defining <tt>square-list</tt> this way produces the answer list in the reverse order of the one desired. Why?
 
-Louis then tries to fix his bug by interchanging the arguments to <tt>cons</tt>:
+<p> Louis then tries to fix his bug by interchanging the arguments to <tt>cons</tt>:
 
-<div id="">
+<div id="scheme-define-louise-square-list-2">
 (define (square-list items)
   (define (iter things answer)
     (if (null? things)
@@ -586,147 +546,156 @@ Louis then tries to fix his bug by interchanging the arguments to <tt>cons</tt>:
   (iter items nil))
 </div>
 <script>
-prompt();
+prompt("scheme-define-louise-square-list-2", ["scheme-define-square"]);
 </script>
 
-This doesn't work either. Explain.
+<p> This doesn't work either. Explain.
 </div>
+
+<p>
 
 <div class="exercise">
-<b>Exercise 2.23:</b> The procedure <tt>for-each</tt> is similar to <tt>map</tt>. It takes as arguments a procedure and a list of elements. However, rather than forming a list of the results, <tt>for-each</tt> just applies the procedure to each of the elements in turn, from left to right. The values returned by applying the procedure to the elements are not used at all---<tt>for-each</tt> is used with procedures that perform an action, such as printing. For example,
+<p> <b>Exercise 2.23:</b> The procedure <tt>for-each</tt> is similar to <tt>map</tt>. It takes as arguments a procedure and a list of elements. However, rather than forming a list of the results, <tt>for-each</tt> just applies the procedure to each of the elements in turn, from left to right. The values returned by applying the procedure to the elements are not used at all &ndash; <tt>for-each</tt> is used with procedures that perform an action, such as printing. For example,
 
-<div id="">
+<div id="scheme-test-for-each">
 (for-each (lambda (x) (newline) (display x))
           (list 57 321 88))
-57
-321
-88
 </div>
 <script>
-prompt();
+prompt("scheme-test-for-each", ["scheme-define-for-each"]);
 </script>
 
-The value returned by the call to <tt>for-each</tt> (not illustrated above) can be something arbitrary, such as true. Give an implementation of <tt>for-each</tt>. 
+<p> The value returned by the call to <tt>for-each</tt> (not illustrated above) can be something arbitrary, such as true. Give an implementation of <tt>for-each</tt>.
+
+<div id="scheme-define-for-each">
+(for-each (lambda (x) (newline) (display x))
+          (list 57 321 88))
+</div>
+<script>
+prompt("scheme-define-for-each");
+</script>
+
 </div>
 
 <h3> Hierarchical Structures </h3> 
 
-The representation of sequences in terms of lists generalizes naturally to represent sequences whose elements may themselves be sequences. For example, we can regard the object <tt>((1 2) 3 4)</tt> constructed by
+<p> The representation of sequences in terms of lists generalizes naturally to represent sequences whose elements may themselves be sequences. For example, we can regard the object <tt>((1 2) 3 4)</tt> constructed by
 
-<div id="">
+<div id="scheme-show-1-2-pair-3-4">
 (cons (list 1 2) (list 3 4))
 </div>
 <script>
-prompt();
+prompt("scheme-show-1-2-pair-3-4");
 </script>
 
-as a list of three items, the first of which is itself a list, <tt>(1 2)</tt>. Indeed, this is suggested by the form in which the result is printed by the interpreter. Figure 2-5 shows the representation of this structure in terms of pairs.
+<p> as a list of three items, the first of which is itself a list, <tt>(1 2)</tt>. Indeed, this is suggested by the form in which the result is printed by the interpreter. Figure 2-5 shows the representation of this structure in terms of pairs.
 
-<div class="exercise">
-<b>Figure 2.5:</b> Structure formed by <tt>(cons (list 1
-2) (list 3 4))</tt>.
+<p> <img class='center' src='http://mitpress.mit.edu/sicp/full-text/book/ch2-Z-G-15.gif'>
 
-<pre>
-                                          (3 4)
-                                            |
-                                            V
-((1 2) 3 4)  +---+---+                  +---+---+     +---+---+
-        ---->| * | *-+----------------->| * | *-+---->| * | / |
-             +-|-+---+                  +-|-+---+     +-|-+---+
-               |                          |             |
-               V                          V             V
-      (1 2)  +---+---+     +---+---+    +---+         +---+
-        ---->| * | *-+---->| * | / |    | 3 |         | 4 |
-             +-|-+---+     +-|-+---+    +---+         +---+
-               |             |
-               V             V
-             +---+         +---+
-             | 1 |         | 2 |
-             +---+         +---+
-</pre>
-</div>
+<p style="text-align:center"> <b>Figure 2.5:</b> Structure formed by <tt>(cons (list 1 2) (list 3 4))</tt>.
 
-Another way to think of sequences whose elements are sequences is as <tt>trees</tt> . The elements of the sequence are the branches of the tree, and elements that are themselves sequences are subtrees. Figure 2-6 shows the structure in Figure 2-5 viewed as a tree.
+<p> Another way to think of sequences whose elements are sequences is as <tt>trees</tt> . The elements of the sequence are the branches of the tree, and elements that are themselves sequences are subtrees. Figure 2-6 shows the structure in Figure 2-5 viewed as a tree.
 
-<div class="exercise">
-<b>Figure 2.6:</b> The list structure in Figure 2-5 viewed as a tree.
+<p> <img class='center' src='http://mitpress.mit.edu/sicp/full-text/book/ch2-Z-G-16.gif'>
 
-<pre>
- ((1 2) 3 4)
-     /\\
-    /  | \
-(1 2)  3 4
- / \
- 1 2
-</pre>
-</div>
+<p style="text-align:center"> <b>Figure 2.6:</b> The list structure in Figure 2-5 viewed as a tree.
 
-Recursion is a natural tool for dealing with tree structures, since we can often reduce operations on trees to operations on their branches, which reduce in turn to operations on the branches of the branches, and so on, until we reach the leaves of the tree. As an example, compare the <tt>length</tt> procedure of section 2-2-1 with the <tt>count-leaves</tt> procedure, which returns the total number of leaves of a tree:
+<p> Recursion is a natural tool for dealing with tree structures, since we can often reduce operations on trees to operations on their branches, which reduce in turn to operations on the branches of the branches, and so on, until we reach the leaves of the tree. As an example, compare the <tt>length</tt> procedure of section 2-2-1 with the <tt>count-leaves</tt> procedure, which returns the total number of leaves of a tree:
 
-<div id="">
+<div id="scheme-define-x">
 (define x (cons (list 1 2) (list 3 4)))
-
-(length x)
-3
-
-(count-leaves x)
-4
-
-(list x x)
-(((1 2) 3 4) ((1 2) 3 4))
-
-(length (list x x))
-2
-
-(count-leaves (list x x))
-8
 </div>
 <script>
-prompt();
+prompt("scheme-define-x");
 </script>
 
-To implement <tt>count-leaves</tt>, recall the recursive plan for computing <tt>length</tt>:
+<p>
+
+<div id="scheme-length-x">
+(length x)
+</div>
+<script>
+prompt("scheme-length-x", ["scheme-define-x"]);
+</script>
+
+<p>
+
+<div id="scheme-count-leaves-x">
+(count-leaves x)
+</div>
+<script>
+prompt("scheme-count-leaves-x", ["scheme-define-x", "scheme-define-count-leaves"]);
+</script>
+
+<p>
+
+<div id="scheme-list-x-x">
+(list x x)
+</div>
+<script>
+prompt("scheme-list-x-x", ["scheme-define-x"]);
+</script>
+
+<p>
+
+<div id="scheme-length-list-x-x">
+(length (list x x))
+</div>
+<script>
+prompt("scheme-length-list-x-x", ["scheme-define-x"]);
+</script>
+
+<p>
+
+<div id="scheme-count-leaves-list-x-x">
+(count-leaves (list x x))
+</div>
+<script>
+prompt("scheme-count-leaves-list-x-x", ["scheme-define-count-leaves", "scheme-define-x"]);
+</script>
+
+<p> To implement <tt>count-leaves</tt>, recall the recursive plan for computing <tt>length</tt>:
 
 <ul>
 
 <li>
-<tt>Length</tt> of a list <tt>x</tt> is 1 plus <tt>length</tt> of the <tt>cdr</tt> of <tt>x</tt>.
+<tt>length</tt> of a list <tt>x</tt> is 1 plus <tt>length</tt> of the <tt>cdr</tt> of <tt>x</tt>.
+</li>
 
 <li>
-<tt>Length</tt> of the empty list is 0.
-
+<tt>length</tt> of the empty list is 0.
+</li>
 </ul>
 
-<tt>Count-leaves</tt> is similar. The value for the empty list is the same:
+<p> <tt>count-leaves</tt> is similar. The value for the empty list is the same:
 
 <ul>
 
 <li>
-<tt>Count-leaves</tt> of the empty list is 0.
-
+<tt>count-leaves</tt> of the empty list is 0.
+</li>
 </ul>
 
-But in the reduction step, where we strip off the <tt>car</tt> of the list, we must take into account that the <tt>car</tt> may itself be a tree whose leaves we need to count. Thus, the appropriate reduction step is
+<p> But in the reduction step, where we strip off the <tt>car</tt> of the list, we must take into account that the <tt>car</tt> may itself be a tree whose leaves we need to count. Thus, the appropriate reduction step is
 
 <ul>
 
 <li>
-<tt>Count-leaves</tt> of a tree <tt>x</tt> is <tt>count-leaves</tt> of the <tt>car</tt> of <tt>x</tt> plus <tt>count-leaves</tt> of the <tt>cdr</tt> of <tt>x</tt>.
-
+<tt>count-leaves</tt> of a tree <tt>x</tt> is <tt>count-leaves</tt> of the <tt>car</tt> of <tt>x</tt> plus <tt>count-leaves</tt> of the <tt>cdr</tt> of <tt>x</tt>.
+</li>
 </ul>
 
-Finally, by taking <tt>car</tt>s we reach actual leaves, so we need another base case:
+<p> Finally, by taking <tt>car</tt>s we reach actual leaves, so we need another base case:
 
 <ul>
-
 <li>
-<tt>Count-leaves</tt> of a leaf is 1.
-
+<tt>count-leaves</tt> of a leaf is 1.
+</li>
 </ul>
 
-To aid in writing recursive procedures on trees, Scheme provides the primitive predicate <tt>pair?</tt>, which tests whether its argument is a pair. Here is the complete procedure:<div class='footnote'> The order of the first two clauses in the <tt>cond</tt> matters, since the empty list satisfies <tt>null?</tt> and also is not a pair. </div>
+<p> To aid in writing recursive procedures on trees, Scheme provides the primitive predicate <tt>pair?</tt>, which tests whether its argument is a pair. Here is the complete procedure:<a name="footnote_link_2-13" class="footnote_link" href="#footnote_2-13">13</a>
 
-<div id="">
+<div id="scheme-define-count-leaves">
 (define (count-leaves x)
   (cond ((null? x) 0)
         ((not (pair? x)) 1)
@@ -734,15 +703,17 @@ To aid in writing recursive procedures on trees, Scheme provides the primitive p
                  (count-leaves (cdr x))))))
 </div>
 <script>
-prompt();
+prompt("scheme-define-count-leaves");
 </script>
 
+<p>
+
 <div class="exercise">
-<b>Exercise 2.24:</b> Suppose we evaluate the expression <tt>(list 1 (list 2 (list 3 4)))</tt>. Give the result printed by the interpreter, the corresponding box-and-pointer structure, and the interpretation of this as a tree (as in Figure 2-6). 
+<p> <b>Exercise 2.24:</b> Suppose we evaluate the expression <tt>(list 1 (list 2 (list 3 4)))</tt>. Give the result printed by the interpreter, the corresponding box-and-pointer structure, and the interpretation of this as a tree (as in Figure 2-6).
 </div>
 
 <div class="exercise">
-<b>Exercise 2.25:</b> Give combinations of <tt>car</tt>s and <tt>cdr</tt>s that will pick 7 from each of the following lists:
+<p> <b>Exercise 2.25:</b> Give combinations of <tt>car</tt>s and <tt>cdr</tt>s that will pick 7 from each of the following lists:
 
 <div id="">
 (1 3 (5 7) 9)
@@ -757,7 +728,7 @@ prompt();
 </div>
 
 <div class="exercise">
-<b>Exercise 2.26:</b> Suppose we define <tt>x</tt> and <tt>y</tt> to be two lists:
+<p> <b>Exercise 2.26:</b> Suppose we define <tt>x</tt> and <tt>y</tt> to be two lists:
 
 <div id="">
 (define x (list 1 2 3))
@@ -768,7 +739,7 @@ prompt();
 prompt();
 </script>
 
-What result is printed by the interpreter in response to evaluating each of the following expressions:
+<p> What result is printed by the interpreter in response to evaluating each of the following expressions:
 
 <div id="">
 (append x y)
@@ -783,7 +754,7 @@ prompt();
 </div>
 
 <div class="exercise">
-<b>Exercise 2.27:</b> Modify your <tt>reverse</tt> procedure of Exercise 2-18 to produce a <tt>deep-reverse</tt> procedure that takes a list as argument and returns as its value the list with its elements reversed and with all sublists deep-reversed as well. For example,
+<p> <b>Exercise 2.27:</b> Modify your <tt>reverse</tt> procedure of Exercise 2-18 to produce a <tt>deep-reverse</tt> procedure that takes a list as argument and returns as its value the list with its elements reversed and with all sublists deep-reversed as well. For example,
 
 <div id="">
 (define x (list (list 1 2) (list 3 4)))
@@ -803,7 +774,7 @@ prompt();
 </div>
 
 <div class="exercise">
-<b>Exercise 2.28:</b> Write a procedure <tt>fringe</tt> that takes as argument a tree (represented as a list) and returns a list whose elements are all the leaves of the tree arranged in left-to-right order. For example,
+<p> <b>Exercise 2.28:</b> Write a procedure <tt>fringe</tt> that takes as argument a tree (represented as a list) and returns a list whose elements are all the leaves of the tree arranged in left-to-right order. For example,
 
 <div id="">
 (define x (list (list 1 2) (list 3 4)))
@@ -820,7 +791,7 @@ prompt();
 </div>
 
 <div class="exercise">
-<b>Exercise 2.29:</b> A binary mobile consists of two branches, a left branch and a right branch. Each branch is a rod of a certain length, from which hangs either a weight or another binary mobile. We can represent a binary mobile using compound data by constructing it from two branches (for example, using <tt>list</tt>):
+<p> <b>Exercise 2.29:</b> A binary mobile consists of two branches, a left branch and a right branch. Each branch is a rod of a certain length, from which hangs either a weight or another binary mobile. We can represent a binary mobile using compound data by constructing it from two branches (for example, using <tt>list</tt>):
 
 <div id="">
 (define (make-mobile left right)
@@ -830,7 +801,7 @@ prompt();
 prompt();
 </script>
 
-A branch is constructed from a <tt>length</tt> (which must be a number) together with a <tt>structure</tt>, which may be either a number (representing a simple weight) or another mobile:
+<p> A branch is constructed from a <tt>length</tt> (which must be a number) together with a <tt>structure</tt>, which may be either a number (representing a simple weight) or another mobile:
 
 <div id="">
 (define (make-branch length structure)
@@ -843,15 +814,19 @@ prompt();
 <ul>
 <li>
 Write the corresponding selectors <tt>left-branch</tt> and <tt>right-branch</tt>, which return the branches of a mobile, and <tt>branch-length</tt> and <tt>branch-structure</tt>, which return the components of a branch.
+</li>
 
 <li>
 Using your selectors, define a procedure <tt>total-weight</tt> that returns the total weight of a mobile.
+</li>
 
 <li>
 A mobile is said to be <tt>balanced</tt> if the torque applied by its top-left branch is equal to that applied by its top-right branch (that is, if the length of the left rod multiplied by the weight hanging from that rod is equal to the corresponding product for the right side) and if each of the submobiles hanging off its branches is balanced. Design a predicate that tests whether a binary mobile is balanced.
+</li>
 
 <li>
 Suppose we change the representation of mobiles so that the constructors are
+</li>
 
 <div id="">
 (define (make-mobile left right)
@@ -864,14 +839,14 @@ Suppose we change the representation of mobiles so that the constructors are
 prompt();
 </script>
 
-How much do you need to change your programs to convert to the new representation?
+<p> How much do you need to change your programs to convert to the new representation?
 
 </ul>
 </div>
 
 <h4> Mapping over trees </h4> 
 
-Just as <tt>map</tt> is a powerful abstraction for dealing with sequences, <tt>map</tt> together with recursion is a powerful abstraction for dealing with trees. For instance, the <tt>scale-tree</tt> procedure, analogous to <tt>scale-list</tt> of section 2-2-1, takes as arguments a numeric factor and a tree whose leaves are numbers. It returns a tree of the same shape, where each number is multiplied by the factor. The recursive plan for <tt>scale-tree</tt> is similar to the one for <tt>count-leaves</tt>:
+<p> Just as <tt>map</tt> is a powerful abstraction for dealing with sequences, <tt>map</tt> together with recursion is a powerful abstraction for dealing with trees. For instance, the <tt>scale-tree</tt> procedure, analogous to <tt>scale-list</tt> of section 2-2-1, takes as arguments a numeric factor and a tree whose leaves are numbers. It returns a tree of the same shape, where each number is multiplied by the factor. The recursive plan for <tt>scale-tree</tt> is similar to the one for <tt>count-leaves</tt>:
 
 <div id="">
 (define (scale-tree tree factor)
@@ -888,7 +863,7 @@ Just as <tt>map</tt> is a powerful abstraction for dealing with sequences, <tt>m
 prompt();
 </script>
 
-Another way to implement <tt>scale-tree</tt> is to regard the tree as a sequence of sub-trees and use <tt>map</tt>. We map over the sequence, scaling each sub-tree in turn, and return the list of results. In the base case, where the tree is a leaf, we simply multiply by the factor:
+<p> Another way to implement <tt>scale-tree</tt> is to regard the tree as a sequence of sub-trees and use <tt>map</tt>. We map over the sequence, scaling each sub-tree in turn, and return the list of results. In the base case, where the tree is a leaf, we simply multiply by the factor:
 
 <div id="">
 (define (scale-tree tree factor)
@@ -902,10 +877,10 @@ Another way to implement <tt>scale-tree</tt> is to regard the tree as a sequence
 prompt();
 </script>
 
-Many tree operations can be implemented by similar combinations of sequence operations and recursion.
+<p> Many tree operations can be implemented by similar combinations of sequence operations and recursion.
 
 <div class="exercise">
-<b>Exercise 2.30:</b> Define a procedure <tt>square-tree</tt> analogous to the <tt>square-list</tt> procedure of Exercise 2-21. That is, <tt>square-list</tt> should behave as follows:
+<p> <b>Exercise 2.30:</b> Define a procedure <tt>square-tree</tt> analogous to the <tt>square-list</tt> procedure of Exercise 2-21. That is, <tt>square-list</tt> should behave as follows:
 
 <div id="">
 (square-tree
@@ -918,11 +893,11 @@ Many tree operations can be implemented by similar combinations of sequence oper
 prompt();
 </script>
 
-Define <tt>square-tree</tt> both directly (i.e., without using any higher-order procedures) and also by using <tt>map</tt> and recursion. 
+<p> Define <tt>square-tree</tt> both directly (i.e., without using any higher-order procedures) and also by using <tt>map</tt> and recursion. 
 </div>
 
 <div class="exercise">
-<b>Exercise 2.31:</b> Abstract your answer to Exercise 2-30 to produce a procedure <tt>tree-map</tt> with the property that <tt>square-tree</tt> could be defined as
+<p> <b>Exercise 2.31:</b> Abstract your answer to Exercise 2-30 to produce a procedure <tt>tree-map</tt> with the property that <tt>square-tree</tt> could be defined as
 
 <div id="">
 (define (square-tree tree) (tree-map square tree))
@@ -933,7 +908,7 @@ prompt();
 </div>
 
 <div class="exercise">
-<b>Exercise 2.32:</b> We can represent a set as a list of distinct elements, and we can represent the set of all subsets of the set as a list of lists. For example, if the set is <tt>(1 2 3)</tt>, then the set of all subsets is <tt>(() (3) (2) (2 3) (1) (1 3) (1 2) (1 2 3))</tt>. Complete the following definition of a procedure that generates the set of subsets of a set and give a clear explanation of why it works:
+<p> <b>Exercise 2.32:</b> We can represent a set as a list of distinct elements, and we can represent the set of all subsets of the set as a list of lists. For example, if the set is <tt>(1 2 3)</tt>, then the set of all subsets is <tt>(() (3) (2) (2 3) (1) (1 3) (1 2) (1 2 3))</tt>. Complete the following definition of a procedure that generates the set of subsets of a set and give a clear explanation of why it works:
 
 <div id="">
 (define (subsets s)
@@ -949,9 +924,9 @@ prompt();
 
 <h3> Sequences as Conventional Interfaces </h3> 
 
-In working with compound data, we've stressed how data abstraction permits us to design programs without becoming enmeshed in the details of data representations, and how abstraction preserves for us the flexibility to experiment with alternative representations. In this section, we introduce another powerful design principle for working with data structures---the use of <tt>conventional interfaces</tt> .
+<p> In working with compound data, we've stressed how data abstraction permits us to design programs without becoming enmeshed in the details of data representations, and how abstraction preserves for us the flexibility to experiment with alternative representations. In this section, we introduce another powerful design principle for working with data structures &ndash; the use of <tt>conventional interfaces</tt> .
 
-In section 1-3 we saw how program abstractions, implemented as higher-order procedures, can capture common patterns in programs that deal with numerical data. Our ability to formulate analogous operations for working with compound data depends crucially on the style in which we manipulate our data structures. Consider, for example, the following procedure, analogous to the <tt>count-leaves</tt> procedure of section 2-2-2, which takes a tree as argument and computes the sum of the squares of the leaves that are odd:
+<p> In section 1-3 we saw how program abstractions, implemented as higher-order procedures, can capture common patterns in programs that deal with numerical data. Our ability to formulate analogous operations for working with compound data depends crucially on the style in which we manipulate our data structures. Consider, for example, the following procedure, analogous to the <tt>count-leaves</tt> procedure of section 2-2-2, which takes a tree as argument and computes the sum of the squares of the leaves that are odd:
 
 <div id="">
 (define (sum-odd-squares tree)
@@ -965,7 +940,7 @@ In section 1-3 we saw how program abstractions, implemented as higher-order proc
 prompt();
 </script>
 
-On the surface, this procedure is very different from the following one, which constructs a list of all the even Fibonacci numbers <em>Fib</em>(k), where k is less than or equal to a given integer n:
+<p> On the surface, this procedure is very different from the following one, which constructs a list of all the even Fibonacci numbers <em>Fib</em>(k), where k is less than or equal to a given integer n:
 
 <div id="">
 (define (even-fibs n)
@@ -982,62 +957,54 @@ On the surface, this procedure is very different from the following one, which c
 prompt();
 </script>
 
-Despite the fact that these two procedures are structurally very different, a more abstract description of the two computations reveals a great deal of similarity. The first program
+<p> Despite the fact that these two procedures are structurally very different, a more abstract description of the two computations reveals a great deal of similarity. The first program
 
 <ul>
-
 <li>
 enumerates the leaves of a tree;
+</li>
 
 <li>
 filters them, selecting the odd ones;
+</li>
 
 <li>
 squares each of the selected ones; and
+</li>
 
 <li>
 accumulates the results using <tt>+</tt>, starting with 0.
-
+</li>
 </ul>
 
-The second program
+<p> The second program
 
 <ul>
-
 <li>
 enumerates the integers from 0 to n;
+</li>
 
 <li>
 computes the Fibonacci number for each integer;
+</li>
 
 <li>
 filters them, selecting the even ones; and
+</li>
 
 <li>
 accumulates the results using <tt>cons</tt>,  starting with the
 empty list.
-
+</li>
 </ul>
 
-A signal-processing engineer would find it natural to conceptualize these processes in terms of signals flowing through a cascade of stages, each of which implements part of the program plan, as shown in Figure 2-7. In <tt>sum-odd-squares</tt>, we begin with an <tt>enumerator</tt> , which generates a ``signal'' consisting of the leaves of a given tree. This signal is passed through a <tt>filter</tt> , which eliminates all but the odd elements. The resulting signal is in turn passed through a <tt>map</tt> , which is a ``transducer'' that applies the <tt>square</tt> procedure to each element. The output of the map is then fed to an <tt>accumulator</tt> , which combines the elements using <tt>+</tt>, starting from an initial 0. The plan for <tt>even-fibs</tt> is analogous.
+<p> A signal-processing engineer would find it natural to conceptualize these processes in terms of signals flowing through a cascade of stages, each of which implements part of the program plan, as shown in Figure 2-7. In <tt>sum-odd-squares</tt>, we begin with an <tt>enumerator</tt> , which generates a ``signal'' consisting of the leaves of a given tree. This signal is passed through a <tt>filter</tt> , which eliminates all but the odd elements. The resulting signal is in turn passed through a <tt>map</tt> , which is a ``transducer'' that applies the <tt>square</tt> procedure to each element. The output of the map is then fed to an <tt>accumulator</tt> , which combines the elements using <tt>+</tt>, starting from an initial 0. The plan for <tt>even-fibs</tt> is analogous.
 
-<div class="exercise">
-<b>Figure 2.7:</b> The signal-flow plans for the procedures <tt>sum-odd-squares</tt> (top) and <tt>even-fibs</tt> (bottom) reveal the commonality between the two programs.
+<p> <img class='center' src='http://mitpress.mit.edu/sicp/full-text/book/ch2-Z-G-17.gif'>
 
-<pre>
-+-------------+   +-------------+   +-------------+   +-------------+
-| enumerate:  |-->| filter:     |-->| map:        |-->| accumulate: |
-| tree leaves |   | odd?        |   | square      |   | +, 0        |
-+-------------+   +-------------+   +-------------+   +-------------+
+<p style="text-align:center"> <b>Figure 2.7:</b> The signal-flow plans for the procedures <tt>sum-odd-squares</tt> (top) and <tt>even-fibs</tt> (bottom) reveal the commonality between the two programs.
 
-+-------------+   +-------------+   +-------------+   +-------------+
-| enumerate:  |-->| map:        |-->| filter:     |-->| accumulate: |
-| integers    |   | fib         |   | even?       |   | cons, ()    |
-+-------------+   +-------------+   +-------------+   +-------------+
-</pre>
-</div>
-
-<p> Unfortunately, the two procedure definitions above fail to exhibit thissignal-flow structure. For instance, if we examine the <tt>sum-odd-squares</tt>procedure, we find that the enumeration is implemented partly by the<tt>null?</tt> and <tt>pair?</tt> tests and partly by the tree-recursive structureof the procedure. Similarly, the accumulation is found partly in the tests andpartly in the addition used in the recursion. In general, there are nodistinct parts of either procedure that correspond to the elements in thesignal-flow description. Our two procedures decompose the computations in adifferent way, spreading the enumeration over the program and mingling it withthe map, the filter, and the accumulation. If we could organize our programsto make the signal-flow structure manifest in the procedures we write, thiswould increase the conceptual clarity of the resulting code.
+<p> Unfortunately, the two procedure definitions above fail to exhibit this signal-flow structure. For instance, if we examine the <tt>sum-odd-squares</tt>procedure, we find that the enumeration is implemented partly by the<tt>null?</tt> and <tt>pair?</tt> tests and partly by the tree-recursive structureof the procedure. Similarly, the accumulation is found partly in the tests andpartly in the addition used in the recursion. In general, there are nodistinct parts of either procedure that correspond to the elements in thesignal-flow description. Our two procedures decompose the computations in adifferent way, spreading the enumeration over the program and mingling it withthe map, the filter, and the accumulation. If we could organize our programsto make the signal-flow structure manifest in the procedures we write, thiswould increase the conceptual clarity of the resulting code.
 
 <h4> Sequence Operations </h4> 
 
@@ -1076,7 +1043,7 @@ For example,
 prompt();
 </script>
 
-Accumulations can be implemented by
+<p> Accumulations can be implemented by
 
 <div id="">
 (define (accumulate op initial sequence)
@@ -1113,7 +1080,7 @@ prompt();
 prompt();
 </script>
 
-<p> To enumerate the leaves of a tree, we can use<div class='footnote'> This is, in fact,precisely the <tt>fringe</tt> procedure from Exercise 2-28. Here we'verenamed it to emphasize that it is part of a family of generalsequence-manipulation procedures. </div>
+<p> To enumerate the leaves of a tree, we can use<a name="footnote_link_2-14" class="footnote_link" href="#footnote_2-14">14</a>
 
 <div id="">
 (define (enumerate-tree tree)
@@ -1205,8 +1172,8 @@ prompt();
 prompt();
 </script>
 
-<p> These examples give just a hint of the vast range of operations that can be expressed as sequence operations.<div class='footnote'> Richard Waters (1979) developed a program that automatically analyzes traditional Fortran programs, viewing them in terms of maps, filters, and accumulations. He found that fully 90 percent of the code in the Fortran Scientific Subroutine Package fits neatly into this paradigm. One of the reasons for the success of Lisp as a programming language is that lists provide a standard medium for expressing ordered collections so that they can be manipulated using higher-order operations. The programming language APL owes much of its power and appeal to a similar choice. In APL all data are represented as arrays, and there is a universal and convenient set of generic operators for all sorts of array operations. </div>
-
+<p> These examples give just a hint of the vast range of operations that can be expressed as sequence operations.<p> To enumerate the leaves of a tree, we can use<a name="footnote_link_2-15" class="footnote_link" href="#footnote_2-15">15</a>
+  
 <p> Sequences, implemented here as lists, serve as a conventional interface that permits us to combine processing modules. Additionally, when we uniformly represent structures as sequences, we have localized the data-structure dependencies in our programs to a small number of sequence operations. By changing these, we can experiment with alternative representations of sequences, while leaving the overall design of our programs intact. We will exploit this capability in section 3-5, when we generalize the sequence-processing paradigm to admit infinite sequences.
 
 <div class="exercise">
@@ -1242,8 +1209,7 @@ a_n r^n | a_(n-1) r^(n-1) + ... + a_1 r + a_0
 </pre>
 
 
-<p> In other words, we start with a_n, multiply by x, add a_(n-1), multiply by x, and so on, until we reach a_0.<div class='footnote'> According to Knuth (1981), this rule was formulated by W. G. Horner early in the nineteenth century, but the method was actually used by Newton over a hundred years earlier. Horner's rule evaluates the polynomial using fewer additions and multiplications than does the straightforward method of first computing a_n x^n, then adding a_(n-1)x^(n-1), and so on. In fact, it is possible to prove that any algorithm for evaluating arbitrary polynomials must use at least as many additions and multiplications as does Horner's rule, and thus Horner's rule is an optimal algorithm for polynomial evaluation. This was proved (for the number of additions) by A. M. Ostrowski in a 1954 paper that essentially founded the modern study of optimal algorithms. The analogous statement for multiplications was proved by V. Y. Pan in 1966. The book by Borodin and Munro (1975) provides an overview of these and other results about optimal algorithms.
-</div>
+<p> In other words, we start with a_n, multiply by x, add a_(n-1), multiply by x, and so on, until we reach a_0.<a name="footnote_link_2-16" class="footnote_link" href="#footnote_2-16">16</a>
 
 <p> Fill in the following template to produce a procedure that evaluates a polynomial using Horner's rule. Assume that the coefficients of the polynomial are arranged in a sequence, from a_0 through a_n.
 
@@ -1326,7 +1292,7 @@ prompt();
                        where n_(ij) = m_(ji)
 </pre>
 
-<p> We can define the dot product as<div class='footnote'> This definition uses the extended version of <tt>map</tt> described in Footnote 12. </div>
+<p> We can define the dot product as<a name="footnote_link_2-17" class="footnote_link" href="#footnote_2-17">17</a>
 
 <div id="">
 (define (dot-product v w)
@@ -1404,7 +1370,7 @@ prompt();
 
 <h4> Nested Mappings </h4> 
 
-<p> We can extend the sequence paradigm to include many computations that are commonly expressed using nested loops.<div class='footnote'> This approach to nested mappings was shown to us by David Turner, whose languages KRC and Miranda provide elegant formalisms for dealing with these constructs. The examples in this section (see also Exercise 2-42) are adapted from Turner 1981. In section 3-5-3, we'll see how this approach generalizes to infinite sequences. </div> Consider this problem: Given a positive integer n, find all ordered pairs of distinct positive integers i and j, where 1 &lt;= j&lt; i&lt;= n, such that i + j is prime. For example, if n is 6, then the pairs are the following:
+<p> We can extend the sequence paradigm to include many computations that are commonly expressed using nested loops.<a name="footnote_link_2-18" class="footnote_link" href="#footnote_2-18">18</a> Consider this problem: Given a positive integer n, find all ordered pairs of distinct positive integers i and j, where 1 &lt;= j&lt; i&lt;= n, such that i + j is prime. For example, if n is 6, then the pairs are the following:
 
 <pre>
   i   | 2 3 4 4 5 6 6
@@ -1415,7 +1381,7 @@ i + j | 3 5 5 7 7 7 11
 
 <p> A natural way to organize this computation is to generate the sequence of all ordered pairs of positive integers less than or equal to n, filter to select those pairs whose sum is prime, and then, for each pair (i, j) that passes through the filter, produce the triple (i,j,i + j).
 
-<p> Here is a way to generate the sequence of pairs: For each integer i &lt;= n, enumerate the integers j&lt;i, and for each such i and j generate the pair (i,j). In terms of sequence operations, we map along the sequence <tt>(enumerate-interval 1 n)</tt>. For each i in this sequence, we map along the sequence <tt>(enumerate-interval 1 (- i 1))</tt>. For each j in this latter sequence, we generate the pair <tt>(list i j)</tt>. This gives us a sequence of pairs for each i. Combining all the sequences for all the i (by accumulating with <tt>append</tt>) produces the required sequence of pairs:<div class='footnote'> We're representing a pair here as a list of two elements rather than as a Lisp pair. Thus, the ``pair'' (i,j) is represented as <tt>(list i j)</tt>, not <tt>(cons i j)</tt>. </div>
+<p> Here is a way to generate the sequence of pairs: For each integer i &lt;= n, enumerate the integers j&lt;i, and for each such i and j generate the pair (i,j). In terms of sequence operations, we map along the sequence <tt>(enumerate-interval 1 n)</tt>. For each i in this sequence, we map along the sequence <tt>(enumerate-interval 1 (- i 1))</tt>. For each j in this latter sequence, we generate the pair <tt>(list i j)</tt>. This gives us a sequence of pairs for each i. Combining all the sequences for all the i (by accumulating with <tt>append</tt>) produces the required sequence of pairs:<a name="footnote_link_2-19" class="footnote_link" href="#footnote_2-19">19</a>
 
 <div id="">
 (accumulate append
@@ -1475,7 +1441,7 @@ prompt();
 prompt();
 </script>
 
-<p> Nested mappings are also useful for sequences other than those that enumerate intervals. Suppose we wish to generate all the permutations of a set S; that is, all the ways of ordering the items in the set. For instance, the permutations of @{1,2,3@} are @{1,2,3@}, @{1,3,2@}, @{2,1,3@}, @{2,3,1@}, @{3,1,2@}, and @{3,2,1@}. Here is a plan for generating the permutations of S: For each item x in S, recursively generate the sequence of permutations of S - x,<div class='footnote'> The set S - x is the set of all elements of S, excluding x. </div> and adjoin x to the front of each one. This yields, for each x in S, the sequence of permutations of S that begin with x. Combining these sequences for all x gives all the permutations of S:<div class='footnote'> Semicolons in Scheme code are used to introduce <tt>comments</tt> . Everything from the semicolon to the end of the line is ignored by the interpreter. In this book we don't use many comments; we try to make our programs self-documenting by using descriptive names. </div>
+<p> Nested mappings are also useful for sequences other than those that enumerate intervals. Suppose we wish to generate all the permutations of a set S; that is, all the ways of ordering the items in the set. For instance, the permutations of @{1,2,3@} are @{1,2,3@}, @{1,3,2@}, @{2,1,3@}, @{2,3,1@}, @{3,1,2@}, and @{3,2,1@}. Here is a plan for generating the permutations of S: For each item x in S, recursively generate the sequence of permutations of S - x,<a name="footnote_link_2-20" class="footnote_link" href="#footnote_2-20">20</a> and adjoin x to the front of each one. This yields, for each x in S, the sequence of permutations of S that begin with x. Combining these sequences for all x gives all the permutations of S:<a name="footnote_link_2-21" class="footnote_link" href="#footnote_2-21">21</a>
 
 <div id="">
 (define (permutations s)
@@ -1509,29 +1475,9 @@ prompt();
 <p> <b>Exercise 2.41:</b> Write a procedure to find all ordered triples of distinct positive integers i, j, and k less than or equal to a given integer n that sum to a given integer s.
  </div>
 
-<div class="exercise">
-<b>Figure 2.8:</b> A solution to the eight-queens puzzle.
+<p> <img class='center' src='http://mitpress.mit.edu/sicp/full-text/book/ch2-Z-G-23.gif'>
 
-<pre>
-+---+---+---+---+---+---+---+---+
-|   |   |   |   |   | Q |   |   |
-+---+---+---+---+---+---+---+---+
-|   |   | Q |   |   |   |   |   |
-+---+---+---+---+---+---+---+---+
-| Q |   |   |   |   |   |   |   |
-+---+---+---+---+---+---+---+---+
-|   |   |   |   |   |   | Q |   |
-+---+---+---+---+---+---+---+---+
-|   |   |   |   | Q |   |   |   |
-+---+---+---+---+---+---+---+---+
-|   |   |   |   |   |   |   | Q |
-+---+---+---+---+---+---+---+---+
-|   | Q |   |   |   |   |   |   |
-+---+---+---+---+---+---+---+---+
-|   |   |   | Q |   |   |   |   |
-+---+---+---+---+---+---+---+---+
-</pre>
-</div>
+<p style="text-align:center"> <b>Figure 2.8:</b> A solution to the eight-queens puzzle.
 
 <div class="exercise">
 <p> <b>Exercise 2.42:</b> The ``eight-queens puzzle'' asks how to place eight queens on a chessboard so that no queen is in check from any other (i.e., no two queens are in the same row, column, or diagonal). One possible solution is shown in Figure 2-8. One way to solve the puzzle is to work across the board, placing a queen in each column. Once we have placed k - 1 queens, we must place the kth queen in a position where it does not check any of the queens already on the board. We can formulate this approach recursively: Assume that we have already generated the sequence of all possible ways to place k - 1 queens in the first k - 1 columns of the board. For each of these ways, generate an extended set of positions by placing a queen in each row of the kth column. Now filter these, keeping only the positions for which the queen in the kth column is safe with respect to the other queens. This produces the sequence of all ways to place k queens in the first k columns. By continuing this process, we will produce not only one solution, but all solutions to the puzzle.
@@ -1581,39 +1527,22 @@ prompt();
 
 <h3> Example: A Picture Language </h3> 
 
-<p> This section presents a simple language for drawing pictures that illustrates the power of data abstraction and closure, and also exploits higher-order procedures in an essential way. The language is designed to make it easy to experiment with patterns such as the ones in Figure 2-9, which are composed of repeated elements that are shifted and scaled.<div class='footnote'> The picture language is based on the language Peter Henderson created to construct images like M.C. Escher's ``Square Limit'' woodcut (see Henderson 1982). The woodcut incorporates a repeated scaled pattern, similar to the arrangements drawn using the <tt>square-limit</tt> procedure in this section. </div> In this language, the data objects being combined are represented as procedures rather than as list structure. Just as <tt>cons</tt>, which satisfies the closure property, allowed us to easily build arbitrarily complicated list structure, the operations in this language, which also satisfy the closure property, allow us to easily build arbitrarily complicated patterns.
+<p> This section presents a simple language for drawing pictures that illustrates the power of data abstraction and closure, and also exploits higher-order procedures in an essential way. The language is designed to make it easy to experiment with patterns such as the ones in Figure 2-9, which are composed of repeated elements that are shifted and scaled.<a name="footnote_link_2-22" class="footnote_link" href="#footnote_2-22">22</a> In this language, the data objects being combined are represented as procedures rather than as list structure. Just as <tt>cons</tt>, which satisfies the closure property, allowed us to easily build arbitrarily complicated list structure, the operations in this language, which also satisfy the closure property, allow us to easily build arbitrarily complicated patterns.
 
-<div class="exercise">
-<p> <b>Figure 2.9:</b> Designs generated with the picture language.
+<p>
 
-[two graphic images not included]
+<div style='text-align:center'>
+<img src='http://mitpress.mit.edu/sicp/full-text/book/ch2-Z-G-24.gif'>
+<img src='http://mitpress.mit.edu/sicp/full-text/book/ch2-Z-G-25.gif'>
 </div>
 
+<p style="text-align:center"> <b>Figure 2.9:</b> Designs generated with the picture language.
 
 <h4> The picture language </h4> 
 
 <p> When we began our study of programming in section 1-1, we emphasized the importance of describing a language by focusing on the language's primitives, its means of combination, and its means of abstraction. We'll follow that framework here.
 
-<p> Part of the elegance of this picture language is that there is only one kind of element, called a <tt>painter</tt> . A painter draws an image that is shifted and scaled to fit within a designated parallelogram-shaped frame. For example, there's a primitive painter we'll call <tt>wave</tt> that makes a crude line drawing, as shown in Figure 2-10. The actual shape of the drawing depends on the frame---all four images in Figure 2-10 are produced by the same <tt>wave</tt> painter, but with respect to four different frames. Painters can be more elaborate than this: The primitive painter called <tt>rogers</tt> paints a picture of MIT's founder, William Barton Rogers, as shown in Figure 2-11.<div class='footnote'> William Barton Rogers (1804-1882) was the founder and first president of @acronym{MIT </div>. A geologist and talented teacher, he taught at William and Mary College and at the University of Virginia. In 1859 he moved to Boston, where he had more time for research, worked on a plan for establishing a ``polytechnic institute,'' and served as Massachusetts's first State Inspector of Gas Meters.
-
-<p> When MIT was established in 1861, Rogers was elected its first president. Rogers espoused an ideal of ``useful learning'' that was different from the university education of the time, with its overemphasis on the classics, which, as he wrote, ``stand in the way of the broader, higher and more practical instruction and discipline of the natural and social sciences.''This education was likewise to be different from narrow trade-school education. In Rogers's words:
-
-<div class="exercise">
-<p> The world-enforced distinction between the practical and the scientific worker is utterly futile, and the whole experience of modern times has demonstrated its utter worthlessness.
- </div>
-
-<p> Rogers served as president of MIT until 1870, when he resigned due to ill health. In 1878 the second president of MIT, John Runkle, resigned under the pressure of a financial crisis brought on by the Panic of 1873 and strain of fighting off attempts by Harvard to take over MIT. Rogers returned to hold the office of president until 1881.
-
-<p> Rogers collapsed and died while addressing MIT's graduating class at the commencement exercises of 1882. Runkle quoted Rogers's last words in a memorial address delivered that same year:
-
-<div class="exercise">
-<p> ``As I stand here today and see what the Institute is, ... I call to mind the beginnings of science. I remember one hundred and fifty years ago Stephen Hales published a pamphlet on the subject of illuminating gas, in which he stated that his researches had demonstrated that 128 grains of bituminous coal -- '' ``Bituminous coal,'' these were his last words on earth. Here he bent forward, as if consulting some notes on the table before him, then slowly regaining an erect position, threw up his hands, and was translated from the scene of his earthly labors and triumphs to ``the tomorrow of death,'' where the mysteries of life are solved, and the disembodied spirit finds unending satisfaction in contemplating the new and still unfathomable mysteries of the infinite future.
- </div>
-
-<p> In the words of Francis A. Walker (MIT's third president):
-
-<div class="exercise">
-<p> All his life he had borne himself most faithfully and heroically, and he died as so good a knight would surely have wished, in harness, at his post, and in the very part and act of public duty. </div> } The four images in Figure 2-11 are drawn with respect to the same four frames as the <tt>wave</tt> images in Figure 2-10.
+<p> Part of the elegance of this picture language is that there is only one kind of element, called a <tt>painter</tt> . A painter draws an image that is shifted and scaled to fit within a designated parallelogram-shaped frame. For example, there's a primitive painter we'll call <tt>wave</tt> that makes a crude line drawing, as shown in Figure 2-10. The actual shape of the drawing depends on the frame---all four images in Figure 2-10 are produced by the same <tt>wave</tt> painter, but with respect to four different frames. Painters can be more elaborate than this: The primitive painter called <tt>rogers</tt> paints a picture of MIT's founder, William Barton Rogers, as shown in Figure 2-11.<a name="footnote_link_2-23" class="footnote_link" href="#footnote_2-23">23</a> The four images in Figure 2-11 are drawn with respect to the same four frames as the <tt>wave</tt> images in Figure 2-10.
 
 To combine images, we use various operations that construct new painters from
 given painters. For example, the <tt>beside</tt> operation takes two painters
@@ -1626,43 +1555,40 @@ example, <tt>flip-vert</tt> takes a painter and produces a painter that draws it
 image upside-down, and <tt>flip-horiz</tt> produces a painter that draws the
 original painter's image left-to-right reversed.
 
-<div class="exercise">
-<b>Figure 2.10:</b> Images produced by the <tt>wave</tt>
-painter, with respect to four different frames. The frames, shown with dotted
-lines, are not part of the images.
+<div style='text-align:center'>
+<img src='http://mitpress.mit.edu/sicp/full-text/book/ch2-Z-G-26.gif'>
+<img src='http://mitpress.mit.edu/sicp/full-text/book/ch2-Z-G-27.gif'>
+<img src='http://mitpress.mit.edu/sicp/full-text/book/ch2-Z-G-28.gif'>
+<img src='http://mitpress.mit.edu/sicp/full-text/book/ch2-Z-G-29.gif'>
 
-[four graphic images not included]
+<p> <b>Figure 2.10:</b> Images produced by the <tt>wave</tt> painter, with respect to four different frames. The frames, shown with dotted lines, are not part of the images. 
 </div>
 
-<div class="exercise">
-<p> <b>Figure 2.11:</b> Images of William Barton Rogers, founder and first president of MIT, painted with respect to the same four frames as in Figure 2-10 (original image reprinted with the permission of the MIT Museum).
 
-[four graphic images not included]
+<div style='text-align:center'>
+<img src='http://mitpress.mit.edu/sicp/full-text/book/ch2-Z-G-30.gif'>
+<img src='http://mitpress.mit.edu/sicp/full-text/book/ch2-Z-G-31.gif'>
+<img src='http://mitpress.mit.edu/sicp/full-text/book/ch2-Z-G-32.gif'>
+<img src='http://mitpress.mit.edu/sicp/full-text/book/ch2-Z-G-33.gif'>
+
+<p> <b>Figure 2.11:</b> Images of William Barton Rogers, founder and first president of MIT, painted with respect to the same four frames as in Figure 2-10 (original image reprinted with the permission of the MIT Museum). 
 </div>
-
 
 <p> Figure 2-12 shows the drawing of a painter called <tt>wave4</tt> that is built up in two stages starting from <tt>wave</tt>:
 
-<div id="">
+<div id="scheme-define-wave-2-4">
 (define wave2 (beside wave (flip-vert wave)))
 (define wave4 (below wave2 wave2))
 </div>
 <script>
-prompt();
+prompt("scheme-define-wave-2-4");
 </script>
 
-<div class="exercise">
+<div style='text-align:center'>
+<img src='http://mitpress.mit.edu/sicp/full-text/book/ch2-Z-G-34.gif'>
+<img src='http://mitpress.mit.edu/sicp/full-text/book/ch2-Z-G-35.gif'>
+
 <p> <b>Figure 2.12:</b> Creating a complex figure, starting from the <tt>wave</tt> painter of Figure 2-10.
-
-[two graphic images not included]
-
-<div id="">
-(define wave2                         (define wave4
-  (beside wave (flip-vert wave)))       (below wave2 wave2))
-</div>
-<script>
-prompt();
-</script>
 </div>
 
 <p> In building up a complex image in this manner we are exploiting the fact that painters are closed under the language's means of combination. The <tt>beside</tt> or <tt>below</tt> of two painters is itself a painter; therefore, we can use it as an element in making more complex painters. As with building up list structure using <tt>cons</tt>, the closure of our data under the means of combination is crucial to the ability to create complex structures while using only a few operations.
@@ -1794,17 +1720,8 @@ prompt();
 <script>
 prompt();
 </script>
-
-<p> Then <tt>flipped-pairs</tt> can be defined in terms of <tt>square-of-four</tt> as follows:<div class='footnote'> Equivalently, we could write
-
-<div id="">
-(define flipped-pairs
-  (square-of-four identity flip-vert identity flip-vert))
-</div>
-<script>
-prompt();
-</script>
- </div>
+4
+<p> Then <tt>flipped-pairs</tt> can be defined in terms of <tt>square-of-four</tt> as follows:<a name="footnote_link_2-24" class="footnote_link" href="#footnote_2-24">24</a>
 
 <div id="">
 (define (flipped-pairs painter)
@@ -1817,8 +1734,7 @@ prompt();
 </script>
 
 
-<p> and <tt>square-limit</tt> can be expressed as<div class='footnote'> <tt>Rotate180</tt> rotates a painter by 180 degrees (see Exercise 2-50). Instead of <tt>rotate180</tt> we could say <tt>(compose flip-vert flip-horiz)</tt>, using the <tt>compose</tt> procedure from Exercise 1-42.
-</div>
+<p> and <tt>square-limit</tt> can be expressed as<a name="footnote_link_2-25" class="footnote_link" href="#footnote_2-25">25</a>
 
 <div id="">
 (define (square-limit painter n)
@@ -1878,8 +1794,7 @@ Origin(Frame) + r * Edge_1(Frame) + y * Edge_2(Frame)
 </pre>
 
 
-<p> For example, (0,0) is mapped to the origin of the frame, (1,1) to the vertex diagonally opposite the origin, and (0.5,0.5) to the center of the frame. We can create a frame's coordinate map with the following procedure:<div class='footnote'> <tt>Frame-coord-map</tt> uses the vector operations described in Exercise 2-46 below, which we assume have been implemented using some representation for vectors. Because of data abstraction, it doesn't matter what this vector representation is, so long as the vector operations behave correctly.
-</div>
+<p> For example, (0,0) is mapped to the origin of the frame, (1,1) to the vertex diagonally opposite the origin, and (0.5,0.5) to the center of the frame. We can create a frame's coordinate map with the following procedure:<a name="footnote_link_2-26" class="footnote_link" href="#footnote_2-26">26</a>
 
 <div id="">
 (define (frame-coord-map frame)
@@ -1946,7 +1861,7 @@ prompt();
 
 <p> A painter is represented as a procedure that, given a frame as argument, draws a particular image shifted and scaled to fit the frame. That is to say, if <tt>p</tt> is a painter and <tt>f</tt> is a frame, then we produce <tt>p</tt>'s image in <tt>f</tt> by calling <tt>p</tt> with <tt>f</tt> as argument.
 
-<p> The details of how primitive painters are implemented depend on the particular characteristics of the graphics system and the type of image to be drawn. For instance, suppose we have a procedure <tt>draw-line</tt> that draws a line on the screen between two specified points. Then we can create painters for line drawings, such as the <tt>wave</tt> painter in Figure 2-10, from lists of line segments as follows:<div class='footnote'> <tt>Segments->painter</tt> uses the representation for line segments described in Exercise 2-48 below. It also uses the <tt>for-each</tt> procedure described in Exercise 2-23. </div>
+<p> The details of how primitive painters are implemented depend on the particular characteristics of the graphics system and the type of image to be drawn. For instance, suppose we have a procedure <tt>draw-line</tt> that draws a line on the screen between two specified points. Then we can create painters for line drawings, such as the <tt>wave</tt> painter in Figure 2-10, from lists of line segments as follows:<a name="footnote_link_2-27" class="footnote_link" href="#footnote_2-27">27</a>
 
 <div id="">
 (define (segments->painter segment-list)
@@ -1964,7 +1879,7 @@ prompt();
 
 <p> The segments are given using coordinates with respect to the unit square. For each segment in the list, the painter transforms the segment endpoints with the frame coordinate map and draws a line between the transformed points.
 
-<p> Representing painters as procedures erects a powerful abstraction barrier in the picture language. We can create and intermix all sorts of primitive painters, based on a variety of graphics capabilities. The details of their implementation do not matter. Any procedure can serve as a painter, provided that it takes a frame as argument and draws something scaled to fit the frame.<div class='footnote'> For example, the <tt>rogers</tt> painter of Figure 2-11 was constructed from a gray-level image. For each point in a given frame, the <tt>rogers</tt> painter determines the point in the image that is mapped to it under the frame coordinate map, and shades it accordingly. By allowing different types of painters, we are capitalizing on the abstract data idea discussed in section 2-1-3, where we argued that a rational-number representation could be anything at all that satisfies an appropriate condition. Here we're using the fact that a painter can be implemented in any way at all, so long as it draws something in the designated frame. Section 2-1-3 also showed how pairs could be implemented as procedures. Painters are our second example of a procedural representation for data. </div>
+<p> Representing painters as procedures erects a powerful abstraction barrier in the picture language. We can create and intermix all sorts of primitive painters, based on a variety of graphics capabilities. The details of their implementation do not matter. Any procedure can serve as a painter, provided that it takes a frame as argument and draws something scaled to fit the frame.<a name="footnote_link_2-28" class="footnote_link" href="#footnote_2-28">28</a>
 
 <div class="exercise">
 <p> <b>Exercise 2.48:</b> A directed line segment in the plane can be represented as a pair of vectors---the vector running from the origin to the start-point of the segment, and the vector running from the origin to the end-point of the segment. Use your vector representation from Exercise 2-46 to define a representation for segments with a constructor <tt>make-segment</tt> and selectors <tt>start-segment</tt> and <tt>end-segment</tt>.
@@ -2036,7 +1951,7 @@ prompt();
 prompt();
 </script>
 
-<p> Other transformations rotate images counterclockwise by 90 degrees<div class='footnote'> <tt>Rotate90</tt> is a pure rotation only for square frames, because it also stretches and shrinks the image to fit into the rotated frame. </div>
+<p> Other transformations rotate images counterclockwise by 90 degrees<a name="footnote_link_2-29" class="footnote_link" href="#footnote_2-29">29</a>
 
 <div id="">
 (define (rotate90 painter)
@@ -2049,7 +1964,7 @@ prompt();
 prompt();
 </script>
 
-<p> or squash images towards the center of the frame:<div class='footnote'> The diamond-shaped images in figures Figure 2-10 and Figure 2-11 were created with <tt>squash-inwards</tt> applied to <tt>wave</tt> and <tt>rogers</tt>. </div>
+<p> or squash images towards the center of the frame:<a name="footnote_link_2-30" class="footnote_link" href="#footnote_2-30">30</a>
 
 <div id="">
 (define (squash-inwards painter)
@@ -2101,7 +2016,7 @@ prompt();
 
 <p> We have also obtained a glimpse of another crucial idea about languages and program design. This is the approach of <tt>stratified design</tt> , the notion that a complex system should be structured as a sequence of levels that are described using a sequence of languages. Each level is constructed by combining parts that are regarded as primitive at that level, and the parts constructed at each level are used as primitives at the next level. The language used at each level of a stratified design has primitives, means of combination, and means of abstraction appropriate to that level of detail.
 
-<p> Stratified design pervades the engineering of complex systems. For example, in computer engineering, resistors and transistors are combined (and described using a language of analog circuits) to produce parts such as and-gates and or-gates, which form the primitives of a language for digital-circuit design.<div class='footnote'> Section 3-3-4 describes one such language. </div> These parts are combined to build processors, bus structures, and memory systems, which are in turn combined to form computers, using languages appropriate to computer architecture. Computers are combined to form distributed systems, using languages appropriate for describing network interconnections, and so on.
+<p> Stratified design pervades the engineering of complex systems. For example, in computer engineering, resistors and transistors are combined (and described using a language of analog circuits) to produce parts such as and-gates and or-gates, which form the primitives of a language for digital-circuit design.<a name="footnote_link_2-31" class="footnote_link" href="#footnote_2-31">31</a> These parts are combined to build processors, bus structures, and memory systems, which are in turn combined to form computers, using languages appropriate to computer architecture. Computers are combined to form distributed systems, using languages appropriate for describing network interconnections, and so on.
 
 <p> As a tiny example of stratification, our picture language uses primitive elements (primitive painters) that are created using a language that specifies points and lines to provide the lists of line segments for <tt>segments->painter</tt>, or the shading details for a painter like <tt>rogers</tt>. The bulk of our description of the picture language focused on combining these primitives, using geometric combiners such as <tt>beside</tt> and <tt>below</tt>. We also worked at a higher level, regarding <tt>beside</tt> and <tt>below</tt> as primitives to be manipulated in a language whose operations, such as <tt>square-of-four</tt>, capture common patterns of combining geometric combiners.
 
@@ -2130,8 +2045,6 @@ Modify the version of <tt>square-limit</tt> that uses <tt>square-of-four</tt> so
 
 {{footnotes}}
 
-<h3> Notes </h3>
-
 <div id="footnote_2-6" class="footnote">  
 <p> <a href="#footnote_link_2-6" class="footnote_backlink">6</a> The use of the word ``closure'' here comes from abstract algebra, where a set of elements is said to be closed under an operation if applying the operation to elements in the set produces an element that is again an element of the set. The Lisp community also (unfortunately) uses the word ``closure'' to describe a totally unrelated concept: A closure is an implementation technique for representing procedures with free variables. We do not use the word ``closure'' in this second sense in this book.
 </div>
@@ -2140,4 +2053,149 @@ Modify the version of <tt>square-limit</tt> that uses <tt>square-of-four</tt> so
 <p> <a href="#footnote_link_2-7" class="footnote_backlink">7</a> The notion that a means of combination should satisfy closure is a straightforward idea. Unfortunately, the data combiners provided in many popular programming languages do not satisfy closure, or make closure cumbersome to exploit. In Fortran or Basic, one typically combines data elements by assembling them into arrays---but one cannot form arrays whose elements are themselves arrays. Pascal and C admit structures whose elements are structures. However, this requires that the programmer manipulate pointers explicitly, and adhere to the restriction that each field of a structure can contain only elements of a prespecified form. Unlike Lisp with its pairs, these languages have no built-in general-purpose glue that makes it easy to manipulate compound data in a uniform way. This limitation lies behind Alan Perlis's comment in his foreword to this book: ``In Pascal the plethora of declarable data structures induces a specialization within functions that inhibits and penalizes casual cooperation. It is better to have 100 functions operate on one data structure than to have 10 functions operate on 10 data structures.''
 </div>
 
+<div id="footnote_2-8" class="footnote">  
+<p> <a href="#footnote_link_2-8" class="footnote_backlink">8</a> In this book, we use list to mean a chain of pairs terminated by the end-of-list marker. In contrast, the term list structure refers to any data structure made out of pairs, not just to lists.
+</div>
+
+<div id="footnote_2-9" class="footnote">  
+<p> <a href="#footnote_link_2-9" class="footnote_backlink">9</a> Since nested applications of car and cdr are cumbersome to write, Lisp dialects provide abbreviations for them -- for instance,
+
+<pre>
+(cadr &lt;arg&gt;) = (car (cdr &lt;arg&gt;))
+</pre>
+
+<p> The names of all such procedures start with c and end with r. Each a between them stands for a car operation and each d for a cdr operation, to be applied in the same order in which they appear in the name. The names car and cdr persist because simple combinations like cadr are pronounceable.
+</div>
+
+<div id="footnote_2-10" class="footnote">  
+<p> <a href="#footnote_link_2-10" class="footnote_backlink">10</a> It's remarkable how much energy in the standardization of Lisp dialects has been dissipated in arguments that are literally over nothing: Should nil be an ordinary name? Should the value of nil be a symbol? Should it be a list? Should it be a pair? In Scheme, nil is an ordinary name, which we use in this section as a variable whose value is the end-of-list marker (just as true is an ordinary variable that has a true value). Other dialects of Lisp, including Common Lisp, treat nil as a special symbol. The authors of this book, who have endured too many language standardization brawls, would like to avoid the entire issue. Once we have introduced quotation in section 2.3, we will denote the empty list as '() and dispense with the variable nil entirely.
+</div>
+
+<div id="footnote_2-11" class="footnote">  
+<p> <a href="#footnote_link_2-11" class="footnote_backlink">11</a> To define <tt>f</tt> and <tt>g</tt> using <tt>lambda</tt> we would write
+
+<div id="scheme-lambda-dotted-tail-syntax">
+(define f (lambda (x y . z) &lt;body&gt;))
+(define g (lambda w &lt;body&gt;))
+</div>
+<script>
+prompt("scheme-lambda-dotted-tail-syntax");
+</script>
+</div>
+
+<div id="footnote_2-12" class='footnote'> 
+<p> <a href="#footnote_link_2-12" class="footnote_backlink">12</a> Scheme standardly provides a <tt>map</tt> procedure that is more general than the one described here. This more general <tt>map</tt> takes a procedure of n arguments, together with n lists, and applies the procedure to all the first elements of the lists, all the second elements of the lists, and so on, returning a list of the results. For example:
+
+<div id="scheme-demonstrate-map">
+(map + (list 1 2 3) (list 40 50 60) (list 700 800 900))
+'(741 852 963)
+
+(map (lambda (x y) (+ x (* 2 y)))
+     (list 1 2 3)
+     (list 4 5 6))
+'(9 12 15)
+</div>
+<script>
+prompt("scheme-demonstrate-map");
+</script>
+</div>
+
+<div id="footnote_2-13" class='footnote'> 
+<p> <a href="#footnote_link_2-13" class="footnote_backlink">13</a> The order of the first two clauses in the <tt>cond</tt> matters, since the empty list satisfies <tt>null?</tt> and also is not a pair.</div>
+
+<div id="footnote_2-14" class='footnote'> 
+<p> <a href="#footnote_link_2-14" class="footnote_backlink">14</a> This is, in fact, precisely the fringe procedure from exercise 2.28. Here we've renamed it to emphasize that it is part of a family of general sequence-manipulation procedures.
+</div>
+
+<div id="footnote_2-15" class='footnote'> 
+<p> <a href="#footnote_link_2-15" class="footnote_backlink">15</a> Richard Waters (1979) developed a program that automatically analyzes traditional Fortran programs, viewing them in terms of maps, filters, and accumulations. He found that fully 90 percent of the code in the Fortran Scientific Subroutine Package fits neatly into this paradigm. One of the reasons for the success of Lisp as a programming language is that lists provide a standard medium for expressing ordered collections so that they can be manipulated using higher-order operations. The programming language APL owes much of its power and appeal to a similar choice. In APL all data are represented as arrays, and there is a universal and convenient set of generic operators for all sorts of array operations.
+</div>
+
+<div id="footnote_2-16" class='footnote'> 
+<p> <a href="#footnote_link_2-16" class="footnote_backlink">16</a> According to Knuth (1981), this rule was formulated by W. G. Horner early in the nineteenth century, but the method was actually used by Newton over a hundred years earlier. Horner's rule evaluates the polynomial using fewer additions and multiplications than does the straightforward method of first computing an xn, then adding an-1xn-1, and so on. In fact, it is possible to prove that any algorithm for evaluating arbitrary polynomials must use at least as many additions and multiplications as does Horner's rule, and thus Horner's rule is an optimal algorithm for polynomial evaluation. This was proved (for the number of additions) by A. M. Ostrowski in a 1954 paper that essentially founded the modern study of optimal algorithms. The analogous statement for multiplications was proved by V. Y. Pan in 1966. The book by Borodin and Munro (1975) provides an overview of these and other results about optimal algorithms.
+</div>
+
+<div id="footnote_2-17" class='footnote'> 
+<p> <a href="#footnote_link_2-17" class="footnote_backlink">17</a> This definition uses the extended version of map described in footnote 12.
+</div>
+
+<div id="footnote_2-18" class='footnote'> 
+<p> <a href="#footnote_link_2-18" class="footnote_backlink">18</a> This approach to nested mappings was shown to us by David Turner, whose languages KRC and Miranda provide elegant formalisms for dealing with these constructs. The examples in this section (see also exercise 2.42) are adapted from Turner 1981. In section 3.5.3, we'll see how this approach generalizes to infinite sequences.
+</div>
+
+<div id="footnote_2-19" class='footnote'> 
+<p> <a href="#footnote_link_2-19" class="footnote_backlink">19</a> We're representing a pair here as a list of two elements rather than as a Lisp pair. Thus, the ``pair'' (i,j) is represented as (list i j), not (cons i j).
+</div>
+
+<div id="footnote_2-20" class='footnote'> 
+<p> <a href="#footnote_link_2-20" class="footnote_backlink">20</a> The set S - x is the set of all elements of S, excluding x.
+</div>
+
+<div id="footnote_2-21" class='footnote'> 
+<p> <a href="#footnote_link_2-21" class="footnote_backlink">21</a> Semicolons in Scheme code are used to introduce comments. Everything from the semicolon to the end of the line is ignored by the interpreter. In this book we don't use many comments; we try to make our programs self-documenting by using descriptive names.
+</div>
+
+<div id="footnote_2-22" class='footnote'> 
+<p> <a href="#footnote_link_2-22" class="footnote_backlink">22</a> The picture language is based on the language Peter Henderson created to construct images like M.C. Escher's ``Square Limit'' woodcut (see Henderson 1982). The woodcut incorporates a repeated scaled pattern, similar to the arrangements drawn using the square-limit procedure in this section.
+</div>
+
+
+<div id="footnote_2-23" class='footnote'> 
+<p> <a href="#footnote_link_2-23" class="footnote_backlink">23</a> William Barton Rogers (1804-1882) was the founder and first president of MIT. A geologist and talented teacher, he taught at William and Mary College and at the University of Virginia. In 1859 he moved to Boston, where he had more time for research, worked on a plan for establishing a ``polytechnic institute,'' and served as Massachusetts's first State Inspector of Gas Meters.
+
+<p> When MIT was established in 1861, Rogers was elected its first president. Rogers espoused an ideal of ``useful learning'' that was different from the university education of the time, with its overemphasis on the classics, which, as he wrote, ``stand in the way of the broader, higher and more practical instruction and discipline of the natural and social sciences.'' This education was likewise to be different from narrow trade-school education. In Rogers's words:
+
+<p> The world-enforced distinction between the practical and the scientific worker is utterly futile, and the whole experience of modern times has demonstrated its utter worthlessness.
+
+<p> Rogers served as president of MIT until 1870, when he resigned due to ill health. In 1878 the second president of MIT, John Runkle, resigned under the pressure of a financial crisis brought on by the Panic of 1873 and strain of fighting off attempts by Harvard to take over MIT. Rogers returned to hold the office of president until 1881.
+
+<p> Rogers collapsed and died while addressing MIT's graduating class at the commencement exercises of 1882. Runkle quoted Rogers's last words in a memorial address delivered that same year:
+
+<blockquote> ``As I stand here today and see what the Institute is, ... I call to mind the beginnings of science. I remember one hundred and fifty years ago Stephen Hales published a pamphlet on the subject of illuminating gas, in which he stated that his researches had demonstrated that 128 grains of bituminous coal -- ''
+
+``Bituminous coal,'' these were his last words on earth. Here he bent forward, as if consulting some notes on the table before him, then slowly regaining an erect position, threw up his hands, and was translated from the scene of his earthly labors and triumphs to ``the tomorrow of death,'' where the mysteries of life are solved, and the disembodied spirit finds unending satisfaction in contemplating the new and still unfathomable mysteries of the infinite future.
+</blockquote>
+
+<p> In the words of Francis A. Walker (MIT's third president):
+
+<blockquote> All his life he had borne himself most faithfully and heroically, and he died as so good a knight would surely have wished, in harness, at his post, and in the very part and act of public duty. </blockquote>
+
+</div>
+
+<div id="footnote_2-24" class='footnote'> 
+<p> <a href="#footnote_link_2-24" class="footnote_backlink">24</a> Equivalently, we could write
+
+<pre>
+(define flipped-pairs
+  (square-of-four identity flip-vert identity flip-vert))
+</pre>
+</div>
+
+<div id="footnote_2-25" class='footnote'> 
+<p> <a href="#footnote_link_2-25" class="footnote_backlink">25</a> Rotate180 rotates a painter by 180 degrees (see exercise 2.50). Instead of rotate180 we could say (compose flip-vert flip-horiz), using the compose procedure from exercise 1.42.
+</div>
+
+<div id="footnote_2-26" class='footnote'> 
+<p> <a href="#footnote_link_2-26" class="footnote_backlink">26</a> Frame-coord-map uses the vector operations described in exercise 2.46 below, which we assume have been implemented using some representation for vectors. Because of data abstraction, it doesn't matter what this vector representation is, so long as the vector operations behave correctly.
+</div>
+
+<div id="footnote_2-27" class='footnote'> 
+<p> <a href="#footnote_link_2-27" class="footnote_backlink">27</a> Segments->painter uses the representation for line segments described in exercise 2.48 below. It also uses the for-each procedure described in exercise 2.23.
+</div>
+
+<div id="footnote_2-28" class='footnote'> 
+<p> <a href="#footnote_link_2-28" class="footnote_backlink">28</a> For example, the rogers painter of figure 2.11 was constructed from a gray-level image. For each point in a given frame, the rogers painter determines the point in the image that is mapped to it under the frame coordinate map, and shades it accordingly. By allowing different types of painters, we are capitalizing on the abstract data idea discussed in section 2.1.3, where we argued that a rational-number representation could be anything at all that satisfies an appropriate condition. Here we're using the fact that a painter can be implemented in any way at all, so long as it draws something in the designated frame. Section 2.1.3 also showed how pairs could be implemented as procedures. Painters are our second example of a procedural representation for data.
+</div>
+
+<div id="footnote_2-29" class='footnote'> 
+<p> <a href="#footnote_link_2-29" class="footnote_backlink">29</a> Rotate90 is a pure rotation only for square frames, because it also stretches and shrinks the image to fit into the rotated frame.
+</div>
+
+<div id="footnote_2-30" class='footnote'> 
+<p> <a href="#footnote_link_2-30" class="footnote_backlink">30</a> The diamond-shaped images in figures 2.10 and 2.11 were created with squash-inwards applied to wave and rogers.
+</div>
+
+<div id="footnote_2-31" class='footnote'> 
+<p> <a href="#footnote_link_2-31" class="footnote_backlink">31</a> Section 3.3.4 describes one such language.
+</div>
 @@
