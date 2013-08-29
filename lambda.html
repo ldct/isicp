@@ -5,12 +5,31 @@
 <link rel="stylesheet" type="text/css" href="css/codemirror.css" />
 <link rel="stylesheet" type="text/css" href="css/isicp.css" />
 
+<script src="js/jquery.min.js"></script>
 <script src="js/codemirror/lib/codemirror.js"></script>
 <script src="js/codemirror/mode/scheme/scheme.js"></script>
 
+
+<script type="text/javascript" src="http://labs.orezdnu.org/lambda/compatibility.js"></script>
+<script type="text/javascript" src="http://labs.orezdnu.org/lambda/ui.js"></script>
+<script type="text/javascript" src="http://labs.orezdnu.org/lambda/pp.js"></script>
+<script type="text/javascript" src="http://labs.orezdnu.org/lambda/lambda.js"></script>
+<script type="text/javascript" src="js/app.js"></script>
+
+<link rel="stylesheet" type="text/css" href="css/default.css" />
+<link rel="stylesheet" type="text/css" href="css/lambda.css" />
+
+
+
 <script src="https://files.nyu.edu/cb125/public/Lambda/lambda.js"></script>
 
-<script src="js/biwascheme.js"></script>
+<script type="text/x-mathjax-config">
+MathJax.Hub.Config({
+  tex2jax: {inlineMath: [['$','$'], ['\\(','\\)']]}
+});
+</script>
+<script type="text/javascript" src="http://cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML"></script>
+
 <script src="js/coding.js"></script>
 
 <script>
@@ -26,40 +45,44 @@ function lprompt(s) {
 
 </head>
 
-<body style="width:66%; margin:0 auto">
+<body style="width:66%; margin:0 auto" onload=init('console')>
 
-<style>
-.lambda {
-	font-style: italic;
-	margin: 1em 1em 1em 3em;
-	font-size: 1.2em;
-}
-</style>
+<div id="console" class="console"></div>
 
 <h1 style="margin:0; text-align:center">From Church Numerals to Y Combinators</h1>
 <h2 style="margin:0; text-align:center">An Interactive Tour of the Lambda Calculus</h2>
+
+$$
+\def\.{\kern0pt{.}}
+$$
 
 <h2> Introduction: How to Write Functions </h2>
 
 <p> We'll begin our introduction to the lambda calculus by considering the question of how we might write down a function. There are standard ways to notate numbers,
 
-<div class="lambda">
-42 <br>
+$$
+42 \\
 0x2a
-</div>
+$$
 
 <p> sets,
 
+$$
+\{0,1,2\} \\
+\{x | x > 0, x \in R\}
+$$
+
 <div class="lambda">
-{0,1,2} <br>
-{x | x > 0, x &in; R}
+
 </div>
 
 <p> etc, but there doesn't seem to be a way to write down functions. How should we write down a function, for example, that takes a natural number and triples it?
 
-<p> "Easy!" you say. "Just call that function <em>f</em> and write
+<p> "Easy!" you say. "Just call that function $f$ and write
 
-<div class="lambda"> f(x) = 3x </div>
+$$
+f(x) = 3x
+$$
 
 <p>
 
@@ -67,90 +90,96 @@ function lprompt(s) {
 
 <p> Well, this approach suffers the drawback that you must give the function a name. I want a way to write down anonymous functions - functions that do not have a name. I want to be able to say
 
-<div class="lambda"> f = something </div>
+$$
+f = something
+$$
 
-Why might I want this? This is indispensible in writing higher-order functions, functions that return other functions.
+<p> This is indispensible in writing higher-order functions, which are functions that return other functions.
 
-<p> In lambda calculus, we would write <em> f </em> as 
+<p> In the lambda calculus, we would write $f$ as 
 
-<div class="lambda"> &lambda;x.3x </div>
+$$
+\lambda x.3x
+$$
 
 <p> Where, in general, a function that takes an argument and returns something is written as 
 
-<div class="lambda"> &lambda;[argument].[return value] </div>
+$$
+\lambda [argument]\.[return\ value]
+$$
 
 <p> By the way, function application will be denoted simply by writing the function next to its operand, like so
 
-<div class="lambda">
+$$
 fx
-</div>
+$$
 
-<p> Because, as you will see later, there are more important things for parentheses to do than denote function application.
+<p> Instead of using parentheses as in $f(x)$ because, as you will see later, there are more important things for parentheses to do.
 
 <h2> Simple Beginnings </h2>
 
 <p> Let's now create a universe for our functions to live in. Mathematically inclined readers might now point out that this universe must be incomplete - after all, functions must act on something, so surely we must include something else in the universe for them to act on, for example integers. 
 
-<p> To which we say, functions can very well act on other functions. Our universe of will only contain functions. Let's see how far we can take this idea. It might seem at first that there aren't any interesting functions to write down. I present as my first counterexample a function that does absolutely nothing, the identity function.
+<p> To get around this, we shall let functions act on other functions. Our universe shall be pure only contain functions. Let's see how far we can take this idea. It might seem at first that there aren't any interesting functions to write down. I present as my first counterexample a function that does absolutely nothing, the identity function.
 
-<div class="lambda"> 
-I = &lambda;t.t
-</div>
+$$
+I = \lambda t\.t
+$$
 
 <p> "You got lucky," I hear you say. "Your universe can only contain silly functions like these - I don't think you can come up with many more."
 
-<p> To which I say, how about this?
+<p> How about this?
 
-<div class="lambda">
-C<sub>I</sub> = &lambda;r.(&lambda;t.t)
-</div>
+$$
+C_I = \lambda r\.(\lambda t\.t)
+$$
 
-<p> This function <em>C<sub>I</sub></em> will always return the identity function that we defined above. Here we see clearly why lambda notation is superior; without it, we would have to do this to define <em>C<sub>I</sub></em>
+<p> This function $C_I$ will always return the identity function that we defined above. Here we see clearly why lambda notation is superior; without it, we would have to do this to define $C_I$
 
-<div class="lambda">
-for all x, C<sub>I</sub>x = I where for all t, It = t
-</div>
+$$
+C_I x = I \text{ for all }x\\
+\text{where }It = t \text{ for all t}
+$$
 
-<p> I hope you got the hint that <em>C<sub>I</sub></em> is so named because it is the <b>constant function of I</b>; we can generalise to a whole class of <b>constant functions of r</b>
+<p> I hope you got the hint that $C_I$ is so named because it is the <b>constant function of I</b>; we can generalise to a whole class of <b>constant functions of r</b>
 
-<div class="lambda">
-C<sub>r</sub> = &lambda;t.r
-</div>
+$$
+C_r = \lambda t\.r
+$$
 
-<p> heck, let's create a function that creates these <em>C<sub>r</sub></em>'s
+<p> heck, let's create a function that creates these $C_r$'s
 
-<div class="lambda">
-K = &lambda;r.(&lambda;t.r)
-</div>
+$$
+K = \lambda r\.(\lambda t\.r)
+$$
 
-<p> with <em>Kr = C<sub>r</sub></em>. The rabbit hole goes deeper and deeper.
+<p> with the property that $Kr = C_r$. The rabbit hole goes deeper and deeper.
 
 <h2> Multiple Arguments </h2>
 
-<p> Let's take a slight detour. So far, all our functions have only accepted one argument - what happens if we want them to take two or more arguments? For example, think of the two-argument functions <em>F</em> and <em>S</em>
+<p> So far, all our functions have only accepted one argument - what happens if we want them to take two or more arguments? For example, think of the two-argument function $\zeta$ that applies its second argument to the first argument.
 
-<div class="lambda">
-H(x,y) = x<br>
-T(x,y) = y
-</div>
+$$
+\zeta(x,y) = yx
+$$
 
-<p> The solution is to make the function take only the first argument <em>x</em> and return a partially evaluated function, which then takes the second argument and processes it.
+<p> The solution is to make the function take only the first argument $x$ and return a partially evaluated function, which then takes the second argument and processes it.
 
-<div class="lambda">
-H = &lambda;x.(&lambda;y.x)
-</div>
+$$
+\zeta = \lambda x\.(\lambda y\.yx)
+$$
 
-<p> So <em>H</em> is just <em>K</em> in disguise. As you can see, when we feed H the first argument...
+<p> As you can see, when we feed $\zeta$ the first argument...
 
-<div class="lambda">
-Hx = &lambda;y.x
-</div>
+$$
+\zeta x = \lambda y\.yx
+$$
 
-we get a partially applied function, and when we feed that the second argument...
+we get a <b>partially applied function</b>. When we feed that the second argument...
 
-<div class="lambda">
-(Hx)y = y
-</div>
+$$
+(\zeta x)y = yx
+$$
 
 <p> We get back the finished computation. This strategy is called <b>currying</b> and should be familiar to Haskell and ML programmers, among others.
 
@@ -158,24 +187,38 @@ we get a partially applied function, and when we feed that the second argument..
 
 <p> You can see why we reserved brackets earlier on; in general, these are two different functions
 
-<div class="lambda">
-(FI)I = I&nbsp;&nbsp; = &lambda;t.t<br>
-F(II) = FI = &lambda;r.(&lambda;t.t)<br>
-</div>
+\begin{align}
+(KI)I &amp;=C_I I \\
+      &amp;= I \\
+      &amp;= \lambda t\.t \\
+K(II) &amp;= KI \\
+      &amp;= \lambda r\.I \\
+      &amp;= \lambda r\.(\lambda t\.t) \\
+\end{align}
 
 <p> Since the first one is much more common, we will often drop the brackets. Hence our convention is that <b>brackets are implicitly placed from the left</b>; when we write <em>FII</em>, it is to be understood as <em>(FI)I</em>.
 
-<p> In a similar vein, let's simplify this
+<p> In a similar vein, let's adopt a convention and simplify this
 
-<div class="lambda">
-F = &lambda;x.(&lambda;y.x)
-</div>
+$$
+\zeta = \lambda x\.(\lambda y\.yx)
+$$
 
 <p> to this
 
-<div class="lambda">
-F = &lambda;xy.y
-</div>
+$$
+\zeta = \lambda xy\.yx
+$$
+
+<p> Let's have a few more examples to make it clear. We'll introduce the <b>projection operators</b> $\pi_1$ and $\pi_2$, which are functions of two arguments that return either the first or the second argument.
+
+$$
+\pi_1 = \lambda xy\.x \\
+\pi_2 = \lambda xy\.y
+$$
+
+<p> Notice how clearly we can see the definition now. Also notice the somewhat subtler point that $\pi_1 = K$ and $\pi_2 = KI$.
+
 
 <h2> One, Two, Three... </h2>
 
@@ -183,44 +226,193 @@ F = &lambda;xy.y
 
 <p> We'll focus on a classic encoding devised by Alonzo Church. The Church encoding of a number <em>n</em> is a function that maps functions to their n-fold compositions.
 
-<div class="lambda">
-nf = f<sup>n</sup> = f &#8728; f &#8728; ... &#8728; f
-</div>
+\begin{align}
+nf &amp;= f^n \\
+   &amp;= f \circ f \circ \ldots \circ f
+\end{align}
 
-<p> we can derive an explicit form for <em>f</em>
+<p> we can derive an explicit form for $n$
 
-<div class="lambda">
-nfx = f<sup>n</sup>x<br>
-n &nbsp;&nbsp; = &lambda;fx.f<sup>n</sup>x
-</div>
+\begin{align}
+ nf &amp;= f^n \\
+nfx &amp;= f^n x \\
+  n &amp;= \lambda fx.f^n x \\
+    &amp;= \lambda fx.f(f(f\ldots f(x)\ldots))
+\end{align}
 
 <p> with some examples
 
-<div class="lambda">
-0 = &lambda;fx.x <br>
-1 = &lambda;fx.fx <br>
-2 = &lambda;fx.f(fx) <br>
-3 = &lambda;fx.f(f(fx))
-</div>
+\begin{align}
+0 &amp;= \lambda fx\.x \\
+1 &amp;= \lambda fx\.fx \\
+2 &amp;= \lambda fx\.f(fx) \\
+3 &amp;= \lambda fx\.f(f(fx))
+\end{align}
 
 <p> Let's derive the successor function that adds one to a number.
 
-<div class="lambda">
-Sn = &lambda;fx.f<sup>(n+1)</sup>x<br>
-&nbsp;&nbsp;&nbsp; = &lambda;fx.f(f<sup>n</sup>x)<br>
-&nbsp;&nbsp;&nbsp; = &lambda;fx.f(nfx)<br>
-S &nbsp; = &lambda;nfx.f(nfx)
-</div>
+\begin{align}
+Sn &amp;= \lambda fx\.f^{(n+1)}x \\
+   &amp;= \lambda fx\.f(f^nx) \\
+   &amp;= \lambda fx\.f(nfx) \\
+S  &amp;= \lambda nfx\.f(nfx)
+\end{align}
 
-<h2> Cons </h2>
+<p> This relies on the fact that $f \circ f^n = f^{n+1}$. Using the general form $f^m \circ f^n = f^{m+n}$, we get 
+
+$$
+\Sigma = \lambda mnfx.mf(nfx)
+$$
+
+<p> Let's do another derivation for practice &ndash; the operator $\Pi$ multiplies two numbers. We'll use the property $(f^m)^n = f^{mn}$
+
+\begin{align}
+\Pi mn &amp;= \lambda f\.f^{mn} \\
+       &amp;= \lambda f\.(f^n)^m \\
+       &amp;= \lambda f\.m(f^n) \\
+       &amp;= \lambda f\.m(nf) \\
+\Pi    &amp;= \lambda mnf\.m(nf)
+\end{align}
+
+<h2> Data Structures </h2>
+
+<p> Linked Lists, Stacks, Queues, Heaps, B-Trees &ndash; our universe is still missing such data structures or even a way to express them. Let's implement one of the building blocks of data structures, the <b>pair</b>. A pair is exactly what the name suggests it is &ndash; a container containing two elements in order, the <b>head</b> and the <b>tail</b>. Programmers using lisp-descended languages will know of them as <b>cons cells</b>.
+
+<p> Let's be more formal - we want a function $P$ that constructs a pair. Once the pair is constructed, functions $H$ and $T$ may be used to access the elements of the pair.
+
+$$
+H(Pxy) = x \\
+T(Pxy) = y
+$$
+
+<p> Here's a clever way of implementing $P$:
+
+$$
+Pxy = \lambda t\.txy \\
+$$
+
+<p> This now allows us to pass in a function $t$ and returns $txy$. We are almost done; to get $x$, for example, we can just pass in $\pi_1$, the first projection operator
+
+\begin{align}
+(\lambda t\.txy)\pi_1 = \pi_1 xy = x
+\end{align}
+
+<p> Written out fully,
+
+\begin{align}
+P &amp;= \lambda xyt\.txy \\
+H &amp;= \lambda p. p(\lambda xy\.x) \\
+T &amp;= \lambda p. p(\lambda xy\.y)
+\end{align}
+
+
 
 <h2> Booleans and Control Flow </h2>
 
+<p> There are many ways to embed booleans into the lambda calculus. We could even declare that the Church numeral $1$ represents $\text{True}$ and $0$ represents $\text{False}$. However, since booleans are normally used for control flow or corditional evaluation ("if statements"), we'll choose a representation that is most convenient for expressing such control flow. Hence if $b$ is a boolean we declare it to have the property that.
+
+$$
+bxy
+$$
+
+<p> evaluates to $x$ if b is true and $y$ otherwise. Then
+
+\begin{align}
+  T &amp;= \lambda ab.a \\
+  F &amp;= \lambda ab.b
+\end{align}
+
+<p> We can also define the common logical manipulators
+
+\begin{align}
+NOT   &amp;= \lambda pab. pba\\
+AND   &amp;= \lambda pq. pqF \\
+OR    &amp;= \lambda pq. pTq
+\end{align}
+
+for example $(OR p q) = (p T q)$ which is "T if p else q", which is a correct definition of OR.
+
 <h2> Recursion? </h2>
+
+<p> Let's try to define a <b>factorial function</b> that computen $n! = n(n-1)(n-2)...2\cdot 1$
+
+<pre>
+fac = 
+(lambda (n)
+    (if (= n 0)
+        1
+        (* n (fac (- n 1)))))
+</pre>
+
+<p> There's a problem with this - lambda calculus does not allow recursive definitions. Remember, we want to define <tt>fac</tt> as an anonymous function, that is, <b>without referring to <tt>fac</tt></b>.
+
+<p> Hence, the expression <tt>fac</tt> is not allowed within the definition. Let's replace it with something legal.
+
+<pre>
+F = 
+(lambda (hukairs)
+    (lambda (n)
+        (if (= n 0)
+            1
+            (* n (hukairs (- n 1))))))
+</pre>
+
+<p> you will notice that we have simply replaced <tt>fac</tt> by <tt>hukairs</tt> in the body and enclosed the whole thing in a <tt>(lambda (hukairs) .. )</tt>. We call the new function <tt>F</tt>
+
+<p> Let's imagine we already have a working copy of <tt>fac</tt>, perhaps from Plato's heaven. What is <tt>(F fac)</tt>? it is a function of one variable,
+
+<pre>
+(F fac) = 
+(lambda (n)
+    (if (= n 0)
+        1
+        (* n (fac (- n 1)))))
+</pre>
+
+<p> We see that <tt>(F fac) = fac</tt>; this means that <tt>fac</tt> is the <b>fixed point of <tt>F</tt></b>. We are very close now, because <tt>F</tt> was defined without recursion. Now all we need is a function that finds the fixed point of its argument, a function $Y$ satisfying
+
+$$
+F(YF) = YF
+$$
+
+<p> The above equation expresses the fact that $YF$ is a fixed point of $F$. How can we define $Y$?
 
 <h2> Y Combinator </h2>
 
-derivation
+<p> The solution to this is one of the most beautiful results of the Lambda Calculus. First, we must take a little detour.
+
+<p> Consider
+
+\begin{align}
+\omega = (\lambda x\. xx) (\lambda x\. xx)
+\end{align}
+
+<p> Realize that $\omega$ expands to itself, that is, substitutin the second term, $\lambda x\. xx$, into the $x$ of the first term simply makes the whole expression evaluate to $\omega$ again. With a small modification,
+
+\begin{align}
+\omega' &amp;= (\lambda x\. F(xx)) (\lambda x\. F(xx))   \\
+        &amp;= F (\lambda x\. F(xx)) (\lambda x\. F(xx)) \\
+        &amp;= F(\omega')
+\end{align}
+
+<p> so $\omega'$ is a fixed point of $F$. Abstracting the $F$ out, we conclude that
+
+\begin{align}
+Y = \lambda F.(\lambda x. F(xx)) (\lambda x. F(xx)) 
+\end{align}
+
+<hr>
+
+<h3> Exercises </h3>
+
+<p> What do you think $Y_k$ is? Explain why it is what you say it.
+
+\begin{align}
+Y_k &amp;= (L L L L L L L L L L L L L L L L L L L L L L L L L L) \\
+L &amp;= \lambda abcdefghijklmnopqstuvwxyzr\.(r(thisisafixedpointcombinator))
+\end{align}
+
+<p> Note: each letter $a$, $b$, $c$ etc correspond to a single variable.
 
 <div class="lambda">
 <div id="numbers">

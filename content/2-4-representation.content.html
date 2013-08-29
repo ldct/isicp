@@ -5,22 +5,22 @@
 {{main_text}}
 <a href='index.html' style="float:left"> <img src='images/chevron-up.svg' height=64 width=64> </a>
 <span style="float:right">
-<a href='2-3-symbolic.html'> <img src='images/chevron-left.svg' height=64 width=64> </a>
+<a href='223-symbolic.html'> <img src='images/chevron-left.svg' height=64 width=64> </a>
 <a href='2-5-generic.html'> <img src='images/chevron-right.svg' height=64 width=64> </a>
 </span>
 
 <br> <br>
 <h2> Multiple Representations for Abstract Data </h2> 
 
-<p> We have introduced data abstraction, a methodology for structuring systems in such a way that much of a program can be specified independent of the choices involved in implementing the data objects that the program manipulates. For example, we saw in section 2-1-1 how to separate the task of designing a program that uses rational numbers from the task of implementing rational numbers in terms of the computer language's primitive mechanisms for constructing compound data. The key idea was to erect an abstraction barrier -- in this case, the selectors and constructors for rational numbers (<tt>make-rat</tt>, <tt>numer</tt>, <tt>denom</tt>)---that isolates the way rational numbers are used from their underlying representation in terms of list structure. A similar abstraction barrier isolates the details of the procedures that perform rational arithmetic (<tt>add-rat</tt>, <tt>sub-rat</tt>, <tt>mul-rat</tt>, and <tt>div-rat</tt>) from the ``higher-level'' procedures that use rational numbers. The resulting program has the structure shown in Figure 2-1.
+<p> We have introduced data abstraction, a methodology for structuring systems in such a way that much of a program ca2 be specified independent of the choices involved in implementing the data objects that the program manipulates. For example, we saw in section 2-1-1 how to separate the task of designing a program that uses rational numbers from the task of implementing rational numbers in terms of the computer language's primitive mechanisms for constructing compound data. The key idea was to erect an abstraction barrier -- in this case, the selectors and constructors for rational numbers (<tt>make-rat</tt>, <tt>numer</tt>, <tt>denom</tt>)---that isolates the way rational numbers are used from their underlying representation in terms of list structure. A similar ab2traction barrier isolates the details of the procedures that perform rational arithmetic (<tt>add-rat</tt>, <tt>sub-rat</tt>, <tt>mul-rat</tt>, and <tt>div-rat</tt>) from the ``higher-level'' procedures that use rational numbers. The resulting program has the structure shown in Figure 2-1.
 
-<p> These data-abstraction barriers are powerful tools for controlling complexity. By isolating the underlying representations of data objects, we can divide the task of designing a large program into smaller tasks that can be performed separately. But this kind of data abstraction is not yet powerful enough, because it may not always make sense to speak of ``the underlying representation'' for a data object.
+<p> These data-abstraction barriers are powerful tools for controlling complexity. By isolating the underlying representa2ions of data objects, we can divide the task of designing a large program into smaller tasks that can be performed separately. But this kind of data abstraction is not yet powerful enough, because it may not always make sense to speak of ``the underlying representation'' for a data object.
 
-<p> For one thing, there might be more than one useful representation for a data object, and we might like to design systems that can deal with multiple representations. To take a simple example, complex numbers may be represented in two almost equivalent ways: in rectangular form (real and imaginary parts) and in polar form (magnitude and angle). Sometimes rectangular form is more appropriate and sometimes polar form is more appropriate. Indeed, it is perfectly plausible to imagine a system in which complex numbers are represented in both ways, and in which the procedures for manipulating complex numbers work with either representation.
+<p> For one thing, there might be more than one useful representation for a data object, and we might like to design sys2ems that can deal with multiple representations. To take a simple example, complex numbers may be represented in two almost equivalent ways: in rectangular form (real and imaginary parts) and in polar form (magnitude and angle). Sometimes rectangular form is more appropriate and sometimes polar form is more appropriate. Indeed, it is perfectly plausible to imagine a system in which complex numbers are represented in both ways, and in which the procedures for manipulating complex numbers work with either representation.
 
 <p> More importantly, programming systems are often designed by many people working over extended periods of time, subject to requirements that change over time. In such an environment, it is simply not possible for everyone to agree in advance on choices of data representation. So in addition to the data-abstraction barriers that isolate representation from use, we need abstraction barriers that isolate different design choices from each other and permit different choices to coexist in a single program. Furthermore, since large programs are often created by combining pre-existing modules that were designed in isolation, we need conventions that permit programmers to incorporate modules into larger systems <tt>additively</tt> , that is, without having to redesign or reimplement these modules.
 
-<p> In this section, we will learn how to cope with data that may be represented in different ways by different parts of a program. This requires constructing <tt>generic procedures</tt> ---procedures that can operate on data that may be represented in more than one way. Our main technique for building generic procedures will be to work in terms of data objects that have <tt>type tags</tt> , that is, data objects that include explicit information about how they are to be processed. We will also discuss <tt>data-directed</tt> programming, a powerful and convenient implementation strategy for additively assembling systems with generic operations.
+<p> In this section, we will learn how to cope with data that may be represented in different ways by different parts of a program. This requires constructing <tt>generic procedures</tt> ---procedures that can operate on data that may be represented in more than one way. Our main technique for building generic procedures will be to work in terms of data objects that have <tt>type tags</tt> , that is, data objects that include explicit information about how they are to be processed. We will also discuss <tt>data-directed</tt> programming, a powerful and convenient2implementation strategy for additively assembling systems with generic operations.
 
 <p> We begin with the simple complex-number example. We will see how type tags and data-directed style enable us to design separate rectangular and polar representations for complex numbers while maintaining the notion of an abstract ``complex-number'' data object. We will accomplish this by defining arithmetic procedures for complex numbers (<tt>add-complex</tt>, <tt>sub-complex</tt>, <tt>mul-complex</tt>, and <tt>div-complex</tt>) in terms of generic selectors that access parts of a complex number independent of how the number is represented. The resulting complex-number system, as shown in Figure 2-19, contains two different kinds of abstraction barriers. The ``horizontal'' abstraction barriers play the same role as the ones in Figure 2-1. They isolate ``higher-level'' operations from ``lower-level'' representations. In addition, there is a ``vertical'' barrier that gives us the ability to separately design and install alternative representations.
 
@@ -44,7 +44,7 @@ complex-number system.
 
 <h3> Representations for Complex Numbers </h3> 
 
-<p> We will develop a system that performs arithmetic operations on complex numbers as a simple but unrealistic example of a program that uses generic operations. We begin by discussing two plausible representations for complex numbers as ordered pairs: rectangular form (real part and imaginary part) and polar form (magnitude and angle).@footnote{In actual computational systems, rectangular form is preferable to polar form most of the time because of roundoff errors in conversion between rectangular and polar form. This is why the complex-number example is unrealistic. Nevertheless, it provides a clear illustration of the design of a system using generic operations and a good introduction to the more substantial systems to be developed later in this chapter.}  Section 2-4-2 will show how both representations can be made to coexist in a single system through the use of type tags and generic operations.
+<p> We will develop a system that performs arithmetic operations on complex numbers as a simple but unrealistic example of a program that uses generic operations. We begin by discussing two plausible representations for complex numbers as ordered pairs: rectangular form (real part and imaginary part) and polar form (magnitude and angle).<a name="footnote_link_2-43" class="footnote_link" href="#footnote_2-43">43</a> Section 2-4-2 will show how both representations can be made to coexist in a single system through the use of type tags and generic operations.
 
 <p> Like rational numbers, complex numbers are naturally represented as ordered pairs. The set of complex numbers can be thought of as a two-dimensional space with two orthogonal axes, the ``real'' axis and the ``imaginary'' axis. (See Figure 2-20.)  From this point of view, the complex number z = x + iy (where i^2 = - 1) can be thought of as the point in the plane whose real coordinate is x and whose imaginary coordinate is y. Addition of complex numbers reduces in this representation to addition of coordinates:
 
@@ -137,7 +137,7 @@ y = r sin A     A = arctan(y,x)
 </pre>
 
 
-<p> which relate the real and imaginary parts (x, y) to the magnitude and the angle (r, A).@footnote{The arctangent function referred to here, computed by Scheme's <tt>atan</tt> procedure, is defined so as to take two arguments y and x and to return the angle whose tangent is y/x. The signs of the arguments determine the quadrant of the angle.}  Ben's representation is therefore given by the following selectors and constructors:
+<p> which relate the real and imaginary parts (x, y) to the magnitude and the angle (r, A).<a name="footnote_link_2-44" class="footnote_link" href="#footnote_2-44">44</a>  Ben's representation is therefore given by the following selectors and constructors:
 
 <div id="scheme-define-rectangular-selectors">
 (define (real-part z) (car z))
@@ -439,7 +439,7 @@ returns the item found there. If no item is found, <tt>get</tt> returns false.
 prompt("scheme-define-install-rectangular-package");
 </script>
 
-<p> Notice that the internal procedures here are the same procedures from section 2-4-1 that Ben wrote when he was working in isolation. No changes are necessary in order to interface them to the rest of the system. Moreover, since these procedure definitions are internal to the installation procedure, Ben needn't worry about name conflicts with other procedures outside the rectangular package. To interface these to the rest of the system, Ben installs his <tt>real-part</tt> procedure under the operation name <tt>real-part</tt> and the type <tt>(rectangular)</tt>, and similarly for the other selectors.@footnote{We use the list <tt>(rectangular)</tt> rather than the symbol <tt>rectangular</tt> to allow for the possibility of operations with multiple arguments, not all of the same type.}  The interface also defines the constructors to be used by the external system.@footnote{The type the constructors are installed under needn't be a list because a constructor is always used to make an object of one particular type.}  These are identical to Ben's internally defined constructors, except that they attach the tag.
+<p> Notice that the internal procedures here are the same procedures from section 2-4-1 that Ben wrote when he was working in isolation. No changes are necessary in order to interface them to the rest of the system. Moreover, since these procedure definitions are internal to the installation procedure, Ben needn't worry about name conflicts with other procedures outside the rectangular package. To interface these to the rest of the system, Ben installs his <tt>real-part</tt> procedure under the operation name <tt>real-part</tt> and the type <tt>(rectangular)</tt>, and similarly for the other selectors.<a name="footnote_link_2-45" class="footnote_link" href="#footnote_2-45">45</a> The interface also defines the constructors to be used by the external system.<a name="footnote_link_2-46" class="footnote_link" href="#footnote_2-46">46</a> These are identical to Ben's internally defined constructors, except that they attach the tag.
 
 <p> Alyssa's polar package is analogous:
 
@@ -475,19 +475,7 @@ prompt("scheme-define-install-polar-package");
 
 <p> Even though Ben and Alyssa both still use their original procedures defined with the same names as each other's (e.g., <tt>real-part</tt>), these definitions are now internal to different procedures (see section 1-1-8), so there is no name conflict.
 
-<p> The complex-arithmetic selectors access the table by means of a general ``operation'' procedure called <tt>apply-generic</tt>, which applies a generic operation to some arguments. <tt>Apply-generic</tt> looks in the table under the name of the operation and the types of the arguments and applies the resulting procedure if one is present:@footnote{<tt>Apply-generic</tt> uses the dotted-tail notation described in Exercise 2-20, because different generic operations may take different numbers of arguments. In <tt>apply-generic</tt>, <tt>op</tt> has as its value the first argument to <tt>apply-generic</tt> and <tt>args</tt> has as its value a list of the remaining arguments.
-
-<p> <tt>Apply-generic</tt> also uses the primitive procedure <tt>apply</tt>, which takes two arguments, a procedure and a list. <tt>Apply</tt> applies the procedure, using the elements in the list as arguments. For example,
-
-<div id="scheme-define-plus-1234">
-(apply + (list 1 2 3 4))
-</div>
-<script>
-prompt("scheme-define-plus-1234");
-</script>
-
-
-<p> returns 10.}
+<p> The complex-arithmetic selectors access the table by means of a general ``operation'' procedure called <tt>apply-generic</tt>, which applies a generic operation to some arguments. <tt>Apply-generic</tt> looks in the table under the name of the operation and the types of the arguments and applies the resulting procedure if one is present:<a name="footnote_link_2-47" class="footnote_link" href="#footnote_2-47">47</a>
 
 <div id="scheme-defne-apply-generic">
 (define (apply-generic op . args)
@@ -646,7 +634,7 @@ When Insatiable takes over a new company, what changes must be made in order to 
 prompt("scheme-define-make-intelligent-complex-from-real-imag");
 </script>
 
-<p> The corresponding <tt>apply-generic</tt> procedure, which applies a generic operation to an argument, now simply feeds the operation's name to the data object and lets the object do the work:@footnote{One limitation of this organization is it permits only generic procedures of one argument.}
+<p> The corresponding <tt>apply-generic</tt> procedure, which applies a generic operation to an argument, now simply feeds the operation's name to the data object and lets the object do the work:<a name="footnote_link_2-48" class="footnote_link" href="#footnote_2-48">48</a>
 
 <div id="scheme-define-message-passing-apply-generic">
 (define (apply-generic op arg) (arg op))
@@ -671,4 +659,39 @@ analogous to the <tt>make-from-real-imag</tt> procedure given above.
 @@
 
 {{footnotes}}
+
+<div id="footnote_2-43" class="footnote"> 
+<p> <a href="#footnote_link_2-43" class="footnote_backlink">43</a> In actual computational systems, rectangular form is preferable to polar form most of the time because of roundoff errors in conversion between rectangular and polar form. This is why the complex-number example is unrealistic. Nevertheless, it provides a clear illustration of the design of a system using generic operations and a good introduction to the more substantial systems to be developed later in this chapter.
+</div>
+
+<div id="footnote_2-44" class="footnote"> 
+<p> <a href="#footnote_link_2-44" class="footnote_backlink">44</a> The arctangent function referred to here, computed by Scheme's atan procedure, is defined so as to take two arguments y and x and to return the angle whose tangent is y/x. The signs of the arguments determine the quadrant of the angle.
+</div>
+
+<div id="footnote_2-45" class="footnote"> 
+<p> <a href="#footnote_link_2-45" class="footnote_backlink">45</a> We use the list (rectangular) rather than the symbol rectangular to allow for the possibility of operations with multiple arguments, not all of the same type.
+</div>
+
+<div id="footnote_2-46" class="footnote"> 
+<p> <a href="#footnote_link_2-46" class="footnote_backlink">46</a> The type the constructors are installed under needn't be a list because a constructor is always used to make an object of one particular type.
+</div>
+
+<div id="footnote_2-47" class="footnote"> 
+<p> <a href="#footnote_link_2-47" class="footnote_backlink">47</a> <tt>Apply-generic</tt> uses the dotted-tail notation described in Exercise 2-20, because different generic operations may take different numbers of arguments. In <tt>apply-generic</tt>, <tt>op</tt> has as its value the first argument to <tt>apply-generic</tt> and <tt>args</tt> has as its value a list of the remaining arguments.
+
+<p> <tt>Apply-generic</tt> also uses the primitive procedure <tt>apply</tt>, which takes two arguments, a procedure and a list. <tt>Apply</tt> applies the procedure, using the elements in the list as arguments. For example,
+
+<div id="scheme-define-plus-1234">
+(apply + (list 1 2 3 4))
+</div>
+<script>
+prompt("scheme-define-plus-1234");
+</script>
+
+<p> returns 10.
+</div>
+
+<div id="footnote_2-48" class="footnote"> 
+<p> <a href="#footnote_link_2-48" class="footnote_backlink">48</a> One limitation of this organization is it permits only generic procedures of one argument.
+</div>
 @@

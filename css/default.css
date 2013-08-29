@@ -1,0 +1,53 @@
+@charset "UTF-8";
+
+/* general */
+
+*
+{
+  font-style: normal;
+  font-weight: normal;
+  text-decoration: none;
+  background-color: inherit;
+  color: inherit;
+  line-height: 1.3;
+}
+
+code
+{
+  display: block;
+  font-family: monospace ! important;
+  border: 1px #999999 solid;
+  background-color: #eeeeee;
+  padding: 0.2em;
+  overflow: scroll;
+}
+
+#article
+{
+  clear: both;
+  background-color: transparent;
+  min-height: 600px;
+}
+
+address
+{
+  text-align: right;
+  font-size: 75%;
+}
+
+#footer
+{
+  margin: 0.5em 0;
+  border: solid #404040 1px;
+  border-style: solid none none none;
+}
+
+#footer *
+{
+  margin: 0.5em 0;
+}
+
+#footer address
+{
+  font-style: italic !important;
+}

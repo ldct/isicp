@@ -4,7 +4,7 @@ body {
 }
 
 /*english text, meant for reading*/
-p, ul, ol, blockquote, table, label, h1, h2, h3, h4, a {
+p, table, label, h1, h2, h3, h4, a {
   font-family:Georgia;
   color:#2E2E2E;
   line-height:1.5em;

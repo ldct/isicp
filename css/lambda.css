@@ -1,0 +1,295 @@
+.console
+{
+  height: 8em;
+  overflow-x: scroll;
+  overflow-y: scroll;
+  white-space: nowrap;
+  border-style: solid;
+  border-width: 4px;
+  border-color: #333333;
+  background-color: #000000;
+  color: #ffffff;
+  font-family: monospace;
+}
+
+#console
+{
+  height: 20em;
+}
+
+.console ul
+{
+  list-style-type: none;
+  margin: 0;
+  padding: 0 .5em;
+}
+
+.console ul li
+{
+  margin-left: 0;
+}
+
+.console input
+{
+  width: 100%;
+  display: inline;
+  border-style: none;
+  background-color: #181818;
+  ime-mode: disabled;
+}
+
+.console ul li.userinput
+{
+  font-weight: bold;
+}
+
+.console ul li.error
+{
+  color: #ff0000;
+}
+
+.console .redex > .abstraction > .lambda
+{
+  color: #8c8ce8;
+}
+
+.console .marked > .abstraction > .lambda,
+.console .marked > .abstraction > .binding,
+.console .marked .bound,
+.console .redex:hover > .abstraction > .lambda,
+.console .redex:hover > .abstraction > .binding
+{
+  color: #00cccc;
+}
+
+.console .marked > .argument,
+.console .redex:hover > .argument
+{
+  border-bottom-style: solid;
+  border-bottom-width: 1px;
+  border-bottom-color: #ffffff;
+}
+
+.console .redex
+{
+  text-decoration: none;
+}
+
+.console .redex:hover
+{
+  cursor: pointer;
+  outline-style: solid;
+  outline-width: 1px;
+  outline-color: #6666ff;
+  background-color: #333366;
+}
+
+.console .redex:active,
+.console .redex:active:hover
+{
+  outline-style: solid;
+  outline-width: 1px;
+  outline-color: #ff3333 ! important;
+  background-color: #663333 ! important;
+}
+
+.console .shadowed:hover,
+.console .shadowed:active,
+.console .shadowed:active:hover
+{
+  outline-style: inherit ! important;
+  outline-width: inherit ! important;
+  outline-color: inherit ! important;
+  background-color: inherit ! important;
+}
+
+.console .shadowed:hover > .abstraction > .lambda
+{
+  color: #8c8ce8;
+}
+
+.console .shadowed:hover > .abstraction > .binding
+{
+  color: inherit ! important;
+}
+
+.console .shadowed:hover > .argument
+{
+  border-bottom-style: none ! important;
+}
+
+.console .reduce
+{
+  margin-right: .5em;
+}
+
+.prompt
+{
+  color: #999999;
+  font-weight: bold;
+  margin-right: .5em;
+}
+
+.abort
+{
+  cursor: pointer;
+  padding: .3em;
+  margin: 4px 0 0 0;
+  border: solid 4px #333333;
+  background-color: #444444;
+  color: #ffffff;
+  -moz-border-radius: 4px;
+  -webkit-border-radius: 4px;
+  text-decoration: none;
+  font-weight: bold;
+}
+
+.abort:hover
+{
+  outline-style: none;
+  border-color: #666666;
+  background-color: #999999;
+}
+
+.abort:active,
+.abort:active:hover
+{
+  outline-style: none;
+  border-color: #ffcccc;
+}
+
+.abort .icon
+{
+  padding: .1em .3em;
+  margin-right: .3em;
+  vertical-align: middle;
+  text-align: center;
+  background-color: #990000;
+  -moz-border-radius: 4px;
+  -webkit-border-radius: 4px;
+}
+
+.resize-corner
+{
+  color: #999999;
+  padding: 0 4px 4px 0;
+}
+
+#store
+{
+  display: none;
+}
+
+ul.select
+{
+  list-style-type: none;
+  height: 1.3em;
+  margin: .5em 0 0 0;
+  padding: 0;
+}
+
+ul.select li
+{
+  float: left;
+  margin: 0 .5em 0 0;
+}
+
+ul.select li.label
+{
+  font-weight: bold;
+}
+
+ul.select li a
+{
+  cursor: pointer;
+  margin: 0;
+  padding: 0 .3em;
+  font-weight: bold;
+  text-decoration: none;
+  color: #999999;
+  background-color: #eeeeee;
+  -moz-border-radius: .3em;
+  -webkit-border-radius: .3em;
+}
+
+ul.select li a:hover
+{
+  color: #9999ee;
+  background-color: #e0e0f0;
+  border-style: none;
+  outline-style: none;
+  text-decoration: underline;
+}
+
+ul.select li a:active,
+ul.select li a:active:hover
+{
+  color: red;
+  border-style: none;
+  outline-style: none;
+}
+
+ul.select li.selected a,
+ul.select li.selected a:link:hover,
+ul.select li.selected a:visited:hover
+{
+  color: #ffffff;
+  background-color: #666666;
+  text-decoration: none;
+  border: solid 2px #999999;
+}
+
+#wait
+{
+  border: solid 2px #666666;
+  width: 3em;
+  text-align: right;
+}
+
+#syntax th, #syntax td
+{
+  padding: .5em;
+  vertical-align: top;
+}
+
+#syntax th, #syntax th a
+{
+  background-color: #999999;
+  color: #ffffff;
+  font-weight: bold;
+}
+
+#syntax td
+{
+  background-color: #eeeeee;
+}
+
+#syntax dl
+{
+  margin: 0;
+}
+
+#syntax code
+{
+  display: inline;
+  border-style: none;
+  background-color: inherit;
+  overflow: visible;
+}
+
+#syntax code var
+{
+  font-style: italic;
+}
+
+#example dt
+{
+  display: inline;
+  padding: .1em .5em;
+  font-weight: bold;
+  color: black;
+  background-color: #eeeeee;
+  border-width: .15em;
+  border-color: #666666;
+  border-style: dashed none dashed none;
+}
