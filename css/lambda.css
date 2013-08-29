@@ -1,8 +1,8 @@
 .console
 {
   height: 8em;
-  overflow-x: scroll;
-  overflow-y: scroll;
+  overflow-x: hidden;
+  overflow-y: auto;
   white-space: nowrap;
   border-style: solid;
   border-width: 4px;
@@ -34,8 +34,12 @@
   width: 100%;
   display: inline;
   border-style: none;
-  background-color: #181818;
+  background-color: rgba(0,0,0,0);
   ime-mode: disabled;
+}
+
+.console input:focus {
+  outline:none;
 }
 
 .console ul li.userinput

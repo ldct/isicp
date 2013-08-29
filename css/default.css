@@ -12,6 +12,10 @@
   line-height: 1.3;
 }
 
+.toggle-link:hover {
+  cursor:pointer;
+}
+
 code
 {
   display: block;
@@ -19,7 +23,6 @@ code
   border: 1px #999999 solid;
   background-color: #eeeeee;
   padding: 0.2em;
-  overflow: scroll;
 }
 
 #article

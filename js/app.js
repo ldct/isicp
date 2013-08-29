@@ -158,7 +158,9 @@ if (typeof LambdaJS.App == 'undefined') LambdaJS.App = {};
         self.hash = {};
         self.run = function(id) {
             var code = self.hash[id];
-            if (code) code.run();
+            if (code) {
+                code.run();
+            }
         };
         self.forEach = function(fun) {
             if (typeof fun == 'string') {
@@ -227,7 +229,8 @@ if (typeof LambdaJS.App == 'undefined') LambdaJS.App = {};
             };
             self.toJavaScript18 = function(){ return self.t('JavaScript18'); };
             self.run = function() {
-                var parent = self.node.parentNode.parentNode;
+                var parent = self.node.parentNode;
+                console.log(parent);
                 if (self.repl) {
                     self.repl.abort.doAbort();
                     parent = self.repl.console.enclosing;

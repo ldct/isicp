@@ -19,48 +19,39 @@
 <link rel="stylesheet" type="text/css" href="css/default.css" />
 <link rel="stylesheet" type="text/css" href="css/lambda.css" />
 
-
-
-<script src="https://files.nyu.edu/cb125/public/Lambda/lambda.js"></script>
+<script src="js/jquery.min.js"></script>
 
 <script type="text/x-mathjax-config">
 MathJax.Hub.Config({
-  tex2jax: {inlineMath: [['$','$'], ['\\(','\\)']]}
+  tex2jax: {inlineMath: [['$','$']]}
 });
 </script>
 <script type="text/javascript" src="http://cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML"></script>
 
 <script src="js/coding.js"></script>
 
-<script>
-function lprompt(s) {
-  makeEditable(s);
-  linkEditor(s, s + "-output", function(x,y) {
-    var f = formatTree(fixedPoint(stringToTree(y)));
-    console.log(f);
-    return f;
-  });
-}
-</script>
-
 </head>
 
-<body style="width:66%; margin:0 auto" onload=init('console')>
+<body style="width:66%; margin:0 auto">
+<script>
+$(function() {
+  init('console');
+});
+</script>
 
-<div id="console" class="console"></div>
+<div id="console" style="display:none" class="console"></div>
+
+<p>
 
 <h1 style="margin:0; text-align:center">From Church Numerals to Y Combinators</h1>
 <h2 style="margin:0; text-align:center">An Interactive Tour of the Lambda Calculus</h2>
-
-$$
-\def\.{\kern0pt{.}}
-$$
 
 <h2> Introduction: How to Write Functions </h2>
 
 <p> We'll begin our introduction to the lambda calculus by considering the question of how we might write down a function. There are standard ways to notate numbers,
 
 $$
+\def\.{\kern0pt{.}}
 42 \\
 0x2a
 $$
@@ -126,6 +117,22 @@ $$
 I = \lambda t\.t
 $$
 
+<div style="margin-top:-2em; float:right; position:relative; z-index:1t">
+  <a class="toggle-link" id="define-I-toggle">&nbsp;&nbsp;&nbsp;|</a>
+</div>
+<span style="display:none" id="define-I-container">
+  <code id="define-I">var I = function(t){ return t };</code>
+</span>
+<a style="display:none" id="run-define-I" href=".">run</a>
+<script>
+$(function(){
+  LambdaJS.App.StaticCode.run('define-I');
+});
+$("#define-I-toggle").click(function(){
+  $("#define-I-container").toggle();
+})
+</script>
+
 <p> "You got lucky," I hear you say. "Your universe can only contain silly functions like these - I don't think you can come up with many more."
 
 <p> How about this?
@@ -133,6 +140,22 @@ $$
 $$
 C_I = \lambda r\.(\lambda t\.t)
 $$
+
+<div style="margin-top:-2em; float:right; position:relative; z-index:1t">
+  <a class="toggle-link" id="define-C_I-toggle">&nbsp;&nbsp;&nbsp;|</a>
+</div>
+<span style="display:none" id="define-C_I-container">
+  <code id="define-C_I">var C_I = function(r){ return function(t) {return t }};</code>
+</span>
+<a style="display:none" id="run-define-C_I" href=".">run</a>
+<script>
+$(function(){
+  LambdaJS.App.StaticCode.run('define-C_I');
+});
+$("#define-C_I-toggle").click(function(){
+  $("#define-C_I-container").toggle();
+})
+</script>
 
 <p> This function $C_I$ will always return the identity function that we defined above. Here we see clearly why lambda notation is superior; without it, we would have to do this to define $C_I$
 
@@ -414,27 +437,18 @@ L &amp;= \lambda abcdefghijklmnopqstuvwxyzr\.(r(thisisafixedpointcombinator))
 
 <p> Note: each letter $a$, $b$, $c$ etc correspond to a single variable.
 
-<div class="lambda">
-<div id="numbers">
-(lambda f x (f (f x)))
-</div>
-<div id="numbers-output">
-</div>
-<script>
-lprompt("numbers");
-</script>
-</div>
+<ul id="strategy" class="select">
+  <li class="label">Evaluation strategy:</li>
+</ul>
+<ul id="pp" class="select">
+  <li class="label">Output:</li>
+</ul>
 
-<h2> addenum </h2>
-
-<div id="lambda">
-(((lambda x (lambda Q (Q x))) j) P)
-</div>
-<div id="lambda-output">
-</div>
-<script>
-lprompt("lambda");
-</script>
+<form action="." id="store"><div>
+<input type="text" name="strategy" id="input-strategy" />
+<input type="text" name="pp" id="input-pp" />
+<input type="text" name="wait" id="input-wait" />
+</div></form>
 
 </body>
 
