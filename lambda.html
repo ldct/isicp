@@ -30,9 +30,24 @@ MathJax.Hub.Config({
 
 <script src="js/coding.js"></script>
 
+<script type="text/javascript">
+
+  var _gaq = _gaq || [];
+  _gaq.push(['_setAccount', 'UA-36868476-1']);
+  _gaq.push(['_trackPageview']);
+
+  (function() {
+    var ga = document.createElement('script'); ga.type = 'text/javascript'; ga.async = true;
+    ga.src = ('https:' == document.location.protocol ? 'https://ssl' : 'http://www') + '.google-analytics.com/ga.js';
+    var s = document.getElementsByTagName('script')[0]; s.parentNode.insertBefore(ga, s);
+  })();
+
+</script>
+
 </head>
 
 <body style="width:66%; margin:0 auto">
+
 <script>
 $(function() {
   init('console');
@@ -117,66 +132,57 @@ $$
 I = \lambda t\.t
 $$
 
-<div style="margin-top:-2em; float:right; position:relative; z-index:1t">
-  <a class="toggle-link" id="define-I-toggle">&nbsp;&nbsp;&nbsp;|</a>
-</div>
-<span style="display:none" id="define-I-container">
-  <code id="define-I">var I = function(t){ return t };</code>
-</span>
-<a style="display:none" id="run-define-I" href=".">run</a>
-<script>
-$(function(){
-  LambdaJS.App.StaticCode.run('define-I');
-});
-$("#define-I-toggle").click(function(){
-  $("#define-I-container").toggle();
-})
-</script>
-
 <p> "You got lucky," I hear you say. "Your universe can only contain silly functions like these - I don't think you can come up with many more."
 
 <p> How about this?
 
 $$
-C_I = \lambda r\.(\lambda t\.t)
+C_I = \lambda s\.(\lambda t\.t)
 $$
-
-<div style="margin-top:-2em; float:right; position:relative; z-index:1t">
-  <a class="toggle-link" id="define-C_I-toggle">&nbsp;&nbsp;&nbsp;|</a>
-</div>
-<span style="display:none" id="define-C_I-container">
-  <code id="define-C_I">var C_I = function(r){ return function(t) {return t }};</code>
-</span>
-<a style="display:none" id="run-define-C_I" href=".">run</a>
-<script>
-$(function(){
-  LambdaJS.App.StaticCode.run('define-C_I');
-});
-$("#define-C_I-toggle").click(function(){
-  $("#define-C_I-container").toggle();
-})
-</script>
 
 <p> This function $C_I$ will always return the identity function that we defined above. Here we see clearly why lambda notation is superior; without it, we would have to do this to define $C_I$
 
 $$
-C_I x = I \text{ for all }x\\
+C_I s = I \text{ for all }s\\
 \text{where }It = t \text{ for all t}
 $$
 
 <p> I hope you got the hint that $C_I$ is so named because it is the <b>constant function of I</b>; we can generalise to a whole class of <b>constant functions of r</b>
 
 $$
-C_r = \lambda t\.r
+C_r = \lambda s\.r
 $$
 
 <p> heck, let's create a function that creates these $C_r$'s
 
 $$
-K = \lambda r\.(\lambda t\.r)
+K = \lambda r\.(\lambda s\.r)
 $$
 
 <p> with the property that $Kr = C_r$. The rabbit hole goes deeper and deeper.
+
+<br><br style="line-height:1.5em;">
+
+<div class="toggle-link" id="beginnings-toggle">
+  <hr>
+</div>
+<div style="display:none" id="beginnings-container">
+<pre>
+  <code id="beginnings">var I = function(t){ return t };
+var C_I = function(s,t) { return t };
+var C_r = function(s) {return r};
+var K = function(r,s){ return r };</code>
+</pre>
+</div>
+<a style="display:none" id="run-beginnings" href=".">run</a>
+<script>
+$(function(){
+  LambdaJS.App.StaticCode.run('beginnings');
+});
+$("#beginnings-toggle").click(function(){
+  $("#beginnings-container").slideToggle();
+})
+</script>
 
 <h2> Multiple Arguments </h2>
 

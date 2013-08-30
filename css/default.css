@@ -12,8 +12,15 @@
   line-height: 1.3;
 }
 
+.toggle-link {
+}
+
 .toggle-link:hover {
   cursor:pointer;
+}
+
+hr {
+  width: 50%;
 }
 
 code
