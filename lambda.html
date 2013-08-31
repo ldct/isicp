@@ -1,3 +1,4 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01//EN" "http://www.w3.org/TR/html4/strict.dtd">
 <html>
 <head>
 <meta charset="UTF-8">
@@ -54,12 +55,12 @@ $(function() {
 });
 </script>
 
-<div id="console" style="display:none" class="console"></div>
-
 <p>
 
-<h1 style="margin:0; text-align:center">From Church Numerals to Y Combinators</h1>
-<h2 style="margin:0; text-align:center">An Interactive Tour of the Lambda Calculus</h2>
+<h1 style="margin-bottom:0; text-align:center">From Church Numerals to Y Combinators</h1>
+<h2 style="margin-top:0; text-align:center">An Interactive Tour of the Lambda Calculus</h2>
+
+<br><br>
 
 <h2> Introduction: How to Write Functions </h2>
 
@@ -82,7 +83,7 @@ $$
 
 </div>
 
-<p> etc, but there doesn't seem to be a way to write down functions. How should we write down a function, for example, that takes a natural number and triples it?
+<p> etc, but there doesn't seem to be a way to write down functions. How should we write down a function, for example, that takes a number and triples it?
 
 <p> "Easy!" you say. "Just call that function $f$ and write
 
@@ -100,9 +101,7 @@ $$
 f = something
 $$
 
-<p> This is indispensible in writing higher-order functions, which are functions that return other functions.
-
-<p> In the lambda calculus, we would write $f$ as 
+<p> This is indispensible in writing higher-order functions, which are functions that return other functions. In the lambda calculus, we would write $f$ as 
 
 $$
 \lambda x.3x
@@ -126,21 +125,19 @@ $$
 
 <p> Let's now create a universe for our functions to live in. Mathematically inclined readers might now point out that this universe must be incomplete - after all, functions must act on something, so surely we must include something else in the universe for them to act on, for example integers. 
 
-<p> To get around this, we shall let functions act on other functions. Our universe shall be pure only contain functions. Let's see how far we can take this idea. It might seem at first that there aren't any interesting functions to write down. I present as my first counterexample a function that does absolutely nothing, the identity function.
+<p> To get around this, we shall let functions act on other functions; our functions shall accept other functions as arguments and returns functions. This way, our universe will only contain functions. It might seem at first that there aren't any interesting functions to write down, but let's see how far we can get. First, a function that does absolutely nothing, the <b>identity function</b>:
 
 $$
 I = \lambda t\.t
 $$
 
-<p> "You got lucky," I hear you say. "Your universe can only contain silly functions like these - I don't think you can come up with many more."
-
-<p> How about this?
+<p> "You got lucky," I hear you say. "Your universe can only contain silly functions like these - I don't think you can come up with many more." Well, how about this?
 
 $$
 C_I = \lambda s\.(\lambda t\.t)
 $$
 
-<p> This function $C_I$ will always return the identity function that we defined above. Here we see clearly why lambda notation is superior; without it, we would have to do this to define $C_I$
+<p> No matter what you pass to it, this function $C_I$ will always return the identity function. Here we see clearly why lambda notation is superior; without it, we would have to do this to define $C_I$
 
 $$
 C_I s = I \text{ for all }s\\
@@ -161,18 +158,29 @@ $$
 
 <p> with the property that $Kr = C_r$. The rabbit hole goes deeper and deeper.
 
-<br><br style="line-height:1.5em;">
-
 <div class="toggle-link" id="beginnings-toggle">
+  <br>
   <hr>
 </div>
-<div style="display:none" id="beginnings-container">
+<div class="code-container" id="beginnings-container">
 <pre>
   <code id="beginnings">var I = function(t){ return t };
 var C_I = function(s,t) { return t };
 var C_r = function(s) {return r};
 var K = function(r,s){ return r };</code>
 </pre>
+<h3>Exercises</h3>
+<ol>
+  <li>
+    Using the interpreter, confirm that <tt>K I</tt> is equivalent to <tt>C_I</tt>
+  </li>
+  <li>
+    Write down the function $C_{C_I}$, the constant function of $C_I$
+  </li>
+  <li>
+    Without using the interpreter, evaluate <tt>(K K) (K K)</tt>.
+  </li>
+</ol>
 </div>
 <a style="display:none" id="run-beginnings" href=".">run</a>
 <script>
@@ -192,7 +200,7 @@ $$
 \zeta(x,y) = yx
 $$
 
-<p> The solution is to make the function take only the first argument $x$ and return a partially evaluated function, which then takes the second argument and processes it.
+<p> The way to write this is to make the function take only the first argument $x$ and return a partially evaluated function, which then takes the second argument and processes that, then returns the final result.
 
 $$
 \zeta = \lambda x\.(\lambda y\.yx)
@@ -204,7 +212,7 @@ $$
 \zeta x = \lambda y\.yx
 $$
 
-we get a <b>partially applied function</b>. When we feed that the second argument...
+we get a <b>partially applied</b> function. When we feed that the second argument...
 
 $$
 (\zeta x)y = yx
@@ -214,7 +222,7 @@ $$
 
 <h2> A Note on Notation </h2>
 
-<p> You can see why we reserved brackets earlier on; in general, these are two different functions
+<p> You can see why we reserved brackets earlier on; without them, an expression like $KII$ is ambiguous because it could be read as either $(KI)I$ or $K(II)$.
 
 \begin{align}
 (KI)I &amp;=C_I I \\
@@ -225,7 +233,7 @@ K(II) &amp;= KI \\
       &amp;= \lambda r\.(\lambda t\.t) \\
 \end{align}
 
-<p> Since the first one is much more common, we will often drop the brackets. Hence our convention is that <b>brackets are implicitly placed from the left</b>; when we write <em>FII</em>, it is to be understood as <em>(FI)I</em>.
+<p> Since the first one is much more common, we will often drop the brackets. Hence our convention is that when omitted, function application starts from the leftmost pair; $KII$ is read as $(KI)I$.
 
 <p> In a similar vein, let's adopt a convention and simplify this
 
@@ -239,37 +247,87 @@ $$
 \zeta = \lambda xy\.yx
 $$
 
-<p> Let's have a few more examples to make it clear. We'll introduce the <b>projection operators</b> $\pi_1$ and $\pi_2$, which are functions of two arguments that return either the first or the second argument.
+<p> and say that multiple arguments appear between a $\lambda$ and a dot represent a curried function. Let's have a few more examples to make it clear. We'll introduce the <b>projection operators</b> $\pi_1$ and $\pi_2$, which are functions of two arguments that return either the first or the second argument.
 
 $$
 \pi_1 = \lambda xy\.x \\
 \pi_2 = \lambda xy\.y
 $$
 
-<p> Notice how clearly we can see the definition now. Also notice the somewhat subtler point that $\pi_1 = K$ and $\pi_2 = KI$.
+<p> Notice how clearly we can see the definition now. Also notice that $\pi_1 = K$ and $\pi_2 = KI$.
 
+<div class="toggle-link" id="multiple-arguments-notation-toggle">
+  <br>
+  <hr>
+</div>
+<div class="code-container" id="multiple-arguments-notation-container">
+<pre>
+  <code id="multiple-arguments-notation">var zeta = function(x,y){ return y(x) };
+var pi_1 = function(x,y){return x};
+var pi_2 = function(x,y){return y};</code>
+</pre>
+<h3>Exercises</h3>
+<ol>
+  <li>
+    Without using the interpreter, evaluate <tt>zeta pi_1 pi_2 zeta</tt>.
+  </li>
+  <li>
+    Let $\pi_{m/n}$ be the <b>$m^{th}$ projection operator on $n$ variables</b>; in other words, it takes $n$ arguments and returns the $m^{th}$ one. For instance, $\pi_{2/5} = \lambda abcde\. b$. Express $\pi_{3/3}$ in terms of $K$ and $I$.
+  </li>
+  <li>
+    In general, what must $m$ and $n$ satisfy so that $\pi_{m/n}$ is expressible in terms of $K$ and $I$?
+  </li>
+</ol>
+</div>
+<a style="display:none" id="run-multiple-arguments-notation" href=".">run</a>
+<script>
+$(function(){
+  LambdaJS.App.StaticCode.run('multiple-arguments-notation');
+});
+$("#multiple-arguments-notation-toggle").click(function(){
+  $("#multiple-arguments-notation-container").slideToggle();
+})
+</script>
+
+<h2> Interactive? </h2>
+
+<p> I promised in the subtitle that this would be an interactive tour. Click on the thin grey line above for the interactive part. Inside you will find the console to an interpreter as well as some pre-defined terms. Note that the interpreter considers <tt>KI</tt> to be one identifier and <tt>K I</tt> to be $K$ applied to $I$. Use <tt>\</tt> to type $\lambda$.
+
+<p> By the way, there's another expandble section after the section Simple Beginnings. I suggest that you start with that one first.
 
 <h2> One, Two, Three... </h2>
 
 <p> There are many ways to represent numbers via functions, to say that this function represents one, that one represents two, etc. As an exercise, try thinking of one of them.
 
-<p> We'll focus on a classic encoding devised by Alonzo Church. The Church encoding of a number <em>n</em> is a function that maps functions to their n-fold compositions.
+<p> We'll focus on a classic encoding devised by Alonzo Church. The Church encoding of a number $n$ is a function that maps functions to their $n$-fold compositions.
 
 \begin{align}
 nf &amp;= f^n \\
    &amp;= f \circ f \circ \ldots \circ f
 \end{align}
 
-<p> we can derive an explicit form for $n$
+<p> To use an example from trigonometry, 
 
 \begin{align}
- nf &amp;= f^n \\
-nfx &amp;= f^n x \\
-  n &amp;= \lambda fx.f^n x \\
-    &amp;= \lambda fx.f(f(f\ldots f(x)\ldots))
+3 \sin &amp;= \sin \circ \sin \circ \sin \\
+(3 \sin) x &amp;= sin(sin(sin(x)))
 \end{align}
 
-<p> with some examples
+<p> To derive the explicit form for $n$, we first write $f^n$ explicitly as $\lambda x\. f(f(f\ldots f(x)\ldots))$.
+
+\begin{align}
+nf &amp;= f^n \\
+   &amp;= \lambda x \.f^n x \\
+   &amp;= \lambda x \.f(f(f\ldots f(x)\ldots))
+\end{align}
+
+<p> abstracting out the $f$,
+
+$$
+n = \lambda fx \.f(f(f\ldots f(x)\ldots))
+$$
+
+<p> and here are some examples to illustrate.
 
 \begin{align}
 0 &amp;= \lambda fx\.x \\
@@ -283,11 +341,17 @@ nfx &amp;= f^n x \\
 \begin{align}
 Sn &amp;= \lambda fx\.f^{(n+1)}x \\
    &amp;= \lambda fx\.f(f^nx) \\
-   &amp;= \lambda fx\.f(nfx) \\
-S  &amp;= \lambda nfx\.f(nfx)
+   &amp;= \lambda fx\.f(nfx)
 \end{align}
 
-<p> This relies on the fact that $f \circ f^n = f^{n+1}$. Using the general form $f^m \circ f^n = f^{m+n}$, we get 
+<p> Hence,
+
+$$
+S = \lambda nfx\.f(nfx)
+$$
+
+
+<p> This relies on the fact that $f \circ f^n = f^{n+1}$. Using the general form $f^m \circ f^n = f^{m+n}$, we get a function $\Sigma$ that sums two numbers.
 
 $$
 \Sigma = \lambda mnfx.mf(nfx)
@@ -303,11 +367,58 @@ $$
 \Pi    &amp;= \lambda mnf\.m(nf)
 \end{align}
 
+<div class="toggle-link" id="one-two-three-toggle">
+  <br>
+  <hr>
+</div>
+<div class="code-container" id="one-two-three-container">
+<pre>
+  <code id="one-two-three">var _0 = function(s,z){ return z };
+var _1 = function(s,z){ return s(z) };
+var _2 = function(s,z){ return s(s(z)) };
+var _3 = function(s,z){ return s(s(s(z))) };
+
+var successor = function(m,n,f,x) {return m(f)(n(f)(x))};
+var add = function(m,n,f,x){ return m(f)(n(f)(x)) };
+
+var multiply = function(m,n,f) { return m(n(f)) };
+</code>
+</pre>
+<h3>Exercises</h3>
+<ol>
+  <li>
+    Try defining the exponentiation operator; test it by ensuring that <tt>exp _3 _2 = _9</tt>. Hint: The operator is only 6 symbols long!
+  </li>
+  <li>
+    Assume we have an operator <tt>pred</tt> such that <tt>pred _0 = _0</tt> and <tt>pred _n = _(n-1)</tt>. Give a short implementation of subtraction using <tt>pred</tt>. Challenge: Implement <tt>pred</tt>.
+  </li>
+  <li>
+    In Peano arithmetic, a natural number is defined inductively as either zero or a successor to a natural number. Is this related to our Church encoding?
+  </li>
+  <li>
+    Another way to embed natural numbers might be to represent $n$ as the $n$-deep constant function of $I$; for instance, $3$ would be represented by <tt>K (K (K I))</tt>. Derive arithmetic operators that work on this representation.
+  </li>
+  <li>
+    Is it possible to find an encoding for all integers? Rational numbers? Reals?
+  </li>
+</ol>
+</div>
+<a style="display:none" id="run-one-two-three" href=".">run</a>
+<script>
+$(function(){
+  LambdaJS.App.StaticCode.run('one-two-three');
+});
+$("#one-two-three-toggle").click(function(){
+  $("#one-two-three-container").slideToggle();
+})
+</script>
+
+
 <h2> Data Structures </h2>
 
 <p> Linked Lists, Stacks, Queues, Heaps, B-Trees &ndash; our universe is still missing such data structures or even a way to express them. Let's implement one of the building blocks of data structures, the <b>pair</b>. A pair is exactly what the name suggests it is &ndash; a container containing two elements in order, the <b>head</b> and the <b>tail</b>. Programmers using lisp-descended languages will know of them as <b>cons cells</b>.
 
-<p> Let's be more formal - we want a function $P$ that constructs a pair. Once the pair is constructed, functions $H$ and $T$ may be used to access the elements of the pair.
+<p> Let's be more formal - we want a function $P$ that constructs a pair. Once the pair is constructed, functions $H$ and $T$ may be used to access the elements of the pair. Consistency requires that
 
 $$
 H(Pxy) = x \\
@@ -335,6 +446,46 @@ T &amp;= \lambda p. p(\lambda xy\.y)
 \end{align}
 
 
+<div class="toggle-link" id="data-structures-toggle">
+  <br>
+  <hr>
+</div>
+<div class="code-container" id="data-structures-container">
+<pre>
+  <code id="data-structures">var pair = function(P,Q,x){ return x(P)(Q) };
+var fst = function(p){ return p(function(x,y){ return x }) };
+var snd = function(p){ return p(function(x,y){ return y }) };
+var p1 = pair(pair(a)(b))(pair(c)(d));</code>
+</pre>
+<h3>Exercises</h3>
+<ol>
+  <li>
+    Verify that <tt>fst (fst p1) = a</tt>
+  </li>
+  <li>
+    Scheme and Lisp programmers have conventionally represented lists as left-leaning pairs; for example, <tt>(5 (3 (42 (4 'nil))))</tt> represents the list <tt>[5, 3, 42, 4]</tt>, and where <tt>'nil</tt> is a special symbol. Let $\rho_n$ return the $n^{th}$ element of the list; for instance, $\rho_2 [5, 3, 42, 4] = 42$. Write a function that takes a number $n$ and returns $\rho_n$.
+  </li>
+  <li>
+    Another, more mathematically elegant, encoding represents a list as an accessor function; the list $[a, b, c]$ would be a function $f$ such that $f(0) = a$, $f(1) = b$ and $f(2) = c$. Write down the list of all even natural numbers $[0,2,4,6,\ldots$.
+  </li>
+  <li>
+    Yet another representation would represent $ [x, y, z]$ as $\lambda cn\.cx(cy(czn))$. What is <tt>[_5, _3, _42, _4] add _0</tt>, where <tt>add</tt> is the operator that adds Church numbers? Write the function <tt>cons</tt> that appends a number to the head of the list.
+  </li>
+  <li>
+    The Church encoding of $n$ requires $O(n)$ symbols to write down. Paul Graham would encode $n$ as a list of elements that has length $n$, which still requires $O(n)$ symbols. Find a way to represent $n$ using only $O(\log n)$ symbols.
+  </li>
+</ol>
+</div>
+<a style="display:none" id="run-data-structures" href=".">run</a>
+<script>
+$(function(){
+  LambdaJS.App.StaticCode.run('data-structures');
+});
+$("#data-structures-toggle").click(function(){
+  $("#data-structures-container").slideToggle();
+})
+</script>
+
 
 <h2> Booleans and Control Flow </h2>
 
@@ -359,7 +510,71 @@ AND   &amp;= \lambda pq. pqF \\
 OR    &amp;= \lambda pq. pTq
 \end{align}
 
-for example $(OR p q) = (p T q)$ which is "T if p else q", which is a correct definition of OR.
+<p> for example <tt>(OR p q) = (p T q)</tt> which can be read as "T if p else q", which is a correct definition of $OR$.
+
+<p> Let's try writing a conditional expression that operates on Church numerals and tells us if its argument is zero. The trick is to make use of the fact that
+
+$$
+C_r \circ C_r = C_r
+$$
+
+<p> that is, constant functions don't change when they are composed with themselves. Similarly $C_r \circ C_r \circ C_r$ is still $C_r$, and so on. Hence, the expression
+
+$$
+n C_F
+$$
+
+<p> will evaluate to $C_F$ when $n > 0$. However, it will evaluate to $I$ when $n=0$; a zero-fold composition is the special case! Then, we simply need to pass $T$ to it
+
+$$
+Zn = n(\lambda x\. F) T
+$$
+
+<p> and we will get $T$ if $n=0$ and $F$ otherwise. Written out fully,
+
+$$
+Z = \lambda n\. n(\lambda xab\. b) (\lambda ab\. b)
+$$
+
+<div class="toggle-link" id="booleans-toggle">
+  <br>
+  <hr>
+</div>
+<div class="code-container" id="booleans-container">
+<pre>
+  <code id="booleans">var T = function(x,y){ return x };
+var F = function(x,y){ return y };
+
+var not = function(p,a,b){return p(b)(a)};
+var and = function(p,q){return p(q)(function(x,y){return y})};
+var or = function(p,q){return p( function(x,y){ return x } )(q) };</code>
+</pre>
+<h3>Exercises</h3>
+<ol>
+  <li>
+    We can very elegantly represent sets by their membership function, ie, $S$ is represented by $\lambda x\.[x \in S]$, where $[x \in S]$ is $T$ if $x \in S$ and $F$ otherwise. Give a definition of the empty set.
+  </li>
+  <li>
+    Implement set union, intersection and complement. Hint: Why have we not put this question in the section about data structures?
+  </li>
+  <li>
+    Is $\lambda x\.T$ a representation of a set?
+  </li>
+  <li>
+    Alyssa P. Hacker immediately notices that she can encode integers as a pair $(s, n)$ where $s$ is a boolean representing whether the number is signed, and $n$ a natural number. However, she runs into problems when tryin to implement multiplication. Ben Bitdiddle suggests a beter way: let the pair $(n,k)$ represent $n-k$. Why is this better?
+  </li>
+</ol>
+</div>
+<a style="display:none" id="run-booleans" href=".">run</a>
+<script>
+$(function(){
+  LambdaJS.App.StaticCode.run('booleans');
+});
+$("#booleans-toggle").click(function(){
+  $("#booleans-container").slideToggle();
+})
+</script>
+
 
 <h2> Recursion? </h2>
 
@@ -379,14 +594,14 @@ fac =
 
 <pre>
 F = 
-(lambda (hukairs)
+(lambda (former-fac)
     (lambda (n)
         (if (= n 0)
             1
-            (* n (hukairs (- n 1))))))
+            (* n (former-fac (- n 1))))))
 </pre>
 
-<p> you will notice that we have simply replaced <tt>fac</tt> by <tt>hukairs</tt> in the body and enclosed the whole thing in a <tt>(lambda (hukairs) .. )</tt>. We call the new function <tt>F</tt>
+<p> you will notice that we have simply replaced <tt>fac</tt> by <tt>former-fac</tt> in the body and enclosed the whole thing in a <tt>(lambda (former-fac) .. )</tt>. We call the new function <tt>F</tt>
 
 <p> Let's imagine we already have a working copy of <tt>fac</tt>, perhaps from Plato's heaven. What is <tt>(F fac)</tt>? it is a function of one variable,
 
@@ -424,37 +639,111 @@ $$
         &amp;= F(\omega')
 \end{align}
 
-<p> so $\omega'$ is a fixed point of $F$. Abstracting the $F$ out, we conclude that
+<p> so $\omega'$ is a fixed point of $F$. Abstracting the $F$ out, we conclude that this is the <b>Y Combinator</b>.
 
 \begin{align}
 Y = \lambda F.(\lambda x. F(xx)) (\lambda x. F(xx)) 
 \end{align}
 
-<hr>
+<div class="toggle-link" id="recursion-toggle">
+  <br>
+  <hr>
+</div>
+<div class="code-container" id="recursion-container">
+<pre>
+  <code id="recursion">var Y = function(f){ return (function(x){ return f((x)(x)) })(function(x){ return f((x)(x)) }) };
 
-<h3> Exercises </h3>
+var _0 = function(s,z){ return z };
+var _1 = function(s,z){ return s(z) };
+var _2 = function(s,z){ return s(s(z)) };
+var _3 = function(s,z){ return s(s(s(z))) };
 
-<p> What do you think $Y_k$ is? Explain why it is what you say it.
+var t = function(x,y){ return x }; // true
+var f = function(x,y){ return y }; // false
+var if0 = function(n){ return n(function(x){ return f })(t) }; // if n equals to _0
 
-\begin{align}
-Y_k &amp;= (L L L L L L L L L L L L L L L L L L L L L L L L L L) \\
-L &amp;= \lambda abcdefghijklmnopqstuvwxyzr\.(r(thisisafixedpointcombinator))
-\end{align}
+var mul = function(m,n,s,z){ return n(m(s))(z) };
+var pred = function(n,s,z){ return n(function(f,g){ return g(f(s)) })(function(x){ return z })(function(x){ return x }) };
 
-<p> Note: each letter $a$, $b$, $c$ etc correspond to a single variable.
+var F = function(r,n){ return if0(n)(_1)(mul(n)(r(pred(n)))) };
+var fact = Y(F);</code>
+</pre>
+<h3>Exercises</h3>
+<ol>
+  <li>
+    What do you think $Y_k$ is? Explain why it is what you say it.
 
-<ul id="strategy" class="select">
-  <li class="label">Evaluation strategy:</li>
-</ul>
-<ul id="pp" class="select">
-  <li class="label">Output:</li>
-</ul>
+    \begin{align}
+    Y_k &amp;= (L L L L L L L L L L L L L L L L L L L L L L L L L L) \\
+    L &amp;= \lambda abcdefghijklmnopqstuvwxyzr\.(r(thisisafixedpointcombinator))
+    \end{align}
 
-<form action="." id="store"><div>
-<input type="text" name="strategy" id="input-strategy" />
-<input type="text" name="pp" id="input-pp" />
-<input type="text" name="wait" id="input-wait" />
-</div></form>
+    <p> Note: each letter $a$, $b$, $c$ etc correspond to a single variable.
+  </li>
+</ol>
+</div>
+<a style="display:none" id="run-recursion" href=".">run</a>
+<script>
+$(function(){
+  LambdaJS.App.StaticCode.run('recursion');
+});
+$("#recursion-toggle").click(function(){
+  $("#recursion-container").slideToggle();
+})
+</script>
+
+<h2> More </h2>
+
+<p> If you enjoyed this, you may enjoy my work-in-progress <a href="index.html">Interactive Structure and Interpretation of Computer Programs</a>. To get stay updated on future interactive guides, please enter your email below.
+
+<p>
+
+<script type="text/javascript" src="http://form.jotform.me/jsform/32423695765463"></script>
+
+<h2> Acknowledgement </h2>
+
+<ol>
+  <li>
+    The lambda calculus interpreter and terminal emulator used belongs to <a href="https://github.com/tarao">INA Lintaro</a> and is available on <a href="http://github.com/tarao/LambdaJS">github</a>. The expandable section below allows you to set the options for the interpreter.
+  </li>
+  <li>
+    Alyssa P. Hacker and Ben Bitdiddle come from the pages of the wonderful book <a href="http://mitpress.mit.edu/sicp/">Structure and Interpretation of Computer Programs</a>.
+  </li>
+</ol>
+
+<div class="toggle-link" id="console-options-toggle">
+  <br>
+  <hr>
+</div>
+<div class="code-container" id="console-options-container">
+
+  <div id="console" class="console"></div>
+
+  <ul id="strategy" class="select">
+    <li class="label">Evaluation strategy:</li>
+  </ul>
+  <ul id="pp" class="select">
+    <li class="label">Output:</li>
+  </ul>
+
+  <form action="." id="store"><div>
+  <input type="text" name="strategy" id="input-strategy" />
+  <input type="text" name="pp" id="input-pp" />
+  <input type="text" name="wait" id="input-wait" />
+  </div></form>
+
+
+</div>
+<script>
+$("#console-options-toggle").click(function(){
+  $("#console-options-container").slideToggle();
+})
+</script>
+
+
+<br><br><br><br>
+
+<a href="https://github.com/zodiac/xuanji.appspot.com" target="_blank"><img style="position: absolute; top: 0; right: 0; border: 0;" src="https://s3.amazonaws.com/github/ribbons/forkme_right_green_007200.png" alt="Fork me on GitHub"></a>
 
 </body>
 
