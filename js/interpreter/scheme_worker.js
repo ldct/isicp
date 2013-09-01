@@ -739,7 +739,7 @@ _PRIMITIVES["remainder"] = new PrimitiveProcedure(scheme_remainder);
 function scheme_modulo(x, y) {
     return ((x % y) + y) % y;
 }
-_PRIMITIVES["modulo"] = new PrimitiveProcedure(scheme_modulo);
+_PRIMITIVES["mod"] = new PrimitiveProcedure(scheme_modulo);
 
 function scheme_floor(x) {
     _check_nums([x]);

@@ -207,7 +207,6 @@ function eval_scheme(code) { //deferred
   w.postMessage(code);
 
   return def;
-
 }
 
 function prompt(s, deps) {

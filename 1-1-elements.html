@@ -286,7 +286,10 @@ answer("scheme-ex-111-nested", 6);
 
 <p> <b> Exercise 1.2. </b>  Translate the following expression into prefix form.
 
-<p style="margin-bottom: 0"> <img src='http://upload.wikimedia.org/math/4/3/e/43e4ba3449a3038629dca7de56757cae.png'>
+$$
+\frac{5 + 4 + (2 - (3 - (6 + \frac{4}{5})))}{3(6-2)(2-7)}
+$$
+
 <div id="scheme-ex-12-input" class='input'></div>
 
 <script> 
@@ -298,20 +301,16 @@ editor.setOption('onBlur', function() {
       "'(/ (+ 5 4 (- 2 (- 3 (+ 6 (/ 4 5))))) (* 3 (- 6 2) (- 2 7))))";
 
   eval_scheme(code).then(function(res){
-    console.log(res);
     if (res == "true\n") {
       $_("scheme-ex-12-input-output").empty().append($("<div class='right-answer'> \u2713 </div>"));
     } else {
       $_("scheme-ex-12-input-output").empty().append($("<div class='wrong-answer'> \u2717 </div>"));
     }
-    
   })
-
-  
 });
 
 /*
-
+(/ (+ 5 4 (- 2 (- 3 (+ 6 (/ 4 5))))) (* 3 (- 6 2) (- 2 7))))
 */
 
 </script>

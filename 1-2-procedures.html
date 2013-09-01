@@ -119,18 +119,20 @@ $(document).ready(createTOC);
 
 <h3> Linear Recursion and Iteration </h3>
 
-<p> <img src="http://mitpress.mit.edu/sicp/full-text/book/ch1-Z-G-7.gif"> </img> <br>
-<p> <b> Figure 1.3: </b>  A linear recursive process for computing 6!.
-
 <p> We begin by considering the factorial function, defined by
 
-<p> <img src="http://mitpress.mit.edu/sicp/full-text/book/ch1-Z-G-8.gif"> </img> <br>
+$$
+n! = n \cdot (n-1) \cdot (n-2) \cdots 3 \cdot 2 \cdot 1 \\
+$$
 
 There are many ways to compute factorials. One way is to make use of the observation that n! is equal to n times (n - 1)! for any positive integer n:
 
-<p> <img src="http://mitpress.mit.edu/sicp/full-text/book/ch1-Z-G-9.gif"> </img> <br>
+\begin{align}
+n! &amp;= n \cdot [(n-1) \cdot (n-2) \cdots 3 \cdot 2 \cdot 1] \\
+   &amp;= n \cdot (n-1)!
+\end{align}
 
-<p> Thus, we can compute n! by computing (n - 1)! and multiplying the result by n. If we add the stipulation that 1! is equal to 1, this observation translates directly into a procedure:
+<p> Thus, we can compute $n!$ by computing $(n - 1)!$ and multiplying the result by $n$. If we add the stipulation that $1!$ is equal to $1$, this observation translates directly into a procedure:
 
 <div id="scheme-define-factorial">
 (define (factorial n)
@@ -144,18 +146,22 @@ prompt("scheme-define-factorial");
 
 <p> We can use the substitution model of section 1.1.5 to watch this procedure in action computing 6!, as shown in figure 1.3.
 
+<p> <img class="center" src="http://mitpress.mit.edu/sicp/full-text/book/ch1-Z-G-7.gif"> </img> <br>
+<p style="text-align:center"> <b> Figure 1.3: </b>  A linear recursive process for computing 6!.
+
+
 <p> Now let's take a different perspective on computing factorials. We could describe a rule for computing n! by specifying that we first multiply 1 by 2, then multiply the result by 3, then by 4, and so on until we reach n. More formally, we maintain a running product, together with a counter that counts from 1 up to n. We can describe the computation by saying that the counter and the product simultaneously change from one step to the next according to the rule
 
-<blockquote>
-<p> product &lt;- counter · product
-<p> counter &lt;- counter + 1
-</blockquote>
+$$
+\def\product{\text{product}}
+\def\counter{\text{counter}}
+\begin{align}
+\product &amp;\leftarrow \counter \cdot \product \\
+\counter &amp;\leftarrow \counter + 1
+\end{align}
+$$
 
 <p> and stipulating that n! is the value of the product when the counter exceeds n.
-
-<p> <img src="http://mitpress.mit.edu/sicp/full-text/book/ch1-Z-G-10.gif"> </img> <br>
-
-<p> <b> Figure 1.4: </b>  A linear iterative process for computing 6!.
 
 <p> Once again, we can recast our description as a procedure for computing factorials:<a name="footnote_link_1-29" class="footnote_link" href="#footnote_1-29">29</a>
 
@@ -175,6 +181,10 @@ prompt("scheme-define-factorial-iterative");
 </script>
 
 <p> As before, we can use the substitution model to visualize the process of computing 6!, as shown in figure 1.4.
+
+<p> <img class="center" src="http://mitpress.mit.edu/sicp/full-text/book/ch1-Z-G-10.gif"> </img> <br>
+
+<p style="text-align:center"> <b> Figure 1.4: </b>  A linear iterative process for computing 6!.
 
 <p> Compare the two processes. From one point of view, they seem hardly different at all. Both compute the same mathematical function on the same domain, and each requires a number of steps proportional to n to compute n!. Indeed, both processes even carry out the same sequence of multiplications, obtaining the same sequence of partial products. On the other hand, when we consider the &ldquo;shapes&rdquo; of the two processes, we find that they evolve quite differently.
 
@@ -305,7 +315,7 @@ makeStatic("scheme-define-a-2-n");
 makeStatic("scheme-define-5-n-squared");
 </script>
 
-<p> Give concise mathematical definitions for the functions computed by the procedures f, g, and h for positive integer values of n. For example, <tt>(k n)</tt> computes <tt>5n<sup>2</sup>.</tt> 
+<p> Give concise mathematical definitions for the functions computed by the procedures $f$, $g$, and $h$ for positive integer values of $n$. For example, <tt>(k n)</tt> computes $5n^2$. 
 
 </div>
 
@@ -470,34 +480,34 @@ makeChangeOnFocusInput("scheme-ex-fn-3-input",
                        "(define (f n)\n  'your-code-here)", 
                        "(define (f n)\n  ");
 addOutput("scheme-ex-fn-3-input");
-linkEditor("scheme-ex-fn-3-input", "scheme-ex-fn-3-input-output", function(x, y) {
-
-function f(n) {
-  if (n < 3) {
-    return n;
-  } else {
-    return f(n-1) + 2*f(n-2) + 3*f(n-3);
+var editor = editorOf["scheme-ex-fn-3-input"];
+editor.setOption("onBlur", function() {
+  function f(n) {
+    if (n < 3) {
+      return n;
+    } else {
+      return f(n-1) + 2*f(n-2) + 3*f(n-3);
+    }
   }
-}
 
-function fs(n) {
-  return "(= (f " + n + ") " + f(n) + ")";
-}
+  function fs(n) {
+    return "(= (f " + n + ") " + f(n) + ")";
+  }
 
-
-  var code = y + "\n" +
+  var code = editor.getValue() + "\n" +
             "(and " + fs(1)  + 
                       fs(10) + 
                       fs(3) + ")";
 
-  if (biwascheme.evaluate(code) == true) {
-    return "<div class='right-answer'> \u2713 </div>";
-  } else {
-    return "<div class='wrong-answer'> \u2717 </div>";
-  }
+  eval_scheme(code).then(function(res){
+    if (res == "true\n") {
+      $_("scheme-ex-fn-3-input-output").empty().append($("<div class='right-answer'> \u2713 </div>"));
+    } else {
+      $_("scheme-ex-fn-3-input-output").empty().append($("<div class='wrong-answer'> \u2717 </div>"));
+    }
+  })
 });
 </script>
-
 <!--
 (define (f n)
   (if (< n 3)
@@ -516,50 +526,53 @@ function fs(n) {
 
 <p> The numbers at the edge of the triangle are all 1, and each number inside the triangle is the sum of the two numbers above it.<a name="footnote_link_1-35" class="footnote_link" href="#footnote_1-35">35</a> 
 
-<p> Write a procedure that computes elements of Pascal's triangle by means of a recursive process. If a number lies outside of the triangle, return 0 (this makes sense if we view <tt>pascal</tt> as the <a href='http://en.wikipedia.org/wiki/Combination' target="_blank"> combination function </a>)
+<p> Write a procedure that computes elements of Pascal's triangle by means of a recursive process. If a number lies outside of the triangle, return 0 (this makes sense if we view <tt>pascal</tt> as the <a href='http://en.wikipedia.org/wiki/Combination' target="_blank"> combination function </a>). Start counting rows and columns from 0.
 
 <div id="scheme-ex-pascal-input" class='input'></div>
-
-<a href='http://www.billthelizard.com/2009/11/sicp-exercise-112-pascals-triangle.html' target="_blank"> discussion </a>
 
 <script>
 makeChangeOnFocusInput("scheme-ex-pascal-input", 
                        "(define (pascal row col)\n  'your-code-here)", 
                        "(define (pascal row col)\n  ");
 addOutput("scheme-ex-pascal-input");
-linkEditor("scheme-ex-pascal-input", "scheme-ex-pascal-input-output", function(x, y) {
+var editor = editorOf["scheme-ex-pascal-input"];
 
-function pascal(row, col) {
-  if (row < col) {
-    return 0;
-  } else if (col == 0 || row == col) {
-    return 1;
-  } else
-    return pascal(row - 1, col) +
-           pascal(row - 1, col - 1);
-}
+editor.setOption("onBlur", function(){
 
-function ps(row, col) {
-  return "(= (pascal " + row + " " + col + ") " + pascal(row, col) + ")";
-}
-
-
-  var code = y + "\n" +
-            "(and " + ps(2,3) + 
-                      ps(1,2) + 
-                      ps(3,4) + ")"
-
-  if (biwascheme.evaluate(code) == true) {
-    return "<div class='right-answer'> \u2713 </div>";
-  } else {
-    return "<div class='wrong-answer'> \u2717 </div>";
+  function pascal(row, col) {
+    if (row < col) {
+      return 0;
+    } else if (col == 0 || row == col) {
+      return 1;
+    } else
+      return pascal(row - 1, col) +
+             pascal(row - 1, col - 1);
   }
+
+  function ps(row, col) {
+    return "(= (pascal " + row + " " + col + ") " + pascal(row, col) + ") ";
+  }
+
+
+  var code = editor.getValue() + "\n" +
+             "(and " + ps(3,2) + 
+                       ps(2,1) + 
+                       ps(4,3) + ")"
+
+  eval_scheme(code).then(function(res){
+    console.log(res);
+    if (res == "true\n") {
+      $_("scheme-ex-pascal-input-output").empty().append($("<div class='right-answer'> \u2713 </div>"));
+    } else {
+      $_("scheme-ex-pascal-input-output").empty().append($("<div class='wrong-answer'> \u2717 </div>"));
+    }    
+  })
 });
 </script>
 
 <!--
 (define (pascal row col)
-   (cond ((< row col) #f)
+   (cond ((< row col) 0)
          ((or (= 0 col) (= row col)) 1)
          (else (+ (pascal (- row 1) col)
                   (pascal (- row 1) (- col 1))))))
@@ -595,9 +608,9 @@ $$
 
 <p> The previous examples illustrate that processes can differ considerably in the rates at which they consume computational resources. One convenient way to describe this difference is to use the notion of order of growth to obtain a gross measure of the resources required by a process as the inputs become larger.
 
-<p> Let <tt>n</tt> be a parameter that measures the size of the problem, and let <tt>R(n)</tt> be the amount of resources the process requires for a problem of size <tt>n</tt>. In our previous examples we took n to be the number for which a given function is to be computed, but there are other possibilities. For instance, if our goal is to compute an approximation to the square root of a number, we might take n to be the number of digits accuracy required. For matrix multiplication we might take <tt>n</tt> to be the number of rows in the matrices. In general there are a number of properties of the problem with respect to which it will be desirable to analyze a given process. Similarly, <tt>R(n)</tt> might measure the number of internal storage registers used, the number of elementary machine operations performed, and so on. In computers that do only a fixed number of operations at a time, the time required will be proportional to the number of elementary machine operations performed.
+<p> Let $n$ be a parameter that measures the size of the problem, and let $R(n)$ be the amount of resources the process requires for a problem of size $n$. In our previous examples we took n to be the number for which a given function is to be computed, but there are other possibilities. For instance, if our goal is to compute an approximation to the square root of a number, we might take n to be the number of digits accuracy required. For matrix multiplication we might take $n$ to be the number of rows in the matrices. In general there are a number of properties of the problem with respect to which it will be desirable to analyze a given process. Similarly, $R(n)$ might measure the number of internal storage registers used, the number of elementary machine operations performed, and so on. In computers that do only a fixed number of operations at a time, the time required will be proportional to the number of elementary machine operations performed.
 
-<p> We say that <tt>R(n)</tt> has order of growth <tt>(f(n)),</tt> written <tt>R(n) = Θ(f(n))</tt> (pronounced "theta of f(n)"), if there are positive constants <tt>k1</tt> and <tt>k2</tt> independent of <tt>n</tt> such that
+<p> We say that $R(n)$ has order of growth $(f(n))$, written $R(n) = \Theta(f(n))$ (pronounced "theta of $f(n)$"), if there are positive constants $k_1$ and $k_2$ independent of $n$ such that
 
 $$
 k_1 f(n) \leq R(n) \leq k_2 f(n)
@@ -605,7 +618,7 @@ $$
 
 <p> for any sufficiently large value of n. (In other words, for large n, the value R(n) is sandwiched between $k_1 f(n)$ and $k_2f(n)$.)
 
-<p> For instance, with the linear recursive process for computing factorial described in section 1.2.1 the number of steps grows proportionally to the input n. Thus, the steps required for this process grows as (n). We also saw that the space required grows as (n). For the iterative factorial, the number of steps is still (n) but the space is (1) &mdash; that is, constant.<a name="footnote_link_1-36" class="footnote_link" href="#footnote_1-36">36</a> The tree-recursive Fibonacci computation requires (n) steps and space (n), where is the golden ratio described in section 1.2.2.
+<p> For instance, with the linear recursive process for computing factorial described in section 1.2.1 the number of steps grows proportionally to the input $n$. Thus, the steps required for this process grows as $\Theta(n)$. We also saw that the space required grows as $\Theta(n)$. For the iterative factorial, the number of steps is still $\Theta(n)$ but the space is $\Theta(1)$ &mdash; that is, constant.<a name="footnote_link_1-36" class="footnote_link" href="#footnote_1-36">36</a> The tree-recursive Fibonacci computation requires $\Theta(\phi^n)$ steps and space $\Theta(n)$, where is the golden ratio described in section 1.2.2.
 
 <p> Orders of growth provide only a crude description of the behavior of a process. For example, a process requiring n2 steps and a process requiring 1000n2 steps and a process requiring 3n2 + 10n + 17 steps all have (n2) order of growth. On the other hand, order of growth provides a useful indication of how we may expect the behavior of the process to change as we change the size of the problem. For a (n) (linear) process, doubling the size will roughly double the amount of resources used. For an exponential process, each increment in problem size will multiply the resource utilization by a constant factor. In the remainder of section 1.2 we will examine two algorithms whose order of growth is logarithmic, so that doubling the problem size increases the resource requirement by a constant amount.
 
@@ -616,9 +629,11 @@ $$
 <p>
 
 <div class='exercise'>
-<p> <b> Exercise 1.15. </b> The sine of an angle (specified in radians) can be computed by making use of the approximation <tt>sin(x) = x</tt> if <tt>x</tt> is sufficiently small, and the trigonometric identity
+<p> <b> Exercise 1.15. </b> The sine of an angle (specified in radians) can be computed by making use of the approximation $\sin(x) = x$ if $x$ is sufficiently small, and the trigonometric identity
 
-<img src='http://mitpress.mit.edu/sicp/full-text/book/ch1-Z-G-19.gif'>
+$$
+\sin(x) = 3 \sin(\frac{x}{3}) - 4\sin^3(\frac{x}{3})
+$$
 
 <p> to reduce the size of the argument of sin. (For purposes of this exercise an angle is considered &ldquo;sufficiently small&rdquo; if its magnitude is not greater than 0.1 radians.) These ideas are incorporated in the following procedures:
 
@@ -635,27 +650,28 @@ prompt("scheme-define-sine");
 </script>
 
 <ol style="list-style-type: lower-alpha">
-<li> How many times is the procedure p applied when (sine 12.15) is evaluated? 
+<li> <p> How many times is the procedure p applied when (sine 12.15) is evaluated? 
 
 <div id="scheme-sine-1215-qns" style="display:none"></div>
 <script>
 answer("scheme-sine-1215-qns", 5);
 </script>
-
-
 </li>
-<li> What is the order of growth in space and number of steps (as a function of a) used by the process generated by the sine procedure when (sine a) is evaluated? 
+
+<br>
+
+<li> <p> What is the order of growth in space and number of steps (as a function of a) used by the process generated by the sine procedure when (sine a) is evaluated? 
 
 <p> 
 
 <div id="scheme-sine-order-mcq"></div>
 <script>
 makeMCQ("scheme-sine-order-mcq", 
-       ["Θ(log(n))"],
-       ["Θ(n)",
-        "Θ(n<sup>2</sup>)",
-        "Θ(sqrt(n))",
-        "Θ(n/3)"
+       ["$\\Theta(\\log(n))$"],
+       ["$\\Theta(n)$",
+        "$\\Theta(n^2)$",
+        "$\\Theta(\\sqrt{n})$",
+        "$\\Theta(n/3)$"
        ]);
 </script>
 </li>
@@ -666,7 +682,10 @@ makeMCQ("scheme-sine-order-mcq",
 
 <p> Consider the problem of computing the exponential of a given number. We would like a procedure that takes as arguments a base b and a positive integer exponent n and computes bn. One way to do this is via the recursive definition
 
-<p> <img src='http://mitpress.mit.edu/sicp/full-text/book/ch1-Z-G-20.gif'>
+\begin{align} 
+b^n &amp;= b \cdot b^{n-1} \\
+b^0 &amp;= 1
+\end{align}
 
 <p> which translates readily into the procedure
 
@@ -697,19 +716,30 @@ prompt("scheme-define-expt");
 prompt("scheme-define-expt-iterative");
 </script>
 
-<p> This version requires Θ(n) steps and Θ(1) space.
+<p> This version requires $\Theta(n)$ steps and $\Theta(1)$ space.
 
-<p> We can compute exponentials in fewer steps by using successive squaring. For instance, rather than computing b<sup>8</sup> as
+<p> We can compute exponentials in fewer steps by using successive squaring. For instance, rather than computing $b^8$ as
 
-<p> <img src='http://mitpress.mit.edu/sicp/full-text/book/ch1-Z-G-21.gif'>
+$$
+b \cdot (b \cdot (b \cdot (b \cdot (b \cdot (b \cdot (b \cdot b))))))
+$$
 
 <p> we can compute it using three multiplications:
 
-<p> <img src='http://mitpress.mit.edu/sicp/full-text/book/ch1-Z-G-22.gif'>
+\begin{align} 
+b^2 &amp;= b \cdot b \\
+b^4 &amp;=b^2 \cdot b^2 \\
+b^8 &amp;=b^4 \cdot b^4
+\end{align}
 
 <p> This method works fine for exponents that are powers of 2. We can also take advantage of successive squaring in computing exponentials in general if we use the rule
 
-<p> <img src='http://mitpress.mit.edu/sicp/full-text/book/ch1-Z-G-23.gif'>
+\begin{align} 
+
+b^n = \begin{cases} 
+(b^{n/2})^2 &amp;\mbox{if } n \text{ is even} \\
+b \cdot b^{n-1} &amp; \mbox{if } n \text{ is odd}. \end{cases} 
+\end{align}
 
 <p> We can express this method as a procedure:
 
@@ -739,7 +769,7 @@ addDep("scheme-define-fast-expt", ["scheme-define-even", "scheme-define-square"]
   (= (remainder n 2) 0))
 </div>
 <script>
-prompt("scheme-define-even"); //TODO s/mod/remainder/g
+prompt("scheme-define-even");
 </script>
 
 <p> The process evolved by fast-expt grows logarithmically with n in both space and number of steps. To see this, observe that computing b2n using fast-expt requires only one more multiplication than computing bn. The size of the exponent we can compute therefore doubles (approximately) with every new multiplication we are allowed. Thus, the number of multiplications required for an exponent of n grows about as fast as the logarithm of n to the base 2. The process has (log n) growth.<a name="footnote_link_1-37" class="footnote_link" href="#footnote_1-37">37</a>
@@ -750,29 +780,32 @@ prompt("scheme-define-even"); //TODO s/mod/remainder/g
 <p> <b> Exercise 1.16. </b> Design a procedure that evolves an iterative exponentiation process that uses successive squaring and uses a logarithmic number of steps, as does fast-expt. (Hint: Using the observation that (b<sup>n/2</sup>)<sup>2</sup> = (b<sup>2</sup>)<sup>n/2</sup>, keep, along with the exponent n and the base b, an additional state variable a, and define the state transformation in such a way that the product a bn is unchanged from state to state. At the beginning of the process a is taken to be 1, and the answer is given by the value of a at the end of the process. In general, the technique of defining an <em> invariant quantity </em> that remains unchanged from state to state is a powerful way to think about the design of iterative algorithms.)
 
 <div id="scheme-ex-fast-iter-input">
+(define (fast-expt b n)
+  'your-code-here)
 </div>
 
 <script>
-makeChangeOnFocusInput("scheme-ex-fast-iter-input", 
-                       "(define (fast-expt b n)\n  'your-code-here)", 
-                       "(define (fast-expt b n)\n  ");
+var editor = makeEditable("scheme-ex-fast-iter-input");
 addOutput("scheme-ex-fast-iter-input");
-linkEditor("scheme-ex-fast-iter-input", "scheme-ex-fast-iter-input-output", function(x, y) {
 
+editor.setOption("onBlur", function(){
   function es(b, n) {
-    return "(= (fast-expt " + b + " " + n + ") " + Math.pow(b,n) + ")";
+    return "(= (fast-expt " + b + " " + n + ") " + Math.pow(b,n) + ") ";
   }
 
-  var code = y + "\n" +
+  var code = editor.getValue() + "\n" +
             "(and " + es(7,5) + 
                       es(4,9) + 
                       es(3,4) + ")"
 
-  if (biwascheme.evaluate(code) == true) {
-    return "<div class='right-answer'> \u2713 </div>";
-  } else {
-    return "<div class='wrong-answer'> \u2717 </div>";
-  }
+  eval_scheme(code).then(function(res){
+    console.log(res);
+    if (res == "true\n") {
+      $_("scheme-ex-fast-iter-input-output").empty().append($("<div class='right-answer'> \u2713 </div>"));
+    } else {
+      $_("scheme-ex-fast-iter-input-output").empty().append($("<div class='wrong-answer'> \u2717 </div>"));
+    }
+  })
 });
 </script>
 
@@ -812,32 +845,35 @@ prompt("scheme-define-times");
 <p> This algorithm takes a number of steps that is linear in b. Now suppose we include, together with addition, operations double, which doubles an integer, and halve, which divides an (even) integer by 2. Using these, design a multiplication procedure analogous to fast-expt that uses a logarithmic number of steps.
 
 <div id="scheme-ex-mul-input">
+(define (mul a b)
+  'your-code-here)
 </div>
 
 <script>
-makeChangeOnFocusInput("scheme-ex-mul-input", 
-                       "(define (mul a b)\n  'your-code-here)", 
-                       "(define (mul a b)\n  ");
+//TODO: halve, double
+var editor = makeEditable("scheme-ex-mul-input");
 addOutput("scheme-ex-mul-input");
-linkEditor("scheme-ex-mul-input", "scheme-ex-mul-input-output", function(x, y) {
 
+editor.setOption("onBlur", function(){
   function ms(a, b) {
-    return "(= (mul " + a + " " + b + ") " + a*b + ")";
+    return "(= (mul " + a + " " + b + ") " + a*b + ") ";
   }
 
-  var code = y + "\n" +
+  var code = editor.getValue() + "\n" +
             "(and " + ms(7,5) + 
                       ms(4,9) + 
                       ms(3,4) + ")"
 
-  if (biwascheme.evaluate(code) == true) {
-    return "<div class='right-answer'> \u2713 </div>";
-  } else {
-    return "<div class='wrong-answer'> \u2717 </div>";
-  }
+  eval_scheme(code).then(function(res){
+    if (res == "true\n") {
+      $_("scheme-ex-mul-input-output").empty().append($("<div class='right-answer'> \u2713 </div>"));
+    } else {
+      $_("scheme-ex-mul-input-output").empty().append($("<div class='wrong-answer'> \u2717 </div>"));
+    }
+  });
 });
-</script>
 
+</script>
 </div>
 
 <p>
@@ -846,29 +882,32 @@ linkEditor("scheme-ex-mul-input", "scheme-ex-mul-input-output", function(x, y) {
 <p> <b> Exercise 1.18. </b> Using the results of exercises 1.16 and 1.17, devise a procedure that generates an iterative process for multiplying two integers in terms of adding, doubling, and halving and uses a logarithmic number of steps.<a name="footnote_link_1-40" class="footnote_link" href="#footnote_1-40">40</a>
 
 <div id="scheme-ex-mul-iter-input">
+(define (mul a b)
+  'your-code-here)
 </div>
 
 <script>
-makeChangeOnFocusInput("scheme-ex-mul-iter-input", 
-                       "(define (mul a b)\n  <your code here>)", 
-                       "(define (mul a b)\n  ");
+var editor = makeEditable("scheme-ex-mul-iter-input")
 addOutput("scheme-ex-mul-iter-input");
-linkEditor("scheme-ex-mul-iter-input", "scheme-ex-mul-iter-input-output", function(x, y) {
+
+editor.setOption("onBlur", function() {
 
   function ms(a, b) {
     return "(= (mul " + a + " " + b + ") " + a*b + ")";
   }
 
-  var code = y + "\n" +
-            "(and " + ms(7,5) + 
-                      ms(4,9) + 
-                      ms(3,4) + ")"
+  var code = editor.getValue() + "\n" +
+             "(and " + ms(7,5) + 
+                       ms(4,9) + 
+                       ms(3,4) + ") "
 
-  if (biwascheme.evaluate(code) == true) {
-    return "<div class='right-answer'> \u2713 </div>";
-  } else {
-    return "<div class='wrong-answer'> \u2717 </div>";
-  }
+  eval_scheme(code).then(function(res){
+    if (res == "true\n") {
+      $_("scheme-ex-mul-iter-input-output").empty().append($("<div class='right-answer'> \u2713 </div>"));
+    } else {
+      $_("scheme-ex-mul-iter-input-output").empty().append($("<div class='wrong-answer'> \u2717 </div>"));
+    }
+  });
 });
 </script>
 </div>
@@ -878,22 +917,22 @@ linkEditor("scheme-ex-mul-iter-input", "scheme-ex-mul-iter-input-output", functi
 <div class='exercise'>
 <p> <b> Exercise 1.19. </b>  There is a clever algorithm for computing the Fibonacci numbers in a logarithmic number of steps. Recall the transformation of the state variables a and b in the fib-iter process of section 1.2.2: 
 
-<blockquote>
-a &lt;- a + b <br>
-b &lt;- a
-</blockquote>
+\begin{align} 
+a &amp;\leftarrow a + b \\
+b &amp;\leftarrow a
+\end{align}
 
-<p> Call this transformation T, and observe that applying T over and over again n times, starting with 1 and 0, produces the pair Fib(n + 1) and Fib(n). In other words, the Fibonacci numbers are produced by applying T<sup>n</sup>, the nth power of the transformation T, starting with the pair (1,0). Now consider T to be the special case of p = 0 and q = 1 in a family of transformations T<sub>pq</sub>, where T<sub>pq</sub> transforms the pair (a,b) according to 
+<p> Call this transformation T, and observe that applying T over and over again n times, starting with 1 and 0, produces the pair Fib(n + 1) and Fib(n). In other words, the Fibonacci numbers are produced by applying T<sup>n</sup>, the nth power of the transformation T, starting with the pair (1,0). Now consider T to be the special case of p = 0 and q = 1 in a family of transformations $T_{pq}$, where $T_{pq}$ transforms the pair $(a,b)$ according to 
 
-<blockquote>
-a &lt;- bq + aq + ap <br>
-b &lt;- bp + aq
-</blockquote> 
+\begin{align} 
+a &amp;\leftarrow bq + aq + ap \\
+b &amp;\leftarrow bp + aq
+\end{align}
 
-<p> Show that if we apply such a transformation T<sub>pq</sub> twice, the effect is the same as using a single transformation T<sub>p'q'</sub> of the same form, and compute p' and q' in terms of p and q. This gives us an explicit way to square these transformations, and thus we can compute T<sup>n</sup> using successive squaring, as in the fast-expt procedure. Put this all together to complete the following procedure, which runs in a logarithmic number of steps:<a name="footnote_link_1-41" class="footnote_link" href="#footnote_1-41">41</a>
+<p> Show that if we apply such a transformation $T_{pq}$ twice, the effect is the same as using a single transformation $T_{p'q'}$ of the same form, and compute $p'$ and $q'$ in terms of $p$ and $q$. This gives us an explicit way to square these transformations, and thus we can compute $T^n$ using successive squaring, as in the fast-expt procedure. Put this all together to complete the following procedure, which runs in a logarithmic number of steps:<a name="footnote_link_1-41" class="footnote_link" href="#footnote_1-41">41</a>
 
 
-<div id="scheme-ex-log-fib">
+<div id="scheme-ex-log-fib-input">
 (define (fib n)
   (fib-iter 1 0 0 1 n))
   
@@ -913,9 +952,10 @@ b &lt;- bp + aq
 </div>
 
 <script>
-makeEditable("scheme-ex-log-fib");
-addOutput("scheme-ex-log-fib");
-linkEditor("scheme-ex-log-fib", "scheme-ex-log-fib-output", function(x, y) {
+var editor = makeEditable("scheme-ex-log-fib-input");
+addOutput("scheme-ex-log-fib-input");
+
+editor.setOption("onBlur", function(){
 
   function fib(n){
     var i;
@@ -933,16 +973,18 @@ linkEditor("scheme-ex-log-fib", "scheme-ex-log-fib-output", function(x, y) {
     return "(= (fib " + n + ") " + fib(n) + ")";
   }
 
-  var code = y + "\n" +
+  var code = editor.getValue() + "\n" +
             "(and " + fibs(10) + 
                       fibs(11) + 
                       fibs(13) + ")"
 
-  if (biwascheme.evaluate(code) == true) {
-    return "<div class='right-answer'> \u2713 </div>";
-  } else {
-    return "<div class='wrong-answer'> \u2717 </div>";
-  }
+  eval_scheme(code).then(function(res){
+    if (res == "true\n") {
+      $_("scheme-ex-log-fib-input-output").empty().append($("<div class='right-answer'> \u2713 </div>"));
+    } else {
+      $_("scheme-ex-log-fib-input-output").empty().append($("<div class='wrong-answer'> \u2717 </div>"));
+    }
+  });
 });
 </script>
 
@@ -979,17 +1021,27 @@ prompt("scheme-define-gcd");
 
 <p> The fact that the number of steps required by Euclid's Algorithm has logarithmic growth bears an interesting relation to the Fibonacci numbers:
 
-<blockquote> Lamé's Theorem: If Euclid's Algorithm requires k steps to compute the GCD of some pair, then the smaller number in the pair must be greater than or equal to the kth Fibonacci number.<a name="footnote_link_1-43" class="footnote_link" href="#footnote_1-43">43</a> </blockquote>
+<blockquote> <p> Lamé's Theorem: If Euclid's Algorithm requires k steps to compute the GCD of some pair, then the smaller number in the pair must be greater than or equal to the kth Fibonacci number.<a name="footnote_link_1-43" class="footnote_link" href="#footnote_1-43">43</a> </blockquote>
 
-<p> We can use this theorem to get an order-of-growth estimate for Euclid's Algorithm. Let n be the smaller of the two inputs to the procedure. If the process takes k steps, then we must have n> Fib (k) k/5. Therefore the number of steps k grows as the logarithm (to the base phi) of n. Hence, the order of growth is O(log n).
+<p> We can use this theorem to get an order-of-growth estimate for Euclid's Algorithm. Let n be the smaller of the two inputs to the procedure. If the process takes k steps, then we must have $n &gt; \Fib(k) \approx \phi^k / \sqrt 5$. Therefore the number of steps k grows as the logarithm (to the base $\phi$) of n. Hence, the order of growth is $O(\log n)$.
 
 <div class="exercise">
 <p> <b> Exercise 1.20. </b> The process that a procedure generates is of course dependent on the rules used by the interpreter. As an example, consider the iterative gcd procedure given above. Suppose we were to interpret this procedure using normal-order evaluation, as discussed in section 1.1.5. (The normal-order-evaluation rule for if is described in exercise 1.5.) Using the substitution method (for normal order), illustrate the process generated in evaluating (gcd 206 40) and indicate the remainder operations that are actually performed. How many remainder operations are actually performed in the normal-order evaluation of <tt>(gcd 206 40)?</tt> In the applicative-order evaluation?
 
-<div id="scheme-ex-120" style="display:none">
+<h4> Normal </h4>
+
+<div id="scheme-ex-120-normal" style="display:none">
 </div>
 <script> 
-answer("scheme-ex-120", 18);
+answer("scheme-ex-120-normal", 18);
+</script>
+
+<h4> Applicative </h4>
+
+<div id="scheme-ex-120-applicative" style="display:none">
+</div>
+<script> 
+answer("scheme-ex-120-applicative", 4);
 </script>
 </div>
 
