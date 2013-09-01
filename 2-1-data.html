@@ -15,6 +15,14 @@
 <script src="js/coding.js"> </script>
 <script src="js/footnotes.js"></script>
 
+<script type="text/x-mathjax-config">
+MathJax.Hub.Config({
+  tex2jax: {inlineMath: [['$','$']]}
+});
+</script>
+<script type="text/javascript" src="http://cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML"></script>
+
+
 <title> iSICP 2.1 - Introduction to Data Abstraction </title>
 <script type="text/javascript">
 
@@ -333,11 +341,11 @@ promptDep("scheme-test-rat-reduce", ["scheme-define-arith-rat", "scheme-define-o
 
 <p> Before continuing with more examples of compound data and data abstraction, let us consider some of the issues raised by the rational-number example. We defined the rational-number operations in terms of a constructor <tt>make-rat</tt> and selectors <tt>numer</tt> and <tt>denom</tt>. In general, the underlying idea of data abstraction is to identify for each type of data object a basic set of operations in terms of which all manipulations of data objects of that type will be expressed, and then to use only those operations in manipulating the data.
 
-<p> We can envision the structure of the rational-number system as shown in figure Figure 2-1. The horizontal lines represent <em>abstraction barriers</em> that isolate different "levels" of the system. At each level, the barrier separates the programs (above) that use the data abstraction from the programs (below) that implement the data abstraction. Programs that use rational numbers manipulate them solely in terms of the procedures supplied "for public use" by the rational-number package: <tt>add-rat</tt>, <tt>sub-rat</tt>, <tt>mul-rat</tt>, <tt>div-rat</tt>, and <tt>equal-rat?</tt>. These, in turn, are implemented solely in terms of the constructor and selectors <tt>make-rat</tt>, <tt>numer</tt>, and <tt>denom</tt>, which themselves are implemented in terms of pairs. The details of how pairs are implemented are irrelevant to the rest of the rational-number package so long as pairs can be manipulated by the use of <tt>cons</tt>, <tt>car</tt>, and <tt>cdr</tt>. In effect, procedures at each level are the interfaces that define the abstraction barriers and connect the different levels.
+<p> We can envision the structure of the rational-number system as shown in Figure 2-1. The horizontal lines represent <em>abstraction barriers</em> that isolate different "levels" of the system. At each level, the barrier separates the programs (above) that use the data abstraction from the programs (below) that implement the data abstraction. Programs that use rational numbers manipulate them solely in terms of the procedures supplied "for public use" by the rational-number package: <tt>add-rat</tt>, <tt>sub-rat</tt>, <tt>mul-rat</tt>, <tt>div-rat</tt>, and <tt>equal-rat?</tt>. These, in turn, are implemented solely in terms of the constructor and selectors <tt>make-rat</tt>, <tt>numer</tt>, and <tt>denom</tt>, which themselves are implemented in terms of pairs. The details of how pairs are implemented are irrelevant to the rest of the rational-number package so long as pairs can be manipulated by the use of <tt>cons</tt>, <tt>car</tt>, and <tt>cdr</tt>. In effect, procedures at each level are the interfaces that define the abstraction barriers and connect the different levels.
 
-<p> <img src='http://mitpress.mit.edu/sicp/full-text/book/ch2-Z-G-6.gif'>
+<p> <img class='center' src='http://mitpress.mit.edu/sicp/full-text/book/ch2-Z-G-6.gif'>
 
-<p> Figure 2.1:  Data-abstraction barriers in the rational-number package.
+<p style="text-align:center"> Figure 2.1:  Data-abstraction barriers in the rational-number package.
 
 <p> This simple idea has many advantages. One advantage is that it makes programs much easier to maintain and to modify. Any complex data structure can be represented in a variety of ways with the primitive data structures provided by a programming language. Of course, the choice of representation influences the programs that operate on it; thus, if the representation were to be changed at some later time, all such programs might have to be modified accordingly. This task could be time-consuming and expensive in the case of large programs unless the dependence on the representation were to be confined by design to a very few program modules.
 
@@ -705,7 +713,7 @@ var todo = Object.keys(editorOf);
 
 </script>
 
-<a href="https://github.com/zodiac/appspot-grading/tree/master/isicp" target="_blank"><img style="position: absolute; top: 0; right: 0; border: 0;" src="https://s3.amazonaws.com/github/ribbons/forkme_right_green_007200.png" alt="Fork me on GitHub"></a>
+<a href="https://github.com/zodiac/xuanji.appspot.com/tree/master/isicp" target="_blank"><img style="position: absolute; top: 0; right: 0; border: 0;" src="https://s3.amazonaws.com/github/ribbons/forkme_right_green_007200.png" alt="Fork me on GitHub"></a>
 
 </body>
 </html>

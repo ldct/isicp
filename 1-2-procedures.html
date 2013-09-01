@@ -15,6 +15,14 @@
 <script src="js/coding.js"> </script>
 <script src="js/footnotes.js"></script>
 
+<script type="text/x-mathjax-config">
+MathJax.Hub.Config({
+  tex2jax: {inlineMath: [['$','$']]}
+});
+</script>
+<script type="text/javascript" src="http://cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML"></script>
+
+
 <title> iSICP 1.2 - Procedures and the Processes They Generate </title>
          <script type="text/javascript">
 
@@ -130,6 +138,9 @@ There are many ways to compute factorials. One way is to make use of the observa
       1
       (* n (factorial (- n 1)))))
 </div>
+<script>
+prompt("scheme-define-factorial");
+</script>
 
 <p> We can use the substitution model of section 1.1.5 to watch this procedure in action computing 6!, as shown in figure 1.3.
 
@@ -296,18 +307,26 @@ makeStatic("scheme-define-5-n-squared");
 
 <p> Give concise mathematical definitions for the functions computed by the procedures f, g, and h for positive integer values of n. For example, <tt>(k n)</tt> computes <tt>5n<sup>2</sup>.</tt> 
 
-<p> Check your answers <a href='http://www.billthelizard.com/2009/11/sicp-exercises-19-and-110.html'> here </a>
 </div>
 
 <h3> Tree Recursion </h3>
 
 <p> Another common pattern of computation is called tree recursion. As an example, consider computing the sequence of Fibonacci numbers, in which each number is the sum of the preceding two:
 
-<blockquote> <tt>0,1,1,2,3,5,8,13</tt> </blockquote>
+$$
+0,1,1,2,3,5,8,13
+$$
 
 <p> In general, the Fibonacci numbers can be defined by the rule 
 
-<p> <img src='http://mitpress.mit.edu/sicp/full-text/book/ch1-Z-G-12.gif' />
+$$
+\def\Fib{\text{Fib}}
+\Fib(n) = \begin{cases} 
+0 &amp;\mbox{if } n = 0 \\
+1 &amp;\mbox{if } n = 1 \\
+\Fib(n-1) + \Fib(n-2) &amp;\mbox{otherwise}
+\end{cases}
+$$
 
 <p> We can immediately translate this definition into a recursive procedure for computing Fibonacci numbers:
 
@@ -322,27 +341,36 @@ makeStatic("scheme-define-5-n-squared");
 prompt("scheme-define-fib");
 </script>
 
-<p> <img src='http://mitpress.mit.edu/sicp/full-text/book/ch1-Z-G-13.gif'>
+<br>
 
-<p> <b> Figure 1.5: </b>  The tree-recursive process generated in computing (fib 5).
+<p> <img class="center" src='http://mitpress.mit.edu/sicp/full-text/book/ch1-Z-G-13.gif'>
+
+<p style="text-align:center"> <b> Figure 1.5: </b>  The tree-recursive process generated in computing (fib 5).
 
 <p> Consider the pattern of this computation. To compute (fib 5), we compute (fib 4) and (fib 3). To compute (fib 4), we compute (fib 3) and (fib 2). In general, the evolved process looks like a tree, as shown in figure 1.5. Notice that the branches split into two at each level (except at the bottom); this reflects the fact that the fib procedure calls itself twice each time it is invoked.
 
-<p> This procedure is instructive as a prototypical tree recursion, but it is a terrible way to compute Fibonacci numbers because it does so much redundant computation. Notice in figure 1.5 that the entire computation of (fib 3) &mdash; almost half the work &mdash; is duplicated. In fact, it is not hard to show that the number of times the procedure will compute (fib 1) or (fib 0) (the number of leaves in the above tree, in general) is precisely Fib(n + 1). To get an idea of how bad this is, one can show that the value of Fib(n) grows exponentially with n. More precisely (see exercise 1.13), Fib(n) is the closest integer to n /5, where
+<p> This procedure is instructive as a prototypical tree recursion, but it is a terrible way to compute Fibonacci numbers because it does so much redundant computation. Notice in figure 1.5 that the entire computation of (fib 3) &mdash; almost half the work &mdash; is duplicated. In fact, it is not hard to show that the number of times the procedure will compute (fib 1) or (fib 0) (the number of leaves in the above tree, in general) is precisely Fib(n + 1). To get an idea of how bad this is, one can show that the value of Fib(n) grows exponentially with n. More precisely (see exercise 1.13), Fib(n) is the closest integer to $\phi^n / 5$ where
 
-<p> <img src='http://upload.wikimedia.org/math/3/c/8/3c817bc4acbf6e8e395afb0c46ba5511.png'>
+$$
+\phi = \frac{1 + \sqrt 5}{2} = 1.6180339887\ldots
+$$
 
 <p> is the golden ratio, which satisfies the equation
 
-<p> <img src='http://upload.wikimedia.org/math/6/1/7/61739d3badb5f558150359331d25cfe5.png'>
+$$
+\phi + 1 = \phi^2
+$$
 
 <p> Thus, the process uses a number of steps that grows exponentially with the input. On the other hand, the space required grows only linearly with the input, because we need keep track only of which nodes are above us in the tree at any point in the computation. In general, the number of steps required by a tree-recursive process will be proportional to the number of nodes in the tree, while the space required will be proportional to the maximum depth of the tree.
 
-<p> We can also formulate an iterative process for computing the Fibonacci numbers. The idea is to use a pair of integers a and b, initialized to Fib(1) = 1 and Fib(0) = 0, and to repeatedly apply the simultaneous transformations
+<p> We can also formulate an iterative process for computing the Fibonacci numbers. The idea is to use a pair of integers $a$ and $b$, initialized to $\Fib(1) = 1$ and $\Fib(0) = 0$, and to repeatedly apply the simultaneous transformations
 
-<p> <img src='http://mitpress.mit.edu/sicp/full-text/book/ch1-Z-G-16.gif'>
+\begin{align}
+a &amp;\leftarrow a+b \\
+b &amp;\leftarrow b
+\end{align}
 
-<p> It is not hard to show that, after applying this transformation n times, a and b will be equal, respectively, to Fib(n + 1) and Fib(n). Thus, we can compute Fibonacci numbers iteratively using the procedure
+<p> It is not hard to show that, after applying this transformation $n$ times, $a$ and $b$ will be equal, respectively, to $\Fib(n + 1)$ and $\Fib(n)$. Thus, we can compute Fibonacci numbers iteratively using the procedure
 
 <div id="scheme-define-fib-iterative">
 (define (fib n)
@@ -371,9 +399,9 @@ prompt("scheme-define-fib-iterative");
 
 <ul>
 
-<li> the number of ways to change amount a using all but the first kind of coin, plus </li>
+<li> <p> the number of ways to change amount a using all but the first kind of coin, plus </li>
 
-<li> the number of ways to change amount a - d using all n kinds of coins, where d is the denomination of the first kind of coin. </li>
+<li> <p> the number of ways to change amount a - d using all n kinds of coins, where d is the denomination of the first kind of coin. </li>
 
 </ul>
 
@@ -383,11 +411,11 @@ prompt("scheme-define-fib-iterative");
 
 <ul>
 
-<li> If a is exactly 0, we should count that as 1 way to make change. </li>
+<li> <p> If a is exactly 0, we should count that as 1 way to make change. </li>
 
-<li> If a is less than 0, we should count that as 0 ways to make change. </li>
+<li> <p> If a is less than 0, we should count that as 0 ways to make change. </li>
 
-<li> If n is 0, we should count that as 0 ways to make change. </li>
+<li> <p> If n is 0, we should count that as 0 ways to make change. </li>
 
 </ul>
 
@@ -429,7 +457,7 @@ addDep("scheme-count-change-100", ["scheme-define-count-change"]);
 
 
 <div class="exercise">
-<p> <b> Exercise 1.11. </b> A function f is defined by the rule that <tt>f(n) = n</tt> if <tt>n&lt;3</tt> and <tt>f(n) = f(n - 1) + 2f(n - 2) + 3f(n - 3)</tt> if <tt>n &gt; 3.</tt> Write a procedure that computes <tt>f</tt> by means of a recursive process. 
+<p> <b> Exercise 1.11. </b> A function $f$ is defined by the rule that $f(n) = n$ if $n&lt;3$ and $f(n) = f(n - 1) + 2f(n - 2) + 3f(n - 3)$ if $n &gt; 3$. Write a procedure that computes $f$ by means of a recursive process. 
 
 <p> Write a procedure that computes f by means of an iterative process.
 
@@ -543,17 +571,24 @@ function ps(row, col) {
 <p>
 
 <div class="exercise">
-<p> <b> Exercise 1.13. </b> Prove that Fib(n) is the closest integer to <img src='http://upload.wikimedia.org/math/1/a/6/1a66b24ec4c976257d0fb57e2145490d.png' style="height:1.5em">, where 
+<p> <b> Exercise 1.13. </b> Prove that $\Fib(n)$ is the closest integer to $\phi^n / 5$, where 
 
-<p> <img src='http://upload.wikimedia.org/math/4/9/e/49e8a76ceee7c67c84383ebdf06683be.png'> 
+$$
+\phi = \frac{1 + \sqrt 5}{2} \approx 1.6180339887
+$$
 
 <p> Hint: Let 
 
-<p> <img src='http://upload.wikimedia.org/math/e/7/f/e7f0abcf4d3c316fca62b0c3662701a0.png'> 
+$$
+\psi = \frac{1 - \sqrt 5}{2} = 1 - \phi = -\frac{1}{\phi} \approx -0.6180339887
+$$
 
 <p> Use induction and the definition of the Fibonacci numbers (see section 1.2.2) to prove that 
 
-<p> <img src='http://upload.wikimedia.org/math/7/4/d/74d191cba08a88c2018cfd67fbc52dd1.png'>
+$$
+\Fib(n) = \frac{\phi^n - \psi^n}{\phi - \psi} = \frac{\phi^n - \psi^n}{\sqrt 5}
+$$
+
 </div>
 
 <h3> Orders of Growth </h3>
@@ -564,9 +599,11 @@ function ps(row, col) {
 
 <p> We say that <tt>R(n)</tt> has order of growth <tt>(f(n)),</tt> written <tt>R(n) = Θ(f(n))</tt> (pronounced "theta of f(n)"), if there are positive constants <tt>k1</tt> and <tt>k2</tt> independent of <tt>n</tt> such that
 
-<p> <tt>k1 f(n) &lt; R(n) &lt; k2 f(n)</tt>
+$$
+k_1 f(n) \leq R(n) \leq k_2 f(n)
+$$
 
-<p> for any sufficiently large value of n. (In other words, for large n, the value R(n) is sandwiched between k1f(n) and k2f(n).)
+<p> for any sufficiently large value of n. (In other words, for large n, the value R(n) is sandwiched between $k_1 f(n)$ and $k_2f(n)$.)
 
 <p> For instance, with the linear recursive process for computing factorial described in section 1.2.1 the number of steps grows proportionally to the input n. Thus, the steps required for this process grows as (n). We also saw that the space required grows as (n). For the iterative factorial, the number of steps is still (n) but the space is (1) &mdash; that is, constant.<a name="footnote_link_1-36" class="footnote_link" href="#footnote_1-36">36</a> The tree-recursive Fibonacci computation requires (n) steps and space (n), where is the golden ratio described in section 1.2.2.
 
@@ -1305,7 +1342,7 @@ var todo = Object.keys(editorOf);
 
 </script>
 
-<a href="https://github.com/zodiac/appspot-grading/tree/master/isicp" target="_blank"><img style="position: absolute; top: 0; right: 0; border: 0;" src="https://s3.amazonaws.com/github/ribbons/forkme_right_green_007200.png" alt="Fork me on GitHub"></a>
+<a href="https://github.com/zodiac/xuanji.appspot.com/tree/master/isicp" target="_blank"><img style="position: absolute; top: 0; right: 0; border: 0;" src="https://s3.amazonaws.com/github/ribbons/forkme_right_green_007200.png" alt="Fork me on GitHub"></a>
 
 </body>
 </html>
