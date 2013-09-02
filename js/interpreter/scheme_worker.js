@@ -438,7 +438,7 @@ function check_form(expr, min, max) {
     }
     var length = expr.length;
     if (length < min) {
-        throw "SchemeError: too few operands in form";
+        throw "SchemeError: too few operands in form, expr=" + expr.toString();
     } else if ( (! (max === undefined)) && (length > max) ) {
         throw "SchemeError: too many operands in form: " + expr.toString();
     }
@@ -872,13 +872,13 @@ function scheme_error(msg) {
 }
 _PRIMITIVES["error"] = new PrimitiveProcedure(scheme_error);
 
-function current_miliseconds() {
+function runtime() {
     // Returns the number of miliseconds from Jan 1 1970
     // Not a good way of measuring runtime of a program though
     return new Date().getTime();
 }
-_PRIMITIVES["current-milliseconds"] =
-    new PrimitiveProcedure(current_miliseconds);
+_PRIMITIVES["runtime"] =
+    new PrimitiveProcedure(runtime);
 
 function scheme_exit() {
     throw "EOFError";

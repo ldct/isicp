@@ -1023,7 +1023,7 @@ prompt("scheme-define-gcd");
 
 <blockquote> <p> Lamé's Theorem: If Euclid's Algorithm requires k steps to compute the GCD of some pair, then the smaller number in the pair must be greater than or equal to the kth Fibonacci number.<a name="footnote_link_1-43" class="footnote_link" href="#footnote_1-43">43</a> </blockquote>
 
-<p> We can use this theorem to get an order-of-growth estimate for Euclid's Algorithm. Let n be the smaller of the two inputs to the procedure. If the process takes k steps, then we must have $n &gt; \Fib(k) \approx \phi^k / \sqrt 5$. Therefore the number of steps k grows as the logarithm (to the base $\phi$) of n. Hence, the order of growth is $O(\log n)$.
+<p> We can use this theorem to get an order-of-growth estimate for Euclid's Algorithm. Let n be the smaller of the two inputs to the procedure. If the process takes k steps, then we must have $n &gt; \Fib(k) \approx \phi^k / \sqrt 5$. Therefore the number of steps k grows as the logarithm (to the base $\phi$) of n. Hence, the order of growth is $\Theta(\log n)$.
 
 <div class="exercise">
 <p> <b> Exercise 1.20. </b> The process that a procedure generates is of course dependent on the rules used by the interpreter. As an example, consider the iterative gcd procedure given above. Suppose we were to interpret this procedure using normal-order evaluation, as discussed in section 1.1.5. (The normal-order-evaluation rule for if is described in exercise 1.5.) Using the substitution method (for normal order), illustrate the process generated in evaluating (gcd 206 40) and indicate the remainder operations that are actually performed. How many remainder operations are actually performed in the normal-order evaluation of <tt>(gcd 206 40)?</tt> In the applicative-order evaluation?
@@ -1171,49 +1171,79 @@ addDep("scheme-define-fast-prime", ["scheme-define-fermat-test"]);
 
 <p> The Fermat test differs in character from most familiar algorithms, in which one computes an answer that is guaranteed to be correct. Here, the answer obtained is only probably correct. More precisely, if n ever fails the Fermat test, we can be certain that n is not prime. But the fact that n passes the test, while an extremely strong indication, is still not a guarantee that n is prime. What we would like to say is that for any number n, if we perform the test enough times and find that n always passes the test, then the probability of error in our primality test can be made as small as we like.
 
-<p> Unfortunately, this assertion is not quite correct. There do exist numbers that fool the Fermat test: numbers n that are not prime and yet have the property that an is congruent to a modulo n for all integers a &lt; n. Such numbers are extremely rare, so the Fermat test is quite reliable in practice.<a name="footnote_link_1-47" class="footnote_link" href="#footnote_1-47">47</a> There are variations of the Fermat test that cannot be fooled. In these tests, as with the Fermat method, one tests the primality of an integer n by choosing a random integer a &lt; n and checking some condition that depends upon n and a. (See exercise 1.28 for an example of such a test.) On the other hand, in contrast to the Fermat test, one can prove that, for any n, the condition does not hold for most of the integers a &lt; n unless n is prime. Thus, if n passes the test for some random choice of a, the chances are better than even that n is prime. If n passes the test for two random choices of a, the chances are better than 3 out of 4 that n is prime. By running the test with more and more randomly chosen values of a we can make the probability of error as small as we like.
+<p> Unfortunately, this assertion is not quite correct. There do exist numbers that fool the Fermat test: numbers n that are not prime and yet have the property that an is congruent to a modulo n for all integers $a &lt; n$. Such numbers are extremely rare, so the Fermat test is quite reliable in practice.<a name="footnote_link_1-47" class="footnote_link" href="#footnote_1-47">47</a> There are variations of the Fermat test that cannot be fooled. In these tests, as with the Fermat method, one tests the primality of an integer n by choosing a random integer $a &lt; n$ and checking some condition that depends upon $n$ and $a$. (See exercise 1.28 for an example of such a test.) On the other hand, in contrast to the Fermat test, one can prove that, for any $n$, the condition does not hold for most of the integers $a &lt; n$ unless $n$ is prime. Thus, if $n$ passes the test for some random choice of $a$, the chances are better than even that $n$ is prime. If $n$ passes the test for two random choices of a, the chances are better than 3 out of 4 that $n$ is prime. By running the test with more and more randomly chosen values of $a$ we can make the probability of error as small as we like.
 
 <p> The existence of tests for which one can prove that the chance of error becomes arbitrarily small has sparked interest in algorithms of this type, which have come to be known as probabilistic algorithms. There is a great deal of research activity in this area, and probabilistic algorithms have been fruitfully applied to many fields.<a name="footnote_link_1-48" class="footnote_link" href="#footnote_1-48">48</a>
 
 <div class="exercise">
-<p> <b> Exercise 1.22. </b> Most Lisp implementations include a primitive called runtime that returns an integer that specifies the amount of time the system has been running (measured, for example, in microseconds). The following timed-prime-test procedure, when called with an integer n, prints n and checks to see if n is prime. If n is prime, the procedure prints three asterisks followed by the amount of time used in performing the test.
+<p> <b> Exercise 1.22. </b> Most Lisp implementations include a primitive called runtime that returns an integer that specifies the amount of time the system has been running (measured, for example, in microseconds). The following timed-prime-test procedure, when called with an integer $n$, prints $n$ and checks to see if $n$ is prime. If n is prime, the procedure prints three asterisks followed by the amount of time used in performing the test.
 
 <div id="scheme-define-timed-prime-test">
 (define (timed-prime-test n)
   (newline)
   (display n)
   (start-prime-test n (runtime)))
+
 (define (start-prime-test n start-time)
   (if (prime? n)
-      (report-prime (- (runtime) start-time))))
+      (report-prime (- (runtime) start-time))
+      #f))
+
 (define (report-prime elapsed-time)
   (display " *** ")
   (display elapsed-time))
 </div>
 <script>
-prompt("scheme-define-timed-prime-test");
+//TODO: remove extra #f on start-prime-test by making if accept 2 arguments
+prompt("scheme-define-timed-prime-test", ["scheme-define-prime", "scheme-define-fast-prime"]);
+
+/*
+(define (timed-prime-test n)
+  (start-prime-test n (runtime)))
+
+(define (start-prime-test n start-time)
+  (if (prime? n)
+      (report-prime n (- (runtime) start-time))
+      #f))
+
+(define (report-prime n elapsed-time)
+  (display n)
+  (display " *** ")
+  (display elapsed-time)
+  (newline))
+
+(define (search-for-primes start total seen)
+  (if (= total seen)
+      'done
+      (if (timed-prime-test start)
+          (search-for-primes (+ start 1) total (+ seen 1))
+          (search-for-primes (+ start 1) total seen))))
+
+(search-for-primes 1000000000 3 0)
+*/
+
 </script>
 
-<p> Using this procedure, write a procedure search-for-primes that checks the primality of consecutive odd integers in a specified range. Use your procedure to find the three smallest primes larger than 1000; larger than 10,000; larger than 100,000; larger than 1,000,000. Note the time needed to test each prime. Since the testing algorithm has order of growth of (n), you should expect that testing for primes around 10,000 should take about 10 times as long as testing for primes around 1000. Do your timing data bear this out? How well do the data for 100,000 and 1,000,000 support the n prediction? Is your result compatible with the notion that programs on your machine run in time proportional to the number of steps required for the computation?
+<p> Using this procedure, write a procedure <tt>search-for-primes</tt> that checks the primality of consecutive odd integers in a specified range. Use your procedure to find the three smallest primes larger than 1000; larger than 10,000; larger than 100,000; larger than 1,000,000. Note the time needed to test each prime. Since the testing algorithm has order of growth of $\Theta(n)$, you should expect that testing for primes around 10,000 should take about 10 times as long as testing for primes around 1000. Do your timing data bear this out? How well do the data for 100,000 and 1,000,000 support the n prediction? Is your result compatible with the notion that programs on your machine run in time proportional to the number of steps required for the computation?
 
 </div>
 
 <p>
 
 <div class="exercise">
-<p> <b> Exercise 1.23. </b> The smallest-divisor procedure shown at the start of this section does lots of needless testing: After it checks to see if the number is divisible by 2 there is no point in checking to see if it is divisible by any larger even numbers. This suggests that the values used for test-divisor should not be 2, 3, 4, 5, 6, ..., but rather 2, 3, 5, 7, 9, .... To implement this change, define a procedure next that returns 3 if its input is equal to 2 and otherwise returns its input plus 2. Modify the smallest-divisor procedure to use (next test-divisor) instead of (+ test-divisor 1). With timed-prime-test incorporating this modified version of smallest-divisor, run the test for each of the 12 primes found in exercise 1.22. Since this modification halves the number of test steps, you should expect it to run about twice as fast. Is this expectation confirmed? If not, what is the observed ratio of the speeds of the two algorithms, and how do you explain the fact that it is different from 2?
+<p> <b> Exercise 1.23. </b> The smallest-divisor procedure shown at the start of this section does lots of needless testing: After it checks to see if the number is divisible by 2 there is no point in checking to see if it is divisible by any larger even numbers. This suggests that the values used for test-divisor should not be $2, 3, 4, 5, 6, \ldots$, but rather $2, 3, 5, 7, 9, \ldots$ To implement this change, define a procedure <tt>next</tt> that returns 3 if its input is equal to 2 and otherwise returns its input plus 2. Modify the smallest-divisor procedure to use <tt>(next test-divisor)</tt> instead of <tt>(+ test-divisor 1)</tt>. With <tt>timed-prime-test</tt> incorporating this modified version of smallest-divisor, run the test for each of the 12 primes found in exercise 1.22. Since this modification halves the number of test steps, you should expect it to run about twice as fast. Is this expectation confirmed? If not, what is the observed ratio of the speeds of the two algorithms, and how do you explain the fact that it is different from 2?
 </div>
 
 <p>
 
 <div class="exercise">
-<p> <b> Exercise 1.24. </b> Modify the timed-prime-test procedure of exercise 1.22 to use fast-prime? (the Fermat method), and test each of the 12 primes you found in that exercise. Since the Fermat test has (log n) growth, how would you expect the time to test primes near 1,000,000 to compare with the time needed to test primes near 1000? Do your data bear this out? Can you explain any discrepancy you find?
+<p> <b> Exercise 1.24. </b> Modify the timed-prime-test procedure of exercise 1.22 to use <tt>fast-prime?</tt> (the Fermat method), and test each of the 12 primes you found in that exercise. Since the Fermat test has $\Theta(log n)$ growth, how would you expect the time to test primes near 1,000,000 to compare with the time needed to test primes near 1000? Do your data bear this out? Can you explain any discrepancy you find?
 </div>
 
 <p>
 
 <div class="exercise">
-<p> <b> Exercise 1.25. </b> Alyssa P. Hacker complains that we went to a lot of extra work in writing expmod. After all, she says, since we already know how to compute exponentials, we could have simply written
+<p> <b> Exercise 1.25. </b> Alyssa P. Hacker complains that we went to a lot of extra work in writing <tt>expmod</tt>. After all, she says, since we already know how to compute exponentials, we could have simply written
 
 <div id="scheme-define-bad-expmod">
 (define (expmod base exp m)
@@ -1224,6 +1254,15 @@ prompt("scheme-define-bad-expmod");
 </script>
 
 <p> Is she correct? Would this procedure serve as well for our fast prime tester? Explain.
+
+<div id="scheme-ex-naive-expmod-mcq"></div>
+<script>
+makeMCQ("scheme-ex-naive-expmod-mcq", 
+    ["No. It would produce the same results, but much slower."],
+    ["Yes. It would produce the same results at comparable speed.",
+     "No. It would produce incorrect results."
+     ]);
+</script>
 
 </div>
 
@@ -1246,13 +1285,24 @@ prompt("scheme-define-bad-expmod");
 prompt("scheme-define-expmod-no-square");
 </script>
 
-<p> &ldquo;I don't see what difference that could make,&rdquo; says Louis. &ldquo;I do.&rdquo; says Eva. &ldquo;By writing the procedure like that, you have transformed the (log n) process into a (n) process.&rdquo; Explain.
+<p> &ldquo;I don't see what difference that could make,&rdquo; says Louis. &ldquo;I do.&rdquo; says Eva. &ldquo;By writing the procedure like that, you have transformed the $\Theta(\log n)$ process into a $\Theta(n)$ process.&rdquo; Explain.
+
+<div id="scheme-ex-expmod-no-square-expmod-mcq"></div>
+<script>
+makeMCQ("scheme-ex-expmod-no-square-expmod-mcq", 
+    ["<tt>(expmod base (/ exp 2) m)</tt> is computed twice at each step instead of once; hence, <tt>expmod</tt> does not halve the problem size at each step."],
+    ["Explicit multiplication is exponentially slower than <tt>square</tt>",
+     "Eva is wrong; the two definitions are entirely equivalent by the substitution model.",
+     "<tt>(expmod base (/ exp 2) m)</tt> is computed twice at each step instead of once; hence, <tt>expmod</tt> takes twice as much time to run."
+     ]);
+</script>
+
 </div>
 
 <p>
 
 <div class="exercise">
-<p> <b> Exercise 1.27. </b> Demonstrate that the Carmichael numbers listed in footnote 47 really do fool the Fermat test. That is, write a procedure that takes an integer n and tests whether an is congruent to a modulo n for every a &lt; n, and try your procedure on the given Carmichael numbers.
+<p> <b> Exercise 1.27. </b> Demonstrate that the Carmichael numbers listed in footnote 47 really do fool the Fermat test. That is, write a procedure that takes an integer $n$ and tests whether $a^n$ is congruent to $a$ modulo $n$ for every $a &lt; n$, and try your procedure on the given Carmichael numbers.
 </div>
 
 <p>

@@ -1012,14 +1012,14 @@ linkEditor("scheme-ex-13-input", "scheme-ex-13-input-output", function(x, y) {
 
 <div class='exercise'>
 
-<p> <b> Exercise 1.4. </b> Describe the behavior of the following procedure by selecting which descriptions are equivalent. If you think that the procedure definition is invalid, choose the reasons why.
+<p> <b> Exercise 1.4. </b> Observe that our model of evaluation allows for combinations whose operators are compound expressions. Use this observation to describe the behavior of the following procedure:
 
 <div id="scheme-ex-14" class="static">
 (define (mystery a b)
   ((if (> b 0) + -) a b))
 </div>
 
-<p>
+<p> Describe the behavior of the procedure by selecting which descriptions are equivalent. If you think that the procedure definition is invalid, choose the reasons why.
 
 <div id="scheme-ex-14-mcq"></div>
 <script>
@@ -1036,7 +1036,7 @@ makeMCQ("scheme-ex-14-mcq",
 </div>
 <script>
 makeStatic("scheme-ex-14");
-//Observe that our model of evaluation allows for combinations whose operators are compound expressions.
+//
 </script>
 
 <p>
