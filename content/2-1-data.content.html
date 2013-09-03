@@ -305,6 +305,9 @@ prompt("scheme-define-print-point");
 
 <p> But exactly what is meant by <em>data</em>  ?  It is not enough to say "whatever is implemented by the given selectors and constructors."  Clearly, not every arbitrary set of three procedures can serve as an appropriate basis for the rational-number implementation. We need to guarantee that, if we construct a rational number <tt>x</tt> from a pair of integers <tt>n</tt> and <tt>d</tt>, then extracting the <tt>numer</tt> and the <tt>denom</tt> of <tt>x</tt> and dividing them should yield the same result as dividing <tt>n</tt> by <tt>d</tt>. In other words, <tt>make-rat</tt>, <tt>numer</tt>, and <tt>denom</tt> must satisfy the condition that, for any integer <tt>n</tt> and any non-zero integer <tt>d</tt>, if <tt>x</tt> is (<tt>make-rat n d</tt>), then
 
+$$
+\frac{\text{(numer x)}}{\text{(denom x)}} = \frac{n}{d}
+$$
 <p> <img src='http://mitpress.mit.edu/sicp/full-text/book/ch2-Z-G-7.gif'>
 
 <p> In fact, this is the only condition <tt>make-rat</tt>, <tt>numer</tt>, and <tt>denom</tt> must fulfill in order to form a suitable basis for a rational-number representation. In general, we can think of data as defined by some collection of selectors and constructors, together with specified conditions that these procedures must fulfill in order to be a valid representation. <a name="footnote_link_2-5" class="footnote_link" href="#footnote_2-5">5</a>
