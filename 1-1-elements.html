@@ -1269,7 +1269,10 @@ makeMCQ("scheme-new-if-mcq",
 
 <p> An alternative strategy for implementing <tt>good-enough?</tt> is to watch how guess changes from one iteration to the next and to stop when the change is a very small fraction of the guess. Design a square-root procedure that  uses this kind of end test. Does this work better for small and large numbers?
 
-<div id="scheme-ex-17-input" class='input'></div>
+<div id="scheme-ex-17-input" class='input'>
+(define (my-sqrt x)
+  'your-code-here)
+</div>
 
 <p>
 
@@ -1284,45 +1287,42 @@ makeMCQ("scheme-new-if-mcq",
 </div>
 
 <script> 
-
-makeChangeOnFocusInput("scheme-ex-17-input", 
-                       "(define (my-sqrt x)\n  'your-code-here)", 
-                       "(define (my-sqrt x)\n  ");
-addDep("scheme-ex-17-input", ["scheme-define-sqrt"]);
 addOutput("scheme-ex-17-input");
-var editor = editorOf["scheme-ex-17-input"];
-
-editor.setOption('onBlur', function() {
-  editorOf["scheme-ex-17-my-test"].getOption("onBlur")(); //needed?
+makeEditable("scheme-ex-17-input").setOption('onBlur', function() {
+  editorOf["scheme-ex-17-my-test"].getOption("onBlur")(); //needed to push dependencies; TODO make a pushDeps() function
   eval_editor("scheme-ex-17-input").then(function(res){
     $_("scheme-ex-17-input-output").empty().append($("<span>" + res + "</span>"));
   })
 });
-  /*
-  if (biwascheme.evaluate(code) == true) {
-    return "<div class='right-answer'> \u2713 </div>";
-  } else {
-    return "<div class='wrong-answer'> \u2717 </div>";
-  }
-  */
-
 frozen_prompt("scheme-ex-17-test", ["scheme-define-sqrt"]);
-frozen_prompt("scheme-ex-17-my-test", ["scheme-ex-17-input"]);
+frozen_prompt("scheme-ex-17-my-test", ["scheme-define-square", "scheme-ex-17-input"]);
 </script>
 
 <!--
-(define (good-enough a b)
-    (< (/ (abs (- a b)) 
-          b) 
-       0.01))
+(define (square x)
+   (* x x))
 
-(define (sqrt-iter g-old g-new x)
-  (if (good-enough g-old g-new)
-      g-new
-      (sqrt-iter g-new (improve g-new x) x)))
+(define (average x y)
+   (/ (+ x y)
+      2))
 
-(define (my-sqrt x)
-  (sqrt-iter 1 2 x))
+(define (good-enough? guess previous-guess)
+   (< (abs (- guess previous-guess))
+         0.001))
+
+(define (improve guess x)
+   (average guess
+            (/ x guess)))
+
+(define (sqrt-iter guess previous-guess x)
+   (if (good-enough? guess previous-guess)
+       guess
+       (sqrt-iter (improve guess x)
+                  guess
+                  x)))
+
+(define (sqrt x)
+   (sqrt-iter 1.0 0 x))
 !-->
 </div>
 

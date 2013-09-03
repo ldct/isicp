@@ -235,8 +235,10 @@ function hidden_prompt(s, deps) {
   addDep(s, (deps || []));
 }
 
-function no_output_prompt(s) {
+function no_output_prompt(s, deps) {
   makeEditable(s);
+
+  addDep(s, (deps || []));
 }
 
 function no_output_frozen_prompt(s) {

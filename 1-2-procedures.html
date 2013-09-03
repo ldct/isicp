@@ -480,8 +480,7 @@ makeChangeOnFocusInput("scheme-ex-fn-3-input",
                        "(define (f n)\n  'your-code-here)", 
                        "(define (f n)\n  ");
 addOutput("scheme-ex-fn-3-input");
-var editor = editorOf["scheme-ex-fn-3-input"];
-editor.setOption("onBlur", function() {
+editorOf["scheme-ex-fn-3-input"].setOption("onBlur", function() {
   function f(n) {
     if (n < 3) {
       return n;
@@ -494,7 +493,7 @@ editor.setOption("onBlur", function() {
     return "(= (f " + n + ") " + f(n) + ")";
   }
 
-  var code = editor.getValue() + "\n" +
+  var code = editorOf["scheme-ex-fn-3-input"].getValue() + "\n" +
             "(and " + fs(1)  + 
                       fs(10) + 
                       fs(3) + ")";
@@ -535,9 +534,7 @@ makeChangeOnFocusInput("scheme-ex-pascal-input",
                        "(define (pascal row col)\n  'your-code-here)", 
                        "(define (pascal row col)\n  ");
 addOutput("scheme-ex-pascal-input");
-var editor = editorOf["scheme-ex-pascal-input"];
-
-editor.setOption("onBlur", function(){
+editorOf["scheme-ex-pascal-input"].setOption("onBlur", function(){
 
   function pascal(row, col) {
     if (row < col) {
@@ -554,7 +551,7 @@ editor.setOption("onBlur", function(){
   }
 
 
-  var code = editor.getValue() + "\n" +
+  var code = editorOf["scheme-ex-pascal-input"].getValue() + "\n" +
              "(and " + ps(3,2) + 
                        ps(2,1) + 
                        ps(4,3) + ")"
@@ -779,21 +776,21 @@ prompt("scheme-define-even");
 <div class='exercise'>
 <p> <b> Exercise 1.16. </b> Design a procedure that evolves an iterative exponentiation process that uses successive squaring and uses a logarithmic number of steps, as does fast-expt. (Hint: Using the observation that (b<sup>n/2</sup>)<sup>2</sup> = (b<sup>2</sup>)<sup>n/2</sup>, keep, along with the exponent n and the base b, an additional state variable a, and define the state transformation in such a way that the product a bn is unchanged from state to state. At the beginning of the process a is taken to be 1, and the answer is given by the value of a at the end of the process. In general, the technique of defining an <em> invariant quantity </em> that remains unchanged from state to state is a powerful way to think about the design of iterative algorithms.)
 
-<div id="scheme-ex-fast-iter-input">
+<div id="scheme-ex-fast-expt-iter-input">
 (define (fast-expt b n)
   'your-code-here)
 </div>
 
 <script>
-var editor = makeEditable("scheme-ex-fast-iter-input");
-addOutput("scheme-ex-fast-iter-input");
+makeEditable("scheme-ex-fast-expt-iter-input");
+addOutput("scheme-ex-fast-expt-iter-input");
 
-editor.setOption("onBlur", function(){
+editorOf["scheme-ex-fast-expt-iter-input"].setOption("onBlur", function(){
   function es(b, n) {
     return "(= (fast-expt " + b + " " + n + ") " + Math.pow(b,n) + ") ";
   }
 
-  var code = editor.getValue() + "\n" +
+  var code = editorOf["scheme-ex-fast-expt-iter-input"].getValue() + "\n" +
             "(and " + es(7,5) + 
                       es(4,9) + 
                       es(3,4) + ")"
@@ -801,9 +798,9 @@ editor.setOption("onBlur", function(){
   eval_scheme(code).then(function(res){
     console.log(res);
     if (res == "true\n") {
-      $_("scheme-ex-fast-iter-input-output").empty().append($("<div class='right-answer'> \u2713 </div>"));
+      $_("scheme-ex-fast-expt-iter-input-output").empty().append($("<div class='right-answer'> \u2713 </div>"));
     } else {
-      $_("scheme-ex-fast-iter-input-output").empty().append($("<div class='wrong-answer'> \u2717 </div>"));
+      $_("scheme-ex-fast-expt-iter-input-output").empty().append($("<div class='wrong-answer'> \u2717 </div>"));
     }
   })
 });
@@ -851,15 +848,15 @@ prompt("scheme-define-times");
 
 <script>
 //TODO: halve, double
-var editor = makeEditable("scheme-ex-mul-input");
+makeEditable("scheme-ex-mul-input");
 addOutput("scheme-ex-mul-input");
 
-editor.setOption("onBlur", function(){
+editorOf["scheme-ex-mul-input"].setOption("onBlur", function(){
   function ms(a, b) {
     return "(= (mul " + a + " " + b + ") " + a*b + ") ";
   }
 
-  var code = editor.getValue() + "\n" +
+  var code = editorOf["scheme-ex-mul-input"].getValue() + "\n" +
             "(and " + ms(7,5) + 
                       ms(4,9) + 
                       ms(3,4) + ")"
@@ -887,16 +884,16 @@ editor.setOption("onBlur", function(){
 </div>
 
 <script>
-var editor = makeEditable("scheme-ex-mul-iter-input")
+makeEditable("scheme-ex-mul-iter-input")
 addOutput("scheme-ex-mul-iter-input");
 
-editor.setOption("onBlur", function() {
+editorOf["scheme-ex-mul-iter-input"].setOption("onBlur", function() {
 
   function ms(a, b) {
     return "(= (mul " + a + " " + b + ") " + a*b + ")";
   }
 
-  var code = editor.getValue() + "\n" +
+  var code = editorOf["scheme-ex-mul-iter-input"].getValue() + "\n" +
              "(and " + ms(7,5) + 
                        ms(4,9) + 
                        ms(3,4) + ") "
@@ -952,10 +949,10 @@ b &amp;\leftarrow bp + aq
 </div>
 
 <script>
-var editor = makeEditable("scheme-ex-log-fib-input");
+makeEditable("scheme-ex-log-fib-input");
 addOutput("scheme-ex-log-fib-input");
 
-editor.setOption("onBlur", function(){
+editorOf["scheme-ex-log-fib-input"].setOption("onBlur", function(){
 
   function fib(n){
     var i;
@@ -973,7 +970,7 @@ editor.setOption("onBlur", function(){
     return "(= (fib " + n + ") " + fib(n) + ")";
   }
 
-  var code = editor.getValue() + "\n" +
+  var code = editorOf["scheme-ex-log-fib-input"].getValue() + "\n" +
             "(and " + fibs(10) + 
                       fibs(11) + 
                       fibs(13) + ")"

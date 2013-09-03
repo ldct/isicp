@@ -75,9 +75,11 @@ promptDep("scheme-define-sum-cubes", ["scheme-define-cube"]);
 
 <p> The third computes the sum of a sequence of terms in the series
 
-<p> <img src='http://mitpress.mit.edu/sicp/full-text/book/ch1-Z-G-26.gif'>
+$$
+\frac{1}{1 \cdot 3} + \frac{1}{5 \cdot 7} + \frac{1}{9 \cdot 11} + \cdots
+$$
 
-<p> which converges to pi/8 (very slowly):<a name="footnote_link_1-49" class="footnote_link" href="#footnote_1-49">49</a>
+<p> which converges to $\pi/8$ (very slowly):<a name="footnote_link_1-49" class="footnote_link" href="#footnote_1-49">49</a>
 
 <div id="scheme-define-pi-sum">
 (define (pi-sum a b)
@@ -104,7 +106,9 @@ prompt("scheme-sum-template");
 
 <p> The presence of such a common pattern is strong evidence that there is a useful abstraction waiting to be brought to the surface. Indeed, mathematicians long ago identified the abstraction of summation of a series and invented &ldquo;sigma notation,&rdquo; for example
 
-<p> <img src='http://mitpress.mit.edu/sicp/full-text/book/ch1-Z-G-27.gif'>
+$$
+\sum_{n=a}^b f(n) = f(a) + \cdots + f(b)
+$$
 
 <p> to express this concept. The power of sigma notation is that it allows mathematicians to deal with the concept of summation itself rather than only with particular sums &mdash; for example, to formulate general results about sums that are independent of the particular series being summed.
 
@@ -200,7 +204,9 @@ depsOf["scheme-pi-sum-pi"] = ["scheme-define-pi-sum-sum"];
 
 <p> Once we have sum, we can use it as a building block in formulating further concepts. For instance, the definite integral of a function f between the limits a and b can be approximated numerically using the formula
 
-<p> <img src='http://mitpress.mit.edu/sicp/full-text/book/ch1-Z-G-28.gif'>
+$$
+\int_a^b = \left[f(a + \frac{dx}{2}) + f(a + dx + \frac{dx}{2}) + f(a + 2dx + \frac{dx}{2}) + \cdots\right] dx
+$$
 
 <p> for small values of dx. We can express this directly as a procedure:
 
@@ -233,14 +239,95 @@ prompt("scheme-integral-cube-finer");
 depsOf["scheme-integral-cube-finer"] = ["scheme-define-cube", "scheme-define-integral"];
 </script>
 
-<p> (The exact value of the integral of cube between 0 and 1 is 1/4.)
+<p> (The exact value of the integral of cube between $0$ and $1$ is $1/4$.)
 
 <div class="exercise">
 <p> <b> Exercise 1.29. </b> Simpson's Rule is a more accurate method of numerical integration than the method illustrated above. Using Simpson's Rule, the integral of a function f between a and b is approximated as
 
-<p> <img src='http://mitpress.mit.edu/sicp/full-text/book/ch1-Z-G-29.gif'>
+$$
+\frac{h}{3} \left[ y_0 + 4y_1 + 2y_2 + 4y_3 + 2y_4 + \cdots + 2y_{n-2} + 4y_{n-1} + y_n\right]
+$$
 
-<p> where h = (b - a)/n, for some even integer n, and yk = f(a + kh). (Increasing n increases the accuracy of the approximation.) Define a procedure that takes as arguments f, a, b, and n and returns the value of the integral, computed using Simpson's Rule. Use your procedure to integrate cube between 0 and 1 (with n = 100 and n = 1000), and compare the results to those of the integral procedure shown above.
+<p> where $h = \frac{b - a}{n}$, for some even integer $n$, and $y_k = f(a + kh)$. (Increasing n increases the accuracy of the approximation.) Define a procedure that takes as arguments f, a, b, and n and returns the value of the integral, computed using Simpson's Rule. Use your procedure to integrate cube between 0 and 1 (with n = 100 and n = 1000), and compare the results to those of the integral procedure shown above.
+
+
+<div id="scheme-ex-simpson-input">
+(define (feq a b)
+  (&lt; (abs (- a b))
+        0.000001))
+
+(define (sum term a next b)
+  (if (> a b)
+      0
+      (+ (term a)
+         (sum term (next a) next b))))
+
+(define (simpson f a b n)
+  'your-code-here)
+</div>
+
+<script>
+/*
+(define (simpson f a b n)
+  (define h (/ (- b a) n))
+  (define (inc x) (+ x 1))
+  (define (y k)
+    (f (+ a (* k h))))
+  (define (term k)
+    (* (cond ((odd? k) 4)
+             ((or (= k 0) (= k n)) 1)
+             ((even? k) 2))
+       (y k)))
+  (/ (* h (sum term 0 inc n)) 3))
+*/
+
+function simpson(f, a, b, n) {
+  var h = (b - a) / n;
+  function y(k) {
+    return f(a + k*h);
+  }
+  function coeff(i) {
+    if (i == 0 || i == n) {
+      return 1;
+    }
+    return [2,4][i % 2];
+  }
+
+  var sum = 0;
+  for (i = 0; i <= n; i++) {
+    sum += coeff(i) * y(i);
+  }
+  return sum * h / 3;
+}
+
+addOutput("scheme-ex-simpson-input");
+makeEditable("scheme-ex-simpson-input").setOption("onBlur", function() {
+
+  function ss(f, fl, a, b, n) {
+    return "(feq (simpson {0} {1} {2} {3}) {4}) ".format(fl, a, b, n, simpson(f, a, b, n));
+  }
+
+  function poly(x) {
+    return 2 * x
+  }
+
+  polyl = "(lambda (x) (* 2 x))"
+
+  var code = editorOf["scheme-ex-simpson-input"].getValue() + "\n" +
+             "(and " + ss(poly,polyl,2,3,10) + 
+                       ss(poly,polyl,4,5,8) + 
+                       ss(poly,polyl,2,10,12) + ") "
+
+  eval_scheme(code).then(function(res){
+    if (res == "true\n") {
+      $_("scheme-ex-simpson-input-output").empty().append($("<div class='right-answer'> \u2713 </div>"));
+    } else {
+      $_("scheme-ex-simpson-input-output").empty().append($("<div class='wrong-answer'> \u2717 </div>"));
+      $_("scheme-ex-simpson-input-output").append(res);
+    }
+  });
+});
+</script>
 
 </div>
 
@@ -249,13 +336,31 @@ depsOf["scheme-integral-cube-finer"] = ["scheme-define-cube", "scheme-define-int
 <div class="exercise">
 <p> <b> Exercise 1.30. </b> The sum procedure above generates a linear recursion. The procedure can be rewritten so that the sum is performed iteratively. Show how to do this by filling in the missing expressions in the following definition:
 
+<div id="scheme-ex-sum-iter">
 (define (sum term a next b)
   (define (iter a result)
-    (if <??>
-        <??>
-        (iter <??> <??>)))
-  (iter <??> <??>))
-  
+    (if &lt;??&gt;
+        &lt;??&gt;
+        (iter &lt;??&gt; &lt;??&gt;)))
+  (iter &lt;??&gt; &lt;??&gt;))  
+</div>
+<script>
+addOutput("scheme-ex-sum-iter");
+
+makeEditable("scheme-ex-sum-iter").setOption("onBlur", function() {
+  var code = editorOf["scheme-ex-sum-iter"].getValue() + "\n" +
+             "(= (sum (lambda (x) (* x x x)) 1 (lambda (n) (+ n 1)) 10) 3025)";
+
+  eval_scheme(code).then(function(res){
+    if (res == "true\n") {
+      $_("scheme-ex-sum-iter-output").empty().append($("<div class='right-answer'> \u2713 </div>"));
+    } else {
+      $_("scheme-ex-sum-iter-output").empty().append($("<div class='wrong-answer'> \u2717 </div>"));
+      $_("scheme-ex-sum-iter-output").append(res);
+    }
+  });
+});
+</script>
 </div>
 
 <p>
@@ -263,47 +368,134 @@ depsOf["scheme-integral-cube-finer"] = ["scheme-define-cube", "scheme-define-int
 <div class="exercise">
 <p> <b> Exercise 1.31. </b>
 
-<ol style="list-style-type: lower-alpha">
-<li>
-The sum procedure is only the simplest of a vast number of similar abstractions that can be captured as higher-order procedures.<a name="footnote_link_1-51" class="footnote_link" href="#footnote_1-51">51</a> Write an analogous procedure called product that returns the product of the values of a function at points over a given range. Show how to define factorial in terms of product. Also use product to compute approximations to  using the formula<a name="footnote_link_1-52" class="footnote_link" href="#footnote_1-52">52</a>
+<p> The sum procedure is only the simplest of a vast number of similar abstractions that can be captured as higher-order procedures.<a name="footnote_link_1-51" class="footnote_link" href="#footnote_1-51">51</a> Write an analogous procedure called product that returns the product of the values of a function at points over a given range. Try both a recursive and an iterative approach. Show how to define factorial in terms of product. Also use product to compute approximations to  using the formula<a name="footnote_link_1-52" class="footnote_link" href="#footnote_1-52">52</a>
 
-<p> <img src='http://mitpress.mit.edu/sicp/full-text/book/ch1-Z-G-30.gif'>
-</li>
+$$
+\frac{\pi}{4} = \frac{2 \cdot 4 \cdot 4 \cdot 6 \cdot 6 \cdot 8 \cdots}{3 \cdot 3 \cdot 5 \cdot 5 \cdot 7 \cdot 7 \cdots}
+$$
 
-<li>
-If your product procedure generates a recursive process, write one that generates an iterative process. If it generates an iterative process, write one that generates a recursive process.
-</li>
-</ol>
+<div id="scheme-ex-define-product">
+(define (product term a next b)
+  'your-code-here)
 </div>
+<script>
+addOutput("scheme-ex-define-product");
+makeEditable("scheme-ex-define-product").setOption("onBlur", function() {
+  var code = editorOf["scheme-ex-define-product"].getValue() + "\n" +
+             "(= (product (lambda (x) (* x x)) 1 (lambda (n) (+ n 1)) 5) 14400)"
+
+  eval_scheme(code).then(function(res){
+    if (res == "true\n") {
+      $_("scheme-ex-define-product-output").empty().append($("<div class='right-answer'> \u2713 </div>"));
+    } else {
+      $_("scheme-ex-define-product-output").empty().append($("<div class='wrong-answer'> \u2717 </div>"));
+      $_("scheme-ex-define-product-output").append(res);
+    }
+  });
+});
+/*
+(define (product term a next b)
+  (if (> a b)
+      1
+      (* (term a)
+         (product term (next a) next b))))
+*/
+</script>
+
+</div>
+
+<p>
 
 <div class="exercise">
 <p> <b> Exercise 1.32. </b>
 
-<ol style="list-style-type: lower-alpha">
-<li>
 <p> Show that sum and product (exercise 1.31) are both special cases of a still more general notion called accumulate that combines a collection of terms, using some general accumulation function:
+
+
 
 <div id="scheme-accumulate-signature">
 (accumulate combiner null-value term a next b)
 </div>
 <script>
-prompt("scheme-accumulate-signature");
+no_output_frozen_prompt("scheme-accumulate-signature");
 </script>
 
 <p> Accumulate takes as arguments the same term and range specifications as sum and product, together with a combiner procedure (of two arguments) that specifies how the current term is to be combined with the accumulation of the preceding terms and a null-value that specifies what base value to use when the terms run out. Write accumulate and show how sum and product can both be defined as simple calls to accumulate. Write two procedures, one that generates a recursive process and one iterative.
 
+<div id="scheme-ex-define-accumulate">
+(define (accumulate combiner null-value term a next b)
+  'your-code-here)
+</div>
+<script>
+addOutput("scheme-ex-define-accumulate");
+makeEditable("scheme-ex-define-accumulate").setOption("onBlur", function() {
+  var code = editorOf["scheme-ex-define-accumulate"].getValue() + "\n" +
+             "(= (accumulate + 0 (lambda (x) (* x x)) 1 (lambda (n) (+ n 1)) 5) 55)"
+
+  eval_scheme(code).then(function(res){
+    if (res == "true\n") {
+      $_("scheme-ex-define-accumulate-output").empty().append($("<div class='right-answer'> \u2713 </div>"));
+    } else {
+      $_("scheme-ex-define-accumulate-output").empty().append($("<div class='wrong-answer'> \u2717 </div>"));
+      $_("scheme-ex-define-accumulate-output").append(res);
+    }
+  });
+});
+/*
+(define (accumulate combiner null-value term a next b)
+  (if (> a b)
+      null-value
+      (combiner (term a)
+                (accumulate combiner null-value term (next a) next b))))
+*/
+</script>
+
 </div>
 
+<p>
+
 <div class="exercise">
-<p> <b> Exercise 1.33. </b> You can obtain an even more general version of accumulate (exercise 1.32) by introducing the notion of a filter on the terms to be combined. That is, combine only those terms derived from values in the range that satisfy a specified condition. The resulting filtered-accumulate abstraction takes the same arguments as accumulate, together with an additional predicate of one argument that specifies the filter. Write filtered-accumulate as a procedure. Show how to express the following using filtered-accumulate:
+<p> <b> Exercise 1.33. </b> You can obtain an even more general version of accumulate (exercise 1.32) by introducing the notion of a filter on the terms to be combined. That is, combine only those terms derived from values in the range that satisfy a specified condition. The resulting filtered-accumulate abstraction takes the same arguments as accumulate, together with an additional predicate of one argument that specifies the filter. Write filtered-accumulate as a procedure. 
+
+<div id="scheme-ex-define-filtered-accumulate">
+(define (filtered-accumulate combiner null-value term a next b filter?)
+  'your-code-here)
+</div>
+<script>
+addOutput("scheme-ex-define-filtered-accumulate");
+makeEditable("scheme-ex-define-filtered-accumulate").setOption("onBlur", function() {
+  var code = editorOf["scheme-ex-define-filtered-accumulate"].getValue() + "\n" +
+             "(= (filtered-accumulate + 0 (lambda (x) (* x x)) 1 (lambda (n) (+ n 1)) 5 (lambda (x) #t)) 55)"
+
+  eval_scheme(code).then(function(res){
+    if (res == "true\n") {
+      $_("scheme-ex-define-filtered-accumulate-output").empty().append($("<div class='right-answer'> \u2713 </div>"));
+    } else {
+      $_("scheme-ex-define-filtered-accumulate-output").empty().append($("<div class='wrong-answer'> \u2717 </div>"));
+      $_("scheme-ex-define-filtered-accumulate-output").append(res);
+    }
+  });
+});
+
+/*
+(define (filtered-accumulate combiner null-value term a next b filter?)
+  (cond ((> a b) null-value)
+         ((filter? a) (combiner (term a)
+                                (filtered-accumulate combiner null-value term (next a) next b filter?)))
+         (else (filtered-accumulate combiner null-value term (next a) next b filter?))))
+*/
+</script>
+
+
+<p> Show how to express the following using filtered-accumulate:
 
 <ol style="list-style-type: lower-alpha">
 <li>
-the sum of the squares of the prime numbers in the interval a to b (assuming that you have a prime? predicate already written)
+<p> the sum of the squares of the prime numbers in the interval a to b (assuming that you have a <tt>prime?</tt> predicate already written)
 </li>
 
 <li>
-the product of all the positive integers less than n that are relatively prime to n (i.e., all positive integers i &lt; n such that GCD(i,n) = 1).
+<p> the product of all the positive integers less than n that are relatively prime to n (i.e., all positive integers $ &lt; n$ such that $\text{GCD}(i,n) = 1$).
 </li>
 </ol>
 
@@ -408,13 +600,19 @@ depsOf["scheme-apply-lambda"] = ["scheme-define-square"];
 
 <p> Another use of <tt>lambda</tt> is in creating local variables. We often need local variables in our procedures other than those that have been bound as formal parameters. For example, suppose we wish to compute the function
 
-<p> <img src='http://mitpress.mit.edu/sicp/full-text/book/ch1-Z-G-31.gif'>
+$$
+f(x,y) = x (1 + xy)^2 + y(1-y) + (1 + xy)(1 - y)
+$$
 
 <p> which we could also express as
 
-<p> <img src='http://mitpress.mit.edu/sicp/full-text/book/ch1-Z-G-32.gif'>
+\begin{align} 
+a &amp;= 1 + xy \\
+b &amp;= 1 - y \\
+f(x,y) &amp;= xa^2 + yb + ab
+\end{align}
 
-<p> In writing a procedure to compute <tt>f,</tt> we would like to include as local variables not only <tt>x</tt> and <tt>y</tt> but also the names of intermediate quantities like <tt>a</tt> and <tt>b</tt>. One way to accomplish this is to use an auxiliary procedure to bind the local variables:
+<p> In writing a procedure to compute $f$ we would like to include as local variables not only $x$ and $y$ but also the names of intermediate quantities like $a$ and $b$. One way to accomplish this is to use an auxiliary procedure to bind the local variables:
 
 <div id="scheme-define-f-helpers">
 (define (f x y)
@@ -522,10 +720,12 @@ makeStatic("scheme-let-expanded-syntax");
 <script>
 hidden_prompt("scheme-let-close-prelude");
 
-makeEditable("scheme-let-close");
-linkEditor("scheme-let-close", "scheme-let-close-output", function(x, y) {return eval_editor(x) + ".";});
-
-depsOf["scheme-let-close"] = ["scheme-let-close-prelude"];
+no_output_prompt("scheme-let-close", ["scheme-let-close-prelude"]);
+editorOf["scheme-let-close"].setOption("onBlur", function(){
+  eval_editor("scheme-let-close").then(function(res){
+    $_("scheme-let-close-output").empty().append($("<span>" + res + "</span>"));    
+  });
+});
 </script>
 
 <p> Here, the <tt>x</tt> in the body of the <tt>let</tt> is 3, so the value of the <tt>let</tt> expression is 33. On the other hand, the <tt>x</tt> that is the second argument to the outermost <tt>+</tt> is still 5.
@@ -546,14 +746,17 @@ hidden_prompt("scheme-let-shadow-prelude");
       (y (+ x 2)))
   (* x y))
 </div>
-<script>
-makeEditable("scheme-let-shadow");
-linkEditor("scheme-let-shadow", "scheme-let-shadow-output", function(x, y) {return eval_editor(x);});
 
-depsOf["scheme-let-shadow"] = ["scheme-let-shadow-prelude"];
+<script>
+no_output_prompt("scheme-let-shadow", ["scheme-let-shadow-prelude"]);
+editorOf["scheme-let-shadow"].setOption("onBlur", function(){
+  eval_editor("scheme-let-shadow").then(function(res){
+    $_("scheme-let-shadow-output").empty().append($("<span>" + res + "</span>"));    
+  });
+});
 </script>
 
-will have the value <span id="scheme-let-shadow-output" class="output"></span> because, inside the body of the <tt>let, x</tt> will be 3 and <tt>y</tt> will be 4 (which is the outer <tt>x</tt> plus 2).
+<p> will have the value <span id="scheme-let-shadow-output" class="output"></span> because, inside the body of the <tt>let, x</tt> will be 3 and <tt>y</tt> will be 4 (which is the outer <tt>x</tt> plus 2).
 </li>
 </ul>
 
@@ -591,20 +794,29 @@ prompt("scheme-define-f-g2");
 (f square)
 </div>
 <script>
-prompt("scheme-f-square");
-addDep(["scheme-f-square"], ["scheme-define-f-g2", "scheme-define-square"]);
+prompt("scheme-f-square", ["scheme-define-f-g2", "scheme-define-square"]);
 </script>
 
 <div id="scheme-f-lambda-poly">
 (f (lambda (z) (* z (+ z 1))))
 </div>
 <script>
-prompt("scheme-f-lambda-poly");
-depsOf["scheme-f-lambda-poly"] = ["scheme-define-f-g2"];
+prompt("scheme-f-lambda-poly", ["scheme-define-f-g2"]);
 </script>
 
 <p> What happens if we (perversely) ask the interpreter to evaluate the combination
 <tt>(f f)?</tt>  Explain.
+
+<div id="scheme-ex-f-f-mcq"></div>
+<script>
+makeMCQ("scheme-ex-f-f-mcq", 
+    ["An error occurs, because <tt>2</tt> is not a procedure."],
+    ["It evaluates to <tt>(2 2)</tt>, which is <tt>4</tt>.",
+     "The interpreter enters an infinite loop.",
+     "The result is <tt>2</tt>."
+     ]);
+</script>
+
 </div>
 
 <h3> Procedures as General Methods </h3>
@@ -613,7 +825,7 @@ depsOf["scheme-f-lambda-poly"] = ["scheme-define-f-g2"];
 
 <h4> Finding roots of equations by the half-interval method </h4>
 
-<p> The <em> half-interval method </em> is a simple but powerful technique for finding roots of an equation <em> f(x) = 0 </em>, where <em> f </em> is a continuous function. The idea is that, if we are given points <em> a </em> and <em> b </em> such that <em> f(a) &lt; 0 &lt; f (b) </em>, then <em> f </em> must have at least one zero between <em> a </em> and <em> b </em>. To locate a zero, let <em> x </em> be the average of <em> a </em> and <em> b </em> and compute <em> f(x) </em>. If <em> f(x) &gt; 0  </em>, then <em> f </em> must have a zero between <em> a </em> and <em> x </em>. If <em> f(x) &lt; 0</em>, then <em> f </em> must have a zero between <em> x </em> and <em> b </em>. Continuing in this way, we can identify smaller and smaller intervals on which <em> f </em> must have a zero. When we reach a point where the interval is small enough, the process stops. Since the interval of uncertainty is reduced by half at each step of the process, the number of steps required grows as &Theta;(log(L/T)), where <em>L</em> is the length of the original interval and <em>T</em> is the error tolerance (that is, the size of the interval we will consider &ldquo;small enough&rdquo;). Here is a procedure that implements this strategy:
+<p> The <em> half-interval method </em> is a simple but powerful technique for finding roots of an equation <em> f(x) = 0 </em>, where <em> f </em> is a continuous function. The idea is that, if we are given points $ a $ and $ b $ such that $ f(a) &lt; 0 &lt; f (b) $, then $ f $ must have at least one zero between $ a $ and $ b $. To locate a zero, let $ x $ be the average of $ a $ and $ b $ and compute $ f(x) $. If $ f(x) &gt; 0  $, then $ f $ must have a zero between $ a $ and $ x $. If $ f(x) &lt; 0$, then $ f $ must have a zero between $ x $ and $ b $. Continuing in this way, we can identify smaller and smaller intervals on which $ f $ must have a zero. When we reach a point where the interval is small enough, the process stops. Since the interval of uncertainty is reduced by half at each step of the process, the number of steps required grows as $\Theta(\log(L/T))$, where $L$ is the length of the original interval and $T$ is the error tolerance (that is, the size of the interval we will consider &ldquo;small enough&rdquo;). Here is a procedure that implements this strategy:
 
 <div id="scheme-define-average">
 (define (average x y)
@@ -706,11 +918,11 @@ depsOf["scheme-half-interval-method-poly"] = ["scheme-define-half-interval-metho
 
 <h4> Finding fixed points of functions </h4>
 
-<p> A number <em> x </em> is called a <em> fixed point </em> of a function <em> f </em> if <em> x </em> satisfies the equation <em> f(x) = x </em>. For some functions <em> f </em> we can locate a fixed point by beginning with an initial guess and applying <em> f </em> repeatedly,
+<p> A number $x$ is called a $fixed point$ of a function $f$ if $x$ satisfies the equation $f(x) = x$. For some functions $f$ we can locate a fixed point by beginning with an initial guess and applying $f$ repeatedly,
 
-<pre>
+$$
 f(x), f(f(x), (f(f(f(x))))
-</pre>
+$$
 
 <p> until the value does not change very much. Using this idea, we can devise a procedure <tt>fixed-point</tt> that takes as inputs a function and an initial guess and produces an approximation to a fixed point of the function. We apply the function repeatedly until we find two successive values whose difference is less than some prescribed tolerance:
 
@@ -728,8 +940,7 @@ f(x), f(f(x), (f(f(f(x))))
   (try first-guess))
 </div>
 <script>
-prompt("scheme-define-fixed-point");
-depsOf["scheme-define-fixed-point"] = ["scheme-define-close-enough"];
+prompt("scheme-define-fixed-point", ["scheme-define-close-enough"]);
 </script>
 
 <p> For example, we can use this method to approximate the fixed point of the cosine function, starting with 1 as an initial approximation:<a name="footnote_link_1-57" class="footnote_link" href="#footnote_1-57">57</a>
@@ -738,22 +949,20 @@ depsOf["scheme-define-fixed-point"] = ["scheme-define-close-enough"];
 (fixed-point cos 1.0)
 </div>
 <script>
-prompt("scheme-fixed-point-cos");
-depsOf["scheme-fixed-point-cos"] = ["scheme-define-fixed-point"];
+prompt("scheme-fixed-point-cos", ["scheme-define-fixed-point"]);
 </script>
 
-<p> Similarly, we can find a solution to the equation y = sin(y) + cos(y):
+<p> Similarly, we can find a solution to the equation $y = sin(y) + cos(y)$:
 
 <div id="scheme-fixed-point-sin-cos">
 (fixed-point (lambda (y) (+ (sin y) (cos y)))
              1.0)
 </div>
 <script>
-prompt("scheme-fixed-point-sin-cos");
-depsOf["scheme-fixed-point-sin-cos"] = ["scheme-define-fixed-point"];
+prompt("scheme-fixed-point-sin-cos", ["scheme-define-fixed-point"]);
 </script>
 
-<p> The fixed-point process is reminiscent of the process we used for finding square roots in section 1.1.7. Both are based on the idea of repeatedly improving a guess until the result satisfies some criterion. In fact, we can readily formulate the square-root computation as a fixed-point search. Computing the square root of some number x requires finding a y such that y2 = x. Putting this equation into the equivalent form y = x/y, we recognize that we are looking for a fixed point of the function<a name="footnote_link_1-58" class="footnote_link" href="#footnote_1-58">58</a> y -> x/y, and we can therefore try to compute square roots as
+<p> The fixed-point process is reminiscent of the process we used for finding square roots in section 1.1.7. Both are based on the idea of repeatedly improving a guess until the result satisfies some criterion. In fact, we can readily formulate the square-root computation as a fixed-point search. Computing the square root of some number $x$ requires finding a $y$ such that $y^2 = x$. Putting this equation into the equivalent form $y = x/y$, we recognize that we are looking for a fixed point of the function<a name="footnote_link_1-58" class="footnote_link" href="#footnote_1-58">58</a> $y \mapsto x/y$, and we can therefore try to compute square roots as
 
 <div id="scheme-define-sqrt">
 (define (sqrt x)
@@ -761,13 +970,12 @@ depsOf["scheme-fixed-point-sin-cos"] = ["scheme-define-fixed-point"];
                1.0))
 </div>
 <script>
-prompt("scheme-define-sqrt");
-addDep("scheme-define-sqrt", ["scheme-define-fixed-point"]);
+prompt("scheme-define-sqrt", ["scheme-define-fixed-point"]);
 </script>
 
-<p> Unfortunately, this fixed-point search does not converge. Consider an initial guess y1. The next guess is y2 = x/y1 and the next guess is y3 = x/y2 = x/(x/y1) = y1. This results in an infinite loop in which the two guesses y1 and y2 repeat over and over, oscillating about the answer.
+<p> Unfortunately, this fixed-point search does not converge. Consider an initial guess $y_1$. The next guess is $y_2 = x/y_1$ and the next guess is $y_3 = x/y_2 = x/(x/y_1) = y_1$. This results in an infinite loop in which the two guesses $y_1$ and $y_2$ repeat over and over, oscillating about the answer.
 
-<p> One way to control such oscillations is to prevent the guesses from changing so much. Since the answer is always between our guess y and x/y, we can make a new guess that is not as far from y as x/y by averaging y with x/y, so that the next guess after y is (1/2)(y + x/y) instead of x/y. The process of making such a sequence of guesses is simply the process of looking for a fixed point of y -> (1/2)(y + x/y):
+<p> One way to control such oscillations is to prevent the guesses from changing so much. Since the answer is always between our guess $y$ and $\frac{x}{y}$, we can make a new guess that is not as far from $y$ as $\frac{x}{y}$ by averaging $y$ with $\frac{x}{y}$, so that the next guess after $y$ is $\frac{1}{2}(y + \frac{x}{y})$ instead of $\frac{x}{y}$. The process of making such a sequence of guesses is simply the process of looking for a fixed point of $y \mapsto \frac{1}{2}(y + \frac{x}{y})$:
 
 <div id="scheme-define-sqrt-average">
 (define (sqrt x)
@@ -779,81 +987,180 @@ prompt("scheme-define-sqrt-average");
 depsOf["scheme-define-sqrt-average"] = ["scheme-define-fixed-point", "scheme-define-average"];
 </script>
 
-<p> (Note that y = (1/2)(y + x/y) is a simple transformation of the equation y = x/y; to derive it, add y to both sides of the equation and divide by 2.)
+<p> (Note that $y = \frac{1}{2}(y + \frac{x}{y})$ is a simple transformation of the equation $y = \frac{x}{y}$; to derive it, add $y$ to both sides of the equation and divide by $2$.)
 
 <p> With this modification, the square-root procedure works. In fact, if we unravel the definitions, we can see that the sequence of approximations to the square root generated here is precisely the same as the one generated by our original square-root procedure of section 1.1.7. This approach of averaging successive approximations to a solution, a technique we that we call average damping, often aids the convergence of fixed-point searches.
 
 <div class="exercise">
-<p> <b> Exercise 1.35. </b> Show that the golden ratio  (section 1.2.2) is a fixed point of the transformation x   1 + 1/x, and use this fact to compute  by means of the fixed-point procedure.
+<p> <b> Exercise 1.35. </b> Show that the golden ratio  (section 1.2.2) is a fixed point of the transformation $x \mapsto 1 + \frac{1}{x}$, and use this fact to compute $\phi$ by means of the fixed-point procedure.
+
+<div id="scheme-define-phi-fixed-point">
+(define phi
+  (fixed-point 'your-answer-here))
+</div>
+<script>
+prompt("scheme-define-phi-fixed-point", ["scheme-define-fixed-point"]); //todo: mark this?
+</script>
+
 </div>
 
 <p>
 
 <div class="exercise">
-<p> <b> Exercise 1.36. </b> Modify fixed-point so that it prints the sequence of approximations it generates, using the newline and display primitives shown in exercise 1.22. Then find a solution to xx = 1000 by finding a fixed point of x  log(1000)/log(x). (Use Scheme's primitive log procedure, which computes natural logarithms.) Compare the number of steps this takes with and without average damping. (Note that you cannot start fixed-point with a guess of 1, as this would cause division by log(1) = 0.)
+<p> <b> Exercise 1.36. </b> Modify fixed-point so that it prints the sequence of approximations it generates, using the <tt>newline</tt> and <tt>display</tt> primitives shown in exercise 1.22. Then find a solution to $x^x = 1000$ by finding a fixed point of $x \mapsto \frac{\log(1000)}{\log(x)}$. (Use Scheme's primitive <tt>log</tt> procedure, which computes natural logarithms.) Compare the number of steps this takes with and without average damping. (Note that you cannot start fixed-point with a guess of 1, as this would cause division by $\log(1) = 0.$)
+
+<div id="scheme-ex-define-printing-fixed-point">
+(define tolerance 0.00001)
+
+(define (fixed-point f first-guess)
+  (define (close-enough? v1 v2)
+    (&lt; (abs (- v1 v2)) tolerance))
+  (define (try guess)
+    (let ((next (f guess)))
+      (if (close-enough? guess next)
+          next
+          (try next))))
+  (try first-guess))
+</div>
+<script>
+prompt("scheme-ex-define-printing-fixed-point", ["scheme-define-close-enough"]);
+/*
+(define tolerance 0.00001)
+
+(define (fixed-point f first-guess)
+  (define (close-enough? v1 v2)
+    (< (abs (- v1 v2)) tolerance))
+  (define (try guess)
+    (display guess)
+    (newline)
+    (let ((next (f guess)))
+      (if (close-enough? guess next)
+          next
+          (try next))))
+  (try first-guess))
+
+(fixed-point (lambda (x) 
+               (/ (+ x (/ (log 1000) (log x))) 
+                  2))
+               1.1)
+*/
+</script>
+
 </div> 
 
 <p>
 
 <div class="exercise">
-<p> Exercise 1.37. 
+<p> <b> Exercise 1.37. </b> An infinite continued fraction is an expression of the form
+ 
+$$
+f = \cfrac{N_1}{D_1 + \cfrac{N_2}{D_2 + \cfrac{N_3}{D_3 + \cdots}}} 
+$$
 
-<ol>
+<p> As an example, one can show that the infinite continued fraction expansion with the $N_i$ and the $D_i$ all equal to $1$ produces $\frac{1}{\phi}$, where $\phi$ is the golden ratio (described in section 1.2.2). One way to approximate an infinite continued fraction is to truncate the expansion after a given number of terms. Such a truncation &mdash; a so-called <em> k-term finite continued fraction </em> &mdash; has the form
 
-<li>
-An infinite continued fraction is an expression of the form
+$$
+f = \cfrac{N_1}{D_1 + \cfrac{N_2}{\ddots + \cfrac{N_k}{D_k}}} 
+$$
 
-<p> As an example, one can show that the infinite continued fraction expansion with the Ni and the Di all equal to 1 produces 1/, where  is the golden ratio (described in section 1.2.2). One way to approximate an infinite continued fraction is to truncate the expansion after a given number of terms. Such a truncation &mdash; a so-called k-term finite continued fraction &mdash; has the form
+<p> Suppose that <tt>n</tt> and <tt>d</tt> are procedures of one argument (the term index $i$ that return the $N_i$ and $D_i$ of the terms of the continued fraction. Define a procedure <tt>cont-frac</tt> such that evaluating <tt>(cont-frac n d k)</tt> computes the value of the $k$-term finite continued fraction. 
 
-<p> Suppose that @code{n} and <tt>d</tt> are procedures of one argument (the term index <em> i </em> that return the <em> N_i </em> and <em> Di </em> of the terms of the continued fraction. Define a procedure @code{cont-frac} such that evaluating <tt>(cont-frac n d k)</tt> computes the value of the <em>k</em>-term finite continued fraction. Check your procedure by approximating 1/phi using
+<div id="scheme-ex-define-cont-frac">
+(define (cont-frac n d k)
+  'your-code-here)
+</div>
+<script>
+prompt("scheme-ex-define-cont-frac");
+/*
+(define (cont-frac n d k)
+  (define (frac i)
+     (if (< i k)
+         (/ (n i) (+ (d i) (frac (+ i 1))))
+         (/ (n i) (d i))))
+  (frac 1))
+*/
+</script>
+
+
+<p> Check your procedure by approximating $\frac{1}{\phi}$ using
 
 <div id="scheme-test-cont-frac">
+(define k 10)
 (cont-frac (lambda (i) 1.0)
            (lambda (i) 1.0)
            k)
 </div>
 <script>
-prompt("scheme-test-cont-frac");
+prompt("scheme-test-cont-frac", ["scheme-ex-define-cont-frac"]);
 </script>
 
 <p> for successive values of <tt>k</tt>. How large must you make <tt>k</tt> in order to get an approximation that is accurate to 4 decimal places?
-</li>
 
-<li>
-<p> If your @code{cont-frac} procedure generates a recursive process, write one
-that generates an iterative process. If it generates an iterative process,
-write one that generates a recursive process.
-</li>
-</ol>
+<p> Try to write both an iterative and a recursive version of <tt>cont-frac</tt>.
+
 </div>
 
 <p>
 
 <div class="exercise">
-<p> Exercise 1.38. In 1737, the Swiss mathematician Leonhard Euler published a memoir De Fractionibus Continuis, which included a continued fraction expansion for e - 2, where e is the base of the natural logarithms. In this fraction, the Ni are all 1, and the Di are successively 1, 2, 1, 1, 4, 1, 1, 6, 1, 1, 8, .... Write a program that uses your cont-frac procedure from exercise 1.37 to approximate e, based on Euler's expansion.
+<p> <b> Exercise 1.38. </b> In 1737, the Swiss mathematician Leonhard Euler published a memoir De Fractionibus Continuis, which included a continued fraction expansion for $e - 2$, where $e$ is the base of the natural logarithms. In this fraction, the $N_i$ are all $1$, and the $D_i$ are successively $1, 2, 1, 1, 4, 1, 1, 6, 1, 1, 8, \ldots$ Write a program that uses your <tt>cont-frac</tt> procedure from exercise 1.37 to approximate $e$, based on Euler's expansion.
+
+<div id="scheme-ex-euler">
+(cont-frac n d 10)
+</div>
+<script>
+prompt("scheme-ex-euler", ["scheme-ex-define-cont-frac"]);
+/*
+(cont-frac (lambda (i) 1)
+           (lambda (i)
+             (if (= (mod i 3) 2)
+                 (* 2 (/ (+ 1 i) 3))
+                 1))
+*/
+</script>
 </div>
 
 <p>
 
 <div class="exercise">
-<p> Exercise 1.39. A continued fraction representation of the tangent function was published in 1770 by the German mathematician J.H. Lambert:
+<p> <b> Exercise 1.39. </b> A continued fraction representation of the tangent function was published in 1770 by the German mathematician J.H. Lambert:
 
-<p> <img src='http://mitpress.mit.edu/sicp/full-text/book/ch1-Z-G-36.gif'>
+$$
+\tan x = \cfrac{x}{1 - \cfrac{x^2}{3 - \cfrac{x^2}{5 - \ddots}}}
+$$
 
 <p> where <em> x </em> is in radians. Define a procedure <tt>(tan-cf x k)</tt> that computes an approximation to the tangent function based on Lambert's formula. <tt>k</tt> specifies the number of terms to compute, as in Exercise 1-37.
+
+<div id="scheme-ex-define-tan-cf">
+(define (tan-cf x k)
+  'your-code-here)
+</div>
+<script>
+prompt("scheme-ex-define-tan-cf", ["scheme-ex-define-cont-frac"]);
+/*
+(define (square x) (* x x))
+
+(define (tan-cf x k)
+   (define (n k)
+       (if (= k 1)
+           x
+           (- (square x))))
+   (define (d k)
+       (- (* 2 k) 1))
+   (cont-frac n d k))
+*/
+</script>
 </div>
 
 <h3> Procedures as Returned Values </h3>
-
-<!--TODO CONT!-->
 
 <p> The above examples demonstrate how the ability to pass procedures as arguments significantly enhances the expressive power of our programming language. We can achieve even more expressive power by creating procedures whose returned values are themselves procedures.
 
 <p> We can illustrate this idea by looking again at the fixed-point example described at the end of section 1.3.3. We formulated a new version of the square-root procedure as a fixed-point search, starting with the observation that x is a fixed-point of the function y -&gt; x/y. Then we used average damping to make the approximations converge. Average damping is a useful general technique in itself. Namely, given a function f, we consider the function whose value at x is equal to the average of x and f(x).
 
 <p> Average damping is a useful general technique in itself. Namely, given a
-function <em> f </em>, we consider the function whose value at <em> x </em> is equal to the
-average of <em> x </em> and <em> f(x </em>).
+function $f$, we consider the function whose value at $x$ is equal to the
+average of $x$ and $f(x)$.
 
 <p> We can express the idea of average damping by means of the following procedure:
 
@@ -862,18 +1169,16 @@ average of <em> x </em> and <em> f(x </em>).
   (lambda (x) (average x (f x))))
 </div>
 <script>
-prompt("scheme-define-average-damp");
-addDep("scheme-define-average-damp", ["scheme-define-average"]);
+prompt("scheme-define-average-damp", ["scheme-define-average"]);
 </script>
 
-<p> <tt>average-damp</tt> is a procedure that takes as its argument a procedure f and returns as its value a procedure (produced by the lambda) that, when applied to a number x, produces the average of x and (f x). For example, applying average-damp to the square procedure produces a procedure whose value at some number x is the average of x and x2. Applying this resulting procedure to 10 returns the average of 10 and 100, or 55:<a name="footnote_link_1-59" class="footnote_link" href="#footnote_1-59">59</a>
+<p> <tt>average-damp</tt> is a procedure that takes as its argument a procedure f and returns as its value a procedure (produced by the lambda) that, when applied to a number <tt>x</tt>, produces the average of <tt>x</tt> and <tt>(f x)</tt>. For example, applying average-damp to the square procedure produces a procedure whose value at some number $x$ is the average of $x$ and $x^2$. Applying this resulting procedure to $10$ returns the average of $10$ and $100$, or $55$:<a name="footnote_link_1-59" class="footnote_link" href="#footnote_1-59">59</a>
 
 <div id="scheme-average-damp-square-10">
 ((average-damp square) 10)
 </div>
 <script>
-prompt("scheme-average-damp-square-10");
-addDep("scheme-average-damp-square-10", ["scheme-define-average-damp", "scheme-define-square"]);
+prompt("scheme-average-damp-square-10", ["scheme-define-average-damp", "scheme-define-square"]);
 </script>
 
 <p> Using <tt>average-damp</tt>, we can reformulate the square-root procedure as follows:
@@ -888,7 +1193,7 @@ prompt("scheme-define-sqrt-average-damp");
 addDep("scheme-define-sqrt-average-damp", ["scheme-define-fixed-point", "scheme-define-average-damp"]);
 </script>
 
-<p> Notice how this formulation makes explicit the three ideas in the method: fixed-point search, average damping, and the function y  x/y. It is instructive to compare this formulation of the square-root method with the original version given in section 1.1.7. Bear in mind that these procedures express the same process, and notice how much clearer the idea becomes when we express the process in terms of these abstractions. In general, there are many ways to formulate a process as a procedure. Experienced programmers know how to choose procedural formulations that are particularly perspicuous, and where useful elements of the process are exposed as separate entities that can be reused in other applications. As a simple example of reuse, notice that the cube root of x is a fixed point of the function y x/y2, so we can immediately generalize our square-root procedure to one that extracts cube roots:<a name="footnote_link_1-60" class="footnote_link" href="#footnote_1-60">60</a>
+<p> Notice how this formulation makes explicit the three ideas in the method: fixed-point search, average damping, and the function $y \mapsto \frac{x}{y}$. It is instructive to compare this formulation of the square-root method with the original version given in section 1.1.7. Bear in mind that these procedures express the same process, and notice how much clearer the idea becomes when we express the process in terms of these abstractions. In general, there are many ways to formulate a process as a procedure. Experienced programmers know how to choose procedural formulations that are particularly perspicuous, and where useful elements of the process are exposed as separate entities that can be reused in other applications. As a simple example of reuse, notice that the cube root of $x$ is a fixed point of the function $y \mapsto $\frac{}{y^2}$, so we can immediately generalize our square-root procedure to one that extracts cube roots:<a name="footnote_link_1-60" class="footnote_link" href="#footnote_1-60">60</a>
 
 <div id="scheme-define-cube-root-average-damp">
 (define (cube-root x)
@@ -904,15 +1209,19 @@ addDep("scheme-define-cube-root-average-damp", ["scheme-define-fixed-point", "sc
 
 <p> When we first introduced the square-root procedure, in section 1.1.7, we mentioned that this was a special case of Newton's method. If x  g(x) is a differentiable function, then a solution of the equation g(x) = 0 is a fixed point of the function x  f(x) where
 
-<p> <img src='http://mitpress.mit.edu/sicp/full-text/book/ch1-Z-G-37.gif'>
+$$
+f(x) = x - \frac{g(x)}{Dg(x)}
+$$
 
-<p> and Dg(x) is the derivative of g evaluated at x. Newton's method is the use of the fixed-point method we saw above to approximate a solution of the equation by finding a fixed point of the function f.<a name="footnote_link_1-61" class="footnote_link" href="#footnote_1-61">61</a> For many functions g and for sufficiently good initial guesses for x, Newton's method converges very rapidly to a solution of g(x) = 0.<a name="footnote_link_1-62" class="footnote_link" href="#footnote_1-62">62</a>
+<p> and $Dg(x)$ is the derivative of $g$ evaluated at $x$. Newton's method is the use of the fixed-point method we saw above to approximate a solution of the equation by finding a fixed point of the function $f$.<a name="footnote_link_1-61" class="footnote_link" href="#footnote_1-61">61</a> For many functions $g$ and for sufficiently good initial guesses for $x$, Newton's method converges very rapidly to a solution of g(x) = 0.<a name="footnote_link_1-62" class="footnote_link" href="#footnote_1-62">62</a>
 
-<p> In order to implement Newton's method as a procedure, we must first express the idea of derivative. Note that &ldquo;derivative,&rdquo; like average damping, is something that transforms a function into another function. For instance, the derivative of the function x  x3 is the function x   3x2. In general, if g is a function and dx is a small number, then the derivative Dg of g is the function whose value at any number x is given (in the limit of small dx) by
+<p> In order to implement Newton's method as a procedure, we must first express the idea of derivative. Note that &ldquo;derivative&rdquo;, like average damping, is something that transforms a function into another function. For instance, the derivative of the function $x \mapsto x^3$ is the function $x \mapsto 3x^2$. In general, if $g$ is a function and $dx$ is a small number, then the derivative $Dg$ of $g$ is the function whose value at any number $x$ is given (in the limit of small $dx$) by
 
-<p> <img src='http://mitpress.mit.edu/sicp/full-text/book/ch1-Z-G-38.gif'>
+$$
+Dg(x) = \frac{g(x+dx) - g(x)}{dx}
+$$
 
-<p> Thus, we can express the idea of derivative (taking <em> dx </em> to be, say, 0.00001) as the procedure
+<p> Thus, we can express the idea of derivative (taking $dx$ to be, say, $0.00001$) as the procedure
 
 <div id="scheme-define-deriv">
 (define (deriv g)
@@ -933,7 +1242,7 @@ prompt("scheme-define-deriv");
 prompt("scheme-define-dx");
 </script>
 
-<p> Like average-damp, deriv is a procedure that takes a procedure as argument and returns a procedure as value. For example, to approximate the derivative of f(x) = x<sup>3</sup> at 5 (whose exact value is 75) we can evaluate
+<p> Like average-damp, deriv is a procedure that takes a procedure as argument and returns a procedure as value. For example, to approximate the derivative of $f(x) = x^3$ at $5$ (whose exact value is $75$) we can evaluate
 
 <div id="scheme-deriv-cube">
 (define (cube x) (* x x x))
@@ -941,8 +1250,7 @@ prompt("scheme-define-dx");
 ((deriv cube) 5)
 </div>
 <script>
-prompt("scheme-deriv-cube");
-depsOf["scheme-deriv-cube"] = ["scheme-define-deriv", "scheme-define-dx"];
+prompt("scheme-deriv-cube", ["scheme-define-deriv", "scheme-define-dx"]);
 </script>
 
 <p> With the aid of <tt>deriv</tt>, we can express Newton's method as a fixed-point process:
@@ -956,13 +1264,10 @@ depsOf["scheme-deriv-cube"] = ["scheme-define-deriv", "scheme-define-dx"];
   (fixed-point (newton-transform g) guess))
 </div>
 <script>
-prompt("scheme-define-newton-transform");
-depsOf["scheme-define-newton-transform"] = ["scheme-define-deriv", "scheme-define-dx", "scheme-define-fixed-point"];
+prompt("scheme-define-newton-transform", ["scheme-define-deriv", "scheme-define-dx", "scheme-define-fixed-point"]);
 </script>
 
 <p> The newton-transform procedure expresses the formula at the beginning of this section, and newtons-method is readily defined in terms of this. It takes as arguments a procedure that computes the function for which we want to find a zero, together with an initial guess. For instance, to find the square root of x, we can use Newton's method to find a zero of the function y  y2 - x starting with an initial guess of 1.<a name="footnote_link_1-63" class="footnote_link" href="#footnote_1-63">63</a> This provides yet another form of the square-root procedure:
-
-<p> This provides yet another form of the square-root procedure:
 
 <div id="scheme-define-sqrt-newton">
 (define (sqrt x)
@@ -970,18 +1275,12 @@ depsOf["scheme-define-newton-transform"] = ["scheme-define-deriv", "scheme-defin
                   1.0))
 </div>
 <script>
-prompt("scheme-define-sqrt-newton");
-depsOf["scheme-define-sqrt-newton"] = ["scheme-define-newton-transform", "scheme-define-square"];
+prompt("scheme-define-sqrt-newton", ["scheme-define-newton-transform", "scheme-define-square"]);
 </script>
 
 <h4> Abstractions and first-class procedures </h4>
 
-<p> We've seen two ways to express the square-root computation as an instance of a
-more general method, once as a fixed-point search and once using Newton's
-method. Since Newton's method was itself expressed as a fixed-point process,
-we actually saw two ways to compute square roots as fixed points. Each method
-begins with a function and finds a fixed point of some transformation of the
-function. We can express this general idea itself as a procedure:
+<p> We've seen two ways to express the square-root computation as an instance of a more general method, once as a fixed-point search and once using Newton's method. Since Newton's method was itself expressed as a fixed-point process, we actually saw two ways to compute square roots as fixed points. Each method begins with a function and finds a fixed point of some transformation of the function. We can express this general idea itself as a procedure:
 
 <div id="scheme-define-fixed-point-of-transform">
 (define (fixed-point-of-transform g transform guess)
@@ -992,9 +1291,9 @@ prompt("scheme-define-fixed-point-of-transform");
 addDep("scheme-define-fixed-point-of-transform", ["scheme-define-fixed-point"]);
 </script>
 
-<p> This very general procedure takes as its arguments a procedure <tt>g</tt> that computes some function, a procedure that transforms <tt>g</tt>, and an initial guess. The returned result is a fixed point of the transformed function.
+<p> This very general procedure takes as its arguments a procedure $g$ that computes some function, a procedure that transforms $g$, and an initial guess. The returned result is a fixed point of the transformed function.
 
-<p> Using this abstraction, we can recast the first square-root computation from this section (where we look for a fixed point of the average-damped version of y -&gt; x/y) as an instance of this general method:
+<p> Using this abstraction, we can recast the first square-root computation from this section (where we look for a fixed point of the average-damped version of $y \mapsto \frac{x}{y}$) as an instance of this general method:
 
 
 <div id="scheme-define-sqrt-fixed-point-of-transform">
@@ -1004,11 +1303,10 @@ addDep("scheme-define-fixed-point-of-transform", ["scheme-define-fixed-point"]);
                             1.0))
 </div>
 <script>
-prompt("scheme-define-sqrt-fixed-point-of-transform");
-addDep("scheme-define-sqrt-fixed-point-of-transform", ["scheme-define-fixed-point-of-transform", "scheme-define-average-damp"]);
+prompt("scheme-define-sqrt-fixed-point-of-transform", ["scheme-define-fixed-point-of-transform", "scheme-define-average-damp"]);
 </script>
 
-<p> Similarly, we can express the second square-root computation from this section (an instance of Newton's method that finds a fixed point of the Newton transform of y -&gt; y<sup>2</sup> - x) as
+<p> Similarly, we can express the second square-root computation from this section (an instance of Newton's method that finds a fixed point of the Newton transform of $y \mapsto y^2 - x$) as
 
 <div id="scheme-define-sqrt-fixed-point-of-newton-transform">
 (define (sqrt x)
@@ -1017,8 +1315,7 @@ addDep("scheme-define-sqrt-fixed-point-of-transform", ["scheme-define-fixed-poin
                             1.0))
 </div>
 <script>
-prompt("scheme-define-sqrt-fixed-point-of-newton-transform");
-addDep("scheme-define-sqrt-fixed-point-of-newton-transform", ["scheme-define-fixed-point-of-transform", "scheme-define-square", "scheme-define-newton-transform"]);
+prompt("scheme-define-sqrt-fixed-point-of-newton-transform", ["scheme-define-fixed-point-of-transform", "scheme-define-square", "scheme-define-newton-transform"]);
 </script>
 
 <p> We began section 1.3 with the observation that compound procedures are a crucial abstraction mechanism, because they permit us to express general methods of computing as explicit elements in our programming language. Now we've seen how higher-order procedures permit us to manipulate these general methods to create further abstractions.
@@ -1029,10 +1326,10 @@ addDep("scheme-define-sqrt-fixed-point-of-newton-transform", ["scheme-define-fix
 
 <ul>
 
-<li> They may be named by variables. </li>
-<li> They may be passed as arguments to procedures. </li>
-<li> They may be returned as the results of procedures. </li>
-<li> They may be included in data structures.<a name="footnote_link_1-65" class="footnote_link" href="#footnote_1-65">65</a> </li>
+<li> <p> They may be named by variables. </li>
+<li> <p> They may be passed as arguments to procedures. </li>
+<li> <p> They may be returned as the results of procedures. </li>
+<li> <p> They may be included in data structures.<a name="footnote_link_1-65" class="footnote_link" href="#footnote_1-65">65</a> </li>
 
 </ul>
 
@@ -1045,26 +1342,39 @@ that can be used together with the <tt>newtons-method</tt> procedure in
 expressions of the form
 
 <div id="scheme-newtons-method-cubic">
+(define (cubic a b c)
+  'your-answer-here)
+
 (newtons-method (cubic a b c) 1)
 </div>
 <script>
-prompt("scheme-newtons-method-cubic");
+prompt("scheme-newtons-method-cubic", ["scheme-define-newton-transform"]);
 </script>
 
-<p> to approximate zeros of the cubic x3 + ax2 + bx + c.
+<p> to approximate zeros of the cubic $x^3 + ax^2 + bx + c$.
 
 </div>
 
 <p>
 
 <div class="exercise">
-<p> <b> Exercise 1.41. </b> Define a procedure <tt>double</tt> that takes a procedure of one argument as argument and returns a procedure that applies the original procedure twice. For example, if <tt>inc</tt> is a procedure that adds 1 to its argument, then @code{(double inc)} should be a procedure that adds 2. What value is returned by
+<p> <b> Exercise 1.41. </b> Define a procedure <tt>double</tt> that takes a procedure of one argument as argument and returns a procedure that applies the original procedure twice. For example, if <tt>inc</tt> is a procedure that adds 1 to its argument, then <tt>(double inc)</tt> should be a procedure that adds 2. What value is returned by
 
 <div id="scheme-double-itered-inc">
 (((double (double double)) inc) 5)
 </div>
 <script>
-prompt("scheme-double-itered-inc");
+answer("scheme-double-itered-inc", 21);
+</script>
+
+<p>
+
+<div id="scheme-ex-define-double">
+(define (double f)
+  'your-answer-here)
+</div>
+<script>
+prompt("scheme-ex-define-double");
 </script>
 </div>
 
@@ -1124,7 +1434,7 @@ Hint: You may find it convenient to use <tt>compose</tt> from Exercise
 
 <div id="footnote_1-49" class="footnote">
 <p><a href="#footnote_link_1-49" class="footnote_backlink">49</a>
- This series, usually written in the equivalent form (<img src="book-Z-G-D-9.gif" border="0">/4)  =  1 - (1/3) + (1/5) - (1/7) + <tt>&middot;&middot;&middot;</tt>, is due to Leibniz. We'll see how to use this as the basis for some fancy numerical tricks in section&nbsp;<a href="book-Z-H-24.html#%_sec_3.5.3">3.5.3</a>.
+ This series, usually written in the equivalent form $\frac{\pi}{4}  =  1 - \frac{1}{3} + \frac{1}{5} - \frac{1}{7} + \cdots$, is due to Leibniz. We'll see how to use this as the basis for some fancy numerical tricks in section&nbsp;<a href="book-Z-H-24.html#%_sec_3.5.3">3.5.3</a>.
 </p></div>
 
 <div id="footnote_1-50" class="footnote">
@@ -1144,7 +1454,7 @@ Hint: You may find it convenient to use <tt>compose</tt> from Exercise
 
 <div id="footnote_1-53" class="footnote">
 <p><a href="#footnote_link_1-53" class="footnote_backlink">53</a>
- It would be clearer and less intimidating to people learning Lisp if a name more obvious than <tt>lambda</tt>, such as <tt>make-procedure</tt>, were used. But the convention is firmly entrenched. The notation is adopted from the <img src="book-Z-G-D-6.gif" border="0"> calculus, a mathematical formalism introduced by the mathematical logician Alonzo Church (1941). Church developed the <img src="book-Z-G-D-6.gif" border="0"> calculus to provide a rigorous foundation for studying the notions of function and function application. The <img src="book-Z-G-D-6.gif" border="0"> calculus has become a basic tool for mathematical investigations of the semantics of programming languages.
+ It would be clearer and less intimidating to people learning Lisp if a name more obvious than <tt>lambda</tt>, such as <tt>make-procedure</tt>, were used. But the convention is firmly entrenched. The notation is adopted from the $\lambda$ calculus, a mathematical formalism introduced by the mathematical logician Alonzo Church (1941). Church developed the $\lambda$ calculus to provide a rigorous foundation for studying the notions of function and function application. The $\lambda$ calculus has become a basic tool for mathematical investigations of the semantics of programming languages.
 </p></div>
 
 <div id="footnote_1-54" class="footnote">
@@ -1169,7 +1479,7 @@ Hint: You may find it convenient to use <tt>compose</tt> from Exercise
 
 <div id="footnote_1-58" class="footnote">
 <p><a href="#footnote_link_1-58" class="footnote_backlink">58</a>
-  <img src="book-Z-G-D-17.gif" border="0">(pronounced &ldquo;maps to&rdquo;) is the mathematician's way of writing <tt>lambda</tt>. <em>y</em>  <img src="book-Z-G-D-17.gif" border="0"><em>x</em>/<em>y</em> means <tt>(lambda(y) (/ x y))</tt>, that is, the function whose value at <em>y</em> is <em>x</em>/<em>y</em>.
+  $\mapsto$ (pronounced &ldquo;maps to&rdquo;) is the mathematician's way of writing <tt>lambda</tt>. $y \mapsto x/y$ means <tt>(lambda(y) (/ x y))</tt>, that is, the function whose value at $y$ is $x/y$.
 </p></div>
 
 <div id="footnote_1-59" class="footnote">

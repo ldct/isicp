@@ -21,3 +21,13 @@ function shuffle(myArray) {
      myArray[j] = tempi;
    }
 }
+
+String.prototype.format = function () {
+    var o = Array.prototype.slice.call(arguments);
+    return this.replace(/{([^{}]*)}/g,
+        function (match, capture) {
+            var r = o[capture];
+            return (typeof r === 'string' || typeof r === 'number') ? r : match;
+        }
+    );
+};
