@@ -957,55 +957,52 @@ As an example of how these are used, the condition that a number x be in the ran
 
 <p> <b> Exercise 1.3. </b> Define a procedure that takes three numbers as arguments and returns the sum of the squares of the two larger numbers. 
 
-<div id="scheme-ex-13-input" class='input'></div>
+<div id="scheme-ex-define-square-sum-larger" class='input'>
+(define (square-sum-larger a b c)
+  'your-code-here)
+</div>
 
 <script> 
-
-makeChangeOnFocusInput("scheme-ex-13-input", 
-                       "(define (square-sum-larger a b c)\n  'your-code-here)", 
-                       "(define (square-sum-larger a b c)\n  ");
-addOutput("scheme-ex-13-input");
-linkEditor("scheme-ex-13-input", "scheme-ex-13-input-output", function(x, y) {
-
+makeEditable("scheme-ex-define-square-sum-larger");
+addOutput("scheme-ex-define-square-sum-larger");
+editorOf["scheme-ex-define-square-sum-larger"].setOption("onBlur", function(){
+  
   function ssl(a, b, c) {
-    if (c > b) {
-      return ssl(a, c, b);
-    }
-    if (c > a) {
-      return ssl(c, b, a);
-    }
+    if (c > b) return ssl(a, c, b);
+    if (c > a) return ssl(c, b, a);
     return (a*a) + (b*b);
   }
-  
-  gs = ssls;
-  
+
+
   function ssls(a, b, c) {
-    return "(= (ssl " + a + " " + b + " " + c + ") " + ssl(a, b, c) + ")";
+    return "(= (square-sum-larger {0} {1} {2}) {3})".format(a,b,c,ssl(a,b,c));
   }
 
-  var code = y + "\n" + "(define ssl square-sum-larger)" +
-            "(and " +
-                      ssls(1, 2, 3)  +
-                      ssls(12, 2, 7) +
-                      ssls(4, 13, 6) +
-                      ssls(2, 13, 5) + ")";
 
-  if (eval_scheme(code) == true) {
-    return "<div class='right-answer'> \u2713 </div>";
-  } else {
-    return "<div class='wrong-answer'> \u2717 </div>";
-  }
+  var code = "{0} \n (and {1} {2} {3} {4})".format(editorOf["scheme-ex-define-square-sum-larger"].getValue(),
+                                                   ssls(1, 2, 3),
+                                                   ssls(12, 2, 7),
+                                                   ssls(4, 13, 6),
+                                                   ssls(2, 13, 5));;
+
+  eval_scheme(code).then(function(res){
+    if (res == "true\n") {
+      $_("scheme-ex-define-square-sum-larger-output").empty().append($("<div class='right-answer'> \u2713 </div>"));
+    } else {
+      $_("scheme-ex-define-square-sum-larger-output").empty().append($("<div class='wrong-answer'> \u2717 </div>")).append(res);
+    }
+  });
 });
-</script>
 
-<!--
+/*
 (define (square-sum-larger a b c)
   (cond ((> c b) (square-sum-larger a c b))
         ((> c a) (square-sum-larger c b a))
         (else (+ (* a a)
                  (* b b)))))
-!-->
+*/
 
+</script>
 </div>
 
 <p>

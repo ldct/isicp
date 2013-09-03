@@ -25,10 +25,10 @@ onmessage = function(event) {
                 this.postMessage(result.toString() + "\n");
             }
         } catch(e) {
-            this.postMessage(e.toString() + "\n");
+            this.postMessage(e.toString() + "\n"); //report errors
         }
     }
-    this.postMessage({"end": true});
+    this.postMessage({"type": "end"});
 };
 
 
@@ -200,7 +200,7 @@ function scheme_apply(procedure, args, env) {
                                                        procedure.dotted);
         return scheme_eval(procedure.body, call_frame);
     } else {
-        throw "SchemeError: Cannot call" + procedure.toString();
+        throw "SchemeError: Cannot call " + procedure.toString();
     }
 }
 
@@ -849,7 +849,7 @@ function scheme_substring(s, start, end) {
 _PRIMITIVES["substring"] = new PrimitiveProcedure(scheme_substring);
 
 function scheme_display(val) {
-    this.postMessage({'suppress_newline': true, 'value': val.toString()});
+    this.postMessage({'type': "displayed_text", 'value': val.toString()});
 }
 _PRIMITIVES["display"] = new PrimitiveProcedure(scheme_display);
 

@@ -345,18 +345,16 @@ $$
 
 <p> where $h = \frac{b - a}{n}$, for some even integer $n$, and $y_k = f(a + kh)$. (Increasing n increases the accuracy of the approximation.) Define a procedure that takes as arguments f, a, b, and n and returns the value of the integral, computed using Simpson's Rule. Use your procedure to integrate cube between 0 and 1 (with n = 100 and n = 1000), and compare the results to those of the integral procedure shown above.
 
-
-<div id="scheme-ex-simpson-input">
+<div id="scheme-define-feq">
 (define (feq a b)
   (&lt; (abs (- a b))
         0.000001))
+</div>
+<script>
+hidden_prompt("scheme-define-feq")
+</script>      
 
-(define (sum term a next b)
-  (if (> a b)
-      0
-      (+ (term a)
-         (sum term (next a) next b))))
-
+<div id="scheme-ex-simpson-input">
 (define (simpson f a b n)
   'your-code-here)
 </div>
@@ -408,18 +406,18 @@ makeEditable("scheme-ex-simpson-input").setOption("onBlur", function() {
 
   polyl = "(lambda (x) (* 2 x))"
 
-  var code = editorOf["scheme-ex-simpson-input"].getValue() + "\n" +
+  var code = editorOf["scheme-ex-simpson-input"].getValue() + "\n" + editorOf["scheme-define-feq"].getValue() + "\n" + editorOf["scheme-define-sum"].getValue() +
              "(and " + ss(poly,polyl,2,3,10) + 
                        ss(poly,polyl,4,5,8) + 
                        ss(poly,polyl,2,10,12) + ") "
 
   eval_scheme(code).then(function(res){
-    if (res == "true\n") {
+    if (res[res.length - 1] === "true\n") {
       $_("scheme-ex-simpson-input-output").empty().append($("<div class='right-answer'> \u2713 </div>"));
     } else {
       $_("scheme-ex-simpson-input-output").empty().append($("<div class='wrong-answer'> \u2717 </div>"));
-      $_("scheme-ex-simpson-input-output").append(res);
     }
+    $_("scheme-ex-simpson-input-output").append(res.slice(0,-1));
   });
 });
 </script>
@@ -1453,7 +1451,31 @@ prompt("scheme-newtons-method-cubic", ["scheme-define-newton-transform"]);
 <p>
 
 <div class="exercise">
-<p> <b> Exercise 1.41. </b> Define a procedure <tt>double</tt> that takes a procedure of one argument as argument and returns a procedure that applies the original procedure twice. For example, if <tt>inc</tt> is a procedure that adds 1 to its argument, then <tt>(double inc)</tt> should be a procedure that adds 2. What value is returned by
+<p> <b> Exercise 1.41. </b> Define a procedure <tt>double</tt> that takes a procedure of one argument as argument and returns a procedure that applies the original procedure twice. For example, if <tt>inc</tt> is a procedure that adds 1 to its argument, then <tt>(double inc)</tt> should be a procedure that adds 2.
+
+<div id="scheme-ex-define-double">
+(define (double f)
+  'your-answer-here)
+</div>
+<script>
+makeEditable("scheme-ex-define-double");
+addOutput("scheme-ex-define-double");
+editorOf["scheme-ex-define-double"].setOption("onBlur", function(){
+  
+  var code = "{0} \n (= ((double (lambda (i) (+ 1 i))) 1) 3)".format(editorOf["scheme-ex-define-double"].getValue());
+
+  eval_scheme(code).then(function(res){
+    if (res[res.length - 1] === "true\n") {
+      $_("scheme-ex-define-double-output").empty().append($("<div class='right-answer'> \u2713 </div>"));
+    } else {
+      $_("scheme-ex-define-double-output").empty().append($("<div class='wrong-answer'> \u2717 </div>"));
+    }
+    $_("scheme-ex-define-double-output").append(res.slice(0,-1));
+  });
+});
+</script>
+
+<p> What value is returned by the following? (Please do not use the interpreter for this.)
 
 <div id="scheme-double-itered-inc">
 (((double (double double)) inc) 5)
@@ -1461,56 +1483,174 @@ prompt("scheme-newtons-method-cubic", ["scheme-define-newton-transform"]);
 <script>
 answer("scheme-double-itered-inc", 21);
 </script>
+
+<p>
 </div>
 
 <p>
 
 <div class="exercise">
-<p> <b> Exercise 1.42. </b> Let f and g be two one-argument functions. The composition f after g is defined to be the function x f(g(x)). Define a procedure compose that implements composition. For example, if inc is a procedure that adds 1 to its argument,
+<p> <b> Exercise 1.42. </b> Let f and g be two one-argument functions. The composition f after g is defined to be the function x f(g(x)). Define a procedure compose that implements composition. 
 
-<p>
+<div id="scheme-ex-define-compose">
+(define (compose f g)
+  'your-answer-here)
+</div>
+<script>
+makeEditable("scheme-ex-define-compose");
+addOutput("scheme-ex-define-compose");
+editorOf["scheme-ex-define-compose"].setOption("onBlur", function(){
+
+  var code = "{0} \n (define (square x) (* x x)) \n (= ((compose square square) 2) 16)".format(editorOf["scheme-ex-define-compose"].getValue());
+
+  eval_scheme(code).then(function(res){
+    if (res[res.length - 1] === "true\n") {
+      $_("scheme-ex-define-compose-output").empty().append($("<div class='right-answer'> \u2713 </div>"));
+    } else {
+      $_("scheme-ex-define-compose-output").empty().append($("<div class='wrong-answer'> \u2717 </div>"));
+    }
+    $_("scheme-ex-define-compose-output").append(res.slice(0,-1));
+    compute("scheme-compose-square-inc")
+  });
+});
+
+/*
+(define (compose f g)
+  (lambda (x) (f (g x))))
+*/
+</script>
+
+<p> For example, if inc is a procedure that adds 1 to its argument,
 
 <div id="scheme-compose-square-inc">
 ((compose square inc) 6)
 </div>
 <script>
-prompt("scheme-compose-square-inc");
+prompt("scheme-compose-square-inc", ["scheme-define-square", "scheme-define-inc", "scheme-ex-define-compose"]);
 </script>
+
+<p> should return 49.
 </div>
 
 <p>
 
 <div class="exercise">
-<p> <b> Exercise 1.43. </b> If f is a numerical function and n is a positive integer, then we can form the nth repeated application of f, which is defined to be the function whose value at x is f(f(...(f(x))...)). For example, if f is the function x   x + 1, then the nth repeated application of f is the function x   x + n. If f is the operation of squaring a number, then the nth repeated application of f is the function that raises its argument to the 2nth power. Write a procedure that takes as inputs a procedure that computes f and a positive integer n and returns the procedure that computes the nth repeated application of f. Your procedure should be able to be used as follows:
+<p> <b> Exercise 1.43. </b> If f is a numerical function and n is a positive integer, then we can form the $n^{th}$ repeated application of $f$, which is defined to be the function whose value at $x$ is $f(f(\cdots(f(x))\cdots))$. For example, if $f$ is the function $x \mapsto x + 1$, then the $n^{th}$ repeated application of $f$ is the function $x \mapsto x + n$. If $f$ is the operation of squaring a number, then the $n^{th}$ repeated application of $f$ is the function that raises its argument to the $2n^{th}$ power. Write a procedure that takes as inputs a procedure that computes $f$ and a positive integer $n$ and returns the procedure that computes the $n^{th}$ repeated application of $f$.
 
+<div id="scheme-ex-define-repeated">
+(define (repeated f n)
+  'your-answer-here)
+</div>
+<script>
+makeEditable("scheme-ex-define-repeated");
+addOutput("scheme-ex-define-repeated");
+editorOf["scheme-ex-define-repeated"].setOption("onBlur", function(){
+
+  var code = "{0} \n (define (square x) (* x x)) \n (= ((repeated square 2) 5) 625)".format(editorOf["scheme-ex-define-repeated"].getValue());
+
+  eval_scheme(code).then(function(res){
+    if (res[res.length - 1] === "true\n") {
+      $_("scheme-ex-define-repeated-output").empty().append($("<div class='right-answer'> \u2713 </div>"));
+    } else {
+      $_("scheme-ex-define-repeated-output").empty().append($("<div class='wrong-answer'> \u2717 </div>"));
+    }
+    $_("scheme-ex-define-repeated-output").append(res.slice(0,-1));
+    compute("scheme-repeated-square-2-5")
+  });
+});
+
+/*
+(define (compose f g)
+  (lambda (x) (f (g x))))
+
+(define (repeated f n)
+  (if (= n 0)
+      (lambda (x) x)
+      (compose f (repeated f (- n 1)))))
+*/
+</script>
+
+<p> Your procedure should be able to be used as follows:
 
 <div id="scheme-repeated-square-2-5">
 ((repeated square 2) 5)
 </div>
 <script>
-prompt("scheme-repeated-square-2-5");
+frozen_prompt("scheme-repeated-square-2-5", ["scheme-ex-define-repeated", "scheme-define-square"]);
 </script>
 
-Hint: You may find it convenient to use <tt>compose</tt> from Exercise
-1-42.
+<p> and should return 625. Hint: You may find it convenient to use <tt>compose</tt> from Exercise 1-42.
+
 </div>
 
 <p>
 
 <div class="exercise">
-<p> <b> Exercise 1.44. </b> The idea of smoothing a function is an important concept in signal processing. If f is a function and dx is some small number, then the smoothed version of f is the function whose value at a point x is the average of f(x - dx), f(x), and f(x + dx). Write a procedure smooth that takes as input a procedure that computes f and returns a procedure that computes the smoothed f. It is sometimes valuable to repeatedly smooth a function (that is, smooth the smoothed function, and so on) to obtained the n-fold smoothed function. Show how to generate the n-fold smoothed function of any given function using smooth and repeated from exercise 1.43.
+<p> <b> Exercise 1.44. </b> The idea of smoothing a function is an important concept in signal processing. If $f$ is a function and $dx$ is some small number, then the smoothed version of f is the function whose value at a point $x$ is the average of $f(x - dx)$, $f(x)$, and $f(x + dx)$. Write a procedure <tt>smooth</tt> that takes as input a procedure that computes f and returns a procedure that computes the smoothed f. It is sometimes valuable to repeatedly smooth a function (that is, smooth the smoothed function, and so on) to obtained the n-fold smoothed function. Show how to generate the n-fold smoothed function of any given function using smooth and repeated from exercise 1.43.
+
+<div id="scheme-ex-define-smooth">
+(define dx 0.1)
+
+(define (smooth f)
+  'your-answer-here)
+</div>
+<script>
+makeEditable("scheme-ex-define-smooth");
+addOutput("scheme-ex-define-smooth");
+editorOf["scheme-ex-define-smooth"].setOption("onBlur", function(){
+
+  var code = "{0} \n {1} \n (feq ((smooth cos) 0) 0.99666944)".format(editorOf["scheme-define-feq"].getValue(), editorOf["scheme-ex-define-smooth"].getValue());
+
+  eval_scheme(code).then(function(res){
+    if (res[res.length - 1] === "true\n") {
+      $_("scheme-ex-define-smooth-output").empty().append($("<div class='right-answer'> \u2713 </div>"));
+    } else {
+      $_("scheme-ex-define-smooth-output").empty().append($("<div class='wrong-answer'> \u2717 </div>"));
+    }
+    $_("scheme-ex-define-smooth-output").append(res.slice(0,-1));
+  });
+});
+
+/*
+(define (smooth f)
+  (lambda (x)
+    (/ (+ (f (- x dx))
+          (f x)
+          (f (+ x dx)))
+       3)))
+*/
+</script>
+
 </div>
 
 <p>
 
 <div class="exercise">
-<p> <b> Exercise 1.45. </b> We saw in section 1.3.3 that attempting to compute square roots by naively finding a fixed point of y x/y does not converge, and that this can be fixed by average damping. The same method works for finding cube roots as fixed points of the average-damped y  x/y2. Unfortunately, the process does not work for fourth roots &mdash; a single average damp is not enough to make a fixed-point search for y  x/y3 converge. On the other hand, if we average damp twice (i.e., use the average damp of the average damp of y  x/y3) the fixed-point search does converge. Do some experiments to determine how many average damps are required to compute nth roots as a fixed-point search based upon repeated average damping of y  x/yn-1. Use this to implement a simple procedure for computing nth roots using fixed-point, average-damp, and the repeated procedure of exercise 1.43. Assume that any arithmetic operations you need are available as primitives.
+<p> <b> Exercise 1.45. </b> We saw in section 1.3.3 that attempting to compute square roots by naively finding a fixed point of $y \mapsto \frac{x}{y}$ does not converge, and that this can be fixed by average damping. The same method works for finding cube roots as fixed points of the average-damped $y \mapsto \frac{x}{y^2}$. Unfortunately, the process does not work for fourth roots &mdash; a single average damp is not enough to make a fixed-point search for $y \mapsto \frac{x}{y^3}$ converge. On the other hand, if we average damp twice (i.e., use the average damp of the average damp of $y \mapsto \frac{x}{y^3}$) the fixed-point search does converge. Do some experiments to determine how many average damps are required to compute $n^{th}$ roots as a fixed-point search based upon repeated average damping of $y \mapsto \frac{x}{y^{n-1}}$. Use this to implement a simple procedure for computing $n^{th}$ roots using fixed-point, average-damp, and the repeated procedure of exercise 1.43. Assume that any arithmetic operations you need are available as primitives.
+
+<div id="scheme-ex-define-nth-root">
+(define (root n x)
+  'your-answer-here)
+</div>
+<script>
+prompt("scheme-ex-define-nth-root");
+</script>
+
 </div>
 
 <p>
 
 <div class="exercise">
-<p> <b> Exercise 1.46. </b> Several of the numerical methods described in this chapter are instances of an extremely general computational strategy known as iterative improvement. Iterative improvement says that, to compute something, we start with an initial guess for the answer, test if the guess is good enough, and otherwise improve the guess and continue the process using the improved guess as the new guess. Write a procedure iterative-improve that takes two procedures as arguments: a method for telling whether a guess is good enough and a method for improving a guess. Iterative-improve should return as its value a procedure that takes a guess as argument and keeps improving the guess until it is good enough. Rewrite the sqrt procedure of section 1.1.7 and the fixed-point procedure of section 1.3.3 in terms of iterative-improve.
+<p> <b> Exercise 1.46. </b> Several of the numerical methods described in this chapter are instances of an extremely general computational strategy known as iterative improvement. Iterative improvement says that, to compute something, we start with an initial guess for the answer, test if the guess is good enough, and otherwise improve the guess and continue the process using the improved guess as the new guess. Write a procedure <tt>iterative-improve</tt> that takes two procedures as arguments: a method for telling whether a guess is good enough and a method for improving a guess. Iterative-improve should return as its value a procedure that takes a guess as argument and keeps improving the guess until it is good enough. Rewrite the sqrt procedure of section 1.1.7 and the fixed-point procedure of section 1.3.3 in terms of iterative-improve.
+
+<div id="scheme-ex-define-iterative-improve">
+(define (iterative-improve good-enough? improve)
+  'your-answer-here)
+</div>
+<script>
+prompt("scheme-ex-define-iterative-improve");
+</script>
+
 </div>
 
 

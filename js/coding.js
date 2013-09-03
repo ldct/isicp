@@ -161,14 +161,14 @@ function compute(s) {
 
   var w = new Worker("js/interpreter/scheme_worker.js");
   w.onmessage = function(e) {
-    if (e.data.end) {
+    if (e.data.type === "end") {
       if (output_fragment.length == 0) {
         $_(_output).empty();
       }
       w.terminate();
       def.resolve(); //todo: switch    
       return;
-    } else if (e.data.suppress_newline) {
+    } else if (e.data.type === "displayed_text") {
       output_fragment.push($("<span>" + e.data.value + "</span>"));
       $_(_output).empty().append(output_fragment);
     } else {
@@ -190,15 +190,16 @@ function eval_scheme(code) { //deferred
   var def = $.Deferred();
 
   var w = new Worker("js/interpreter/scheme_worker.js");
-  var out = "";
+  var out = [];
   w.onmessage = function(e) {
-    if (e.data.end) {
-      def.resolve(out); //using eval here might throw errors
+    if (e.data.type === "end") {
+      def.resolve(out); //for .then(function(res)) to catch
       w.terminate();
-    } else if (e.data.suppress_newline) { //eval_scheme should not be used with
-      return; //e.data.value actually contains something
+    } else if (e.data.suppress_newline) {
+      out.push(e.data.value);
+      return;
     } else {
-      out += e.data;
+      out.push(e.data);
       return;
     }
   }
