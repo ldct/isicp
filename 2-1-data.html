@@ -746,6 +746,10 @@ editorOf["scheme-ex-define-make-center-percent"].setOption("onBlur", function(){
 /*
 (define (make-center-percent center percent)
   (make-center-width center (* 0.01 center percent)))
+
+(define (percent interval)
+  (* 100 (/ (width interval)
+            (center interval)))) 
 */
 </script>
 

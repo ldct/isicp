@@ -152,11 +152,11 @@ promptDep("scheme-cons-5-one-through-four", ["scheme-define-one-through-four"]);
 <ul>
 
 <li>
-For n = 0, <tt>list-ref</tt> should return the <tt>car</tt> of the list.
+<p> For n = 0, <tt>list-ref</tt> should return the <tt>car</tt> of the list.
 </li>
 
 <li>
-Otherwise, <tt>list-ref</tt> should return  the (n - 1)st item of the <tt>cdr</tt> of the list.
+<p> Otherwise, <tt>list-ref</tt> should return  the (n - 1)st item of the <tt>cdr</tt> of the list.
 </li>
 </ul>
 
@@ -218,7 +218,7 @@ promptDep("scheme-length-odds", ["scheme-define-length", "scheme-define-odds"]);
 <ul>
 
 <li>
-The <tt>length</tt> of any list is 1 plus the <tt>length</tt> of the <tt>cdr</tt> of the list.
+<p> The <tt>length</tt> of any list is 1 plus the <tt>length</tt> of the <tt>cdr</tt> of the list.
 </li>
 
 </ul>
@@ -228,7 +228,7 @@ The <tt>length</tt> of any list is 1 plus the <tt>length</tt> of the <tt>cdr</tt
 <ul>
 
 <li>
-The <tt>length</tt> of the empty list is 0.
+<p> The <tt>length</tt> of the empty list is 0.
 </li>
 
 </ul>
@@ -269,11 +269,11 @@ promptDep("scheme-append-odds-squares", ["scheme-define-squares", "scheme-define
 
 <ul>
 <li>
-If <tt>list1</tt> is the empty list, then the result is just <tt>list2</tt>.
+<p> If <tt>list1</tt> is the empty list, then the result is just <tt>list2</tt>.
 </li>
 
 <li>
-Otherwise, <tt>append</tt> the <tt>cdr</tt> of <tt>list1</tt> and <tt>list2</tt>, and <tt>cons</tt> the <tt>car</tt> of <tt>list1</tt> onto the result:
+<p> Otherwise, <tt>append</tt> the <tt>cdr</tt> of <tt>list1</tt> and <tt>list2</tt>, and <tt>cons</tt> the <tt>car</tt> of <tt>list1</tt> onto the result:
 </li>
 </ul>
 
@@ -294,13 +294,34 @@ prompt("scheme-define-append");
 <div class="exercise">
 <p> <b>Exercise 2.17:</b> Define a procedure <tt>last-pair</tt> that returns the list that contains only the last element of a given (nonempty) list:
 
-<div id="scheme-last-pair">
+<div id="scheme-ex-define-last-pair">
 (define (last-pair l)
   'your-code-here)
 (last-pair (list 23 72 149 34))
 </div>
 <script>
-prompt("scheme-last-pair");
+makeEditable("scheme-ex-define-last-pair");
+addOutput("scheme-ex-define-last-pair");
+editorOf["scheme-ex-define-last-pair"].setOption("onBlur", function(){
+
+  var code = "{0} \n (equal? (last-pair '(1 2 3 4)) '(4))".format(
+    editorOf["scheme-ex-define-last-pair"].getValue());
+
+  eval_scheme(code).then(function(res){
+    if (res[res.length - 1] === "true\n") {
+      $_("scheme-ex-define-last-pair-output").empty().append($("<div class='right-answer'> \u2713 </div>"));
+    } else {
+      $_("scheme-ex-define-last-pair-output").empty().append($("<div class='wrong-answer'> \u2717 </div>"));
+    }
+    $_("scheme-ex-define-last-pair-output").append(res.slice(0,-1));
+  });
+});
+/*
+(define (last-pair l)
+  (if (null? (cdr l))
+      l
+      (last-pair (cdr l))))
+*/
 </script>
 </div>
 
@@ -309,13 +330,42 @@ prompt("scheme-last-pair");
 <div class="exercise">
 <p> <b>Exercise 2.18:</b> Define a procedure <tt>reverse</tt> that takes a list as argument and returns a list of the same elements in reverse order:
 
-<div id="scheme-reverse">
+<div id="scheme-ex-define-reverse">
 (define (reverse l)
   'your-code-here)
 (reverse (list 1 4 9 16 25))
 </div>
 <script>
-prompt("scheme-reverse");
+makeEditable("scheme-ex-define-reverse");
+addOutput("scheme-ex-define-reverse");
+editorOf["scheme-ex-define-reverse"].setOption("onBlur", function(){
+
+  var code = "{0} \n (equal? (reverse '(1 2 3 4)) '(4 3 2 1))".format(
+    editorOf["scheme-ex-define-reverse"].getValue());
+
+  eval_scheme(code).then(function(res){
+    if (res[res.length - 1] === "true\n") {
+      $_("scheme-ex-define-reverse-output").empty().append($("<div class='right-answer'> \u2713 </div>"));
+    } else {
+      $_("scheme-ex-define-reverse-output").empty().append($("<div class='wrong-answer'> \u2717 </div>"));
+    }
+    $_("scheme-ex-define-reverse-output").append(res.slice(0,-1));
+  });
+});
+/*
+(define (append-to-end l x)
+  (if (null? l)
+      (list x)
+      (cons (car l)
+            (append-to-end (cdr l) x))))
+
+(define (reverse l)
+  (if (null? l)
+      l
+      (append-to-end (reverse (cdr l))
+                     (car l))))
+
+*/
 </script>
 </div>
 
@@ -337,17 +387,16 @@ prompt("scheme-define-coins");
 
 <p> We could then call <tt>cc</tt> as follows:
 
-<div id="scheme-cc-coins">
-(cc 100 us-coins)
-292
+<div id="scheme-cc-us-coins">
+(cc 100 us-coins) ;292
 </div>
 <script>
-prompt("scheme-cc-coins");
+prompt("scheme-cc-us-coins", ["scheme-define-coins", "scheme-ex-define-cc"]);
 </script>
 
 <p> To do this will require changing the program <tt>cc</tt> somewhat. It will still have the same form, but it will access its second argument differently, as follows:
 
-<div id="scheme-define-cc">
+<div id="scheme-ex-define-cc">
 (define (cc amount coin-values)
   (cond ((= amount 0) 1)
         ((or (&lt; amount 0) (no-more? coin-values)) 0)
@@ -359,7 +408,29 @@ prompt("scheme-cc-coins");
                 coin-values)))))
 </div>
 <script>
-prompt("scheme-define-cc");
+makeEditable("scheme-ex-define-cc");
+addOutput("scheme-ex-define-cc");
+editorOf["scheme-ex-define-cc"].setOption("onBlur", function(){
+
+  var code = "{0} \n (equal? (cc 100 '(50 25 10 5 1)) 292)".format(
+    editorOf["scheme-ex-define-cc"].getValue());
+
+  eval_scheme(code).then(function(res){
+    if (res[res.length - 1] === "true\n") {
+      $_("scheme-ex-define-cc-output").empty().append($("<div class='right-answer'> \u2713 </div>"));
+    } else {
+      $_("scheme-ex-define-cc-output").empty().append($("<div class='wrong-answer'> \u2717 </div>"));
+    }
+    $_("scheme-ex-define-cc-output").append(res.slice(0,-1));
+    compute("scheme-cc-us-coins")
+  });
+});
+
+/*
+(define no-more? null?)
+(define except-first-denomination cdr)
+(define first-denomination car)
+*/
 </script>
 
 <p> Define the procedures <tt>first-denomination</tt>, <tt>except-first-denomination</tt>, and <tt>no-more?</tt> in terms of primitive operations on list structures. Does the order of the list <tt>coin-values</tt> affect the answer produced by <tt>cc</tt>?  Why or why not?
@@ -368,13 +439,13 @@ prompt("scheme-define-cc");
 <p>
 
 <div class="exercise">
-<p> <b>Exercise 2.20:</b> The procedures <tt>+</tt>, <tt>*</tt>, and <tt>list</tt> take arbitrary numbers of arguments. One way to define such procedures is to use <tt>define</tt> with <tt>dotted-tail notation</tt>  . In a procedure definition, a parameter list that has a dot before the last parameter name indicates that, when the procedure is called, the initial parameters (if any) will have as values the initial arguments, as usual, but the final parameter's value will be a <tt>list</tt>  of any remaining arguments. For instance, given the definition
+<p> <b>Exercise 2.20:</b> The procedures <tt>+</tt>, <tt>*</tt>, and <tt>list</tt> take arbitrary numbers of arguments. One way to define such procedures is to use <tt>define</tt> with <em>dotted-tail notation</em>  . In a procedure definition, a parameter list that has a dot before the last parameter name indicates that, when the procedure is called, the initial parameters (if any) will have as values the initial arguments, as usual, but the final parameter's value will be a <tt>list</tt>  of any remaining arguments. For instance, given the definition
 
 <div id="scheme-dotted-tail-syntax">
 (define (f x y . z) &lt;body&gt;)
 </div>
 <script>
-makeStatic("scheme-dotted-tail-syntax");
+no_output_frozen_prompt("scheme-dotted-tail-syntax");
 </script>
 
 <p> the procedure <tt>f</tt> can be called with two or more arguments. If we evaluate
@@ -408,17 +479,42 @@ no_output_frozen_prompt("scheme-g");
 
 <p> Use this notation to write a procedure <tt>same-parity</tt> that takes one or more integers and returns a list of all the arguments that have the same even-odd parity as the first argument. For example,
 
-<div id="scheme-same-parity">
+<div id="scheme-ex-define-same-parity">
 (define (same-parity x . y)
   'your-code-here)
-(same-parity 1 2 3 4 5 6 7)
-'(1 3 5 7)
 
+(same-parity 1 2 3 4 5 6 7)
 (same-parity 2 3 4 5 6 7)
-'(2 4 6)
 </div>
 <script>
-prompt("scheme-same-parity");
+makeEditable("scheme-ex-define-same-parity");
+addOutput("scheme-ex-define-same-parity");
+editorOf["scheme-ex-define-same-parity"].setOption("onBlur", function(){
+
+  var code = "{0} \n (equal? (same-parity '1 2 3 4 5 6 7) '(1 3 5 7))".format(
+    editorOf["scheme-ex-define-same-parity"].getValue());
+
+  eval_scheme(code).then(function(res){
+    if (res[res.length - 1] === "true\n") {
+      $_("scheme-ex-define-same-parity-output").empty().append($("<div class='right-answer'> \u2713 </div>"));
+    } else {
+      $_("scheme-ex-define-same-parity-output").empty().append($("<div class='wrong-answer'> \u2717 </div>"));
+    }
+    $_("scheme-ex-define-same-parity-output").append(res.slice(0,-1));
+    compute("scheme-same-parity-us-coins")
+  });
+});
+/*
+(define (filter l p)
+  (cond ((null? l) l)
+        ((p (car l)) (cons (car l)
+                           (filter (cdr l) p)))
+        (else (filter (cdr l) p))))
+
+(define (same-parity x . y)
+  (cons x (filter y (lambda (t) (= (mod t 2)
+                                   (mod x 2))))))
+*/
 </script>
 </div>
 
@@ -461,7 +557,7 @@ prompt("scheme-define-map");
      (list 1 2 3 4))
 </div>
 <script>
-prompt("scheme-test-map");
+prompt("scheme-test-map", ["scheme-define-map"]);
 </script>
 
 <p> Now we can give a new definition of <tt>scale-list</tt> in terms of <tt>map</tt>:
@@ -498,17 +594,45 @@ prompt("scheme-test-square-list", ["scheme-hidden-define-square-list"]);
 
 <p> Here are two different definitions of <tt>square-list</tt>. Complete both of them by filling in the missing expressions:
 
-<div id="scheme-square-list-input">
+<div id="scheme-ex-define-square-list">
 (define (square-list items)
   (if (null? items)
       nil
-      (cons &lt;??&gt; &lt;??&gt;))
+      (cons &lt;??&gt; &lt;??&gt;)))
 
-(define (square-list items)
-  (map &lt;??&gt; &lt;??&gt;)
+(define (square-list-map items)
+  (map &lt;??&gt; &lt;??&gt;))
 </div>
 <script>
-prompt("scheme-square-list-input");
+makeEditable("scheme-ex-define-square-list");
+addOutput("scheme-ex-define-square-list");
+editorOf["scheme-ex-define-square-list"].setOption("onBlur", function(){
+
+  var code = "{0} \n {1} \n (and (equal? (square-list '(1 2 3 4)) '(1 4 9 16)) (equal? (square-list-map '(1 2 3 4)) '(1 4 9 16)))".format(
+    editorOf["scheme-define-map"].getValue(),
+    editorOf["scheme-ex-define-square-list"].getValue());
+
+  eval_scheme(code).then(function(res){
+    if (res[res.length - 1] === "true\n") {
+      $_("scheme-ex-define-square-list-output").empty().append($("<div class='right-answer'> \u2713 </div>"));
+    } else {
+      $_("scheme-ex-define-square-list-output").empty().append($("<div class='wrong-answer'> \u2717 </div>"));
+    }
+    $_("scheme-ex-define-square-list-output").append(res.slice(0,-1));
+    compute("scheme-square-list-us-coins")
+  });
+});
+/*
+(define (square-list items)
+  (if (null? items)
+      nil
+      (cons (* (car items) (car items))
+            (square-list (cdr items)))))
+
+(define (square-list-map items)
+  (map (lambda (x) (* x x))
+       items))
+*/
 </script>
 </div>
 
