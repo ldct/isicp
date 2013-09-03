@@ -400,7 +400,9 @@ prompt("scheme-define-print-point");
 
 <p> But exactly what is meant by <em>data</em>  ?  It is not enough to say "whatever is implemented by the given selectors and constructors."  Clearly, not every arbitrary set of three procedures can serve as an appropriate basis for the rational-number implementation. We need to guarantee that, if we construct a rational number <tt>x</tt> from a pair of integers <tt>n</tt> and <tt>d</tt>, then extracting the <tt>numer</tt> and the <tt>denom</tt> of <tt>x</tt> and dividing them should yield the same result as dividing <tt>n</tt> by <tt>d</tt>. In other words, <tt>make-rat</tt>, <tt>numer</tt>, and <tt>denom</tt> must satisfy the condition that, for any integer <tt>n</tt> and any non-zero integer <tt>d</tt>, if <tt>x</tt> is (<tt>make-rat n d</tt>), then
 
-<p> <img src='http://mitpress.mit.edu/sicp/full-text/book/ch2-Z-G-7.gif'>
+$$
+\frac{\text{(numer x)}}{\text{(denom x)}} = \frac{n}{d}
+$$
 
 <p> In fact, this is the only condition <tt>make-rat</tt>, <tt>numer</tt>, and <tt>denom</tt> must fulfill in order to form a suitable basis for a rational-number representation. In general, we can think of data as defined by some collection of selectors and constructors, together with specified conditions that these procedures must fulfill in order to be a valid representation. <a name="footnote_link_2-5" class="footnote_link" href="#footnote_2-5">5</a>
 
@@ -442,19 +444,77 @@ prompt("scheme-define-cons");
 prompt("scheme-define-cons-lambda");
 </script>
 
-<p> What is the corresponding definition of <tt>cdr</tt>? (Hint: To verify that this works, make use of the substitution model of section 1-1-5.)
+<p> What is the corresponding definition of <tt>cdr</tt>? 
+
+<div id="scheme-ex-define-cdr">
+(define (cdr z)
+  'your-answer-here)
+</div>
+<script>
+makeEditable("scheme-ex-define-cdr");
+addOutput("scheme-ex-define-cdr");
+editorOf["scheme-ex-define-cdr"].setOption("onBlur", function(){
+
+  var code = "{0} \n {1} \n (= (cdr (cons 1 2)) 2)".format(editorOf["scheme-define-cons-lambda"].getValue(), editorOf["scheme-ex-define-cdr"].getValue());
+
+  eval_scheme(code).then(function(res){
+    if (res[res.length - 1] === "true\n") {
+      $_("scheme-ex-define-cdr-output").empty().append($("<div class='right-answer'> \u2713 </div>"));
+    } else {
+      $_("scheme-ex-define-cdr-output").empty().append($("<div class='wrong-answer'> \u2717 </div>"));
+    }
+    $_("scheme-ex-define-cdr-output").append(res.slice(0,-1));
+  });
+});
+
+/*
+(define (cdr z)
+  (z (lambda (p q) q)))
+*/
+</script>
+
+<p> Hint: To verify that this works, make use of the substitution model of section 1-1-5.
 </div>
 
 <p>
 
 <div class="exercise">
-<p> <b> Exercise 2.5. </b> Show that we can represent pairs of nonnegative integers using only numbers and arithmetic operations if we represent the pair a and b as the integer that is the product 2^a 3^b. Give the corresponding definitions of the procedures <tt>cons</tt>, <tt>car</tt>, and <tt>cdr</tt>.
+<p> <b> Exercise 2.5. </b> Show that we can represent pairs of nonnegative integers using only numbers and arithmetic operations if we represent the pair $a$ and $b$ as the integer that is the product $2^a 3^b$. Give the corresponding definitions of the procedures <tt>cons</tt>, <tt>car</tt>, and <tt>cdr</tt>.
+
+<div id="scheme-ex-define-cons-using-2-3">
+(define (cons a b)
+  'your-answer-here)
+</div>
+<script>
+makeEditable("scheme-ex-define-cons-using-2-3");
+addOutput("scheme-ex-define-cons-using-2-3");
+editorOf["scheme-ex-define-cons-using-2-3"].setOption("onBlur", function(){
+
+  var code = "{0} \n (= (cons 1 2) 18)".format(editorOf["scheme-ex-define-cons-using-2-3"].getValue());
+
+  eval_scheme(code).then(function(res){
+    if (res[res.length - 1] === "true\n") {
+      $_("scheme-ex-define-cons-using-2-3-output").empty().append($("<div class='right-answer'> \u2713 </div>"));
+    } else {
+      $_("scheme-ex-define-cons-using-2-3-output").empty().append($("<div class='wrong-answer'> \u2717 </div>"));
+    }
+    $_("scheme-ex-define-cons-using-2-3-output").append(res.slice(0,-1));
+  });
+});
+
+/*
+(define (cons a b)
+  (* (expt 2 a)
+     (expt 3 b)))
+*/
+</script>
+
 </div>
 
 <p>
 
 <div class="exercise">
-<p> <b> Exercise 2.6. </b> In case representing pairs as procedures wasn't mind-boggling enough, consider that, in a language that can manipulate procedures, we can get by without numbers (at least insofar as nonnegative integers are concerned) by implementing 0 and the operation of adding 1 as
+<p> <b> Exercise 2.6. </b> In case representing pairs as procedures wasn't mind-boggling enough, consider that, in a language that can manipulate procedures, we can get by without numbers (at least insofar as nonnegative integers are concerned) by implementing $0$ and the operation of adding $1$ as
 
 <div id="scheme-define-church-numeral">
 (define zero (lambda (f) (lambda (x) x)))
@@ -464,6 +524,15 @@ prompt("scheme-define-cons-lambda");
 </div>
 <script>
 prompt("scheme-define-church-numeral");
+/*
+(define one (lambda (f)
+              (lambda (x)
+                (f x))))
+
+(define two (lambda (f)
+              (lambda (x)
+                (f (f x)))))
+*/
 </script>
 
 <p> This representation is known as <em>Church numerals</em>  , after its inventor, Alonzo Church, the logician who invented the lambda calculus. 
@@ -475,13 +544,11 @@ prompt("scheme-define-church-numeral");
 
 <p> Alyssa P. Hacker is designing a system to help people solve engineering problems. One feature she wants to provide in her system is the ability to manipulate inexact quantities (such as measured parameters of physical devices) with known precision, so that when computations are done with such approximate quantities the results will be numbers of known precision.
 
-<p> Electrical engineers will be using Alyssa's system to compute electrical quantities. It is sometimes necessary for them to compute the value of a parallel equivalent resistance R_p of two resistors R_1 and R_2 using the formula
+<p> Electrical engineers will be using Alyssa's system to compute electrical quantities. It is sometimes necessary for them to compute the value of a parallel equivalent resistance R_p of two resistors $R_1$ and $R_2$ using the formula
 
-<pre>
-            1
-R_p = -------------
-      1/R_1 + 1/R_2
-</pre>
+$$
+R_p = \frac{1}{\frac{1}{R_1} + \frac{1}{R_2}}
+$$
 
 <p> Resistance values are usually known only up to some tolerance guaranteed by the manufacturer of the resistor. For example, if you buy a resistor labeled "6.8 ohms with 10% tolerance" you can only be sure that the resistor has a resistance between 6.8 - 0.68 = 6.12 and 6.8 + 0.68 = 7.48 ohms. Thus, if you have a 6.8-ohm 10% resistor in parallel with a 4.7-ohm 5% resistor, the resistance of the combination can range from about 2.58 ohms (if the two resistors are at the lower bounds) to about 2.97 ohms (if the two resistors are at the upper bounds).
 
@@ -538,12 +605,72 @@ prompt("scheme-define-make-interval");
 </script>
 
 <p> Define selectors <tt>upper-bound</tt> and <tt>lower-bound</tt> to complete the implementation.
+
+<div id="scheme-ex-define-upper-lower-bound">
+(define (lower-bound interval)
+  'your-answer-here)
+
+(define (upper-bound interval)
+  'your-answer-here)
+</div>
+<script>
+makeEditable("scheme-ex-define-upper-lower-bound");
+addOutput("scheme-ex-define-upper-lower-bound");
+editorOf["scheme-ex-define-upper-lower-bound"].setOption("onBlur", function(){
+
+  var code = "{0} \n (= (upper-bound (cons 1 2)) 2)".format(editorOf["scheme-ex-define-upper-lower-bound"].getValue());
+
+  eval_scheme(code).then(function(res){
+    if (res[res.length - 1] === "true\n") {
+      $_("scheme-ex-define-upper-lower-bound-output").empty().append($("<div class='right-answer'> \u2713 </div>"));
+    } else {
+      $_("scheme-ex-define-upper-lower-bound-output").empty().append($("<div class='wrong-answer'> \u2717 </div>"));
+    }
+    $_("scheme-ex-define-upper-lower-bound-output").append(res.slice(0,-1));
+  });
+});
+
+/*
+(define lower-bound car)
+(define upper-bound cdr)
+*/
+</script>
+
 </div>
 
 <p>
 
 <div class="exercise">
 <p> <b>Exercise 2.8:</b> Using reasoning analogous to Alyssa's, describe how the difference of two intervals may be computed. Define a corresponding subtraction procedure, called <tt>sub-interval</tt>.
+
+<div id="scheme-ex-define-sub-interval">
+(define (sub-interval)
+  'your-answer-here)
+</div>
+<script>
+makeEditable("scheme-ex-define-sub-interval");
+addOutput("scheme-ex-define-sub-interval");
+editorOf["scheme-ex-define-sub-interval"].setOption("onBlur", function(){
+
+  var code = "{0} \n {1} \n {2} \n (equal? (sub-interval (cons 3 4) (cons 1 2)) (cons 1 3))".format(editorOf["scheme-define-make-interval"].getValue(), editorOf["scheme-ex-define-upper-lower-bound"].getValue() ,editorOf["scheme-ex-define-sub-interval"].getValue());
+
+  eval_scheme(code).then(function(res){
+    if (res[res.length - 1] === "true\n") {
+      $_("scheme-ex-define-sub-interval-output").empty().append($("<div class='right-answer'> \u2713 </div>"));
+    } else {
+      $_("scheme-ex-define-sub-interval-output").empty().append($("<div class='wrong-answer'> \u2717 </div>"));
+    }
+    $_("scheme-ex-define-sub-interval-output").append(res.slice(0,-1));
+  });
+});
+
+/*
+(define (sub-interval a b)
+  (make-interval (- (lower-bound a) (upper-bound b))
+                 (- (upper-bound a) (lower-bound b))))
+*/
+</script>
+
 </div>
 
 <p>
@@ -555,7 +682,7 @@ prompt("scheme-define-make-interval");
 <p>
 
 <div class="exercise">
-<p> <b>Exercise 2.10:</b> Ben Bitdiddle, an expert systems programmer, looks over Alyssa's shoulder and comments that it is not clear what it means to divide by an interval that spans zero. Modify Alyssa's code to check for this condition and to signal an error if it occurs.
+<p> <b>Exercise 2.10:</b> Ben Bitdiddle, an expert systems programmer, looks over Alyssa's shoulder and comments that it is not clear what it means to divide by an interval that spans (includes) zero. Modify Alyssa's code to check for this condition and to signal an error if it occurs.
 </div>
 
 <p>
@@ -586,6 +713,42 @@ prompt("scheme-define-make-center-width");
 
 <div class="exercise">
 <p> <b>Exercise 2.12:</b> Define a constructor <tt>make-center-percent</tt> that takes a center and a percentage tolerance and produces the desired interval. You must also define a selector <tt>percent</tt> that produces the percentage tolerance for a given interval. The <tt>center</tt> selector is the same as the one shown above.
+
+
+<div id="scheme-ex-define-make-center-percent">
+(define (make-center-percent center percent)
+  'your-answer-here)
+
+(define (percent interval)
+  'your-answer-here)
+</div>
+<script>
+makeEditable("scheme-ex-define-make-center-percent");
+addOutput("scheme-ex-define-make-center-percent");
+editorOf["scheme-ex-define-make-center-percent"].setOption("onBlur", function(){
+
+  var code = "{0} \n {1} \n {2} \n {3} \n (define i (make-center-percent 2 100)) \n (and (equal? i (cons 0 4)) (equal? (percent i) 100))".format(
+    editorOf["scheme-define-make-interval"].getValue(), 
+    editorOf["scheme-ex-define-upper-lower-bound"].getValue(), 
+    editorOf["scheme-define-make-center-width"].getValue(), 
+    editorOf["scheme-ex-define-make-center-percent"].getValue());
+
+  eval_scheme(code).then(function(res){
+    if (res[res.length - 1] === "true\n") {
+      $_("scheme-ex-define-make-center-percent-output").empty().append($("<div class='right-answer'> \u2713 </div>"));
+    } else {
+      $_("scheme-ex-define-make-center-percent-output").empty().append($("<div class='wrong-answer'> \u2717 </div>"));
+    }
+    $_("scheme-ex-define-make-center-percent-output").append(res.slice(0,-1));
+  });
+});
+
+/*
+(define (make-center-percent center percent)
+  (make-center-width center (* 0.01 center percent)))
+*/
+</script>
+
 </div>
 
 <p>
@@ -595,20 +758,15 @@ prompt("scheme-define-make-center-width");
 
 <p> After considerable work, Alyssa P. Hacker delivers her finished system. Several years later, after she has forgotten all about it, she gets a frenzied call from an irate user, Lem E. Tweakit. It seems that Lem has noticed that the formula for parallel resistors can be written in two algebraically equivalent ways:
 
-<pre>
- R_1 R_2
----------
-R_1 + R_2
-</pre>
+$$
+\frac{R_1 R_2}{R_1 + R_2}
+$$
 
+<p> and
 
-and
-
-<pre>
-      1
--------------
-1/R_1 + 1/R_2
-</pre>
+$$
+\frac{1}{\frac{1}{R_1} + \frac{1}{R_2}}
+$$
 
 <p> He has written the following two programs, each of which computes the parallel-resistors formula differently:
 

@@ -722,6 +722,7 @@ _PRIMITIVES["random"] = new PrimitiveProcedure(scheme_random);
 _PRIMITIVES["abs"] = new PrimitiveProcedure(Math.abs);
 _PRIMITIVES["log"] = new PrimitiveProcedure(Math.log);
 _PRIMITIVES["exp"] = new PrimitiveProcedure(Math.exp);
+_PRIMITIVES["expt"] = new PrimitiveProcedure(Math.pow);
 _PRIMITIVES["sin"] = new PrimitiveProcedure(Math.sin);
 _PRIMITIVES["cos"] = new PrimitiveProcedure(Math.cos);
 _PRIMITIVES["tan"] = new PrimitiveProcedure(Math.tan);
