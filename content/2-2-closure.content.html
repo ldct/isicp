@@ -1025,17 +1025,75 @@ editorOf["scheme-ex-define-deep-reverse"].setOption("onBlur", function(){
 <div class="exercise">
 <p> <b>Exercise 2.28:</b> Write a procedure <tt>fringe</tt> that takes as argument a tree (represented as a list) and returns a list whose elements are all the leaves of the tree arranged in left-to-right order. For example,
 
-<div id="sheme-ex-define-fringe">
-(define x (list (list 1 2) (list 3 4)))
 
-(fringe x)
-(1 2 3 4)
-
-(fringe (list x x))
-(1 2 3 4 1 2 3 4)
+<div id="scheme-hidden-answer-define-fringe">
+(define (fringe l)
+  (cond ((null? l) '())
+        ((pair? l) (append (fringe (car l))
+                           (fringe (cdr l))))
+        (else (list l))))
 </div>
 <script>
-prompt("scheme-ex-define-fringe");
+hidden_prompt("scheme-hidden-answer-define-fringe");
+</script>
+
+<div id="scheme-demonstrate-fringe-define-x">
+(define x (list (list 1 2) (list 3 4)))
+</div>
+<script>
+prompt("scheme-demonstrate-fringe-define-x", ["scheme-hidden-answer-define-fringe"]);
+</script>
+
+<p>
+
+<div id="scheme-demonstrate-fringe-fringe-x">
+(fringe x)
+</div>
+<script>
+prompt("scheme-demonstrate-fringe-fringe-x", ["scheme-demonstrate-fringe-define-x"]);
+</script>
+
+<p>
+
+<div id="scheme-demonstrate-fringe-fringe-x-x">
+(fringe (list x x))
+</div>
+<script>
+prompt("scheme-demonstrate-fringe-fringe-x-x", ["scheme-demonstrate-fringe-define-x"]);
+</script>
+
+<p>
+
+
+<div id="scheme-ex-define-fringe">
+(define (fringe lst)
+  'your-code-here)
+</div>
+
+<script>
+makeEditable("scheme-ex-define-fringe");
+addOutput("scheme-ex-define-fringe");
+editorOf["scheme-ex-define-fringe"].setOption("onBlur", function(){
+
+  var code = "{0} \n (equal? '(1 2 3 4) (fringe '((1 2) (3 4))))".format(
+    editorOf["scheme-ex-define-fringe"].getValue());
+
+  eval_scheme(code).then(function(res){
+    if (res[res.length - 1] === "true\n") {
+      $_("scheme-ex-define-fringe-output").empty().append($("<div class='right-answer'> \u2713 </div>"));
+    } else {
+      $_("scheme-ex-define-fringe-output").empty().append($("<div class='wrong-answer'> \u2717 </div>"));
+    }
+    $_("scheme-ex-define-fringe-output").append(res.slice(0,-1));
+  });
+});
+/*
+(define (fringe l)
+  (cond ((null? l) '())
+        ((pair? l) (append (fringe (car l))
+                           (fringe (cdr l))))
+        (else (list l))))
+*/
 </script>
 </div>
 
@@ -1044,27 +1102,71 @@ prompt("scheme-ex-define-fringe");
 <div class="exercise">
 <p> <b>Exercise 2.29:</b> A binary mobile consists of two branches, a left branch and a right branch. Each branch is a rod of a certain length, from which hangs either a weight or another binary mobile. We can represent a binary mobile using compound data by constructing it from two branches (for example, using <tt>list</tt>):
 
-<div id="">
+<div id="scheme-define-make-mobile">
 (define (make-mobile left right)
   (list left right))
 </div>
 <script>
-prompt();
+prompt("scheme-define-make-mobile");
 </script>
 
 <p> A branch is constructed from a <tt>length</tt> (which must be a number) together with a <tt>structure</tt>, which may be either a number (representing a simple weight) or another mobile:
 
-<div id="">
+<div id="scheme-define-make-branch">
 (define (make-branch length structure)
   (list length structure))
 </div>
 <script>
-prompt();
+prompt("scheme-define-make-branch");
 </script>
 
 <ul>
 <li>
-Write the corresponding selectors <tt>left-branch</tt> and <tt>right-branch</tt>, which return the branches of a mobile, and <tt>branch-length</tt> and <tt>branch-structure</tt>, which return the components of a branch.
+<p> Write the corresponding selectors <tt>left-branch</tt> and <tt>right-branch</tt>, which return the branches of a mobile, and <tt>branch-length</tt> and <tt>branch-structure</tt>, which return the components of a branch.
+
+<div id="scheme-ex-define-left-right-branch-length-structure">
+(define (left-branch mobile)
+  'your-code-here)
+
+(define (right-branch mobile)
+  'your-code-here)
+
+(define (branch-length branch)
+  'your-code-here)
+
+(define (branch-structure branch)
+  'your-code-here)
+</div>
+
+<script>
+makeEditable("scheme-ex-define-left-right-branch-length-structure");
+addOutput("scheme-ex-define-left-right-branch-length-structure");
+editorOf["scheme-ex-define-left-right-branch-length-structure"].setOption("onBlur", function(){
+
+  var code = "{0} \n (and {1} {2} {3} {4})".format(
+    editorOf["scheme-ex-define-left-right-branch-length-structure"].getValue(),
+    "(equal? 1 (left-branch '(1 2)))",
+    "(equal? 2 (right-branch '(1 2)))",
+    "(equal? 1 (branch-length '(1 2)))",
+    "(equal? 2 (branch-structure '(1 2)))");
+
+  eval_scheme(code).then(function(res){
+    if (res[res.length - 1] === "true\n") {
+      $_("scheme-ex-define-left-right-branch-length-structure-output").empty().append($("<div class='right-answer'> \u2713 </div>"));
+    } else {
+      $_("scheme-ex-define-left-right-branch-length-structure-output").empty().append($("<div class='wrong-answer'> \u2717 </div>"));
+    }
+    $_("scheme-ex-define-left-right-branch-length-structure-output").append(res.slice(0,-1));
+  });
+});
+/*
+(define left-branch car)
+(define right-branch cadr)
+(define branch-length car)
+(define branch-structure cadr)
+*/
+</script>
+
 </li>
 
 <li>
