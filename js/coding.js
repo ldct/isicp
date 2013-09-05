@@ -271,6 +271,26 @@ function answer(s, a) {
   });
 }
 
+function equalp_answer(s, a) {
+  makeStatic(s);
+  $_(s).after($('<div>', {'id': s + "-input", 'class': "input"}));
+  makePromptingInput(s + "-input");
+  addOutput(s + "-input");
+
+  editorOf[s + "-input"].setOption("onBlur", function() {
+    var ans = editorOf[s + "-input"].getValue();
+    var code = "(equal? (quote {0}) (quote {1}))".format(ans, a);
+
+    eval_scheme(code).then(function(res) {
+      if (res[res.length - 1] === "true\n") {
+        $_(s + "-input-output").empty().append("<div class='right-answer'> \u2713 </div>");
+      } else {
+        $_(s + "-input-output").empty().append("<div class='wrong-answer'> \u2717 </div>");
+      }
+    });
+  });
+}
+
 function makePromptingInput(i) {
   makeChangeOnFocusInput(i, "'your-input-here", "");
 }
