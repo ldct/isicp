@@ -26,6 +26,7 @@ onmessage = function(event) {
             }
         } catch(e) {
             this.postMessage(e.toString() + "\n"); //report errors
+            //throw e;
         }
     }
     this.postMessage({"type": "end"});

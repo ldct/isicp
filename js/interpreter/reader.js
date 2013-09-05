@@ -37,7 +37,7 @@ Pair.prototype = {
                        + this.second.valueOf() + ")";
     },
     toString : function() {
-        var s = "(" + this.first.toString();
+        var s = "(" + (this.first === undefined ? "undefined" : this.first.toString());
         var second = this.second;
         while (second instanceof Pair) {
             s += " " + second.first.toString();

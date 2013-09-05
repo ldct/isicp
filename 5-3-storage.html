@@ -533,7 +533,8 @@ var todo = Object.keys(editorOf);
     return;
   }
   try {
-    editorOf[todo.shift()].getOption("onBlur")().then(proc);
+    var first = todo.shift();
+    editorOf[first].getOption("onBlur")().then(proc);
   } catch (err) {
     proc();
   }    

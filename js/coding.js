@@ -231,8 +231,11 @@ function frozen_prompt(s, deps) {
 
 function hidden_prompt(s, deps) {
   makeEditable(s);
+  addOutput(s);
 
-  $_(s).hide()
+  $_(s).hide();
+  $_(s + "-output").hide();
+
   addDep(s, (deps || []));
 }
 
@@ -269,7 +272,7 @@ function answer(s, a) {
 }
 
 function makePromptingInput(i) {
-  makeChangeOnFocusInput(i, "<your input here>", "");
+  makeChangeOnFocusInput(i, "'your-input-here", "");
 }
 
 function makeChangeOnFocusInput(i, before, after) {

@@ -596,7 +596,6 @@ editorOf["scheme-ex-define-same-parity"].setOption("onBlur", function(){
       $_("scheme-ex-define-same-parity-output").empty().append($("<div class='wrong-answer'> \u2717 </div>"));
     }
     $_("scheme-ex-define-same-parity-output").append(res.slice(0,-1));
-    compute("scheme-same-parity-us-coins")
   });
 });
 /*
@@ -714,19 +713,18 @@ editorOf["scheme-ex-define-square-list"].setOption("onBlur", function(){
       $_("scheme-ex-define-square-list-output").empty().append($("<div class='wrong-answer'> \u2717 </div>"));
     }
     $_("scheme-ex-define-square-list-output").append(res.slice(0,-1));
-    compute("scheme-square-list-us-coins")
   });
 });
 /*
-(define (square-list items)
-  (map (lambda (x) (* x x))
-       items))
-
 (define (square-list items)
   (if (null? items)
       nil
       (cons (* (car items) (car items))
             (square-list (cdr items)))))
+
+(define (square-list-map items)
+  (map (lambda (x) (* x x))
+       items))
 */
 </script>
 </div>
@@ -781,17 +779,48 @@ prompt("scheme-define-louise-square-list-2", ["scheme-define-square"]);
           (list 57 321 88))
 </div>
 <script>
-prompt("scheme-test-for-each", ["scheme-define-for-each"]);
+prompt("scheme-test-for-each", ["scheme-ex-define-for-each"]);
 </script>
 
-<p> The value returned by the call to <tt>for-each</tt> (not illustrated above) can be something arbitrary, such as true. Give an implementation of <tt>for-each</tt>.
+<p> should print <tt>57</tt>, <tt>321</tt> and <tt>88</tt>. The value returned by the call to <tt>for-each</tt> should be <tt>true</tt>. Give an implementation of <tt>for-each</tt>.
 
-<div id="scheme-define-for-each">
-(for-each (lambda (x) (newline) (display x))
-          (list 57 321 88))
+<div id="scheme-ex-define-for-each">
+(define (for-each proc lst)
+  'your-code-here)
 </div>
 <script>
-prompt("scheme-define-for-each");
+makeEditable("scheme-ex-define-for-each");
+addOutput("scheme-ex-define-for-each");
+editorOf["scheme-ex-define-for-each"].setOption("onBlur", function(){
+
+  var code = "{0} \n (for-each (lambda (x) (newline) (display x)) '(57 321 88))".format( 
+    editorOf["scheme-ex-define-for-each"].getValue());
+
+  eval_scheme(code).then(function(res){
+    console.log(res);
+
+    var $output = $_("scheme-ex-define-for-each-output")
+    
+    if (res.length >= 7 && res[res.length - 1] === "true\n" && res[res.length - 2].value === "88") {
+      $output.empty().append($("<div class='right-answer'> \u2713 </div>"));
+    } else {
+      $output.empty().append($("<div class='wrong-answer'> \u2717 </div>"));
+    }
+    $output.append(res.slice(0,-1));
+    compute("scheme-test-for-each");
+  });
+});
+
+/*
+TODO: why does a map-style definition throw exceptions?
+
+(define (for-each proc items)
+  (if (null? items)
+      nil
+      (begin (proc (car items))
+             (for-each proc (cdr items))
+             #t)))
+*/
 </script>
 
 </div>
@@ -931,6 +960,8 @@ prompt("scheme-define-count-leaves");
 <p> <b>Exercise 2.24:</b> Suppose we evaluate the expression <tt>(list 1 (list 2 (list 3 4)))</tt>. Give the result printed by the interpreter, the corresponding box-and-pointer structure, and the interpretation of this as a tree (as in Figure 2-6).
 </div>
 
+<p>
+
 <div class="exercise">
 <p> <b>Exercise 2.25:</b> Give combinations of <tt>car</tt>s and <tt>cdr</tt>s that will pick 7 from each of the following lists:
 
@@ -945,6 +976,8 @@ prompt("scheme-define-count-leaves");
 prompt();
 </script>
 </div>
+
+<p>
 
 <div class="exercise">
 <p> <b>Exercise 2.26:</b> Suppose we define <tt>x</tt> and <tt>y</tt> to be two lists:
@@ -972,6 +1005,8 @@ prompt();
 </script>
 </div>
 
+<p>
+
 <div class="exercise">
 <p> <b>Exercise 2.27:</b> Modify your <tt>reverse</tt> procedure of Exercise 2-18 to produce a <tt>deep-reverse</tt> procedure that takes a list as argument and returns as its value the list with its elements reversed and with all sublists deep-reversed as well. For example,
 
@@ -992,6 +1027,8 @@ prompt();
 </script>
 </div>
 
+<p>
+
 <div class="exercise">
 <p> <b>Exercise 2.28:</b> Write a procedure <tt>fringe</tt> that takes as argument a tree (represented as a list) and returns a list whose elements are all the leaves of the tree arranged in left-to-right order. For example,
 
@@ -1009,6 +1046,8 @@ prompt();
 </script>
 </div>
 
+<p>
+  
 <div class="exercise">
 <p> <b>Exercise 2.29:</b> A binary mobile consists of two branches, a left branch and a right branch. Each branch is a rod of a certain length, from which hangs either a weight or another binary mobile. We can represent a binary mobile using compound data by constructing it from two branches (for example, using <tt>list</tt>):
 
@@ -2438,7 +2477,8 @@ var todo = Object.keys(editorOf);
     return;
   }
   try {
-    editorOf[todo.shift()].getOption("onBlur")().then(proc);
+    var first = todo.shift();
+    editorOf[first].getOption("onBlur")().then(proc);
   } catch (err) {
     proc();
   }    
