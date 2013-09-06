@@ -20,6 +20,16 @@ h2 {
   margin-top: 2em;
 }
 
+tt {
+  border: 1px #999999 solid;
+  background-color: #eeeeee;
+}
+
+li {
+  font-family:Georgia;
+  color:#2E2E2E;
+}
+
 .p-link {
   text-decoration: underline;
   text-align: right;

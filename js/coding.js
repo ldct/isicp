@@ -245,10 +245,12 @@ function no_output_prompt(s, deps) {
   addDep(s, (deps || []));
 }
 
-function no_output_frozen_prompt(s) {
+function no_output_frozen_prompt(s, deps) {
   makeEditable(s);
   $_(s).find(".CodeMirror-scroll").addClass("static")
   editorOf[s].setOption("readOnly", 'nocursor');
+
+  addDep(s, (deps || []));
 }
 
 function makeStatic(_static) { //and no output
