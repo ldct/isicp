@@ -22,7 +22,7 @@ h2 {
 
 tt {
   border: 1px #999999 solid;
-  background-color: #eeeeee;
+  background-color: rgba(0,0,0,0.05);
 }
 
 li {
