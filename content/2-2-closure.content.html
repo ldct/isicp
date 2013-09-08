@@ -1769,7 +1769,7 @@ prompt("scheme-product-of-squares-of-odd-elements-1-to-5", ["scheme-define-produ
 
 <p> We can also formulate conventional data-processing applications in terms of sequence operations. Suppose we have a sequence of personnel records and we want to find the salary of the highest-paid programmer. Assume that we have a selector <tt>salary</tt> that returns the salary of a record, and a predicate <tt>programmer?</tt> that tests if a record is for a programmer. Then we can write
 
-<div id="">
+<div id="scheme-define-salary-of-highest-paid-programmer">
 (define (salary-of-highest-paid-programmer records)
   (accumulate max
               0
@@ -1777,10 +1777,10 @@ prompt("scheme-product-of-squares-of-odd-elements-1-to-5", ["scheme-define-produ
                    (filter programmer? records))))
 </div>
 <script>
-prompt();
+prompt("scheme-define-salary-of-highest-paid-programmer");
 </script>
 
-<p> These examples give just a hint of the vast range of operations that can be expressed as sequence operations.<p> To enumerate the leaves of a tree, we can use<a name="footnote_link_2-15" class="footnote_link" href="#footnote_2-15">15</a>
+<p> These examples give just a hint of the vast range of operations that can be expressed as sequence operations.<a name="footnote_link_2-15" class="footnote_link" href="#footnote_2-15">15</a>
   
 <p> Sequences, implemented here as lists, serve as a conventional interface that permits us to combine processing modules. Additionally, when we uniformly represent structures as sequences, we have localized the data-structure dependencies in our programs to a small number of sequence operations. By changing these, we can experiment with alternative representations of sequences, while leaving the overall design of our programs intact. We will exploit this capability in section 3-5, when we generalize the sequence-processing paradigm to admit infinite sequences.
 
