@@ -11,7 +11,7 @@ function cleanCode(code) {
 
 function $_(s) { 
   // _ to $ where _ = div id's, $ = jQuery objects; read _ as #, $_ consumes a hash and adds a $
-  var ret = $("#" + s);
+  var ret = $("[id={0}]".format(s).replace(/\?/, "\\\?"));
   if (!ret[0]) {
     throw "#" + s + " did not match anything";
   } else {

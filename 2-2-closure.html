@@ -1875,159 +1875,335 @@ prompt("scheme-product-of-squares-of-odd-elements-1-to-5", ["scheme-define-produ
 prompt("scheme-define-salary-of-highest-paid-programmer");
 </script>
 
-<p> These examples give just a hint of the vast range of operations that can be expressed as sequence operations.<p> To enumerate the leaves of a tree, we can use<a name="footnote_link_2-15" class="footnote_link" href="#footnote_2-15">15</a>
+<p> These examples give just a hint of the vast range of operations that can be expressed as sequence operations.<a name="footnote_link_2-15" class="footnote_link" href="#footnote_2-15">15</a>
   
 <p> Sequences, implemented here as lists, serve as a conventional interface that permits us to combine processing modules. Additionally, when we uniformly represent structures as sequences, we have localized the data-structure dependencies in our programs to a small number of sequence operations. By changing these, we can experiment with alternative representations of sequences, while leaving the overall design of our programs intact. We will exploit this capability in section 3-5, when we generalize the sequence-processing paradigm to admit infinite sequences.
 
 <div class="exercise">
 <p> <b>Exercise 2.33:</b> Fill in the missing expressions to complete the following definitions of some basic list-manipulation operations as accumulations:
 
-<div id="">
+<div id="scheme-ex-define-map-as-accumulate">
 (define (map p sequence)
-  (accumulate (lambda (x y) <??>) nil sequence))
-
-(define (append seq1 seq2)
-  (accumulate cons <??> <??>))
-
-(define (length sequence)
-  (accumulate <??> 0 sequence))
+  (accumulate (lambda (x y) 'you-answer-here) nil sequence))
 </div>
 <script>
-prompt();
+makeEditable("scheme-ex-define-map-as-accumulate");
+addDep("scheme-ex-define-map-as-accumulate", ["scheme-define-accumulate"]);
+
+addOutput("scheme-ex-define-map-as-accumulate");
+editorOf["scheme-ex-define-map-as-accumulate"].setOption("onBlur", function(){
+
+  var code = "{0} \n (and {1} {2})".format(
+    getDependedOnCode("scheme-ex-define-map-as-accumulate"),
+    "#t",
+    "(equal? '(1 2 3) (map (lambda (x) x) '(1 2 3)))"
+  );
+
+  eval_scheme(code).then(function(res){
+    if (res[res.length - 1] === "true\n") {
+      $_("scheme-ex-define-map-as-accumulate-output").empty().append($("<div class='right-answer'> \u2713 </div>"));
+    } else {
+      $_("scheme-ex-define-map-as-accumulate-output").empty().append($("<div class='wrong-answer'> \u2717 </div>"));
+    }
+    $_("scheme-ex-define-map-as-accumulate-output").append(res.slice(0,-1));
+  });
+});
+/*
+(define (map p sequence)
+  (accumulate (lambda (x y) (cons (p x) y)) nil sequence))
+*/
+</script>
+
+<p>
+
+<div id="scheme-ex-define-append-as-accumulate">
+(define (append seq1 seq2)
+  (accumulate cons 'your-answer-here 'your-answer-here))
+</div>
+<script>
+makeEditable("scheme-ex-define-append-as-accumulate");
+addDep("scheme-ex-define-append-as-accumulate", ["scheme-define-accumulate"]);
+
+addOutput("scheme-ex-define-append-as-accumulate");
+editorOf["scheme-ex-define-append-as-accumulate"].setOption("onBlur", function(){
+
+  var code = "{0} \n (and {1} {2})".format(
+    getDependedOnCode("scheme-ex-define-append-as-accumulate"),
+    "#t",
+    "(equal? '(1 2 3 4 5) (append '(1 2 3) '(4 5)))"
+  );
+
+  eval_scheme(code).then(function(res){
+    if (res[res.length - 1] === "true\n") {
+      $_("scheme-ex-define-append-as-accumulate-output").empty().append($("<div class='right-answer'> \u2713 </div>"));
+    } else {
+      $_("scheme-ex-define-append-as-accumulate-output").empty().append($("<div class='wrong-answer'> \u2717 </div>"));
+    }
+    $_("scheme-ex-define-append-as-accumulate-output").append(res.slice(0,-1));
+  });
+});
+/*
+(define (append seq1 seq2)
+  (accumulate cons seq2 seq1))
+*/
+</script>
+
+<p>
+
+<div id="scheme-ex-define-length-as-accumulate">
+(define (length sequence)
+  (accumulate 'your-answer-here 0 sequence))
+</div>
+<script>
+makeEditable("scheme-ex-define-length-as-accumulate");
+addDep("scheme-ex-define-length-as-accumulate", ["scheme-define-accumulate"]);
+
+addOutput("scheme-ex-define-length-as-accumulate");
+editorOf["scheme-ex-define-length-as-accumulate"].setOption("onBlur", function(){
+
+  var code = "{0} \n (and {1} {2})".format(
+    getDependedOnCode("scheme-ex-define-length-as-accumulate"),
+    "#t",
+    "(equal? 3 (length '(1 2 3)))"
+  );
+
+  eval_scheme(code).then(function(res){
+    if (res[res.length - 1] === "true\n") {
+      $_("scheme-ex-define-length-as-accumulate-output").empty().append($("<div class='right-answer'> \u2713 </div>"));
+    } else {
+      $_("scheme-ex-define-length-as-accumulate-output").empty().append($("<div class='wrong-answer'> \u2717 </div>"));
+    }
+    $_("scheme-ex-define-length-as-accumulate-output").append(res.slice(0,-1));
+  });
+});
+/*
+(define (length sequence)
+  (accumulate (lambda (x y) (+ 1 y)) 0 sequence))
+*/
 </script>
 </div>
+
+<p>
 
 <div class="exercise">
 <p> <b>Exercise 2.34:</b> Evaluating a polynomial in x at a given value of x can be formulated as an accumulation. We evaluate the polynomial
 
-<pre>
-a_n r^n | a_(n-1) r^(n-1) + ... + a_1 r + a_0
-</pre>
+$$
+a_n r^n + a_{n-1} r^{n-1} + \cdots + a_1 r + a_0
+$$
 
 
 <p> using a well-known algorithm called <tt>Horner's rule</tt> , which structures the computation as
 
-<pre>
-(... (a_n r + a_(n-1)) r + ... + a_1) r + a_0
-</pre>
+$$
+(\cdots (a_n r + a_{n-1}) r + \cdots + a_1) r + a_0
+$$
 
 
-<p> In other words, we start with a_n, multiply by x, add a_(n-1), multiply by x, and so on, until we reach a_0.<a name="footnote_link_2-16" class="footnote_link" href="#footnote_2-16">16</a>
+<p> In other words, we start with $a_n$, multiply by $x$, add $a_{n-1}$, multiply by $x$, and so on, until we reach $a_0$.<a name="footnote_link_2-16" class="footnote_link" href="#footnote_2-16">16</a>
 
-<p> Fill in the following template to produce a procedure that evaluates a polynomial using Horner's rule. Assume that the coefficients of the polynomial are arranged in a sequence, from a_0 through a_n.
+<p> Fill in the following template to produce a procedure that evaluates a polynomial using Horner's rule. Assume that the coefficients of the polynomial are arranged in a sequence, from $a_0$ through $a_n$.
 
-<div id="">
+<div id="scheme-ex-define-horner-eval">
 (define (horner-eval x coefficient-sequence)
   (accumulate (lambda (this-coeff higher-terms) <??>)
               0
               coefficient-sequence))
 </div>
 <script>
-prompt();
+makeEditable("scheme-ex-define-horner-eval");
+addDep("scheme-ex-define-horner-eval", ["scheme-define-accumulate"]);
+
+addOutput("scheme-ex-define-horner-eval");
+editorOf["scheme-ex-define-horner-eval"].setOption("onBlur", function(){
+
+  var code = "{0} \n (and {1} {2})".format(
+    getDependedOnCode("scheme-ex-define-horner-eval"),
+    "#t",
+    "(equal? 79 (horner-eval 2 '(1 3 0 5 0 1)))"
+  );
+
+  eval_scheme(code).then(function(res){
+    if (res[res.length - 1] === "true\n") {
+      $_("scheme-ex-define-horner-eval-output").empty().append($("<div class='right-answer'> \u2713 </div>"));
+    } else {
+      $_("scheme-ex-define-horner-eval-output").empty().append($("<div class='wrong-answer'> \u2717 </div>"));
+    }
+    $_("scheme-ex-define-horner-eval-output").append(res.slice(0,-1));
+  });
+});
+/*
+(define (horner-eval x coefficient-sequence)
+  (accumulate (lambda (this-coeff higher-terms) 
+                (+ this-coeff (* x higher-terms)))
+              0
+              coefficient-sequence))
+*/
 </script>
 
-<p> For example, to compute 1 + 3x + 5x^3 + x^(5) at x = 2 you would evaluate
+<p> For example, to compute $1 + 3x + 5x^3 + x^5$ at $x = 2$ you would evaluate
 
-<div id="">
+<div id="scheme-horner-eval-poly-at-2">
 (horner-eval 2 (list 1 3 0 5 0 1))
 </div>
 <script>
-prompt();
+no_output_frozen_prompt("scheme-horner-eval-poly-at-2");
 </script>
 </div>
+
+<p>
 
 <div class="exercise">
-<b>Exercise 2.35:</b> Redefine <tt>count-leaves</tt> from
+<p> <b>Exercise 2.35:</b> Redefine <tt>count-leaves</tt> from
 section 2-2-2 as an accumulation:
 
-<div id="">
+<div id="scheme-ex-define-count-leaves-with-accumulate">
 (define (count-leaves t)
-  (accumulate <??> <??> (map <??> <??>)))
+  (accumulate 'your 'answer (map 'your 'answer)))
 </div>
 <script>
-prompt();
+makeEditable("scheme-ex-define-count-leaves-with-accumulate");
+addDep("scheme-ex-define-count-leaves-with-accumulate", ["scheme-define-accumulate", "scheme-define-map"]);
+
+addOutput("scheme-ex-define-count-leaves-with-accumulate");
+editorOf["scheme-ex-define-count-leaves-with-accumulate"].setOption("onBlur", function(){
+
+  var code = "{0} \n (and {1} {2})".format(
+    getDependedOnCode("scheme-ex-define-count-leaves-with-accumulate"),
+    "#t",
+    "(equal? 4 (count-leaves '((1 2) (1 2))))"
+  );
+
+  eval_scheme(code).then(function(res){
+    if (res[res.length - 1] === "true\n") {
+      $_("scheme-ex-define-count-leaves-with-accumulate-output").empty().append($("<div class='right-answer'> \u2713 </div>"));
+    } else {
+      $_("scheme-ex-define-count-leaves-with-accumulate-output").empty().append($("<div class='wrong-answer'> \u2717 </div>"));
+    }
+    $_("scheme-ex-define-count-leaves-with-accumulate-output").append(res.slice(0,-1));
+  });
+});
+/*
+(define (count-leaves t)
+  (accumulate + 0 (map (lambda (x)
+                         (if (pair? x)
+                             (count-leaves x)
+                             1))
+                         t)))
+*/
 </script>
 </div>
+
+<p>
 
 <div class="exercise">
 <p> <b>Exercise 2.36:</b> The procedure <tt>accumulate-n</tt> is similar to <tt>accumulate</tt> except that it takes as its third argument a sequence of sequences, which are all assumed to have the same number of elements. It applies the designated accumulation procedure to combine all the first elements of the sequences, all the second elements of the sequences, and so on, and returns a sequence of the results. For instance, if <tt>s</tt> is a sequence containing four sequences, <tt>((1 2 3) (4 5 6) (7 8 9) (10 11 12)),</tt> then the value of <tt>(accumulate-n + 0 s)</tt> should be the sequence <tt>(22 26 30)</tt>. Fill in the missing expressions in the following definition of <tt>accumulate-n</tt>:
 
-<div id="">
+<div id="scheme-ex-define-accumulate-n">
 (define (accumulate-n op init seqs)
   (if (null? (car seqs))
       nil
-      (cons (accumulate op init <??>)
-            (accumulate-n op init <??>))))
+      (cons (accumulate op init 'your-answer)
+            (accumulate-n op init 'your-answer))))
 </div>
 <script>
-prompt();
+makeEditable("scheme-ex-define-accumulate-n");
+addDep("scheme-ex-define-accumulate-n", ["scheme-define-accumulate", "scheme-define-map"]);
+
+addOutput("scheme-ex-define-accumulate-n");
+editorOf["scheme-ex-define-accumulate-n"].setOption("onBlur", function(){
+
+  var code = "{0} \n (and {1} {2})".format(
+    getDependedOnCode("scheme-ex-define-accumulate-n"),
+    "#t",
+    "(equal? '(22 26 30) (accumulate-n + 0 '((1 2 3) (4 5 6) (7 8 9) (10 11 12))))"
+  );
+
+  eval_scheme(code).then(function(res){
+    if (res[res.length - 1] === "true\n") {
+      $_("scheme-ex-define-accumulate-n-output").empty().append($("<div class='right-answer'> \u2713 </div>"));
+    } else {
+      $_("scheme-ex-define-accumulate-n-output").empty().append($("<div class='wrong-answer'> \u2717 </div>"));
+    }
+    $_("scheme-ex-define-accumulate-n-output").append(res.slice(0,-1));
+  });
+});
+/*
+(define (accumulate-n op init seqs)
+  (if (null? (car seqs))
+      nil
+      (cons (accumulate op init (map car seqs))
+            (accumulate-n op init (map cdr seqs)))))
+*/
 </script>
 </div>
+
+<p>
 
 <div class="exercise">
 <b> Exercise 2.37 </b>.
 
 <p> Suppose we represent vectors v = (v_i) as sequences of numbers, and matrices m = (m_(ij)) as sequences of vectors (the rows of the matrix). For example, the matrix
 
-<pre>
-+-         -+
-|  1 2 3 4  |
-|  4 5 6 6  |
-|  6 7 8 9  |
-+-         -+
-</pre>
+
+$$ 
+\left[ \begin{array}{cccc}
+1 &amp; 2 &amp; 3 &amp; 4 \\
+4 &amp; 5 &amp; 6 &amp; 6 \\
+6 &amp; 7 &amp; 8 &amp; 9 \end{array} \right]
+$$
 
 
 <p> is represented as the sequence <tt>((1 2 3 4) (4 5 6 6) (6 7 8 9))</tt>. With this representation, we can use sequence operations to concisely express the basic matrix and vector operations. These operations (which are described in any book on matrix algebra) are the following:
 
-<pre>
-                                       __
-(dot-product v w)      returns the sum >_i v_i w_i
-
-(matrix-*-vector m v)  returns the vector t,
-                                   __
-                       where t_i = >_j m_(ij) v_j
-
-(matrix-*-matrix m n)  returns the matrix p,
-                                      __
-                       where p_(ij) = >_k m_(ik) n_(kj)
-
-(transpose m)          returns the matrix n,
-                       where n_(ij) = m_(ji)
-</pre>
+<ul>
+<li>
+<tt>(dot-product v w)</tt> returns the sum $\sum_i v_i w_i$
+</li>
+<li>
+<tt>(matrix-*-vector m w)</tt> returns the vector $t$, where $t_i =  \sum_j m_{ij} v_j$
+</li>
+<li>
+<tt>(matrix-*-matrix m n)</tt> returns the matrix $p$, where $p_{ij} = \sum_k m_{ik} n_{kj}$
+</li>
+<li>
+<tt>(transpose m)</tt> returns the matrix $n$, where $n_{ij} = m_{ji}$
+</li>
+</ul>
 
 <p> We can define the dot product as<a name="footnote_link_2-17" class="footnote_link" href="#footnote_2-17">17</a>
 
-<div id="">
+<div id="scheme-define-dot-product">
 (define (dot-product v w)
+  'sorry-map-is-not-implemented-yet
   (accumulate + 0 (map * v w)))
 </div>
 <script>
-prompt();
+prompt("scheme-define-dot-product");
 </script>
 
 <p> Fill in the missing expressions in the following procedures for computing the other matrix operations. (The procedure <tt>accumulate-n</tt> is defined in Exercise 2-36.)
 
-<div id="">
+<div id="scheme-ex-define-matrix-operations">
 (define (matrix-*-vector m v)
-  (map <??> m))
+  (map 'your-answer-here m))
 
 (define (transpose mat)
-  (accumulate-n <??> <??> mat))
+  (accumulate-n 'your 'answer mat))
 
 (define (matrix-*-matrix m n)
   (let ((cols (transpose n)))
-    (map <??> m)))
+    (map 'your-answer-here m)))
 </div>
 <script>
-prompt();
+prompt("scheme-ex-define-matrix-operations");
 </script>
 </div>
 
 <div class="exercise">
 <p> <b>Exercise 2.38:</b> The <tt>accumulate</tt> procedure is also known as <tt>fold-right</tt>, because it combines the first element of the sequence with the result of combining all the elements to the right. There is also a <tt>fold-left</tt>, which is similar to <tt>fold-right</tt>, except that it combines elements working in the opposite direction:
 
-<div id="">
+<div id="scheme-define-fold-left">
 (define (fold-left op initial sequence)
   (define (iter result rest)
     (if (null? rest)
@@ -2037,31 +2213,48 @@ prompt();
   (iter initial sequence))
 </div>
 <script>
-prompt();
+prompt("scheme-define-fold-left");
 </script>
 
 <p> What are the values of
 
-<div id="">
+<div id="scheme-ex-foldr-div" class='static'>
 (fold-right / 1 (list 1 2 3))
+</div>
+<script> 
+answer("scheme-ex-foldr-div", 1.5);
+</script>
 
-(fold-left / 1 (list 1 2 3))
+<div id="scheme-ex-foldl-div" class='static'>
+(fold-left / 1 (list 1 2 3)) ;please give the inverse, we haven't implemented rational numbers yet!
+</div>
+<script> 
+answer("scheme-ex-foldl-div", 6);
+</script>
 
+<div id="scheme-ex-foldr-list" class='static'>
 (fold-right list nil (list 1 2 3))
+</div>
+<script> 
+answer("scheme-ex-foldr-list", "(1 (2 (3 ())))");
+</script>
 
+<div id="scheme-ex-foldl-list" class='static'>
 (fold-left list nil (list 1 2 3))
 </div>
-<script>
-prompt();
+<script> 
+answer("scheme-ex-foldl-list", "(((() 1) 2) 3)");
 </script>
 
 <p> Give a property that <tt>op</tt> should satisfy to guarantee that <tt>fold-right</tt> and <tt>fold-left</tt> will produce the same values for any sequence.
- </div>
+</div>
+
+<p>
 
 <div class="exercise">
 <p> <b>Exercise 2.39:</b> Complete the following definitions of <tt>reverse</tt> (Exercise 2-18) in terms of <tt>fold-right</tt> and <tt>fold-left</tt> from Exercise 2-38:
 
-<div id="">
+<div id="scheme-ex-define-reverse">
 (define (reverse sequence)
   (fold-right (lambda (x y) <??>) nil sequence))
 
@@ -2069,7 +2262,7 @@ prompt();
   (fold-left (lambda (x y) <??>) nil sequence))
 </div>
 <script>
-prompt();
+prompt("scheme-ex-define-reverse");
 </script>
 </div>
 
@@ -2077,18 +2270,22 @@ prompt();
 
 <p> We can extend the sequence paradigm to include many computations that are commonly expressed using nested loops.<a name="footnote_link_2-18" class="footnote_link" href="#footnote_2-18">18</a> Consider this problem: Given a positive integer n, find all ordered pairs of distinct positive integers i and j, where 1 &lt;= j&lt; i&lt;= n, such that i + j is prime. For example, if n is 6, then the pairs are the following:
 
-<pre>
-  i   | 2 3 4 4 5 6 6
-  j   | 1 2 1 3 2 1 5
-------+---------------
-i + j | 3 5 5 7 7 7 11
-</pre>
+$$ 
+\begin{array}{c|ccc}
+i &amp; 2 &amp; 3 &amp; 4 &amp; 4 &amp; 5 &amp; 6 &amp; 6 \\
+j &amp; 1 &amp; 2 &amp; 1 &amp; 3 &amp; 2 &amp; 1 &amp; 5 \\
+\hline \\
+i+j &amp; 3 &amp; 5 &amp; 5 &amp; 7 &amp; 7 &amp; 7 &amp; 11 \end{array}
+$$
 
-<p> A natural way to organize this computation is to generate the sequence of all ordered pairs of positive integers less than or equal to n, filter to select those pairs whose sum is prime, and then, for each pair (i, j) that passes through the filter, produce the triple (i,j,i + j).
 
-<p> Here is a way to generate the sequence of pairs: For each integer i &lt;= n, enumerate the integers j&lt;i, and for each such i and j generate the pair (i,j). In terms of sequence operations, we map along the sequence <tt>(enumerate-interval 1 n)</tt>. For each i in this sequence, we map along the sequence <tt>(enumerate-interval 1 (- i 1))</tt>. For each j in this latter sequence, we generate the pair <tt>(list i j)</tt>. This gives us a sequence of pairs for each i. Combining all the sequences for all the i (by accumulating with <tt>append</tt>) produces the required sequence of pairs:<a name="footnote_link_2-19" class="footnote_link" href="#footnote_2-19">19</a>
+<p> A natural way to organize this computation is to generate the sequence of all ordered pairs of positive integers less than or equal to $n$, filter to select those pairs whose sum is prime, and then, for each pair $(i, j)$ that passes through the filter, produce the triple $(i,j,i+j)$.
 
-<div id="">
+<p> Here is a way to generate the sequence of pairs: For each integer $i &lt;= n$, enumerate the integers $j&lt;i$, and for each such $i$ and $j$ generate the pair $(i,j)$. In terms of sequence operations, we map along the sequence <tt>(enumerate-interval 1 n)</tt>. For each $i$ in this sequence, we map along the sequence <tt>(enumerate-interval 1 (- i 1))</tt>. For each $j$ in this latter sequence, we generate the pair <tt>(list i j)</tt>. This gives us a sequence of pairs for each $i$. Combining all the sequences for all the $i$ (by accumulating with <tt>append</tt>) produces the required sequence of pairs:<a name="footnote_link_2-19" class="footnote_link" href="#footnote_2-19">19</a>
+
+<div id="scheme-define-pairs-sum-to-prime">
+(define n 6)
+
 (accumulate append
             nil
             (map (lambda (i)
@@ -2097,27 +2294,46 @@ i + j | 3 5 5 7 7 7 11
                  (enumerate-interval 1 n)))
 </div>
 <script>
-prompt();
+prompt("scheme-define-pairs-sum-to-prime", ["scheme-define-accumulate", "scheme-define-map", "scheme-define-enumerate-interval"]);
 </script>
 
 <p> The combination of mapping and accumulating with <tt>append</tt> is so common in this sort of program that we will isolate it as a separate procedure:
 
-<div id="">
+<div id="scheme-define-flatmap">
 (define (flatmap proc seq)
   (accumulate append nil (map proc seq)))
 </div>
 <script>
-prompt();
+prompt("scheme-define-flatmap", ["scheme-define-accumulate", "scheme-define-map"]);
 </script>
 
 <p> Now filter this sequence of pairs to find those whose sum is prime. The filter predicate is called for each element of the sequence; its argument is a pair and it must extract the integers from the pair. Thus, the predicate to apply to each element in the sequence is
 
-<div id="">
+<div id="scheme-define-prime?">
+(define (smallest-divisor n)
+  (find-divisor n 2))
+
+(define (find-divisor n test-divisor)
+  (cond ((> (square test-divisor) n) n)
+        ((divides? test-divisor n) test-divisor)
+        (else (find-divisor n (+ test-divisor 1)))))
+
+(define (divides? a b)
+  (= (remainder b a) 0))
+
+(define (prime? n)
+  (= n (smallest-divisor n)))
+</div>
+<script>
+hidden_prompt("scheme-define-prime?");
+</script>
+
+<div id="scheme-define-prime-sum?">
 (define (prime-sum? pair)
   (prime? (+ (car pair) (cadr pair))))
 </div>
 <script>
-prompt();
+prompt("scheme-define-prime-sum?", ["scheme-define-prime?"]);
 </script>
 
 <p> Finally, generate the sequence of results by mapping over the filtered pairs using the following procedure, which constructs a triple consisting of the two elements of the pair along with their sum:
