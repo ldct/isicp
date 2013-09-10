@@ -2159,7 +2159,7 @@ answer("scheme-ex-foldl-list", "(((() 1) 2) 3)");
 <div class="exercise">
 <p> <b>Exercise 2.39:</b> Complete the following definitions of <tt>reverse</tt> (Exercise 2-18) in terms of <tt>fold-right</tt> and <tt>fold-left</tt> from Exercise 2-38:
 
-<div id="scheme-ex-define-reverse">
+<div id="scheme-ex-define-reverse-with-foldr">
 (define (reverse sequence)
   (fold-right (lambda (x y) <??>) nil sequence))
 
@@ -2167,7 +2167,7 @@ answer("scheme-ex-foldl-list", "(((() 1) 2) 3)");
   (fold-left (lambda (x y) <??>) nil sequence))
 </div>
 <script>
-prompt("scheme-ex-define-reverse");
+prompt("scheme-ex-define-reverse-with-foldr");
 </script>
 </div>
 
@@ -2243,17 +2243,17 @@ prompt("scheme-define-prime-sum?", ["scheme-define-prime?"]);
 
 <p> Finally, generate the sequence of results by mapping over the filtered pairs using the following procedure, which constructs a triple consisting of the two elements of the pair along with their sum:
 
-<div id="">
+<div id="scheme-define-make-pair-sum">
 (define (make-pair-sum pair)
   (list (car pair) (cadr pair) (+ (car pair) (cadr pair))))
 </div>
 <script>
-prompt();
+prompt("scheme-define-make-pair-sum");
 </script>
 
 <p> Combining all these steps yields the complete procedure:
 
-<div id="">
+<div id="scheme-define-prime-sum-pairs">
 (define (prime-sum-pairs n)
   (map make-pair-sum
        (filter prime-sum?
@@ -2264,12 +2264,12 @@ prompt();
                 (enumerate-interval 1 n)))))
 </div>
 <script>
-prompt();
+prompt("scheme-define-prime-sum-pairs", ["scheme-define-map", "scheme-define-filter", "scheme-define-flatmap", "scheme-define-enumerate-interval"]);
 </script>
 
-<p> Nested mappings are also useful for sequences other than those that enumerate intervals. Suppose we wish to generate all the permutations of a set S; that is, all the ways of ordering the items in the set. For instance, the permutations of @{1,2,3@} are @{1,2,3@}, @{1,3,2@}, @{2,1,3@}, @{2,3,1@}, @{3,1,2@}, and @{3,2,1@}. Here is a plan for generating the permutations of S: For each item x in S, recursively generate the sequence of permutations of S - x,<a name="footnote_link_2-20" class="footnote_link" href="#footnote_2-20">20</a> and adjoin x to the front of each one. This yields, for each x in S, the sequence of permutations of S that begin with x. Combining these sequences for all x gives all the permutations of S:<a name="footnote_link_2-21" class="footnote_link" href="#footnote_2-21">21</a>
+<p> Nested mappings are also useful for sequences other than those that enumerate intervals. Suppose we wish to generate all the permutations of a set $S$; that is, all the ways of ordering the items in the set. For instance, the permutations of $\{1,2,3\}$ are $\{1,2,3\}$, $\{1,3,2\}$, $\{2,1,3\}$, $\{2,3,1\}$, $\{3,1,2\}$, and $\{3,2,1\}$. Here is a plan for generating the permutations of $S$: For each item $x$ in $S$, recursively generate the sequence of permutations of $S - x$,<a name="footnote_link_2-20" class="footnote_link" href="#footnote_2-20">20</a> and adjoin $x$ to the front of each one. This yields, for each x in S, the sequence of permutations of S that begin with $x$. Combining these sequences for all $x$ gives all the permutations of $S$:<a name="footnote_link_2-21" class="footnote_link" href="#footnote_2-21">21</a>
 
-<div id="">
+<div id="scheme-define-permutations">
 (define (permutations s)
   (if (null? s)                    ; empty set?
       (list nil)                   ; sequence containing empty set
@@ -2279,38 +2279,47 @@ prompt();
                s)))
 </div>
 <script>
-prompt();
+prompt("scheme-define-permutations", ["scheme-define-map", "scheme-define-flatmap", "scheme-define-remove"]);
 </script>
 
 <p> Notice how this strategy reduces the problem of generating permutations of S to the problem of generating the permutations of sets with fewer elements than S. In the terminal case, we work our way down to the empty list, which represents a set of no elements. For this, we generate <tt>(list nil)</tt>, which is a sequence with one item, namely the set with no elements. The <tt>remove</tt> procedure used in <tt>permutations</tt> returns all the items in a given sequence except for a given item. This can be expressed as a simple filter:
 
-<div id="">
+<div id="scheme-define-remove">
 (define (remove item sequence)
   (filter (lambda (x) (not (= x item)))
           sequence))
 </div>
 <script>
-prompt();
+prompt("scheme-define-remove", ["scheme-define-filter"]);
 </script>
 
-<div class="exercise">
-<p> <b>Exercise 2.40:</b> Define a procedure <tt>unique-pairs</tt> that, given an integer n, generates the sequence of pairs (i,j) with 1 <= j< i <= n. Use <tt>unique-pairs</tt> to simplify the definition of <tt>prime-sum-pairs</tt> given above. 
-</div>
+<p>
 
 <div class="exercise">
-<p> <b>Exercise 2.41:</b> Write a procedure to find all ordered triples of distinct positive integers i, j, and k less than or equal to a given integer n that sum to a given integer s.
- </div>
+<p> <b>Exercise 2.40:</b> Define a procedure <tt>unique-pairs</tt> that, given an integer $n$, generates the sequence of pairs $(i,j)$ with $1 &le; j&lt; i &le; n$. Use <tt>unique-pairs</tt> to simplify the definition of <tt>prime-sum-pairs</tt> given above. 
+</div>
+
+<p>
+
+<div class="exercise">
+<p> <b>Exercise 2.41:</b> Write a procedure to find all ordered triples of distinct positive integers $i$, $j$, and $k$ less than or equal to a given integer $n$ that sum to a given integer $s$.
+</div>
+
+<p>
+
+<div class="exercise">
+
+<p> <b>Exercise 2.42:</b> The ``eight-queens puzzle'' asks how to place eight queens on a chessboard so that no queen is in check from any other (i.e., no two queens are in the same row, column, or diagonal). 
 
 <p> <img class='center' src='http://mitpress.mit.edu/sicp/full-text/book/ch2-Z-G-23.gif'>
 
 <p style="text-align:center"> <b>Figure 2.8:</b> A solution to the eight-queens puzzle.
 
-<div class="exercise">
-<p> <b>Exercise 2.42:</b> The ``eight-queens puzzle'' asks how to place eight queens on a chessboard so that no queen is in check from any other (i.e., no two queens are in the same row, column, or diagonal). One possible solution is shown in Figure 2-8. One way to solve the puzzle is to work across the board, placing a queen in each column. Once we have placed k - 1 queens, we must place the kth queen in a position where it does not check any of the queens already on the board. We can formulate this approach recursively: Assume that we have already generated the sequence of all possible ways to place k - 1 queens in the first k - 1 columns of the board. For each of these ways, generate an extended set of positions by placing a queen in each row of the kth column. Now filter these, keeping only the positions for which the queen in the kth column is safe with respect to the other queens. This produces the sequence of all ways to place k queens in the first k columns. By continuing this process, we will produce not only one solution, but all solutions to the puzzle.
+<p> One possible solution is shown in Figure 2-8. One way to solve the puzzle is to work across the board, placing a queen in each column. Once we have placed $k - 1$ queens, we must place the $k^{th}$ queen in a position where it does not check any of the queens already on the board. We can formulate this approach recursively: Assume that we have already generated the sequence of all possible ways to place $k - 1$ queens in the first $k - 1$ columns of the board. For each of these ways, generate an extended set of positions by placing a queen in each row of the kth column. Now filter these, keeping only the positions for which the queen in the $k^{th}$ column is safe with respect to the other queens. This produces the sequence of all ways to place $k$ queens in the first $k$ columns. By continuing this process, we will produce not only one solution, but all solutions to the puzzle.
 
-<p> We implement this solution as a procedure <tt>queens</tt>, which returns a sequence of all solutions to the problem of placing n queens on an n*n chessboard. <tt>Queens</tt> has an internal procedure <tt>queen-cols</tt> that returns the sequence of all ways to place queens in the first k columns of the board.
+<p> We implement this solution as a procedure <tt>queens</tt>, which returns a sequence of all solutions to the problem of placing n queens on an $n \times n$ chessboard. <tt>queens</tt> has an internal procedure <tt>queen-cols</tt> that returns the sequence of all ways to place queens in the first k columns of the board.
 
-<div id="">
+<div id="scheme-define-queens">
 (define (queens board-size)
   (define (queen-cols k)
     (if (= k 0)
@@ -2326,16 +2335,18 @@ prompt();
   (queen-cols board-size))
 </div>
 <script>
-prompt();
+prompt("scheme-define-queens", ["scheme-define-filter", "scheme-define-map", "scheme-define-flatmap"]);
 </script>
 
-<p> In this procedure <tt>rest-of-queens</tt> is a way to place k - 1 queens in the first k - 1 columns, and <tt>new-row</tt> is a proposed row in which to place the queen for the kth column. Complete the program by implementing the representation for sets of board positions, including the procedure <tt>adjoin-position</tt>, which adjoins a new row-column position to a set of positions, and <tt>empty-board</tt>, which represents an empty set of positions. You must also write the procedure <tt>safe?</tt>, which determines for a set of positions, whether the queen in the kth column is safe with respect to the others. (Note that we need only check whether the new queen is safe---the other queens are already guaranteed safe with respect to each other.)
+<p> In this procedure <tt>rest-of-queens</tt> is a way to place $k - 1$ queens in the first $k - 1$ columns, and <tt>new-row</tt> is a proposed row in which to place the queen for the $k^{th}$ column. Complete the program by implementing the representation for sets of board positions, including the procedure <tt>adjoin-position</tt>, which adjoins a new row-column position to a set of positions, and <tt>empty-board</tt>, which represents an empty set of positions. You must also write the procedure <tt>safe?</tt>, which determines for a set of positions, whether the queen in the kth column is safe with respect to the others. (Note that we need only check whether the new queen is safe---the other queens are already guaranteed safe with respect to each other.)
  </div>
 
-<div class="exercise">
-<p> <b>Exercise 2.43:</b> Louis Reasoner is having a terrible time doing Exercise 2-42. His <tt>queens</tt> procedure seems to work, but it runs extremely slowly. (Louis never does manage to wait long enough for it to solve even the 6*6 case.)  When Louis asks Eva Lu Ator for help, she points out that he has interchanged the order of the nested mappings in the <tt>flatmap</tt>, writing it as
+<p>
 
-<div id="">
+<div class="exercise">
+<p> <b>Exercise 2.43:</b> Louis Reasoner is having a terrible time doing Exercise 2-42. His <tt>queens</tt> procedure seems to work, but it runs extremely slowly. (Louis never does manage to wait long enough for it to solve even the $6 \times 6$ case.)  When Louis asks Eva Lu Ator for help, she points out that he has interchanged the order of the nested mappings in the <tt>flatmap</tt>, writing it as
+
+<div id="scheme-louise-queens-flatmap">
 (flatmap
  (lambda (new-row)
    (map (lambda (rest-of-queens)
@@ -2344,11 +2355,11 @@ prompt();
  (enumerate-interval 1 board-size))
 </div>
 <script>
-prompt();
+no_output_frozen_prompt("scheme-louise-queens-flatmap");
 </script>
 
 <p> Explain why this interchange makes the program run slowly. Estimate how long it will take Louis's program to solve the eight-queens puzzle, assuming that the program in Exercise 2-42 solves the puzzle in time T.
- </div>
+</div>
 
 
 <h3> Example: A Picture Language </h3> 
@@ -2357,12 +2368,12 @@ prompt();
 
 <p>
 
-<div style='text-align:center'>
+<div class="figure">
 <img src='http://mitpress.mit.edu/sicp/full-text/book/ch2-Z-G-24.gif'>
 <img src='http://mitpress.mit.edu/sicp/full-text/book/ch2-Z-G-25.gif'>
-</div>
 
-<p style="text-align:center"> <b>Figure 2.9:</b> Designs generated with the picture language.
+<p> <b>Figure 2.9:</b> Designs generated with the picture language.
+</div>
 
 <h4> The picture language </h4> 
 
@@ -2370,18 +2381,9 @@ prompt();
 
 <p> Part of the elegance of this picture language is that there is only one kind of element, called a <tt>painter</tt> . A painter draws an image that is shifted and scaled to fit within a designated parallelogram-shaped frame. For example, there's a primitive painter we'll call <tt>wave</tt> that makes a crude line drawing, as shown in Figure 2-10. The actual shape of the drawing depends on the frame---all four images in Figure 2-10 are produced by the same <tt>wave</tt> painter, but with respect to four different frames. Painters can be more elaborate than this: The primitive painter called <tt>rogers</tt> paints a picture of MIT's founder, William Barton Rogers, as shown in Figure 2-11.<a name="footnote_link_2-23" class="footnote_link" href="#footnote_2-23">23</a> The four images in Figure 2-11 are drawn with respect to the same four frames as the <tt>wave</tt> images in Figure 2-10.
 
-To combine images, we use various operations that construct new painters from
-given painters. For example, the <tt>beside</tt> operation takes two painters
-and produces a new, compound painter that draws the first painter's image in
-the left half of the frame and the second painter's image in the right half of
-the frame. Similarly, <tt>below</tt> takes two painters and produces a compound
-painter that draws the first painter's image below the second painter's image.
-Some operations transform a single painter to produce a new painter. For
-example, <tt>flip-vert</tt> takes a painter and produces a painter that draws its
-image upside-down, and <tt>flip-horiz</tt> produces a painter that draws the
-original painter's image left-to-right reversed.
+<p> To combine images, we use various operations that construct new painters from given painters. For example, the <tt>beside</tt> operation takes two painters and produces a new, compound painter that draws the first painter's image in the left half of the frame and the second painter's image in the right half of the frame. Similarly, <tt>below</tt> takes two painters and produces a compound painter that draws the first painter's image below the second painter's image. Some operations transform a single painter to produce a new painter. For example, <tt>flip-vert</tt> takes a painter and produces a painter that draws its image upside-down, and <tt>flip-horiz</tt> produces a painter that draws the original painter's image left-to-right reversed.
 
-<div style='text-align:center'>
+<div class="figure">
 <img src='http://mitpress.mit.edu/sicp/full-text/book/ch2-Z-G-26.gif'>
 <img src='http://mitpress.mit.edu/sicp/full-text/book/ch2-Z-G-27.gif'>
 <img src='http://mitpress.mit.edu/sicp/full-text/book/ch2-Z-G-28.gif'>
@@ -2390,8 +2392,9 @@ original painter's image left-to-right reversed.
 <p> <b>Figure 2.10:</b> Images produced by the <tt>wave</tt> painter, with respect to four different frames. The frames, shown with dotted lines, are not part of the images. 
 </div>
 
+<p>
 
-<div style='text-align:center'>
+<div class="figure">
 <img src='http://mitpress.mit.edu/sicp/full-text/book/ch2-Z-G-30.gif'>
 <img src='http://mitpress.mit.edu/sicp/full-text/book/ch2-Z-G-31.gif'>
 <img src='http://mitpress.mit.edu/sicp/full-text/book/ch2-Z-G-32.gif'>
@@ -2410,7 +2413,7 @@ original painter's image left-to-right reversed.
 prompt("scheme-define-wave-2-4");
 </script>
 
-<div style='text-align:center'>
+<div class='figure'>
 <img src='http://mitpress.mit.edu/sicp/full-text/book/ch2-Z-G-34.gif'>
 <img src='http://mitpress.mit.edu/sicp/full-text/book/ch2-Z-G-35.gif'>
 
@@ -2421,27 +2424,27 @@ prompt("scheme-define-wave-2-4");
 
 <p> Once we can combine painters, we would like to be able to abstract typical patterns of combining painters. We will implement the painter operations as Scheme procedures. This means that we don't need a special abstraction mechanism in the picture language: Since the means of combination are ordinary Scheme procedures, we automatically have the capability to do anything with painter operations that we can do with procedures. For example, we can abstract the pattern in <tt>wave4</tt> as
 
-<div id="">
+<div id="scheme-define-flipped-pairs">
 (define (flipped-pairs painter)
   (let ((painter2 (beside painter (flip-vert painter))))
     (below painter2 painter2)))
 </div>
 <script>
-prompt();
+prompt("scheme-define-flipped-pairs");
 </script>
 
 <p> and define <tt>wave4</tt> as an instance of this pattern:
 
-<div id="">
+<div id="scheme-define-wave4">
 (define wave4 (flipped-pairs wave))
 </div>
 <script>
-prompt();
+prompt("scheme-define-wave4");
 </script>
 
 <p> We can also define recursive operations. Here's one that makes painters split and branch towards the right as shown in figures Figure 2-13 and Figure 2-14:
 
-<div id="">
+<div id="scheme-define-right-split">
 (define (right-split painter n)
   (if (= n 0)
       painter
@@ -2449,34 +2452,21 @@ prompt();
         (beside painter (below smaller smaller)))))
 </div>
 <script>
-prompt();
+prompt("scheme-define-right-split");
 </script>
 
-<div class="exercise">
+<p>
+
+<div class="figure">
+<img src="http://mitpress.mit.edu/sicp/full-text/book/ch2-Z-G-36.gif">
+<img src="http://mitpress.mit.edu/sicp/full-text/book/ch2-Z-G-37.gif">
+
 <p> <b>Figure 2.13:</b> Recursive plans for <tt>right-split</tt> and <tt>corner-split</tt>.
-
-<pre>
-+-------------+-------------+    +------+------+-------------+
-|             |             |    | up-  | up-  |             |
-|             | right-split |    | split| split| corner-split|
-|             |             |    |      |      |             |
-|             |     n-1     |    |  n-1 |  n-1 |     n-1     |
-|             |             |    |      |      |             |
-|  identity   +-------------+    +------+------+-------------+
-|             |             |    |             | right-split |
-|             | right-split |    |             |     n-1     |
-|             |             |    |  identity   +-------------+
-|             |     n-1     |    |             | right-split |
-|             |             |    |             |     n-1     |
-+-------------+-------------+    +-------------+-------------+
-
-       right-split n                    corner-split n
-</pre>
 </div>
 
 <p> We can produce balanced patterns by branching upwards as well as towards the right (see Exercise 2-44 and figures Figure 2-13 and Figure 2-14):
 
-<div id="">
+<div id="scheme-ex-define-corner-split">
 (define (corner-split painter n)
   (if (= n 0)
       painter
@@ -2489,42 +2479,45 @@ prompt();
                   (below bottom-right corner))))))
 </div>
 <script>
-prompt();
+prompt("scheme-ex-define-corner-split");
 </script>
 
-<div class="exercise">
+<p>
+
+<div id="scheme-right-split-wave-rogers-4">
+(right-split wave 4)         
+(right-split rogers 4)
+</div>
+<script>
+prompt("scheme-right-split-wave-rogers-4");
+</script>
+<img src="http://mitpress.mit.edu/sicp/full-text/book/ch2-Z-G-38.gif">
+<img src="http://mitpress.mit.edu/sicp/full-text/book/ch2-Z-G-39.gif">
+
+<div id="scheme-corner-split-wave-rogers-4">
+(corner-split wave 4)        
+(corner-split rogers 4)
+</div>
+<script>
+prompt("scheme-corner-split-wave-rogers-4");
+</script>
+<img src="http://mitpress.mit.edu/sicp/full-text/book/ch2-Z-G-40.gif">
+<img src="http://mitpress.mit.edu/sicp/full-text/book/ch2-Z-G-41.gif">
 <p> <b>Figure 2.14:</b> The recursive operations <tt>right-split</tt> and <tt>corner-split</tt> applied to the painters <tt>wave</tt> and <tt>rogers</tt>. Combining four <tt>corner-split</tt> figures produces symmetric <tt>square-limit</tt> designs as shown in Figure 2-9.
-
-[two graphic images not included]
-
-<div id="">
-(right-split wave 4)         (right-split rogers 4)
-</div>
-<script>
-prompt();
-</script>
-
-[two graphic images not included]
-
-<div id="">
-(corner-split wave 4)        (corner-split rogers 4)
-</div>
-<script>
-prompt();
-</script>
-</div>
 
 <p> By placing four copies of a <tt>corner-split</tt> appropriately, we obtain a pattern called <tt>square-limit</tt>, whose application to <tt>wave</tt> and <tt>rogers</tt> is shown in Figure 2-9:
 
-<div id="">
+<div id="scheme-define-square-limit">
 (define (square-limit painter n)
   (let ((quarter (corner-split painter n)))
     (let ((half (beside (flip-horiz quarter) quarter)))
       (below (flip-vert half) half))))
 </div>
 <script>
-prompt();
+prompt("scheme-define-square-limit");
 </script>
+
+<p>
 
 <div class="exercise">
 <p> <b>Exercise 2.44:</b> Define the procedure <tt>up-split</tt> used by <tt>corner-split</tt>. It is similar to <tt>right-split</tt>, except that it switches the roles of <tt>below</tt> and <tt>beside</tt>.
@@ -2536,7 +2529,7 @@ prompt();
 
 <p> For example, <tt>flipped-pairs</tt> and <tt>square-limit</tt> each arrange four copies of a painter's image in a square pattern; they differ only in how they orient the copies. One way to abstract this pattern of painter combination is with the following procedure, which takes four one-argument painter operations and produces a painter operation that transforms a given painter with those four operations and arranges the results in a square. <tt>Tl</tt>, <tt>tr</tt>, <tt>bl</tt>, and <tt>br</tt> are the transformations to apply to the top left copy, the top right copy, the bottom left copy, and the bottom right copy, respectively.
 
-<div id="">
+<div id="scheme-define-square-of-four">
 (define (square-of-four tl tr bl br)
   (lambda (painter)
     (let ((top (beside (tl painter) (tr painter)))
@@ -2544,43 +2537,43 @@ prompt();
       (below bottom top))))
 </div>
 <script>
-prompt();
+prompt("scheme-define-square-of-four");
 </script>
-4
+
 <p> Then <tt>flipped-pairs</tt> can be defined in terms of <tt>square-of-four</tt> as follows:<a name="footnote_link_2-24" class="footnote_link" href="#footnote_2-24">24</a>
 
-<div id="">
+<div id="scheme-define-flipped-pairs-with-square-of-four">
 (define (flipped-pairs painter)
   (let ((combine4 (square-of-four identity flip-vert
                                   identity flip-vert)))
     (combine4 painter)))
 </div>
 <script>
-prompt();
+prompt("scheme-define-flipped-pairs-with-square-of-four");
 </script>
 
 
 <p> and <tt>square-limit</tt> can be expressed as<a name="footnote_link_2-25" class="footnote_link" href="#footnote_2-25">25</a>
 
-<div id="">
+<div id="scheme-define-square-limit-with-square-of-four">
 (define (square-limit painter n)
   (let ((combine4 (square-of-four flip-horiz identity
                                   rotate180 flip-vert)))
     (combine4 (corner-split painter n))))
 </div>
 <script>
-prompt();
+prompt("scheme-define-square-limit-with-square-of-four");
 </script>
 
 <div class="exercise">
-<p> <b>Exercise 2.45:</b> <tt>Right-split</tt> and <tt>up-split</tt> can be expressed as instances of a general splitting operation. Define a procedure <tt>split</tt> with the property that evaluating
+<p> <b>Exercise 2.45:</b> <tt>right-split</tt> and <tt>up-split</tt> can be expressed as instances of a general splitting operation. Define a procedure <tt>split</tt> with the property that evaluating
 
-<div id="">
+<div id="scheme-define-right-up-split-with-split">
 (define right-split (split beside below))
 (define up-split (split below beside))
 </div>
 <script>
-prompt();
+prompt("scheme-define-right-up-split-with-split");
 </script>
 
 <p> produces procedures <tt>right-split</tt> and <tt>up-split</tt> with the same behaviors as the ones already defined.
@@ -2592,37 +2585,21 @@ prompt();
 
 <p> Figure 2-15 shows a frame and its associated vectors. In accordance with data abstraction, we need not be specific yet about how frames are represented, other than to say that there is a constructor <tt>make-frame</tt>, which takes three vectors and produces a frame, and three corresponding selectors <tt>origin-frame</tt>, <tt>edge1-frame</tt>, and <tt>edge2-frame</tt> (see Exercise 2-47).
 
-<div class="exercise">
+<div class="figure">
+<img src="http://mitpress.mit.edu/sicp/full-text/book/ch2-Z-G-42.gif">
 <p> <b>Figure 2.15:</b> A frame is described by three vectors -- an origin and two edges.
-
-<pre>
-                         __
-                     __--  \
-                 __--       \
-      __     __--            \   __
-     |\  __--                 \__-|
-       \-                  __--
-frame   \              __--
-edge2    \         __--    frame
-vector    \    __--        edge1
-           \_--            vector
-            -   <--+
-          frame    |
-          origin   +-- (0,0) point
-          vector       on display screen
-</pre>
 </div>
 
-<p> We will use coordinates in the unit square (0<= x,y<= 1) to specify images. With each frame, we associate a <tt>frame coordinate map</tt> , which will be used to shift and scale images to fit the frame. The map transforms the unit square into the frame by mapping the vector v = (x,y) to the vector sum
+<p> We will use coordinates in the unit square $(0 &le; x,y &le; 1)$ to specify images. With each frame, we associate a <tt>frame coordinate map</tt> , which will be used to shift and scale images to fit the frame. The map transforms the unit square into the frame by mapping the vector v = (x,y) to the vector sum
 
-<pre>
-Origin(Frame) + r * Edge_1(Frame) + y * Edge_2(Frame)
-</pre>
+$$
+\text{Origin}(\text{Frame}) + x \cdot \text{Edge}_1(\text{Frame}) + y \cdot \text{Edge}_2(\text{Frame})
+$$
 
 
 <p> For example, (0,0) is mapped to the origin of the frame, (1,1) to the vertex diagonally opposite the origin, and (0.5,0.5) to the center of the frame. We can create a frame's coordinate map with the following procedure:<a name="footnote_link_2-26" class="footnote_link" href="#footnote_2-26">26</a>
 
-<div id="">
+<div id="scheme-define-frame-coord-map">
 (define (frame-coord-map frame)
   (lambda (v)
     (add-vect
@@ -2633,43 +2610,43 @@ Origin(Frame) + r * Edge_1(Frame) + y * Edge_2(Frame)
                            (edge2-frame frame))))))
 </div>
 <script>
-prompt();
+prompt("scheme-define-frame-coord-map");
 </script>
 
 <p> Observe that applying <tt>frame-coord-map</tt> to a frame returns a procedure that, given a vector, returns a vector. If the argument vector is in the unit square, the result vector will be in the frame. For example,
 
-<div id="">
+<div id="scheme-frame-coord-map-a-frame-0-0">
 ((frame-coord-map a-frame) (make-vect 0 0))
 </div>
 <script>
-prompt();
+no_output_frozen_prompt("scheme-frame-coord-map-a-frame-0-0");
 </script>
 
+<p> returns the same vector as
 
-returns the same vector as
-
-<div id="">
+<div id="scheme-origin-frame-a-frame">
 (origin-frame a-frame)
 </div>
 <script>
-prompt();
+prompt("scheme-origin-frame-a-frame");
 </script>
 
 <div class="exercise">
 <p> <b>Exercise 2.46:</b> A two-dimensional vector v running from the origin to a point can be represented as a pair consisting of an x-coordinate and a y-coordinate. Implement a data abstraction for vectors by giving a constructor <tt>make-vect</tt> and corresponding selectors <tt>xcor-vect</tt> and <tt>ycor-vect</tt>. In terms of your selectors and constructor, implement procedures <tt>add-vect</tt>, <tt>sub-vect</tt>, and <tt>scale-vect</tt> that perform the operations vector addition, vector subtraction, and multiplying a vector by a scalar:
 
-<pre>
-(x_1, y_1) + (x_2, y_2) = (x_1 + x_2, y_1 + y_2)
-(x_1, y_1) - (x_2, y_2) = (x_1 - x_2, y_1 - y_2)
-             s * (x, y) = (sx, sy)
-</pre>
+\begin{align} 
+(x_1, y_1) + (x_2, y_2) &amp;= (x_1 + x_2, y_1 + y_2) \\
+(x_1, y_1) - (x_2, y_2) &amp;= (x_1 - x_2, y_1 - y_2) \\
+             s \cdot (x, y) &amp;= (sx, sy)
+\end{align}
 </div>
 
-<div class="exercise">
-<b>Exercise 2.47:</b> Here are two possible
-constructors for frames:
+<p>
 
-<div id="">
+<div class="exercise">
+<p> <b>Exercise 2.47:</b> Here are two possible constructors for frames:
+
+<div id="scheme-ex-define-make-frame">
 (define (make-frame origin edge1 edge2)
   (list origin edge1 edge2))
 
@@ -2677,11 +2654,11 @@ constructors for frames:
   (cons origin (cons edge1 edge2)))
 </div>
 <script>
-prompt();
+prompt("scheme-ex-define-make-frame");
 </script>
 
 <p> For each constructor supply the appropriate selectors to produce an implementation for frames.
- </div>
+</div>
 
 <h4> Painters </h4> 
 
@@ -2689,7 +2666,7 @@ prompt();
 
 <p> The details of how primitive painters are implemented depend on the particular characteristics of the graphics system and the type of image to be drawn. For instance, suppose we have a procedure <tt>draw-line</tt> that draws a line on the screen between two specified points. Then we can create painters for line drawings, such as the <tt>wave</tt> painter in Figure 2-10, from lists of line segments as follows:<a name="footnote_link_2-27" class="footnote_link" href="#footnote_2-27">27</a>
 
-<div id="">
+<div id="scheme-ex-define-segments-to-painter">
 (define (segments->painter segment-list)
   (lambda (frame)
     (for-each
@@ -2700,7 +2677,7 @@ prompt();
      segment-list)))
 </div>
 <script>
-prompt();
+prompt("scheme-ex-define-segments-to-painter");
 </script>
 
 <p> The segments are given using coordinates with respect to the unit square. For each segment in the list, the painter transforms the segment endpoints with the frame coordinate map and draws a line between the transformed points.
@@ -2709,7 +2686,9 @@ prompt();
 
 <div class="exercise">
 <p> <b>Exercise 2.48:</b> A directed line segment in the plane can be represented as a pair of vectors---the vector running from the origin to the start-point of the segment, and the vector running from the origin to the end-point of the segment. Use your vector representation from Exercise 2-46 to define a representation for segments with a constructor <tt>make-segment</tt> and selectors <tt>start-segment</tt> and <tt>end-segment</tt>.
- </div>
+</div>
+
+<p>
 
 <div class="exercise">
 <p> <b>Exercise 2.49:</b> Use <tt>segments->painter</tt> to define the following primitive painters:
@@ -2717,17 +2696,20 @@ prompt();
 <ul>
 <li>
 The painter that draws the outline of the designated frame.
+</li>
 
 <li>
 The painter that draws an ``X'' by connecting opposite corners of the frame.
+</li>
 
 <li>
 The painter that draws a diamond shape by connecting the midpoints of the sides
 of the frame.
+</li>
 
 <li>
 The <tt>wave</tt> painter.
-
+</li>
 </ul>
 </div>
 
@@ -2737,7 +2719,7 @@ The <tt>wave</tt> painter.
 
 <p> Painter operations are based on the procedure <tt>transform-painter</tt>, which takes as arguments a painter and information on how to transform a frame and produces a new painter. The transformed painter, when called on a frame, transforms the frame and calls the original painter on the transformed frame. The arguments to <tt>transform-painter</tt> are points (represented as vectors) that specify the corners of the new frame: When mapped into the frame, the first point specifies the new frame's origin and the other two specify the ends of its edge vectors. Thus, arguments within the unit square specify a frame contained within the original frame.
 
-<div id="">
+<div id="scheme-define-transform-painter">
 (define (transform-painter painter origin corner1 corner2)
   (lambda (frame)
     (let ((m (frame-coord-map frame)))
@@ -2748,12 +2730,12 @@ The <tt>wave</tt> painter.
                      (sub-vect (m corner2) new-origin)))))))
 </div>
 <script>
-prompt();
+prompt("scheme-define-transform-painter");
 </script>
 
 <p> Here's how to flip painter images vertically:
 
-<div id="">
+<div id="scheme-define-flip-vert">
 (define (flip-vert painter)
   (transform-painter painter
                      (make-vect 0.0 1.0)   ; new <tt>origin</tt>
@@ -2761,12 +2743,12 @@ prompt();
                      (make-vect 0.0 0.0))) ; new end of <tt>edge2</tt>
 </div>
 <script>
-prompt();
+prompt("scheme-define-flip-vert");
 </script>
 
 <p> Using <tt>transform-painter</tt>, we can easily define new transformations. For example, we can define a painter that shrinks its image to the upper-right quarter of the frame it is given:
 
-<div id="">
+<div id="scheme-define-shrink-to-upper-right">
 (define (shrink-to-upper-right painter)
   (transform-painter painter
                      (make-vect 0.5 0.5)
@@ -2774,12 +2756,12 @@ prompt();
                      (make-vect 0.5 1.0)))
 </div>
 <script>
-prompt();
+prompt("scheme-define-shrink-to-upper-right");
 </script>
 
 <p> Other transformations rotate images counterclockwise by 90 degrees<a name="footnote_link_2-29" class="footnote_link" href="#footnote_2-29">29</a>
 
-<div id="">
+<div id="scheme-define-rotate90">
 (define (rotate90 painter)
   (transform-painter painter
                      (make-vect 1.0 0.0)
@@ -2787,12 +2769,12 @@ prompt();
                      (make-vect 0.0 0.0)))
 </div>
 <script>
-prompt();
+prompt("scheme-define-rotate90");
 </script>
 
 <p> or squash images towards the center of the frame:<a name="footnote_link_2-30" class="footnote_link" href="#footnote_2-30">30</a>
 
-<div id="">
+<div id="scheme-define-squash-inwards">
 (define (squash-inwards painter)
   (transform-painter painter
                      (make-vect 0.0 0.0)
@@ -2800,12 +2782,12 @@ prompt();
                      (make-vect 0.35 0.65)))
 </div>
 <script>
-prompt();
+prompt("scheme-define-squash-inwards");
 </script>
 
 <p> Frame transformation is also the key to defining means of combining two or more painters. The <tt>beside</tt> procedure, for example, takes two painters, transforms them to paint in the left and right halves of an argument frame respectively, and produces a new, compound painter. When the compound painter is given a frame, it calls the first transformed painter to paint in the left half of the frame and calls the second transformed painter to paint in the right half of the frame:
 
-<div id="">
+<div id="scheme-define-beside">
 (define (beside painter1 painter2)
   (let ((split-point (make-vect 0.5 0.0)))
     (let ((paint-left
@@ -2823,18 +2805,20 @@ prompt();
         (paint-right frame)))))
 </div>
 <script>
-prompt();
+prompt("scheme-define-beside");
 </script>
 
 <p> Observe how the painter data abstraction, and in particular the representation of painters as procedures, makes <tt>beside</tt> easy to implement. The <tt>beside</tt> procedure need not know anything about the details of the component painters other than that each painter will draw something in its designated frame.
 
 <div class="exercise">
 <p> <b>Exercise 2.50:</b> Define the transformation <tt>flip-horiz</tt>, which flips painters horizontally, and transformations that rotate painters counterclockwise by 180 degrees and 270 degrees.
- </div>
+</div>
+
+<p>
 
 <div class="exercise">
 <p> <b>Exercise 2.51:</b> Define the <tt>below</tt> operation for painters. <tt>Below</tt> takes two painters as arguments. The resulting painter, given a frame, draws with the first painter in the bottom of the frame and with the second painter in the top. Define <tt>below</tt> in two different ways---first by writing a procedure that is analogous to the <tt>beside</tt> procedure given above, and again in terms of <tt>beside</tt> and suitable rotation operations (from Exercise 2-50).
- </div>
+</div>
 
 <h4> Levels of language for robust design </h4> 
 
@@ -2865,8 +2849,6 @@ Modify the version of <tt>square-limit</tt> that uses <tt>square-of-four</tt> so
 </li>
 </ul>
 </div>
-
-
 @@
 
 {{footnotes}}

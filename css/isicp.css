@@ -30,6 +30,14 @@ li {
   color:#2E2E2E;
 }
 
+.figure {
+  text-align: center;
+}
+
+.figure p {
+  text-align: center;
+}
+
 .p-link {
   text-decoration: underline;
   text-align: right;

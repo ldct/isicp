@@ -590,10 +590,12 @@ prompt("scheme-define-square");
 
 <p> We can understand this in the following way:
 
-<p><p><tt>(define&nbsp;(square&nbsp;&nbsp;x)&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;(*&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;x&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;x))<br>
-&nbsp;&nbsp;&#8593;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&#8593;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&#8593;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&#8593;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&#8593;&nbsp;&nbsp;&nbsp;&nbsp;&#8593;<br>
+<p><p>
+<pre>
+(define&nbsp;(square&nbsp;&nbsp;x)&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;(*&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;x&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;x))
+&nbsp;&nbsp;&#8593;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&#8593;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&#8593;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&#8593;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&#8593;&nbsp;&nbsp;&nbsp;&nbsp;&#8593;
 &nbsp;To&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;square&nbsp;something,&nbsp;multiply&nbsp;&nbsp;&nbsp;it&nbsp;by&nbsp;&nbsp;itself.<br>
-</tt><p><p>
+</pre>
 
 <p> We have here a compound procedure, which has been given the name square. The procedure represents the operation of multiplying something by itself. The thing to be multiplied is given a local name, x, which plays the same role that a pronoun plays in natural language. Evaluating the definition creates this compound procedure and associates it with the name square.<a name="footnote_link_1-12" class="footnote_link" href="#footnote_1-12">12</a>
 
@@ -636,7 +638,7 @@ prompt("scheme-square-square", ["scheme-define-square"]);
 </script>
 
 
-<p> We can also use square as a building block in defining other procedures. For example, x<sup>2</sup> + y<sup>2</sup> can be expressed as
+<p> We can also use square as a building block in defining other procedures. For example, $x^2 + y^2$ can be expressed as
 
 <div id="scheme-sum-square-eg" class='static'>
 (+ (square x) (square y))
@@ -674,7 +676,7 @@ prompt("scheme-sum-of-squares-3-4", ["scheme-define-sum-of-squares"]);
 prompt("scheme-f", ["scheme-define-sum-of-squares"]);
 </script>
 
-<p> Compound procedures are used in exactly the same way as primitive procedures. Indeed, one could not tell by looking at the definition of sum-of-squares given above whether square was built into the interpreter, like + and *, or defined as a compound procedure.
+<p> Compound procedures are used in exactly the same way as primitive procedures. Indeed, one could not tell by looking at the definition of sum-of-squares given above whether square was built into the interpreter, like <tt>+</tt> and <tt>*</tt>, or defined as a compound procedure.
 
 <h3> The Substitution Model for Procedure Application</h3>
 
@@ -682,7 +684,7 @@ prompt("scheme-f", ["scheme-define-sum-of-squares"]);
 
 <p> We can assume that the mechanism for applying primitive procedures to arguments is built into the interpreter. For compound procedures, the application process is as follows:
 
-<blockquote> To apply a compound procedure to arguments, evaluate the body of the procedure with each formal parameter replaced by the corresponding argument. </blockquote>
+<blockquote> <p> To apply a compound procedure to arguments, evaluate the body of the procedure with each formal parameter replaced by the corresponding argument. </blockquote>
 
 <p> To illustrate this process, let's evaluate the combination
 
@@ -693,7 +695,7 @@ prompt("scheme-f", ["scheme-define-sum-of-squares"]);
 makeStatic("scheme-f-1"); 
 </script>
 
-<p> where f is the procedure defined in section 1.1.4. We begin by retrieving the body of f:
+<p> where <tt>f</tt> is the procedure defined in section 1.1.4. We begin by retrieving the body of <tt>f</tt>:
 
 <div id="scheme-f-2" class='static'>
 (sum-of-squares (+ a 1) (* a 2))
@@ -702,7 +704,7 @@ makeStatic("scheme-f-1");
 makeStatic("scheme-f-2"); 
 </script>
 
-<p> Then we replace the formal parameter a by the argument 5:
+<p> Then we replace the formal parameter <tt>a</tt> by the argument <tt>5</tt>:
 
 <div id="scheme-f-3" class='static'>
 (sum-of-squares (+ 5 1) (* 5 2))
@@ -711,7 +713,7 @@ makeStatic("scheme-f-2");
 makeStatic("scheme-f-3"); 
 </script>
 
-<p> Thus the problem reduces to the evaluation of a combination with two operands and an operator sum-of-squares. Evaluating this combination involves three subproblems. We must evaluate the operator to get the procedure to be applied, and we must evaluate the operands to get the arguments. Now (+ 5 1) produces 6 and (* 5 2) produces 10, so we must apply the sum-of-squares procedure to 6 and 10. These values are substituted for the formal parameters x and y in the body of sum-of-squares, reducing the expression to
+<p> Thus the problem reduces to the evaluation of a combination with two operands and an operator <tt>sum-of-squares</tt>. Evaluating this combination involves three subproblems. We must evaluate the operator to get the procedure to be applied, and we must evaluate the operands to get the arguments. Now <tt>(+ 5 1)</tt> produces <tt>6</tt> and <tt>(* 5 2)</tt> produces <tt>10</tt>, so we must apply the sum-of-squares procedure to 6 and 10. These values are substituted for the formal parameters x and y in the body of sum-of-squares, reducing the expression to
 
 <div id="scheme-f-4" class='static'>
 (+ (square 6) (square 10))
@@ -751,10 +753,12 @@ makeStatic("scheme-f-7");
 
 <ul>
 
-<li> The purpose of the substitution is to help us think about procedure application, not to provide a description of how the interpreter really works. Typical interpreters do not evaluate procedure applications by manipulating the text of a procedure to substitute values for the formal parameters. In practice, the "substitution" is accomplished by using a local environment for the formal parameters. We will discuss this more fully in chapters 3 and 4 when we examine the implementation of an interpreter in detail.
+<li> 
+<p> The purpose of the substitution is to help us think about procedure application, not to provide a description of how the interpreter really works. Typical interpreters do not evaluate procedure applications by manipulating the text of a procedure to substitute values for the formal parameters. In practice, the "substitution" is accomplished by using a local environment for the formal parameters. We will discuss this more fully in chapters 3 and 4 when we examine the implementation of an interpreter in detail.
+</li>
 
-<li> Over the course of this book, we will present a sequence of increasingly elaborate models of how interpreters work, culminating with a complete implementation of an interpreter and compiler in chapter 5. The substitution model is only the first of these models &mdash; a way to get started thinking formally about the evaluation process. In general, when modeling phenomena in science and engineering, we begin with simplified, incomplete models. As we examine things in greater detail, these simple models become inadequate and must be replaced by more refined models. The substitution model is no exception. In particular, when we address in chapter 3 the use of procedures with "mutable data," we will see that the substitution model breaks down and must be replaced by a more complicated model of procedure application.<a name="footnote_link_1-15" class="footnote_link" href="#footnote_1-15">15</a> 
-
+<li> <p> Over the course of this book, we will present a sequence of increasingly elaborate models of how interpreters work, culminating with a complete implementation of an interpreter and compiler in chapter 5. The substitution model is only the first of these models &mdash; a way to get started thinking formally about the evaluation process. In general, when modeling phenomena in science and engineering, we begin with simplified, incomplete models. As we examine things in greater detail, these simple models become inadequate and must be replaced by more refined models. The substitution model is no exception. In particular, when we address in chapter 3 the use of procedures with "mutable data," we will see that the substitution model breaks down and must be replaced by a more complicated model of procedure application.<a name="footnote_link_1-15" class="footnote_link" href="#footnote_1-15">15</a> 
+</li>
 </ul>
 
 <h4> Applicative order versus normal order </h4>
@@ -841,7 +845,12 @@ makeStatic("scheme-x");
 
 <p> The expressive power of the class of procedures that we can define at this point is very limited, because we have no way to make tests and to perform different operations depending on the result of a test. For instance, we cannot define a procedure that computes the absolute value of a number by testing whether the number is positive, negative, or zero and taking different actions in the different cases according to the rule
 
-<p> <img src='http://mitpress.mit.edu/sicp/full-text/book/ch1-Z-G-2.gif'>
+$$
+|x| = \begin{cases} 
+x  &amp;\mbox{if } x &gt; 0 \\
+0  &amp;\mbox{if } x =    0 \\
+-x &amp;\mbox{if } x &lt; 0 \end{cases}
+$$
 
 <p> This construct is called a case analysis, and there is a special form in Lisp for notating such a case analysis. It is called cond (which stands for "conditional"), and it is used as follows:
 
@@ -870,7 +879,7 @@ no_output_frozen_prompt("scheme-cond-syntax");
 
 <p> Conditional expressions are evaluated as follows. The predicate <tt>&lt;p1&gt;</tt>; is evaluated first. If its value is false, then <tt>&lt;p2&gt;</tt> is evaluated. If <tt>&lt;p2&gt;</tt>'s value is also false, then <tt>&lt;p3&gt;</tt> is evaluated. This process continues until a predicate is found whose value is true, in which case the interpreter returns the value of the corresponding consequent expression <tt>&lt;e&gt;</tt> of the clause as the value of the conditional expression. If none of the <tt>&lt;p&gt;</tt>'s is found to be true, the value of the cond is undefined.
 
-<p> The word predicate is used for procedures that return true or false, as well as for expressions that evaluate to true or false. The absolute-value procedure abs makes use of the primitive predicates <tt>&lt;, &gt;,</tt> and <tt>=</tt>.<a name="footnote_link_1-18" class="footnote_link" href="#footnote_1-18">18</a> These take two numbers as arguments and test whether the first number is, respectively, greater than, less than, or equal to the second number, returning true or false accordingly.
+<p> The word predicate is used for procedures that return true or false, as well as for expressions that evaluate to true or false. The absolute-value procedure abs makes use of the primitive predicates <tt>&lt;</tt>, <tt>&gt;</tt>, and <tt>=</tt>.<a name="footnote_link_1-18" class="footnote_link" href="#footnote_1-18">18</a> These take two numbers as arguments and test whether the first number is, respectively, greater than, less than, or equal to the second number, returning true or false accordingly.
 
 <p> Another way to write the absolute-value procedure is
 
@@ -881,7 +890,7 @@ no_output_frozen_prompt("scheme-cond-syntax");
 </div>
 <script> prompt("scheme-abs"); </script>
 
-<p> which could be expressed in English as "If x is less than zero return - x; otherwise return x." Else is a special symbol that can be used in place of the <tt>&lt;p&gt;</tt> in the final clause of a cond. This causes the cond to return as its value the value of the corresponding <tt>&lt;e&gt;</tt> whenever all previous clauses have been bypassed. In fact, any expression that always evaluates to a true value could be used as the <tt>&lt;p&gt;</tt> here.
+<p> which could be expressed in English as "If $x$ is less than zero return $-x$; otherwise return $x$." <tt>else</tt> is a special symbol that can be used in place of the <tt>&lt;p&gt;</tt> in the final clause of a cond. This causes the cond to return as its value the value of the corresponding <tt>&lt;e&gt;</tt> whenever all previous clauses have been bypassed. In fact, any expression that always evaluates to a true value could be used as the <tt>&lt;p&gt;</tt> here.
 <p> Here is yet another way to write the absolute-value procedure:
 
 <div id="scheme-abs-if">
@@ -928,7 +937,7 @@ no_output_frozen_prompt("scheme-cond-syntax");
 
 <p> Notice that and and or are special forms, not procedures, because the subexpressions are not necessarily all evaluated. Not is an ordinary procedure.
 
-As an example of how these are used, the condition that a number x be in the range 5 &lt; x &lt; 10 may be expressed as
+As an example of how these are used, the condition that a number $x$ be in the range $5 &lt; x &lt; 10$ may be expressed as
 
 <div id="scheme-between">
 (and (> x 5) (&lt; x 10))
@@ -1083,7 +1092,9 @@ makeMCQ("scheme-ex-15-mcq",
 
 <p> As a case in point, consider the problem of computing square roots. We can define the square-root function as
 
-<p> <img src='http://mitpress.mit.edu/sicp/full-text/book/ch1-Z-G-4.gif' />
+$$
+\text{$\sqrt x$ = the $y$ such that $y \ge 0$ and $y^2 = x$}
+$$
 
 <p>  This describes a perfectly legitimate mathematical function. We could use it to recognize whether one number is the square root of another, or to derive facts about square roots in general. On the other hand, the definition does not describe a procedure. Indeed, it tells us almost nothing about how to actually find the square root of a given number. It will not help matters to rephrase this definition in pseudo-Lisp:
               
@@ -1092,28 +1103,25 @@ makeMCQ("scheme-ex-15-mcq",
   (the y (and (>= y 0)
               (= (square y) x))))
 </div>
-<script> prompt("scheme-pseudo-sqrt"); </script>
+<script> 
+no_output_frozen_prompt("scheme-pseudo-sqrt"); 
+</script>
 
 <p> This only begs the question.
 
 <p> The contrast between function and procedure is a reflection of the general distinction between describing properties of things and describing how to do things, or, as it is sometimes referred to, the distinction between declarative knowledge and imperative knowledge. In mathematics we are usually concerned with declarative (what is) descriptions, whereas in computer science we are usually concerned with imperative (how to) descriptions.<a name="footnote_link_1-20" class="footnote_link" href="#footnote_1-20">20</a>
 
-<p> How does one compute square roots?  The most common way is to use Newton's method of successive approximations, which says that whenever we have a guess <em>y</em> for the value of the square root of a number <em>x</em>, we can perform a simple manipulation to get a better guess (one closer to the actual square root) by averaging <em>y</em> with
-<em>x</em>/<em>y</em>.<a name="footnote_link_1-21" class="footnote_link" href="#footnote_1-21">21</a> For example, we can compute the square root of 2 as follows. Suppose our initial guess is&nbsp;1:<p>
+<p> How does one compute square roots?  The most common way is to use Newton's method of successive approximations, which says that whenever we have a guess $y$ for the value of the square root of a number $x$, we can perform a simple manipulation to get a better guess (one closer to the actual square root) by averaging $y$ with
+$\frac{x}{y}$.<a name="footnote_link_1-21" class="footnote_link" href="#footnote_1-21">21</a> For example, we can compute the square root of 2 as follows. Suppose our initial guess is $1$:<p>
 
-<table><tr><td valign=top >Guess </td><td valign=top >Quotient </td><td valign=top >Average</td></tr>
-<tr><td valign=top >&nbsp;&nbsp;</td></tr>
-<tr><td valign=top >1      </td><td valign=top > (2/1)  =  2        </td><td valign=top >
-((2 + 1)/2)  =  1.5 </td></tr>
-<tr><td valign=top >&nbsp;&nbsp;</td></tr>
-<tr><td valign=top >1.5    </td><td valign=top > (2/1.5)  =  1.3333 </td><td valign=top >
-((1.3333 + 1.5)/2)  =  1.4167 </td></tr>
-<tr><td valign=top >&nbsp;&nbsp;</td></tr>
-<tr><td valign=top >1.4167 </td><td valign=top > (2/1.4167)  =  1.4118 </td><td valign=top >
-((1.4167 + 1.4118)/2)  =  1.4142 </td></tr>
-<tr><td valign=top >&nbsp;&nbsp;</td></tr>
-<tr><td valign=top >1.4142 </td><td valign=top ><tt>...</tt></td><td valign=top ><tt>...</tt></td></tr>
-<tr><td valign=top ></td></tr></table><p>
+\begin{array}{c|c|c}
+\text{Guess} &amp; \text{Quotient} &amp; \text{Average} \\
+\hline \\
+1       &amp; \frac{2}{1} = 2            &amp; \frac{1}{2} (2 + 1) = 1.5 \\
+1.5     &amp; \frac{2}{1.5} = 1.3333     &amp; \frac{1}{2} (1.3333 + 1.5) = 1.4617 \\
+1.4617  &amp; \frac{2}{1.4617} = 1.4188  &amp; \frac{1}{2} (1.4167 + 1.4188) = 1.4142 \\
+1.4142  &amp; \frac{2}{1.4142} = 1.4164  &amp; \cdots 
+\end{array}
 
 <p> Continuing this process, we obtain better and better approximations to the square root.
 
@@ -1329,7 +1337,9 @@ frozen_prompt("scheme-ex-17-my-test", ["scheme-define-square", "scheme-ex-17-inp
 
 <p> <b> Exercise 1.8. </b> Newton's method for cube roots is  based on the fact that if y is an approximation to the cube root of x, then a better approximation is given  by the value 
 
-<p> <img src='http://mitpress.mit.edu/sicp/full-text/book/ch1-Z-G-5.gif' />
+$$
+\frac{x/y^2 + 2y}{3}
+$$
 
 <p> Use this formula to implement a cube-root procedure analogous to the square-root procedure. (In Section 1.3.4 we will see how to implement Newton’s  method in general as an abstraction of these square root and cube-root procedures.)
 
@@ -1379,9 +1389,10 @@ editorOf["scheme-ex-18-test"].setOption("readOnly", 'nocursor');
 
 <p> Observe that the problem of computing square roots breaks up naturally into a number of subproblems: how to tell whether a guess is good enough, how to improve a guess, and so on. Each of these tasks is accomplished by a separate procedure. The entire sqrt program can be viewed as a cluster of procedures (shown in figure 1.2) that mirrors the decomposition of the problem into subproblems.
 
-<p> <img class='center' src='http://mitpress.mit.edu/sicp/full-text/book/ch1-Z-G-6.gif'>
-
-<p style="text-align:center"> <b> Figure 1.2: </b> Procedural decomposition of the sqrt program.
+<div class="figure">
+<img src='http://mitpress.mit.edu/sicp/full-text/book/ch1-Z-G-6.gif'>
+<p> <b> Figure 1.2: </b> Procedural decomposition of the <tt>sqrt</tt> program.
+</div>
 
 <p> The importance of this decomposition strategy is not simply that one is dividing the program into parts. After all, we could take any large program and divide it into parts &mdash; the first ten lines, the next ten lines, the next ten lines, and so on. Rather, it is crucial that each procedure accomplishes an identifiable task that can be used as a module in defining other procedures. For example, when we define the good-enough? procedure in terms of square, we are able to regard the square procedure as a &ldquo;black box.&rdquo; We are not at that moment concerned with how the procedure computes its result, only with the fact that it computes the square. The details of how the square is computed can be suppressed, to be considered at a later time. Indeed, as far as the good-enough? procedure is concerned, square is not quite a procedure but rather an abstraction of a procedure, a so-called procedural abstraction. At this level of abstraction, any procedure that computes the square is equally good.
 
@@ -1519,7 +1530,7 @@ prompt("scheme-define-sqrt-no-x", ["scheme-define-square", "scheme-define-averag
 <div id="footnotes">
 <h3 id='Notes'> Notes </h3>
 <div id="footnote_1-4" class="footnote"> 
-<p> <a href="#footnote_link_1-4" class="footnote_backlink">4</a> The characterization of numbers as &ldquo;simple data&rdquo; is a barefaced bluff. In fact, the treatment of numbers is one of the trickiest and most confusing aspects of any programming language. Some typical issues involved are these: Some computer systems distinguish <em>integers</em>, such as 2, from <em>real numbers</em>, such as 2.71. Is the real number 2.00 different from the integer 2?  Are the arithmetic operations used for integers the same as the operations used for real numbers?  Does 6 divided by 2 produce 3, or 3.0?  How large a number can we represent?  How many decimal places of accuracy can we represent?  Is the range of integers the same as the range of real numbers?  Above and beyond these questions, of course, lies a collection of issues concerning roundoff and truncation errors &mdash; the entire science of numerical analysis. Since our focus in this book is on large-scale program design rather than on numerical techniques, we are going to ignore these problems. The numerical examples in this chapter will exhibit the usual roundoff behavior that one observes when using arithmetic operations that preserve a limited number of decimal places of accuracy in noninteger operations.
+<p> <a href="#footnote_link_1-4" class="footnote_backlink">4</a> The characterization of numbers as &ldquo;simple data&rdquo; is a barefaced bluff. In fact, the treatment of numbers is one of the trickiest and most confusing aspects of any programming language. Some typical issues involved are these: Some computer systems distinguish <em>integers</em>, such as $2$, from <em>real numbers</em>, such as $2.71$. Is the real number $2.00$ different from the integer $2$?  Are the arithmetic operations used for integers the same as the operations used for real numbers?  Does $6$ divided by $2$ produce $3$, or $3.0$?  How large a number can we represent?  How many decimal places of accuracy can we represent?  Is the range of integers the same as the range of real numbers?  Above and beyond these questions, of course, lies a collection of issues concerning roundoff and truncation errors &mdash; the entire science of numerical analysis. Since our focus in this book is on large-scale program design rather than on numerical techniques, we are going to ignore these problems. The numerical examples in this chapter will exhibit the usual roundoff behavior that one observes when using arithmetic operations that preserve a limited number of decimal places of accuracy in noninteger operations.
 </div>
 
 <div id="footnote_1-5" class="footnote">
@@ -1588,13 +1599,12 @@ Lisp systems typically provide features to aid the user in formatting expression
 </p></div>
 
 <div id="footnote_1-18" class="footnote">
-<p><a href="#footnote_link_1-18" class="footnote_backlink">18</a>
- <tt>Abs</tt> also uses the &ldquo;minus&rdquo; operator <tt>-</tt>, which, when used with a single operand, as in <tt>(-&nbsp;x)</tt>, indicates negation.  
+<p><a href="#footnote_link_1-18" class="footnote_backlink">18</a> <tt>abs</tt> also uses the &ldquo;minus&rdquo; operator <tt>-</tt>, which, when used with a single operand, as in <tt>(-&nbsp;x)</tt>, indicates negation.  
 </p></div>
 
 <div id="footnote_1-19" class="footnote">
 <p><a href="#footnote_link_1-19" class="footnote_backlink">19</a>
- A minor difference between <tt>if</tt> and <tt>cond</tt> is that the &lt;<em>e</em>&gt; part of each <tt>cond</tt> clause may be a sequence of expressions. If the corresponding &lt;<em>p</em>&gt; is found to be true, the expressions &lt;<em>e</em>&gt; are evaluated in sequence and the value of the final expression in the sequence is returned as the value of the <tt>cond</tt>. In an <tt>if</tt> expression, however, the &lt;<em>consequent</em>&gt; and &lt;<em>alternative</em>&gt; must be single expressions.  
+ A minor difference between <tt>if</tt> and <tt>cond</tt> is that the <tt><em>&lt;e&gt;</em></tt> part of each <tt>cond</tt> clause may be a sequence of expressions. If the corresponding <tt><em>&lt;p&gt;</em></tt> is found to be true, the expressions <tt><em>&lt;e&gt;</em></tt> are evaluated in sequence and the value of the final expression in the sequence is returned as the value of the <tt>cond</tt>. In an <tt>if</tt> expression, however, the <tt><em>&lt;consequent&gt;</em></tt> and <tt><em>&lt;alternative&gt;</em></tt> must be single expressions.  
 </p></div>
 
 <div id="footnote_1-20" class="footnote">
@@ -1614,7 +1624,7 @@ Lisp systems typically provide features to aid the user in formatting expression
 
 <div id="footnote_1-23" class="footnote">
 <p><a href="#footnote_link_1-23" class="footnote_backlink">23</a>
- Observe that we express our initial guess as 1.0 rather than 1. This would not make any difference in many Lisp implementations. MIT Scheme, however, distinguishes between exact integers and decimal values, and dividing two integers produces a rational number rather than a decimal. For example, dividing 10 by 6 yields 5/3, while dividing 10.0 by 6.0 yields 1.6666666666666667. (We will learn how to implement arithmetic on rational numbers in section&nbsp;<a href="book-Z-H-14.html#%_sec_2.1.1">2.1.1</a>.)  If we start with an initial guess of 1 in our square-root program, and <em>x</em> is an exact integer, all subsequent values produced in the square-root computation will be rational numbers rather than decimals. Mixed operations on rational numbers and decimals always yield decimals, so starting with an initial guess of 1.0 forces all subsequent values to be decimals.  
+ Observe that we express our initial guess as $1.0$ rather than $1$. This would not make any difference in many Lisp implementations. MIT Scheme, however, distinguishes between exact integers and decimal values, and dividing two integers produces a rational number rather than a decimal. For example, dividing $10$ by $6$ yields $5/3$, while dividing $10.0$ by $6.0$ yields $1.6666666666666667$. (We will learn how to implement arithmetic on rational numbers in section&nbsp;<a href="book-Z-H-14.html#%_sec_2.1.1">2.1.1</a>.)  If we start with an initial guess of $1$ in our square-root program, and $x$ is an exact integer, all subsequent values produced in the square-root computation will be rational numbers rather than decimals. Mixed operations on rational numbers and decimals always yield decimals, so starting with an initial guess of $1.0$ forces all subsequent values to be decimals.  
 </p></div>
 
 <div id="footnote_1-24" class="footnote">
