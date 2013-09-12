@@ -183,7 +183,7 @@ prompt("scheme-define-make-complex");
 <p> In the above packages, we used <tt>add-rat</tt>, <tt>add-complex</tt>, and the other arithmetic procedures exactly as originally written. Once these definitions are internal to different installation procedures, however, they no longer need names that are distinct from each other: we could simply name them <tt>add</tt>, <tt>sub</tt>, <tt>mul</tt>, and <tt>div</tt> in both packages.
 
 <div class="exercise">
-<p> <b>Exercise 2.77:</b> Louis Reasoner tries to evaluate the expression <tt>(magnitude z)</tt> where <tt>z</tt> is the object shown in Figure 2-24. To his surprise, instead of the answer $5$ he gets an error message from <tt>apply-generic</tt>, saying there is no method for the operation <tt>magnitude</tt> on the types <tt>(complex)</tt>. He shows this interaction to Alyssa P. Hacker, who says "The problem is that the complex-number selectors were never defined for <tt>complex</tt> numbers, just for <tt>polar</tt> and <tt>rectangular</tt> numbers. All you have to do to make this work is add the following to the <tt>complex</tt> package:""
+<p> <b>Exercise 2.77:</b> Louis Reasoner tries to evaluate the expression <tt>(magnitude z)</tt> where <tt>z</tt> is the object shown in Figure 2-24. To his surprise, instead of the answer $5$ he gets an error message from <tt>apply-generic</tt>, saying there is no method for the operation <tt>magnitude</tt> on the types <tt>(complex)</tt>. He shows this interaction to Alyssa P. Hacker, who says "The problem is that the complex-number selectors were never defined for <tt>complex</tt> numbers, just for <tt>polar</tt> and <tt>rectangular</tt> numbers. All you have to do to make this work is add the following to the <tt>complex</tt> package:"
 
 <div id="scheme-complex-selectors-for-complex">
 (put 'real-part '(complex) real-part)
@@ -453,7 +453,7 @@ prompt("scheme-define-add-mul-poly");
 
 <p> To incorporate polynomials into our generic arithmetic system, we need to supply them with type tags. We'll use the tag <tt>polynomial</tt>, and install appropriate operations on tagged polynomials in the operation table. We'll embed all our code in an installation procedure for the polynomial package, similar to the ones in section 2-5-1:
 
-<div id="">
+<div id="scheme-define-install-polynomial-package">
 (define (install-polynomial-package)
   ;; internal procedures
   ;; representation of poly
@@ -461,17 +461,17 @@ prompt("scheme-define-add-mul-poly");
     (cons variable term-list))
   (define (variable p) (car p))
   (define (term-list p) (cdr p))
-  <<em>procedures <tt>same-variable?</tt> and <tt>variable?</tt> from section 2.3.2</em>>
+  ;procedures same-variable? and variable? from section 2.3.2
 
   ;; representation of terms and term lists
-  <<em>procedures <tt>adjoin-term</tt> ... <tt>coeff</tt> from text below</em>>
+  ;procedures adjoin-term ... coeff from text below
 
   ;; continued on next page
 
   (define (add-poly p1 p2) ...)
-  <<em>procedures used by <tt>add-poly</tt></em>>
+  ;procedures used by add-poly
   (define (mul-poly p1 p2) ...)
-  <<em>procedures used by <tt>mul-poly</tt></em>>
+  ;procedures used by mul-poly
 
   ;; interface to rest of the system
   (define (tag p) (attach-tag 'polynomial p))
@@ -484,8 +484,9 @@ prompt("scheme-define-add-mul-poly");
   'done)
 </div>
 <script>
-prompt();
+prompt("scheme-define-install-polynomial-package");
 </script>
+
 
 <p> Polynomial addition is performed termwise. Terms of the same order (i.e., with the same power of the indeterminate) must be combined. This is done by forming a new term of the same order whose coefficient is the sum of the coefficients of the addends. Terms in one addend for which there are no terms of the same order in the other addend are simply accumulated into the sum polynomial being constructed.
 
@@ -493,7 +494,7 @@ prompt();
 
 <p> Here is the procedure that constructs the term list for the sum of two polynomials:<a name="footnote_link_2-56" class="footnote_link" href="#footnote_2-56">56</a>
 
-<div id="">
+<div id="scheme-define-add-terms">
 (define (add-terms L1 L2)
   (cond ((empty-termlist? L1) L2)
         ((empty-termlist? L2) L1)
@@ -513,14 +514,14 @@ prompt();
                               (rest-terms L2)))))))))
 </div>
 <script>
-prompt();
+prompt("scheme-define-add-terms");
 </script>
 
 <p> The most important point to note here is that we used the generic addition procedure <tt>add</tt> to add together the coefficients of the terms being combined. This has powerful consequences, as we will see below.
 
 <p> In order to multiply two term lists, we multiply each term of the first list by all the terms of the other list, repeatedly using <tt>mul-term-by-all-terms</tt>, which multiplies a given term by all terms in a given term list. The resulting term lists (one for each term of the first list) are accumulated into a sum. Multiplying two terms forms a term whose order is the sum of the orders of the factors and whose coefficient is the product of the coefficients of the factors:
 
-<div id="">
+<div id="scheme-define-mul-terms">
 (define (mul-terms L1 L2)
   (if (empty-termlist? L1)
       (the-empty-termlist)
@@ -537,22 +538,20 @@ prompt();
          (mul-term-by-all-terms t1 (rest-terms L))))))
 </div>
 <script>
-prompt();
+prompt("scheme-define-mul-terms");
 </script>
 
 <p> This is really all there is to polynomial addition and multiplication. Notice that, since we operate on terms using the generic procedures <tt>add</tt> and <tt>mul</tt>, our polynomial package is automatically able to handle any type of coefficient that is known about by the generic arithmetic package. If we include a coercion mechanism such as one of those discussed in section 2-5-2, then we also are automatically able to handle operations on polynomials of different coefficient types, such as
 
-<pre>
-                         /        2                 \
-[3x^2 + (2 + 3i)x + 7] * | x^4 + --- x^2 + (5 + 3i) |
-                         \        3                 /
-</pre>
+$$
+\left[3x^2 + (2 + 3i)x + 7\right] \cdot \left[ x^4 + \frac{2}{3} x^2 + (5 + 3i) \right]
+$$
 
 <p> Because we installed the polynomial addition and multiplication procedures <tt>add-poly</tt> and <tt>mul-poly</tt> in the generic arithmetic system as the <tt>add</tt> and <tt>mul</tt> operations for type <tt>polynomial</tt>, our system is also automatically able to handle polynomial operations such as
 
-<pre>
-[(y + 1)x^2 + (y^2 + 1)x + (y - 1)] * [(y - 2)x + (y^3 + 7)]
-</pre>
+$$
+\left[(y + 1)x^2 + (y^2 + 1)x + (y - 1)\right] \cdot \left[(y - 2)x + (y^3 + 7)\right]
+$$
 
 <p> The reason is that when the system tries to combine coefficients, it will dispatch through <tt>add</tt> and <tt>mul</tt>. Since the coefficients are themselves polynomials (in y), these will be combined using <tt>add-poly</tt> and <tt>mul-poly</tt>. The result is a kind of ``data-directed recursion'' in which, for example, a call to <tt>mul-poly</tt> will result in recursive calls to <tt>mul-poly</tt> in order to multiply the coefficients. If the coefficients of the coefficients were themselves polynomials (as might be used to represent polynomials in three variables), the data direction would ensure that the system would follow through another level of recursive calls, and so on through as many levels as the structure of the data dictates.<a name="footnote_link_2-57" class="footnote_link" href="#footnote_2-57">57</a>
 
@@ -562,21 +561,21 @@ prompt();
 
 <p> How should we structure the list that represents a term list?  One consideration is the ``density'' of the polynomials we intend to manipulate. A polynomial is said to be <tt>dense</tt> if it has nonzero coefficients in terms of most orders. If it has many zero terms it is said to be <tt>sparse</tt> . For example,
 
-<pre>
+$$
 A : x^5 + 2x^4 + 3x^2 - 2x - 5
-</pre>
+$$
 
 <p> is a dense polynomial, whereas
 
-<pre>
-B : x^100 + 2x^2 + 1
-</pre>
+$$
+B : x^{100} + 2x^2 + 1
+$$
 
 <p> is sparse.
 
 <p> The term lists of dense polynomials are most efficiently represented as lists of the coefficients. For example, A above would be nicely represented as <tt>(1 2 0 3 -2 -5)</tt>. The order of a term in this representation is the length of the sublist beginning with that term's coefficient, decremented by 1.<a name="footnote_link_2-58" class="footnote_link" href="#footnote_2-58">58</a>  This would be a terrible representation for a sparse polynomial such as B: There would be a giant list of zeros punctuated by a few lonely nonzero terms. A more reasonable representation of the term list of a sparse polynomial is as a list of the nonzero terms, where each term is a list containing the order of the term and the coefficient for that order. In such a scheme, polynomial B is efficiently represented as <tt>((100 1) (2 2) (0 1))</tt>. As most polynomial manipulations are performed on sparse polynomials, we will use this method. We will assume that term lists are represented as lists of terms, arranged from highest-order to lowest-order term. Once we have made this decision, implementing the selectors and constructors for terms and term lists is straightforward:<a name="footnote_link_2-59" class="footnote_link" href="#footnote_2-59">59</a>
 
-<div id="">
+<div id="scheme-define-adjoin-term">
 (define (adjoin-term term term-list)
   (if (=zero? (coeff term))
       term-list
@@ -592,7 +591,7 @@ B : x^100 + 2x^2 + 1
 (define (coeff term) (cadr term))
 </div>
 <script>
-prompt();
+prompt("scheme-define-adjoin-term");
 </script>
 
 
@@ -600,12 +599,12 @@ prompt();
 
 <p> Users of the polynomial package will create (tagged) polynomials by means of the procedure:
 
-<div id="">
+<div id="scheme-define-make-polynomial">
 (define (make-polynomial var terms)
   ((get 'make 'polynomial) var terms))
 </div>
 <script>
-prompt();
+prompt("scheme-define-make-polynomial");
 </script>
 
 <div class="exercise">
@@ -639,7 +638,7 @@ x^2 - 1
 
 <p> Complete the following definition of <tt>div-terms</tt> by filling in the missing expressions. Use this to implement <tt>div-poly</tt>, which takes two polys as arguments and returns a list of the quotient and remainder polys.
 
-<div id="">
+<div id="scheme-define-div-terms">
 (define (div-terms L1 L2)
   (if (empty-termlist? L1)
       (list (the-empty-termlist) (the-empty-termlist))
@@ -650,13 +649,13 @@ x^2 - 1
             (let ((new-c (div (coeff t1) (coeff t2)))
                   (new-o (- (order t1) (order t2))))
               (let ((rest-of-result
-                     <compute rest of result recursively>
+                     ;compute rest of result recursively>
                      ))
-                <form complete result>
+                ;form complete result>
                 ))))))
 </div>
 <script>
-prompt();
+prompt("scheme-define-div-terms");
 </script>
 </div>
 
@@ -676,19 +675,16 @@ prompt();
 
 <p> We can extend our generic arithmetic system to include <tt>rational functions</tt> . These are ``fractions'' whose numerator and denominator are polynomials, such as
 
-<pre>
- x + 1
--------
-x^3 - 1
-</pre>
+$$
+\frac{x+1}{x^3 - 1}
+$$
 
 <p> The system should be able to add, subtract, multiply, and divide rational functions, and to perform such computations as
 
-<pre>
- x + 1       x      x^3 + 2x^2 + 3x + 1
-------- + ------- = -------------------
-x^3 - 1   x^2 - 1    x^4 + x^3 - x - 1
-</pre>
+
+$$
+\frac{x+1}{x^3 - 1} + \frac{x}{x^2 - 1} = \frac{x^3 + 2x^2 + 3x + 1}{x^4 + x^3 - x - 1}
+$$
 
 <p> (Here the sum has been simplified by removing common factors. Ordinary ``cross multiplication'' would have produced a fourth-degree polynomial over a fifth-degree polynomial.)
 
@@ -697,97 +693,87 @@ x^3 - 1   x^2 - 1    x^4 + x^3 - x - 1
 <div class="exercise">
 <p> <b>Exercise 2.93:</b> Modify the rational-arithmetic package to use generic operations, but change <tt>make-rat</tt> so that it does not attempt to reduce fractions to lowest terms. Test your system by calling <tt>make-rational</tt> on two polynomials to produce a rational function
 
-<div id="">
+<div id="scheme-test-rational-functions">
 (define p1 (make-polynomial 'x '((2 1)(0 1))))
 (define p2 (make-polynomial 'x '((3 1)(0 1))))
 (define rf (make-rational p2 p1))
 </div>
 <script>
-prompt();
+prompt("scheme-test-rational-functions");
 </script>
 
 <p> Now add <tt>rf</tt> to itself, using <tt>add</tt>. You will observe that this addition procedure does not reduce fractions to lowest terms.
 
 <p> We can reduce polynomial fractions to lowest terms using the same idea we used with integers: modifying <tt>make-rat</tt> to divide both the numerator and the denominator by their greatest common divisor. The notion of ``greatest common divisor'' makes sense for polynomials. In fact, we can compute the GCD of two polynomials using essentially the same Euclid's Algorithm that works for integers.<a name="footnote_link_2-60" class="footnote_link" href="#footnote_2-60">60</a>  The integer version is
 
-<div id="">
+<div id="scheme-define-gcd">
 (define (gcd a b)
   (if (= b 0)
       a
       (gcd b (remainder a b))))
 </div>
 <script>
-prompt();
+prompt("scheme-define-gcd");
 </script>
 
 <p> Using this, we could make the obvious modification to define a GCD operation that works on term lists:
 
-<div id="">
+<div id="scheme-define-gcd-terms">
 (define (gcd-terms a b)
   (if (empty-termlist? b)
       a
       (gcd-terms b (remainder-terms a b))))
 </div>
 <script>
-prompt();
+prompt("scheme-define-gcd-terms");
 </script>
 
 <p> where <tt>remainder-terms</tt> picks out the remainder component of the list returned by the term-list division operation <tt>div-terms</tt> that was implemented in Exercise 2-91. 
 </div>
 
+<p>
+
 <div class="exercise">
 <p> <b>Exercise 2.94:</b> Using <tt>div-terms</tt>, implement the procedure <tt>remainder-terms</tt> and use this to define <tt>gcd-terms</tt> as above. Now write a procedure <tt>gcd-poly</tt> that computes the polynomial GCD of two polys. (The procedure should signal an error if the two polys are not in the same variable.)  Install in the system a generic operation <tt>greatest-common-divisor</tt> that reduces to <tt>gcd-poly</tt> for polynomials and to ordinary <tt>gcd</tt> for ordinary numbers. As a test, try
 
-<div id="">
+<div id="scheme-test-polynomial-gcd">
 (define p1 (make-polynomial 'x '((4 1) (3 -1) (2 -2) (1 2))))
 (define p2 (make-polynomial 'x '((3 1) (1 -1))))
 (greatest-common-divisor p1 p2)
 </div>
 <script>
-prompt();
+prompt("scheme-test-polynomial-gcd");
 </script>
 
 <p> and check your result by hand.
-
 </div>
 
+<p>
+
 <div class="exercise">
-<p> <b>Exercise 2.95:</b> Define P_1, P_2, and
-P_3 to be the polynomials
+<p> <b>Exercise 2.95:</b> Define P_1, P_2, and P_3 to be the polynomials
 
-<pre>
-P_1 : x^2 - 2x + 1
-
-P_2 : 11x^2 + 7
-
+$$
+P_1 : x^2 - 2x + 1 \\
+P_2 : 11x^2 + 7 \\
 P_3 : 13x + 5
-</pre>
+$$
 
-<p> Now define Q_1 to be the product of P_1 and P_2 and Q_2 to be the product of P_1 and P_3, and use <tt>greatest-common-divisor</tt> (Exercise 2-94) to compute the GCD of Q_1 and Q_2. Note that the answer is not the same as P_1. This example introduces noninteger operations into the computation, causing difficulties with the GCD algorithm.<a name="footnote_link_2-61" class="footnote_link" href="#footnote_2-61">61</a>  To understand what is happening, try tracing <tt>gcd-terms</tt> while computing the GCD or try performing the division by hand.
+<p> Now define $Q_1$ to be the product of $P_1$ and $P_2$ and $Q_2$ to be the product of $P_1$ and $P_3$, and use <tt>greatest-common-divisor</tt> (Exercise 2-94) to compute the GCD of $Q_1$ and $Q_2$. Note that the answer is not the same as $P_1$. This example introduces noninteger operations into the computation, causing difficulties with the GCD algorithm.<a name="footnote_link_2-61" class="footnote_link" href="#footnote_2-61">61</a>  To understand what is happening, try tracing <tt>gcd-terms</tt> while computing the GCD or try performing the division by hand.
 
 <p> We can solve the problem exhibited in Exercise 2-95 if we use the following modification of the GCD algorithm (which really works only in the case of polynomials with integer coefficients). Before performing any polynomial division in the GCD computation, we multiply the dividend by an integer constant factor, chosen to guarantee that no fractions will arise during the division process. Our answer will thus differ from the actual GCD by an integer constant factor, but this does not matter in the case of reducing rational functions to lowest terms; the GCD will be used to divide both the numerator and denominator, so the integer constant factor will cancel out.
 
-<p> More precisely, if P and Q are polynomials, let O_1 be the order of P (i.e., the order of the largest term of P) and let O_2 be the order of Q. Let c be the leading coefficient of Q. Then it can be shown that, if we multiply P by the <tt>integerizing factor</tt>
-
-<p> c^(1+O_1 -O_2), the resulting polynomial can be divided by Q by using the <tt>div-terms</tt> algorithm without introducing any fractions. The operation of multiplying the dividend by this constant and then dividing is sometimes called the <tt>pseudodivision</tt> of P by Q. The remainder of the division is called the <tt>pseudoremainder</tt> . </div>
+<p> More precisely, if $P$ and $Q$ are polynomials, let $O_1$ be the order of $P$ (i.e., the order of the largest term of $P$) and let $O_2$ be the order of $Q$. Let $c$ be the leading coefficient of $Q$. Then it can be shown that, if we multiply $P$ by the <tt>integerizing factor</tt> $ c^{1 + O_1 - O_2}$, the resulting polynomial can be divided by $Q$ by using the <tt>div-terms</tt> algorithm without introducing any fractions. The operation of multiplying the dividend by this constant and then dividing is sometimes called the <tt>pseudodivision</tt> of $P$ by $Q$. The remainder of the division is called the <tt>pseudoremainder</tt> . </div>
 
 <div class="exercise">
 <b>Exercise 2.96:</b>
 <ul>
 <li>
-Implement the procedure <tt>pseudoremainder-terms</tt>, which is just like
-<tt>remainder-terms</tt> except that it multiplies the dividend by the
-integerizing factor described above before calling <tt>div-terms</tt>. Modify
-<tt>gcd-terms</tt> to use <tt>pseudoremainder-terms</tt>, and verify that
-<tt>greatest-common-divisor</tt> now produces an answer with integer coefficients
-on the example in Exercise 2-95.
+<p> Implement the procedure <tt>pseudoremainder-terms</tt>, which is just like <tt>remainder-terms</tt> except that it multiplies the dividend by the integerizing factor described above before calling <tt>div-terms</tt>. Modify <tt>gcd-terms</tt> to use <tt>pseudoremainder-terms</tt>, and verify that <tt>greatest-common-divisor</tt> now produces an answer with integer coefficients on the example in Exercise 2-95.
 </li>
 
 <li>
-The GCD now has integer coefficients, but they are larger than those
-of P_1. Modify <tt>gcd-terms</tt> so that it removes common factors from the
-coefficients of the answer by dividing all the coefficients by their (integer)
-greatest common divisor.
+<p> The GCD now has integer coefficients, but they are larger than those of P_1. Modify <tt>gcd-terms</tt> so that it removes common factors from the coefficients of the answer by dividing all the coefficients by their (integer) greatest common divisor.
 </li>
 </ul>
 
@@ -799,11 +785,11 @@ Compute the GCD of the numerator and denominator, using the version of <tt>gcd-t
 </li>
 
 <li>
-When you obtain the GCD, multiply both numerator and denominator by the same integerizing factor before dividing through by the GCD, so that division by the GCD will not introduce any noninteger coefficients. As the factor you can use the leading coefficient of the GCD raised to the power 1 + O_1 - O_2, where O_2 is the order of the GCD and O_1 is the maximum of the orders of the numerator and denominator. This will ensure that dividing the numerator and denominator by the GCD will not introduce any fractions.
+<p> When you obtain the GCD, multiply both numerator and denominator by the same integerizing factor before dividing through by the GCD, so that division by the GCD will not introduce any noninteger coefficients. As the factor you can use the leading coefficient of the GCD raised to the power 1 + O_1 - O_2, where O_2 is the order of the GCD and O_1 is the maximum of the orders of the numerator and denominator. This will ensure that dividing the numerator and denominator by the GCD will not introduce any fractions.
 </li>
 
 <li>
-The result of this operation will be a numerator and denominator with integer coefficients. The coefficients will normally be very large because of all of the integerizing factors, so the last step is to remove the redundant factors by computing the (integer) greatest common divisor of all the coefficients of the numerator and the denominator and dividing through by this factor.
+<p> The result of this operation will be a numerator and denominator with integer coefficients. The coefficients will normally be very large because of all of the integerizing factors, so the last step is to remove the redundant factors by computing the (integer) greatest common divisor of all the coefficients of the numerator and the denominator and dividing through by this factor.
 <li>
 </ul>
 </div>
@@ -812,24 +798,24 @@ The result of this operation will be a numerator and denominator with integer co
 <b>Exercise 2.97:</b>
 <ul>
 <li>
-Implement this algorithm as a procedure <tt>reduce-terms</tt> that takes two term lists <tt>n</tt> and <tt>d</tt> as arguments and returns a list <tt>nn</tt>, <tt>dd</tt>, which are <tt>n</tt> and <tt>d</tt> reduced to lowest terms via the algorithm given above. Also write a procedure <tt>reduce-poly</tt>, analogous to <tt>add-poly</tt>, that checks to see if the two polys have the same variable. If so, <tt>reduce-poly</tt> strips off the variable and passes the problem to <tt>reduce-terms</tt>, then reattaches the variable to the two term lists supplied by <tt>reduce-terms</tt>.
+<p> Implement this algorithm as a procedure <tt>reduce-terms</tt> that takes two term lists <tt>n</tt> and <tt>d</tt> as arguments and returns a list <tt>nn</tt>, <tt>dd</tt>, which are <tt>n</tt> and <tt>d</tt> reduced to lowest terms via the algorithm given above. Also write a procedure <tt>reduce-poly</tt>, analogous to <tt>add-poly</tt>, that checks to see if the two polys have the same variable. If so, <tt>reduce-poly</tt> strips off the variable and passes the problem to <tt>reduce-terms</tt>, then reattaches the variable to the two term lists supplied by <tt>reduce-terms</tt>.
 </li>
 
 <li>
-Define a procedure analogous to <tt>reduce-terms</tt> that does what the original <tt>make-rat</tt> did for integers:
+<p> Define a procedure analogous to <tt>reduce-terms</tt> that does what the original <tt>make-rat</tt> did for integers:
 
-<div id="">
+<div id="scheme-define-reduce-integers">
 (define (reduce-integers n d)
   (let ((g (gcd n d)))
     (list (/ n g) (/ d g))))
 </div>
 <script>
-prompt();
+prompt("scheme-define-reduce-integers");
 </script>
 
- and define <tt>reduce</tt> as a generic operation that calls <tt>apply-generic</tt> to dispatch to either <tt>reduce-poly</tt> (for <tt>polynomial</tt> arguments) or <tt>reduce-integers</tt> (for <tt>scheme-number</tt> arguments). You can now easily make the rational-arithmetic package reduce fractions to lowest terms by having <tt>make-rat</tt> call <tt>reduce</tt> before combining the given numerator and denominator to form a rational number. The system now handles rational expressions in either integers or polynomials. To test your program, try the example at the beginning of this extended exercise:
+<p> and define <tt>reduce</tt> as a generic operation that calls <tt>apply-generic</tt> to dispatch to either <tt>reduce-poly</tt> (for <tt>polynomial</tt> arguments) or <tt>reduce-integers</tt> (for <tt>scheme-number</tt> arguments). You can now easily make the rational-arithmetic package reduce fractions to lowest terms by having <tt>make-rat</tt> call <tt>reduce</tt> before combining the given numerator and denominator to form a rational number. The system now handles rational expressions in either integers or polynomials. To test your program, try the example at the beginning of this extended exercise:
 
-<div id="">
+<div id="scheme-test-make-rational">
 (define p1 (make-polynomial 'x '((1 1)(0 1))))
 (define p2 (make-polynomial 'x '((3 1)(0 -1))))
 (define p3 (make-polynomial 'x '((1 1))))
@@ -841,12 +827,12 @@ prompt();
 (add rf1 rf2)
 </div>
 <script>
-prompt();
+prompt("scheme-test-make-rational");
 </script>
 
-See if you get the correct answer, correctly reduced to lowest terms.
+<p> See if you get the correct answer, correctly reduced to lowest terms.
 
-The GCD computation is at the heart of any system that does operations on rational functions. The algorithm used above, although mathematically straightforward, is extremely slow. The slowness is due partly to the large number of division operations and partly to the enormous size of the intermediate coefficients generated by the pseudodivisions. One of the active areas in the development of algebraic-manipulation systems is the design of better algorithms for computing polynomial GCDs.<a name="footnote_link_2-62" class="footnote_link" href="#footnote_2-62">62</a>
+<p> The GCD computation is at the heart of any system that does operations on rational functions. The algorithm used above, although mathematically straightforward, is extremely slow. The slowness is due partly to the large number of division operations and partly to the enormous size of the intermediate coefficients generated by the pseudodivisions. One of the active areas in the development of algebraic-manipulation systems is the design of better algorithms for computing polynomial GCDs.<a name="footnote_link_2-62" class="footnote_link" href="#footnote_2-62">62</a>
 </li>
 </ul>
 </div>
