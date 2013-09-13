@@ -262,7 +262,7 @@ no_output_frozen_prompt("scheme-rand-update");
 
 <div id="scheme-hidden-define-rand-update-init">
 (define (rand-update x)
-  (remainder (+ (* 1664525 x) 1013904223) 4294967296))
+  (remainder (+ (* 3 x) 27) 32))
 (define random-init 42)
 </div>
 <script>
@@ -338,7 +338,7 @@ prompt("scheme-define-monte-carlo", ["scheme-define-rand"]);
   (iter trials 0 initial-x))
 </div>
 <script>
-prompt("scheme-define-monte-carlo-with-rand", "scheme-hidden-define-rand-update");
+prompt("scheme-define-monte-carlo-with-rand", ["scheme-hidden-define-rand-update"]);
 </script>
 
 <p> While the program is still simple, it betrays some painful breaches of modularity. In our first version of the program, using <tt>rand</tt>, we can express the Monte Carlo method directly as a general <tt>monte-carlo</tt> procedure that takes as an argument an arbitrary <tt>experiment</tt> procedure. In our second version of the program, with no local state for the random-number generator, <tt>random-gcd-test</tt> must explicitly manipulate the random numbers <tt>x1</tt> and <tt>x2</tt> and recycle <tt>x2</tt> through the iterative loop as the new input to <tt>rand-update</tt>. This explicit handling of the random numbers intertwines the structure of accumulating test results with the fact that our particular experiment uses two random numbers, whereas other Monte Carlo experiments might use one random number or three. Even the top-level procedure <tt>estimate-pi</tt> has to be concerned with supplying an initial random number. The fact that the random-number generator's insides are leaking out into other parts of the program makes it difficult for us to isolate the Monte Carlo idea so that it can be applied to other tasks. In the first version of the program, assignment encapsulates the state of the random-number generator within the <tt>rand</tt> procedure, so that the details of random-number generation remain independent of the rest of the program.
@@ -348,26 +348,26 @@ prompt("scheme-define-monte-carlo-with-rand", "scheme-hidden-define-rand-update"
 <p> It is tempting to conclude this discussion by saying that, by introducing assignment and the technique of hiding state in local variables, we are able to structure systems in a more modular fashion than if all state had to be manipulated explicitly, by passing additional parameters. Unfortunately, as we shall see, the story is not so simple.
 
 <div class="exercise">
-<b>Exercise 3.5:</b> <tt>Monte Carlo integration</tt> 
-
-<p> is a method of estimating definite integrals by means of Monte Carlo simulation. Consider computing the area of a region of space described by a predicate $P(x, y)$ that is true for points $(x, y)$ in the region and false for points not in the region. For example, the region contained within a circle of radius $3$ centered at $(5, 7)$ is described by the predicate that tests whether $(x - 5)^2 + (y - 7)^2 \le 3^2$. To estimate the area of the region described by such a predicate, begin by choosing a rectangle that contains the region. For example, a rectangle with diagonally opposite corners at $(2, 4)$ and $(8, 10)$ contains the circle above. The desired integral is the area of that portion of the rectangle that lies in the region. We can estimate the integral by picking, at random, points $(x,y)$ that lie in the rectangle, and testing $P(x, y)$ for each point to determine whether the point lies in the region. If we try this with many points, then the fraction of points that fall in the region should give an estimate of the proportion of the rectangle that lies in the region. Hence, multiplying this fraction by the area of the entire rectangle should produce an estimate of the integral.
+<p> <b>Exercise 3.5:</b> <em>Monte Carlo integration</em> is a method of estimating definite integrals by means of Monte Carlo simulation. Consider computing the area of a region of space described by a predicate $P(x, y)$ that is true for points $(x, y)$ in the region and false for points not in the region. For example, the region contained within a circle of radius $3$ centered at $(5, 7)$ is described by the predicate that tests whether $(x - 5)^2 + (y - 7)^2 \le 3^2$. To estimate the area of the region described by such a predicate, begin by choosing a rectangle that contains the region. For example, a rectangle with diagonally opposite corners at $(2, 4)$ and $(8, 10)$ contains the circle above. The desired integral is the area of that portion of the rectangle that lies in the region. We can estimate the integral by picking, at random, points $(x,y)$ that lie in the rectangle, and testing $P(x, y)$ for each point to determine whether the point lies in the region. If we try this with many points, then the fraction of points that fall in the region should give an estimate of the proportion of the rectangle that lies in the region. Hence, multiplying this fraction by the area of the entire rectangle should produce an estimate of the integral.
 
 <p> Implement Monte Carlo integration as a procedure <tt>estimate-integral</tt> that takes as arguments a predicate <tt>P</tt>, upper and lower bounds <tt>x1</tt>, <tt>x2</tt>, <tt>y1</tt>, and <tt>y2</tt> for the rectangle, and the number of trials to perform in order to produce the estimate. Your procedure should use the same <tt>monte-carlo</tt> procedure that was used above to estimate [pi]. Use your <tt>estimate-integral</tt> to produce an estimate of [pi] by measuring the area of a unit circle.
 
 <p> You will find it useful to have a procedure that returns a number chosen at random from a given range. The following <tt>random-in-range</tt> procedure implements this in terms of the <tt>random</tt> procedure used in section 1-2-6, which returns a nonnegative number less than its input.<a name="footnote_link_3-8" class="footnote_link" href="#footnote_3-8">8</a>
 
-<div id="">
+<div id="scheme-define-random-in-range">
 (define (random-in-range low high)
   (let ((range (- high low)))
     (+ low (random range))))
 </div>
 <script>
-prompt();
+prompt("scheme-define-random-in-range");
 </script>
 </div>
 
+<p>
+
 <div class="exercise">
-<p> <b>Exercise 3.6:</b> It is useful to be able to reset a random-number generator to produce a sequence starting from a given value. Design a new <tt>rand</tt> procedure that is called with an argument that is either the symbol <tt>generate</tt> or the symbol <tt>reset</tt> and behaves as follows: <tt>(rand 'generate)</tt> produces a new random number; <tt>((rand 'reset) <new-value</tt>>) resets the internal state variable to the designated <new-value>. Thus, by resetting the state, one can generate repeatable sequences. These are very handy to have when testing and debugging programs that use random numbers. </div>
+<p> <b>Exercise 3.6:</b> It is useful to be able to reset a random-number generator to produce a sequence starting from a given value. Design a new <tt>rand</tt> procedure that is called with an argument that is either the symbol <tt>generate</tt> or the symbol <tt>reset</tt> and behaves as follows: <tt>(rand 'generate)</tt> produces a new random number; <tt>((rand 'reset) &lt;new-value&gt;)</tt> resets the internal state variable to the designated <tt>&lt;new-value&gt;</tt>. Thus, by resetting the state, one can generate repeatable sequences. These are very handy to have when testing and debugging programs that use random numbers. </div>
 
 <h3> The Costs of Introducing Assignment </h3> 
 
@@ -377,104 +377,103 @@ prompt();
 
 <p> To understand how assignment complicates matters, consider a simplified version of the <tt>make-withdraw</tt> procedure of section 3-1-1 that does not bother to check for an insufficient amount:
 
-<div id="">
+<div id="scheme-define-make-simplified-withdraw">
 (define (make-simplified-withdraw balance)
   (lambda (amount)
     (set! balance (- balance amount))
     balance))
+</div>
+<script>
+prompt("scheme-define-make-simplified-withdraw");
+</script>
 
+<div id="scheme-test-make-simplified-withdraw">
 (define W (make-simplified-withdraw 25))
 
 (W 20)
-5
-
 (W 10)
- - 5
 </div>
 <script>
-prompt();
+prompt("scheme-test-make-simplified-withdraw", ["scheme-define-make-simplified-withdraw"]);
 </script>
 
 <p> Compare this procedure with the following <tt>make-decrementer</tt> procedure, which does not use <tt>set!</tt>:
 
-<div id="">
+<div id="scheme-define-make-decrementer">
 (define (make-decrementer balance)
   (lambda (amount)
     (- balance amount)))
 </div>
 <script>
-prompt();
+prompt("scheme-define-make-decrementer");
 </script>
 
-<p> <tt>Make-decrementer</tt> returns a procedure that subtracts its input from a designated amount <tt>balance</tt>, but there is no accumulated effect over successive calls, as with <tt>make-simplified-withdraw</tt>:
+<p> <tt>make-decrementer</tt> returns a procedure that subtracts its input from a designated amount <tt>balance</tt>, but there is no accumulated effect over successive calls, as with <tt>make-simplified-withdraw</tt>:
 
-<div id="">
+<div id="scheme-test-decrementer">
 (define D (make-decrementer 25))
 
 (D 20)
-5
-
 (D 10)
-15
 </div>
 <script>
-prompt();
+prompt("scheme-test-decrementer", ["scheme-define-make-decrementer"]);
 </script>
 
 <p> We can use the substitution model to explain how <tt>make-decrementer</tt> works. For instance, let us analyze the evaluation of the expression
 
-<div id="">
+<div id="scheme-make-decrementer-25-20">
 ((make-decrementer 25) 20)
 </div>
 <script>
-prompt();
+no_output_frozen_prompt("scheme-make-decrementer-25-20");
 </script>
 
 <p> We first simplify the operator of the combination by substituting 25 for <tt>balance</tt> in the body of <tt>make-decrementer</tt>. This reduces the expression to
 
-<div id="">
+<div id="scheme-lambda-decrementer">
 ((lambda (amount) (- 25 amount)) 20)
 </div>
 <script>
-prompt();
+no_output_frozen_prompt("scheme-lambda-decrementer");
 </script>
 
 <p> Now we apply the operator by substituting 20 for <tt>amount</tt> in the body of the <tt>lambda</tt> expression:
 
-<div id="">
+<div id="scheme-decrementer-final">
 (- 25 20)
 </div>
 <script>
-prompt();
+no_output_frozen_prompt("scheme-decrementer-final");
 </script>
 
-<p> The final answer is 5.
+<p> The final answer is <tt>5</tt>.
 
 <p> Observe, however, what happens if we attempt a similar substitution analysis with <tt>make-simplified-withdraw</tt>:
 
-<div id="">
+<div id="scheme-make-simplified-withdraw-25-20">
 ((make-simplified-withdraw 25) 20)
 </div>
 <script>
-prompt();
+no_output_frozen_prompt("scheme-make-simplified-withdraw-25-20");
 </script>
 
 <p> We first simplify the operator by substituting 25 for <tt>balance</tt> in the body of <tt>make-simplified-withdraw</tt>. This reduces the expression to <a name="footnote_link_3-9" class="footnote_link" href="#footnote_3-9">9</a>
 
-<div id="">
+<div id="scheme-lambda-make-simplified-withdraw">
 ((lambda (amount) (set! balance (- 25 amount)) 25) 20)
 </div>
 <script>
-prompt();
+no_output_frozen_prompt("scheme-lambda-make-simplified-withdraw");
 </script>
 
 <p> Now we apply the operator by substituting 20 for <tt>amount</tt> in the body of the <tt>lambda</tt> expression:
 
-<div id="">
+<div id="scheme-set-balance-substituted">
 (set! balance (- 25 20)) 25
 </div>
 <script>
-prompt();
+no_output_frozen_prompt("scheme-set-balance-substituted");
 </script>
 
 <p> If we adhered to the substitution model, we would have to say that the meaning of the procedure application is to first set <tt>balance</tt> to 5 and then return 25 as the value of the expression. This gets the wrong answer. In order to get the correct answer, we would have to somehow distinguish the first occurrence of <tt>balance</tt> (before the effect of the <tt>set!</tt>)  from the second occurrence of <tt>balance</tt> (after the effect of the <tt>set!</tt>), and the substitution model cannot do this.
@@ -487,68 +486,63 @@ prompt();
 
 <p> Suppose we call <tt>make-decrementer</tt> twice with the same argument to create two procedures:
 
-<div id="">
+<div id="scheme-define-d12">
 (define D1 (make-decrementer 25))
 
 (define D2 (make-decrementer 25))
 </div>
 <script>
-prompt();
+prompt("scheme-define-d12", ["scheme-define-make-decrementer"]);
 </script>
 
 <p> Are <tt>D1</tt> and <tt>D2</tt> the same?  An acceptable answer is yes, because <tt>D1</tt> and <tt>D2</tt> have the same computational behavior---each is a procedure that subtracts its input from 25. In fact, <tt>D1</tt> could be substituted for <tt>D2</tt> in any computation without changing the result.
 
 <p> Contrast this with making two calls to <tt>make-simplified-withdraw</tt>:
 
-<div id="">
+<div id="scheme-define-w12">
 (define W1 (make-simplified-withdraw 25))
 
 (define W2 (make-simplified-withdraw 25))
 </div>
 <script>
-prompt();
+prompt("scheme-define-w12", ["scheme-define-make-simplified-withdraw"]);
 </script>
 
 <p> Are <tt>W1</tt> and <tt>W2</tt> the same?  Surely not, because calls to <tt>W1</tt> and <tt>W2</tt> have distinct effects, as shown by the following sequence of interactions:
 
-<div id="">
+<div id="scheme-test-w12">
 (W1 20)
-5
-
 (W1 20)
- - 15
-
 (W2 20)
-5
 </div>
 <script>
-prompt();
+prompt("scheme-test-w12", ["scheme-define-w12"]);
 </script>
 
-<p> Even though <tt>W1</tt> and <tt>W2</tt> are ``equal'' in the sense that they are both created by evaluating the same expression, <tt>(make-simplified-withdraw 25)</tt>, it is not true that <tt>W1</tt> could be substituted for <tt>W2</tt> in any expression without changing the result of evaluating the expression.
+<p> Even though <tt>W1</tt> and <tt>W2</tt> are "equal" in the sense that they are both created by evaluating the same expression, <tt>(make-simplified-withdraw 25)</tt>, it is not true that <tt>W1</tt> could be substituted for <tt>W2</tt> in any expression without changing the result of evaluating the expression.
 
-<p> A language that supports the concept that ``equals can be substituted for equals'' in an expresssion without changing the value of the expression is said to be <tt>referentially transparent</tt> . Referential transparency is violated when we include <tt>set!</tt> in our computer language. This makes it tricky to determine when we can simplify expressions by substituting equivalent expressions. Consequently, reasoning about programs that use assignment becomes drastically more difficult.
+<p> A language that supports the concept that "equals can be substituted for equals" in an expresssion without changing the value of the expression is said to be <tt>referentially transparent</tt> . Referential transparency is violated when we include <tt>set!</tt> in our computer language. This makes it tricky to determine when we can simplify expressions by substituting equivalent expressions. Consequently, reasoning about programs that use assignment becomes drastically more difficult.
 
-<p> Once we forgo referential transparency, the notion of what it means for computational objects to be ``the same'' becomes difficult to capture in a formal way. Indeed, the meaning of ``same'' in the real world that our programs model is hardly clear in itself. In general, we can determine that two apparently identical objects are indeed ``the same one'' only by modifying one object and then observing whether the other object has changed in the same way. But how can we tell if an object has ``changed'' other than by observing the ``same'' object twice and seeing whether some property of the object differs from one observation to the next?  Thus, we cannot determine ``change''without some <em>a priori</em> notion of ``sameness,'' and we cannot determine sameness without observing the effects of change.
+<p> Once we forgo referential transparency, the notion of what it means for computational objects to be "the same" becomes difficult to capture in a formal way. Indeed, the meaning of "same" in the real world that our programs model is hardly clear in itself. In general, we can determine that two apparently identical objects are indeed "the same one" only by modifying one object and then observing whether the other object has changed in the same way. But how can we tell if an object has "changed" other than by observing the "same" object twice and seeing whether some property of the object differs from one observation to the next?  Thus, we cannot determine "change" without some <em>a priori</em> notion of "sameness," and we cannot determine sameness without observing the effects of change.
 
 <p> As an example of how this issue arises in programming, consider the situation where Peter and Paul have a bank account with $100 in it. There is a substantial difference between modeling this as
 
-<div id="">
+<div id="scheme-define-peter-paul-acc">
 (define peter-acc (make-account 100))
 (define paul-acc (make-account 100))
 </div>
 <script>
-prompt();
+prompt("scheme-define-peter-paul-acc", ["scheme-define-make-account"]);
 </script>
 
 <p> and modeling it as
 
-<div id="">
+<div id="scheme-define-peter-as-paul-acc">
 (define peter-acc (make-account 100))
 (define paul-acc peter-acc)
 </div>
 <script>
-prompt();
+prompt("scheme-define-peter-as-paul-acc", ["scheme-define-make-account"]);
 </script>
 
 <p> In the first situation, the two bank accounts are distinct. Transactions made by Peter will not affect Paul's account, and vice versa. In the second situation, however, we have defined <tt>paul-acc</tt> to be <em>the same thing</em> as <tt>peter-acc</tt>. In effect, Peter and Paul now have a joint bank account, and if Peter makes a withdrawal from <tt>peter-acc</tt> Paul will observe less money in <tt>paul-acc</tt>. These two similar but distinct situations can cause confusion in building computational models. With the shared account, in particular, it can be especially confusing that there is one object (the bank account) that has two different names (<tt>peter-acc</tt> and <tt>paul-acc</tt>); if we are searching for all the places in our program where <tt>paul-acc</tt> can be changed, we must remember to look also at things that change <tt>peter-acc</tt>.<a name="footnote_link_3-10" class="footnote_link" href="#footnote_3-10">10</a>
@@ -559,7 +553,7 @@ prompt();
 
 <p> In contrast to functional programming, programming that makes extensive use of assignment is known as <tt>imperative programming</tt> . In addition to raising complications about computational models, programs written in imperative style are susceptible to bugs that cannot occur in functional programs. For example, recall the iterative factorial program from section 1-2-1:
 
-<div id="">
+<div id="scheme-define-factorial">
 (define (factorial n)
   (define (iter product counter)
     (if (> counter n)
@@ -569,12 +563,12 @@ prompt();
   (iter 1 1))
 </div>
 <script>
-prompt();
+prompt("scheme-define-factorial");
 </script>
 
 <p> Instead of passing arguments in the internal iterative loop, we could adopt a more imperative style by using explicit assignment to update the values of the variables <tt>product</tt> and <tt>counter</tt>:
 
-<div id="">
+<div id="scheme-define-factorial-imperative">
 (define (factorial n)
   (let ((product 1)
         (counter 1))
@@ -587,17 +581,17 @@ prompt();
     (iter)))
 </div>
 <script>
-prompt();
+prompt("scheme-define-factorial-imperative");
 </script>
 
 <p> This does not change the results produced by the program, but it does introduce a subtle trap. How do we decide the order of the assignments?  As it happens, the program is correct as written. But writing the assignments in the opposite order
 
-<div id="">
+<div id="scheme-wrong-order-assign-factorial">
 (set! counter (+ counter 1))
 (set! product (* counter product))
 </div>
 <script>
-prompt();
+no_output_frozen_prompt("scheme-wrong-order-assign-factorial");
 </script>
 
 <p> would have produced a different, incorrect result. In general, programming with assignment forces us to carefully consider the relative orders of the assignments to make sure that each statement is using the correct version of the variables that have been changed. This issue simply does not arise in functional programs.<a name="footnote_link_3-11" class="footnote_link" href="#footnote_3-11">11</a>
@@ -607,16 +601,18 @@ prompt();
 <div class="exercise">
 <p> <b>Exercise 3.7:</b> Consider the bank account objects created by <tt>make-account</tt>, with the password modification described in Exercise 3-3. Suppose that our banking system requires the ability to make joint accounts. Define a procedure <tt>make-joint</tt> that accomplishes this. <tt>Make-joint</tt> should take three arguments. The first is a password-protected account. The second argument must match the password with which the account was defined in order for the <tt>make-joint</tt> operation to proceed. The third argument is a new password. <tt>Make-joint</tt> is to create an additional access to the original account using the new password. For example, if <tt>peter-acc</tt> is a bank account with password <tt>open-sesame</tt>, then
 
-<div id="">
+<div id="scheme-define-paul-acc-joint">
 (define paul-acc
   (make-joint peter-acc 'open-sesame 'rosebud))
 </div>
 <script>
-prompt();
+prompt("scheme-define-paul-acc-joint");
 </script>
 
 <p> will allow one to make transactions on <tt>peter-acc</tt> using the name <tt>paul-acc</tt> and the password <tt>rosebud</tt>. You may wish to modify your solution to Exercise 3-3 to accommodate this new feature
- </div>
+</div>
+
+<p>
 
 <div class="exercise">
 <p> <b>Exercise 3.8:</b> When we defined the evaluation model in section 1-1-3, we said that the first step in evaluating an expression is to evaluate its subexpressions. But we never specified the order in which the subexpressions should be evaluated (e.g., left to right or right to left). When we introduce assignment, the order in which the arguments to a procedure are evaluated can make a difference to the result. Define a simple procedure <tt>f</tt> such that evaluating <tt>(+ (f 0) (f 1))</tt> will return 0 if the arguments to <tt>+</tt> are evaluated from left to right but will return 1 if the arguments are evaluated from right to left.
