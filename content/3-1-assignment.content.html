@@ -262,7 +262,7 @@ no_output_frozen_prompt("scheme-rand-update");
 
 <div id="scheme-hidden-define-rand-update-init">
 (define (rand-update x)
-  (remainder (+ (* 3 x) 27) 32))
+  (remainder (+ (* 2147483629 x) 2147483587) 2147483647))
 (define random-init 42)
 </div>
 <script>
@@ -286,7 +286,7 @@ prompt("scheme-define-rand", ["scheme-hidden-define-rand-update-init"]);
 
 <p> The heart of our program is a procedure <tt>monte-carlo</tt>, which takes as arguments the number of times to try an experiment, together with the experiment, represented as a no-argument procedure that will return either true or false each time it is run. <tt>monte-carlo</tt> runs the experiment for the designated number of trials and returns a number telling the fraction of the trials in which the experiment was found to be true.
 
-<div id="scheme-define-monte-carlo">
+<div id="scheme-define-hidden-sqrt-gcd">
 (define (sqrt x)
   (exp (* 0.5 (log x))))
 
@@ -294,7 +294,12 @@ prompt("scheme-define-rand", ["scheme-hidden-define-rand-update-init"]);
   (if (= b 0)
       a
       (gcd b (remainder a b))))
+</div>
+<script>
+hidden_prompt("scheme-define-hidden-sqrt-gcd");
+</script>
 
+<div id="scheme-define-monte-carlo">
 (define (estimate-pi trials)
   (sqrt (/ 6 (monte-carlo trials cesaro-test))))
 
@@ -312,7 +317,7 @@ prompt("scheme-define-rand", ["scheme-hidden-define-rand-update-init"]);
   (iter trials 0))
 </div>
 <script>
-prompt("scheme-define-monte-carlo", ["scheme-define-rand"]);
+prompt("scheme-define-monte-carlo", ["scheme-define-rand", "scheme-define-hidden-sqrt-gcd"]);
 </script>
 
 <p> Now let us try the same computation using <tt>rand-update</tt> directly rather than <tt>rand</tt>, the way we would be forced to proceed if we did not use assignment to model local state:
@@ -338,7 +343,7 @@ prompt("scheme-define-monte-carlo", ["scheme-define-rand"]);
   (iter trials 0 initial-x))
 </div>
 <script>
-prompt("scheme-define-monte-carlo-with-rand", ["scheme-hidden-define-rand-update"]);
+prompt("scheme-define-monte-carlo-with-rand", ["scheme-hidden-define-rand-update-init", "scheme-define-hidden-sqrt-gcd"]);
 </script>
 
 <p> While the program is still simple, it betrays some painful breaches of modularity. In our first version of the program, using <tt>rand</tt>, we can express the Monte Carlo method directly as a general <tt>monte-carlo</tt> procedure that takes as an argument an arbitrary <tt>experiment</tt> procedure. In our second version of the program, with no local state for the random-number generator, <tt>random-gcd-test</tt> must explicitly manipulate the random numbers <tt>x1</tt> and <tt>x2</tt> and recycle <tt>x2</tt> through the iterative loop as the new input to <tt>rand-update</tt>. This explicit handling of the random numbers intertwines the structure of accumulating test results with the fact that our particular experiment uses two random numbers, whereas other Monte Carlo experiments might use one random number or three. Even the top-level procedure <tt>estimate-pi</tt> has to be concerned with supplying an initial random number. The fact that the random-number generator's insides are leaking out into other parts of the program makes it difficult for us to isolate the Monte Carlo idea so that it can be applied to other tasks. In the first version of the program, assignment encapsulates the state of the random-number generator within the <tt>rand</tt> procedure, so that the details of random-number generation remain independent of the rest of the program.
@@ -478,11 +483,11 @@ no_output_frozen_prompt("scheme-set-balance-substituted");
 
 <p> If we adhered to the substitution model, we would have to say that the meaning of the procedure application is to first set <tt>balance</tt> to 5 and then return 25 as the value of the expression. This gets the wrong answer. In order to get the correct answer, we would have to somehow distinguish the first occurrence of <tt>balance</tt> (before the effect of the <tt>set!</tt>)  from the second occurrence of <tt>balance</tt> (after the effect of the <tt>set!</tt>), and the substitution model cannot do this.
 
-<p> The trouble here is that substitution is based ultimately on the notion that the symbols in our language are essentially names for values. But as soon as we introduce <tt>set!</tt> and the idea that the value of a variable can change, a variable can no longer be simply a name. Now a variable somehow refers to a place where a value can be stored, and the value stored at this place can change. In section 3-2 we will see how environments play this role of ``place'' in our computational model.
+<p> The trouble here is that substitution is based ultimately on the notion that the symbols in our language are essentially names for values. But as soon as we introduce <tt>set!</tt> and the idea that the value of a variable can change, a variable can no longer be simply a name. Now a variable somehow refers to a place where a value can be stored, and the value stored at this place can change. In section 3-2 we will see how environments play this role of "place" in our computational model.
 
 <h4> Sameness and change </h4> 
 
-<p> The issue surfacing here is more profound than the mere breakdown of a particular model of computation. As soon as we introduce change into our computational models, many notions that were previously straightforward become problematical. Consider the concept of two things being ``the same.''
+<p> The issue surfacing here is more profound than the mere breakdown of a particular model of computation. As soon as we introduce change into our computational models, many notions that were previously straightforward become problematical. Consider the concept of two things being "the same."
 
 <p> Suppose we call <tt>make-decrementer</tt> twice with the same argument to create two procedures:
 
@@ -547,7 +552,7 @@ prompt("scheme-define-peter-as-paul-acc", ["scheme-define-make-account"]);
 
 <p> In the first situation, the two bank accounts are distinct. Transactions made by Peter will not affect Paul's account, and vice versa. In the second situation, however, we have defined <tt>paul-acc</tt> to be <em>the same thing</em> as <tt>peter-acc</tt>. In effect, Peter and Paul now have a joint bank account, and if Peter makes a withdrawal from <tt>peter-acc</tt> Paul will observe less money in <tt>paul-acc</tt>. These two similar but distinct situations can cause confusion in building computational models. With the shared account, in particular, it can be especially confusing that there is one object (the bank account) that has two different names (<tt>peter-acc</tt> and <tt>paul-acc</tt>); if we are searching for all the places in our program where <tt>paul-acc</tt> can be changed, we must remember to look also at things that change <tt>peter-acc</tt>.<a name="footnote_link_3-10" class="footnote_link" href="#footnote_3-10">10</a>
 
-<p> With reference to the above remarks on ``sameness'' and ``change,'' observe that if Peter and Paul could only examine their bank balances, and could not perform operations that changed the balance, then the issue of whether the two accounts are distinct would be moot. In general, so long as we never modify data objects, we can regard a compound data object to be precisely the totality of its pieces. For example, a rational number is determined by giving its numerator and its denominator. But this view is no longer valid in the presence of change, where a compound data object has an ``identity'' that is something different from the pieces of which it is composed. A bank account is still ``the same'' bank account even if we change the balance by making a withdrawal; conversely, we could have two different bank accounts with the same state information. This complication is a consequence, not of our programming language, but of our perception of a bank account as an object. We do not, for example, ordinarily regard a rational number as a changeable object with identity, such that we could change the numerator and still have ``the same''rational number.
+<p> With reference to the above remarks on "sameness" and "change," observe that if Peter and Paul could only examine their bank balances, and could not perform operations that changed the balance, then the issue of whether the two accounts are distinct would be moot. In general, so long as we never modify data objects, we can regard a compound data object to be precisely the totality of its pieces. For example, a rational number is determined by giving its numerator and its denominator. But this view is no longer valid in the presence of change, where a compound data object has an ``identity'' that is something different from the pieces of which it is composed. A bank account is still ``the same'' bank account even if we change the balance by making a withdrawal; conversely, we could have two different bank accounts with the same state information. This complication is a consequence, not of our programming language, but of our perception of a bank account as an object. We do not, for example, ordinarily regard a rational number as a changeable object with identity, such that we could change the numerator and still have ``the same''rational number.
 
 <h4> Pitfalls of imperative programming </h4> 
 
@@ -664,6 +669,6 @@ prompt("scheme-define-paul-acc-joint");
 </div>
 
 <div id="footnote_3-11" class="footnote">
-<p><a href="#footnote_link_3-11" class="footnote_backlink">11</a> In view of this, it is ironic that introductory programming is most often taught in a highly imperative style. This may be a vestige of a belief, common throughout the 1960s and 1970s, that programs that call procedures must inherently be less efficient than programs that perform assignments. (Steele (1977) debunks this argument.) Alternatively it may reflect a view that step-by-step assignment is easier for beginners to visualize than procedure call. Whatever the reason, it often saddles beginning programmers with ``should I set this variable before or after that one'' concerns that can complicate programming and obscure the important ideas.
+<p><a href="#footnote_link_3-11" class="footnote_backlink">11</a> In view of this, it is ironic that introductory programming is most often taught in a highly imperative style. This may be a vestige of a belief, common throughout the 1960s and 1970s, that programs that call procedures must inherently be less efficient than programs that perform assignments. (Steele (1977) debunks this argument.) Alternatively it may reflect a view that step-by-step assignment is easier for beginners to visualize than procedure call. Whatever the reason, it often saddles beginning programmers with "should I set this variable before or after that one" concerns that can complicate programming and obscure the important ideas.
 </div>
 @@
