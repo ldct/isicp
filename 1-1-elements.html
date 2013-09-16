@@ -187,16 +187,18 @@ editorOf["scheme-number"].setOption('onBlur', function() {
 <div id="scheme-plus-multiple">
 (+ 21 35 12 7)
 </div>
-<div id="scheme-plus-multiple-output" class="output"> </div>
-<script> prompt("scheme-plus-multiple"); </script>
+<script> 
+prompt("scheme-plus-multiple"); 
+</script>
 
 <p>
 
 <div id="scheme-times-multiple">
 (* 25 4 12)
 </div>
-<div id="scheme-times-multiple-output" class="output"> </div>
-<script> prompt("scheme-times-multiple"); </script>
+<script>
+prompt("scheme-times-multiple");
+</script>
 
 <p> No ambiguity can arise, because the operator is always the leftmost element and the entire combination is delimited by the parentheses.
 
@@ -205,16 +207,18 @@ editorOf["scheme-number"].setOption('onBlur', function() {
 <div id="scheme-plus-times">
 (+ (* 3 5) (- 10 6))
 </div>
-<div id="scheme-plus-times-output" class="output"> </div>
-<script> prompt("scheme-plus-times"); </script>
+<script>
+prompt("scheme-plus-times");
+</script>
 
 <p> There is no limit (in principle) to the depth of such nesting and to the overall complexity of the expressions that the Lisp interpreter can evaluate. It is we humans who get confused by still relatively simple expressions such as
 
 <div id="scheme-long-tree">
 (+ (* 3 (+ (* 2 4) (+ 3 5))) (+ (- 10 7) 6))
 </div>
-<div id="scheme-long-tree-output" class="output"> </div>
-<script> prompt("scheme-long-tree"); </script>
+<script>
+prompt("scheme-long-tree");
+</script>
 
 <p> which the interpreter would readily evaluate to be <tt>57</tt>. We can help ourselves by writing such an expression in the form
 
@@ -225,8 +229,9 @@ editorOf["scheme-number"].setOption('onBlur', function() {
    (+ (- 10 7)
       6))
 </div>
-<div id="scheme-long-tree-pp-output" class="output"> </div>
-<script> prompt("scheme-long-tree-pp"); </script>
+<script> 
+prompt("scheme-long-tree-pp"); 
+</script>
 
 <p> following a formatting convention known as pretty-printing, in which each long combination is written so that the operands are aligned vertically. The resulting indentations display clearly the structure of the expression.<a name="footnote_link_1-6" class="footnote_link" href="#footnote_1-6">6</a>
 
@@ -301,7 +306,7 @@ editor.setOption('onBlur', function() {
       "'(/ (+ 5 4 (- 2 (- 3 (+ 6 (/ 4 5))))) (* 3 (- 6 2) (- 2 7))))";
 
   eval_scheme(code).then(function(res){
-    if (res == "true\n") {
+    if (res[res.length - 1] === "true") {
       $_("scheme-ex-12-input-output").empty().append($("<div class='right-answer'> \u2713 </div>"));
     } else {
       $_("scheme-ex-12-input-output").empty().append($("<div class='wrong-answer'> \u2717 </div>"));
@@ -310,7 +315,7 @@ editor.setOption('onBlur', function() {
 });
 
 /*
-(/ (+ 5 4 (- 2 (- 3 (+ 6 (/ 4 5))))) (* 3 (- 6 2) (- 2 7))))
+(/ (+ 5 4 (- 2 (- 3 (+ 6 (/ 4 5))))) (* 3 (- 6 2) (- 2 7)))
 */
 
 </script>
@@ -446,7 +451,6 @@ answer("scheme-ex-112-eq", "false");
 (* (+ 2 (* 4 6))
    (+ 3 5 7))
 </div>
-<div id="scheme-tree-eg-output" class="output"> </div>    
 <div id="gout"> </div>
 <script> 
 
@@ -526,7 +530,7 @@ linkEditor("scheme-tree-eg", "scheme-tree-eg-output", function(x, y) {
       $("#gv-out").html(svg);
     }
     if (typeof Viz == "undefined") {
-      $("#gv-out").html("<p style='text-align:center'>loading <tt>mdaines/viz.js<tt>")
+      $("#gv-out").html("<p style='text-align:center'>loading <tt>mdaines/viz.js</tt>")
       $.getScript('http://mdaines.github.com/viz.js/viz.js', update);
     } else {
       update();
@@ -885,7 +889,7 @@ no_output_frozen_prompt("scheme-cond-syntax");
 
 <div id="scheme-abs">
 (define (abs x)
-  (cond ((< x 0) (- x))
+  (cond ((&lt; x 0) (- x))
         (else x)))
 </div>
 <script> prompt("scheme-abs"); </script>
@@ -895,7 +899,7 @@ no_output_frozen_prompt("scheme-cond-syntax");
 
 <div id="scheme-abs-if">
 (define (abs x)
-  (if (< x 0)
+  (if (&lt; x 0)
       (- x)
       x))
 </div>
@@ -995,7 +999,7 @@ editorOf["scheme-ex-define-square-sum-larger"].setOption("onBlur", function(){
                                                    ssls(2, 13, 5));;
 
   eval_scheme(code).then(function(res){
-    if (res == "true\n") {
+    if (res[res.length - 1] === "true") {
       $_("scheme-ex-define-square-sum-larger-output").empty().append($("<div class='right-answer'> \u2713 </div>"));
     } else {
       $_("scheme-ex-define-square-sum-larger-output").empty().append($("<div class='wrong-answer'> \u2717 </div>")).append(res);

@@ -166,15 +166,18 @@ function compute(s) {
         $_(_output).empty();
       }
       w.terminate();
-      def.resolve(); //todo: switch    
+      def.resolve();
       return;
     } else if (e.data.type === "displayed_text") {
-      output_fragment.push($("<span>" + e.data.value + "</span>"));
-      $_(_output).empty().append(output_fragment);
+      output_fragment.push($("<span class='output_displayed_text'>" + e.data.value.replace(/\n/, "<br>") + "</span>"));
+    } else if (e.data.type === "return_value") {
+      output_fragment.push($("<span class='output_return_value'>" + e.data.value + "<br> </span>"));
+    } else if (e.data.type === "error") {
+      output_fragment.push($("<span class='output_error'>" + e.data.value + "<br> </span>"));
     } else {
       output_fragment.push($("<span>" + e.data + "<br> </span>"));
-      $_(_output).empty().append(output_fragment);
     }
+    $_(_output).empty().append(output_fragment);
   }
   
   w.postMessage(getDependedOnCode(s));
@@ -195,11 +198,8 @@ function eval_scheme(code) { //deferred
     if (e.data.type === "end") {
       def.resolve(out); //for .then(function(res)) to catch
       w.terminate();
-    } else if (e.data.suppress_newline) {
-      out.push(e.data.value);
-      return;
     } else {
-      out.push(e.data);
+      out.push(e.data.value);
       return;
     }
   }

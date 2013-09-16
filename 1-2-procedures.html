@@ -499,7 +499,7 @@ editorOf["scheme-ex-fn-3-input"].setOption("onBlur", function() {
                       fs(3) + ")";
 
   eval_scheme(code).then(function(res){
-    if (res == "true\n") {
+    if (res[res.length - 1] === "true") {
       $_("scheme-ex-fn-3-input-output").empty().append($("<div class='right-answer'> \u2713 </div>"));
     } else {
       $_("scheme-ex-fn-3-input-output").empty().append($("<div class='wrong-answer'> \u2717 </div>"));
@@ -558,7 +558,7 @@ editorOf["scheme-ex-pascal-input"].setOption("onBlur", function(){
 
   eval_scheme(code).then(function(res){
     console.log(res);
-    if (res == "true\n") {
+    if (res[res.length - 1] === "true") {
       $_("scheme-ex-pascal-input-output").empty().append($("<div class='right-answer'> \u2713 </div>"));
     } else {
       $_("scheme-ex-pascal-input-output").empty().append($("<div class='wrong-answer'> \u2717 </div>"));
@@ -797,7 +797,7 @@ editorOf["scheme-ex-fast-expt-iter-input"].setOption("onBlur", function(){
 
   eval_scheme(code).then(function(res){
     console.log(res);
-    if (res == "true\n") {
+    if (res[res.length - 1] == "true") {
       $_("scheme-ex-fast-expt-iter-input-output").empty().append($("<div class='right-answer'> \u2713 </div>"));
     } else {
       $_("scheme-ex-fast-expt-iter-input-output").empty().append($("<div class='wrong-answer'> \u2717 </div>"));
@@ -862,7 +862,7 @@ editorOf["scheme-ex-mul-input"].setOption("onBlur", function(){
                       ms(3,4) + ")"
 
   eval_scheme(code).then(function(res){
-    if (res == "true\n") {
+    if (res[res.length - 1] == "true") {
       $_("scheme-ex-mul-input-output").empty().append($("<div class='right-answer'> \u2713 </div>"));
     } else {
       $_("scheme-ex-mul-input-output").empty().append($("<div class='wrong-answer'> \u2717 </div>"));
@@ -899,7 +899,7 @@ editorOf["scheme-ex-mul-iter-input"].setOption("onBlur", function() {
                        ms(3,4) + ") "
 
   eval_scheme(code).then(function(res){
-    if (res == "true\n") {
+    if (res[res.length - 1] == "true") {
       $_("scheme-ex-mul-iter-input-output").empty().append($("<div class='right-answer'> \u2713 </div>"));
     } else {
       $_("scheme-ex-mul-iter-input-output").empty().append($("<div class='wrong-answer'> \u2717 </div>"));
@@ -976,7 +976,7 @@ editorOf["scheme-ex-log-fib-input"].setOption("onBlur", function(){
                       fibs(13) + ")"
 
   eval_scheme(code).then(function(res){
-    if (res == "true\n") {
+    if (res[res.length - 1] == "true") {
       $_("scheme-ex-log-fib-input-output").empty().append($("<div class='right-answer'> \u2713 </div>"));
     } else {
       $_("scheme-ex-log-fib-input-output").empty().append($("<div class='wrong-answer'> \u2717 </div>"));

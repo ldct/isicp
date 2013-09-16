@@ -40,6 +40,14 @@ li {
   text-align: center;
 }
 
+.output_displayed_text {
+  color: blue;
+}
+
+.output_error {
+  color: red;
+}
+
 .p-link {
   text-decoration: underline;
   text-align: right;

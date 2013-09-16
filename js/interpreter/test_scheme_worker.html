@@ -20,8 +20,8 @@
 <form>
 <textarea id="input" name="input" rows=30 cols=60></textarea>
 <br>
-<input type="button" value="Evaluate" onClick="out.value = ''; w.postMessage(this.form.input.value);">
-<input type="button" value="Run Tests" onClick="out.value = ''; test(this.form.input.value, out);">
+<input type="button" value="Evaluate" onClick="output.value = ''; w.postMessage(this.form.input.value);">
+<input type="button" value="Run Tests" onClick="output.value = ''; test(this.form.input.value, output);">
 <input type="button" value="Clear" onClick="this.form.input.value = ''">
 </form>
 </td>
@@ -35,16 +35,21 @@
 
 <script>
   var w = new Worker("scheme_worker.js");
-  var out = document.getElementById("output");
+  var output = document.getElementById("output");
   
   w.onmessage = function(e) {
-    if (e.data.end) {
-      out.value += "\n";
+    if (e.data.type === "end") {
       return;
+    } else if (e.data.type === "return_value") {
+        output.value += e.data.value + "\n";
+    } else if (e.data.type === "displayed_text") {
+        output.value += e.data.value;
+    } else if (e.data.type === "error") {
+        output.value += e.data.value + "\n";
+    } else {
+      output.value += e.data.value + "\n";
     }
-    out.value += e.data;
-  }
-  
+  };
 </script>
 
 </body>

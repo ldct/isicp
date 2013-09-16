@@ -375,38 +375,6 @@ circumference
 z
 ; expect ((1 . 2) 3 . 4)
 
-(define (make-rat n d) (cons n d))
-(define (numer x) (car x))
-(define (denom x) (cdr x))
-(define (print-rat x)
-  (display (numer x))
-  (display '/)
-  (display (denom x))
-  (newline))
-(define one-half (make-rat 1 2))
-(print-rat one-half)
-; expect 1/2
-
-(define one-third (make-rat 1 3))
-(print-rat (add-rat one-half one-third))
-; expect 5/6
-
-(print-rat (mul-rat one-half one-third))
-; expect 1/6
-
-(print-rat (add-rat one-third one-third))
-; expect 6/9
-
-(define (gcd a b)
-  (if (= b 0)
-      a
-      (gcd b (remainder a b))))
-(define (make-rat n d)
-  (let ((g (gcd n d)))
-    (cons (/ n g) (/ d g))))
-(print-rat (add-rat one-third one-third))
-; expect 2/3
-
 (define one-through-four (list 1 2 3 4))
 one-through-four
 ; expect (1 2 3 4)

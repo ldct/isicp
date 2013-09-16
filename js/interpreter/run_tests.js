@@ -1,19 +1,24 @@
-function test(str, out) {
+function test(test_specs, output) {
     // Runs the test code in a single global environment.
-    var test_cases = split_cases(str);
+    var test_cases = split_cases(test_specs);
     var worker = new Worker("scheme_worker.js");
     var eval_result = "";
     var code = "";
 
-    out.value += "Running Tests...\n";
+    output.value += "Running Tests...\n";
     
     worker.onmessage = function(e) {
         if (e.data.type === "end") {
-            check_tests(test_cases, eval_result, out);
+            check_tests(test_cases, eval_result, output);
             worker.terminate();
             return;
+        } else if (e.data.type === "return_value") {
+            eval_result += e.data.value + "\n";
+        } else if (e.data.type === "displayed_text") {
+            eval_result += e.data.value;
+        } else if (e.data.type === "error") {
+            eval_result += e.data.value + "\n";
         }
-        eval_result += e.data;
     };
     
     for (var i = 0; i < test_cases.length; i++) {

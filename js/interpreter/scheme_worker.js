@@ -22,11 +22,10 @@ onmessage = function(event) {
         try {
             var result = scheme_eval(scheme_read(codebuffer), env);
             if (! (result === null || result === undefined)) {
-                this.postMessage(result.toString() + "\n");
+                this.postMessage({'type': 'return_value', 'value': result.toString()});
             }
         } catch(e) {
-            this.postMessage(e.toString() + "\n"); //report errors
-            //throw e;
+            this.postMessage({'type': 'error', 'value': e.toString()});
         }
     }
     this.postMessage({"type": "end"});
@@ -767,7 +766,7 @@ _PRIMITIVES["remainder"] = new PrimitiveProcedure(scheme_remainder);
 function scheme_modulo(x, y) {
     return ((x % y) + y) % y;
 }
-_PRIMITIVES["mod"] = new PrimitiveProcedure(scheme_modulo);
+_PRIMITIVES["modulo"] = new PrimitiveProcedure(scheme_modulo);
 
 function scheme_floor(x) {
     _check_nums([x]);
@@ -882,12 +881,12 @@ function scheme_display(val) {
 _PRIMITIVES["display"] = new PrimitiveProcedure(scheme_display);
 
 function scheme_print(val) {
-    this.postMessage(val.toString() + "\n");
+    this.postMessage({'type': "displayed_text", 'value': val.toString() + "\n"});
 }
 _PRIMITIVES["print"] = new PrimitiveProcedure(scheme_print);
 
 function scheme_newline() {
-    this.postMessage("");
+    this.postMessage({'type': "displayed_text", 'value': "\n"});
 }
 _PRIMITIVES["newline"] = new PrimitiveProcedure(scheme_newline);
 

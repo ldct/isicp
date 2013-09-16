@@ -317,7 +317,7 @@ makeEditable("scheme-ex-simpson-input").setOption("onBlur", function() {
                        ss(poly,polyl,2,10,12) + ") "
 
   eval_scheme(code).then(function(res){
-    if (res[res.length - 1] === "true\n") {
+    if (res[res.length - 1] === "true") {
       $_("scheme-ex-simpson-input-output").empty().append($("<div class='right-answer'> \u2713 </div>"));
     } else {
       $_("scheme-ex-simpson-input-output").empty().append($("<div class='wrong-answer'> \u2717 </div>"));
@@ -350,7 +350,7 @@ makeEditable("scheme-ex-sum-iter").setOption("onBlur", function() {
              "(= (sum (lambda (x) (* x x x)) 1 (lambda (n) (+ n 1)) 10) 3025)";
 
   eval_scheme(code).then(function(res){
-    if (res == "true\n") {
+    if (res[res.length - 1] === "true") {
       $_("scheme-ex-sum-iter-output").empty().append($("<div class='right-answer'> \u2713 </div>"));
     } else {
       $_("scheme-ex-sum-iter-output").empty().append($("<div class='wrong-answer'> \u2717 </div>"));
@@ -383,7 +383,7 @@ makeEditable("scheme-ex-define-product").setOption("onBlur", function() {
              "(= (product (lambda (x) (* x x)) 1 (lambda (n) (+ n 1)) 5) 14400)"
 
   eval_scheme(code).then(function(res){
-    if (res == "true\n") {
+    if (res[res.length - 1] === "true") {
       $_("scheme-ex-define-product-output").empty().append($("<div class='right-answer'> \u2713 </div>"));
     } else {
       $_("scheme-ex-define-product-output").empty().append($("<div class='wrong-answer'> \u2717 </div>"));
@@ -431,7 +431,7 @@ makeEditable("scheme-ex-define-accumulate").setOption("onBlur", function() {
              "(= (accumulate + 0 (lambda (x) (* x x)) 1 (lambda (n) (+ n 1)) 5) 55)"
 
   eval_scheme(code).then(function(res){
-    if (res == "true\n") {
+    if (res[res.length - 1] === "true") {
       $_("scheme-ex-define-accumulate-output").empty().append($("<div class='right-answer'> \u2713 </div>"));
     } else {
       $_("scheme-ex-define-accumulate-output").empty().append($("<div class='wrong-answer'> \u2717 </div>"));
@@ -466,7 +466,7 @@ makeEditable("scheme-ex-define-filtered-accumulate").setOption("onBlur", functio
              "(= (filtered-accumulate + 0 (lambda (x) (* x x)) 1 (lambda (n) (+ n 1)) 5 (lambda (x) #t)) 55)"
 
   eval_scheme(code).then(function(res){
-    if (res == "true\n") {
+    if (res[res.length] === "true") {
       $_("scheme-ex-define-filtered-accumulate-output").empty().append($("<div class='right-answer'> \u2713 </div>"));
     } else {
       $_("scheme-ex-define-filtered-accumulate-output").empty().append($("<div class='wrong-answer'> \u2717 </div>"));
