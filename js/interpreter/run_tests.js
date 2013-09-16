@@ -8,7 +8,7 @@ function test(str, out) {
     out.value += "Running Tests...\n";
     
     worker.onmessage = function(e) {
-        if (e.data.end) {
+        if (e.data.type === "end") {
             check_tests(test_cases, eval_result, out);
             worker.terminate();
             return;
@@ -24,6 +24,7 @@ function test(str, out) {
 }
 
 function check_tests(test_cases, eval_result, out) {
+    console.log("hi");
     var code, result, curr_result, result_num_lines;
     var failed = 0;
     var total = test_cases.length;

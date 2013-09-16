@@ -222,10 +222,10 @@ w
 ;&lt;response&gt;
 </div>
 <script>
-prompt("scheme-define-test-append-inplace", ["scheme-define-append-inplace"]);
+no_output_frozen_prompt("scheme-define-test-append-inplace");
 </script>
 
-<p> What are the missing &lt;response&gt;s?  Draw box-and-pointer diagrams to explain your answer.
+<p> What are the missing <tt>&lt;response&gt;</tt>s?  Draw box-and-pointer diagrams to explain your answer.
 </div>
 
 <p>
@@ -375,7 +375,7 @@ prompt("scheme-test-set-to-wow-z2", ["scheme-define-z2", "scheme-define-set-to-w
 <p>
 
 <div class="exercise">
-<p> <b>Exercise 3.16:</b> Ben Bitdiddle decides to write a procedure to count the number of pairs in any list structure. ``It's easy,''he reasons. ``The number of pairs in any structure is the number in the <tt>car</tt> plus the number in the <tt>cdr</tt> plus one more to count the current pair.''  So Ben writes the following procedure:
+<p> <b>Exercise 3.16:</b> Ben Bitdiddle decides to write a procedure to count the number of pairs in any list structure. "It's easy," he reasons. "The number of pairs in any structure is the number in the <tt>car</tt> plus the number in the <tt>cdr</tt> plus one more to count the current pair."  So Ben writes the following procedure:
 
 <div id="scheme-define-count-pairs">
 (define (count-pairs x)
@@ -470,11 +470,10 @@ prompt("scheme-define-cons-set-car-cdr");
 (define z (cons x x))
 (set-car! (cdr z) 17)
 
-(car x)
-;17
+(car x) ;should be 17. apologies.
 </div>
 <script>
-prompt("scheme-test-procedural-set-car-cdr");
+prompt("scheme-test-procedural-set-car-cdr", ["scheme-define-cons-set-car-cdr"]);
 </script>
 
 <p> using the procedural implementation of pairs given above. (Compare Exercise 3-11.)
