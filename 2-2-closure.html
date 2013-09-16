@@ -605,8 +605,8 @@ editorOf["scheme-ex-define-same-parity"].setOption("onBlur", function(){
         (else (filter (cdr l) p))))
 
 (define (same-parity x . y)
-  (cons x (filter y (lambda (t) (= (mod t 2)
-                                   (mod x 2))))))
+  (cons x (filter y (lambda (t) (= (modulo t 2)
+                                   (modulo x 2))))))
 */
 </script>
 </div>

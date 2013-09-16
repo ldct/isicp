@@ -25,21 +25,25 @@
 
 <ul>
 
+<li> 
 <tt>(make-rat n d)</tt> returns therational number whose
-numerator is the integer <tt>n</tt> and whose denominator is the integer
-<tt>d.</tt>
+numerator is the integer <tt>n</tt> and whose denominator is the integer <tt>d</tt>.
+</li>
 
-<tt>(numer x)</tt> returns the numerator of the rational number
-<tt>x</tt>.
+<li>
+<tt>(numer x)</tt> returns the numerator of the rational number <tt>x</tt>.
+</li>
 
-<tt>(denom x)</tt> returns the denominator of the rational number
-<tt>x.</tt>
-
+<li>
+<tt>(denom x)</tt> returns the denominator of the rational number <tt>x.</tt>
+</li>
 </ul>
 
 <p> We are using here a powerful strategy of synthesis: <em>wishful thinking</em>. We haven't yet said how a rational number is represented, or how the procedures <tt>numer</tt>, <tt>denom</tt>, and <tt>make-rat</tt> should be implemented. Even so, if we did have these three procedures, we could then add, subtract, multiply, divide, and test equality by using the following relations:
 
-<p> <img src="http://mitpress.mit.edu/sicp/full-text/book/ch2-Z-G-2.gif">
+$$
+\frac{n_1}{d_1} - \frac{n_2}{d_2} = \frac{n_1 d_2 - n_2 d_1}{d_1 d_2}
+$$
 
 <p> We can express these rules as procedures:
 
