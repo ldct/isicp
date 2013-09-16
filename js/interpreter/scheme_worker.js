@@ -169,6 +169,10 @@ function scheme_eval(expr, env) {
             return do_lambda_form(rest, env);
         } else if (first === 'set!') {
             return do_sete_form(rest, env);
+        } else if (first === 'set-car!') {
+            return do_set_care_form(rest, env);
+        } else if (first === 'set-cdr!') {
+            return do_set_cdre_form(rest, env);
         } else if (first === 'define') {
             return do_define_form(rest, env);
         } else if (first === 'quote') {
@@ -272,6 +276,28 @@ function do_sete_form(vals, env) {
         throw "SchemeError: cannot set!: " + target.toString()
             + " is not a variable";
     }
+}
+
+function do_set_care_form(vals, env) {
+    // Evaluate a set-car! form with parameters VALS in environment ENV
+    var target, value;
+    check_form(vals, 2, 2);
+
+    target = vals.getitem(0);
+    value = scheme_eval(vals.getitem(1), env);
+
+    scheme_eval(target, env).first = value;
+}
+
+function do_set_cdre_form(vals, env) {
+    // Evaluate a set-cdr! form with parameters VALS in environment ENV
+    var target, value;
+    check_form(vals, 2, 2);
+
+    target = vals.getitem(0);
+    value = scheme_eval(vals.getitem(1), env);
+
+    scheme_eval(target, env).second = value;
 }
 
 function do_define_form(vals, env) {

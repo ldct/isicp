@@ -102,144 +102,54 @@ $(document).ready(createTOC);
 
 <p> Chapter 2 dealt with compound data as a means for constructing computational objects that have several parts, in order to model real-world objects that have several aspects. In that chapter we introduced the discipline of data abstraction, according to which data structures are specified in terms of constructors, which create data objects, and selectors, which access the parts of compound data objects. But we now know that there is another aspect of data that Chapter 2 did not address. The desire to model systems composed of objects that have changing state leads us to the need to modify compound data objects, as well as to construct and select from them. In order to model compound objects with changing state, we will design data abstractions to include, in addition to selectors and constructors, operations called <tt>mutators</tt> , which modify data objects. For instance, modeling a banking system requires us to change account balances. Thus, a data structure for representing bank accounts might admit an operation
 
-<div id="">
-(set-balance! <account> <new-value>)
+<div id="scheme-set-balance">
+(set-balance! &lt;account&gt; &lt;new-value&gt;)
 </div>
 <script>
-prompt();
+no_output_frozen_prompt("scheme-set-balance");
 </script>
 
 <p> that changes the balance of the designated account to the designated new value. Data objects for which mutators are defined are known as <tt>mutable data objects</tt>.
 
-<p> Chapter 2 introduced pairs as a general-purpose ``glue'' for synthesizing compound data. We begin this section by defining basic mutators for pairs, so that pairs can serve as building blocks for constructing mutable data objects. These mutators greatly enhance the representational power of pairs, enabling us to build data structures other than the sequences and trees that we worked with in section 2-2. We also present some examples of simulations in which complex systems are modeled as collections of objects with local state.
+<p> Chapter 2 introduced pairs as a general-purpose "glue" for synthesizing compound data. We begin this section by defining basic mutators for pairs, so that pairs can serve as building blocks for constructing mutable data objects. These mutators greatly enhance the representational power of pairs, enabling us to build data structures other than the sequences and trees that we worked with in section 2-2. We also present some examples of simulations in which complex systems are modeled as collections of objects with local state.
 
 <h3> Mutable List Structure </h3> 
 
-<p> The basic operations on pairs---<tt>cons</tt>, <tt>car</tt>, and <tt>cdr</tt>---can be used to construct list structure and to select parts from list structure, but they are incapable of modifying list structure. The same is true of the list operations we have used so far, such as <tt>append</tt> and <tt>list</tt>, since these can be defined in terms of <tt>cons</tt>, <tt>car</tt>, and <tt>cdr</tt>. To modify list structures we need new operations.
+<p> The basic operations on pairs &ndash; <tt>cons</tt>, <tt>car</tt>, and <tt>cdr</tt> &ndash; can be used to construct list structure and to select parts from list structure, but they are incapable of modifying list structure. The same is true of the list operations we have used so far, such as <tt>append</tt> and <tt>list</tt>, since these can be defined in terms of <tt>cons</tt>, <tt>car</tt>, and <tt>cdr</tt>. To modify list structures we need new operations.
 
-<div class="exercise">
-<b>Figure 3.12:</b> Lists <tt>x</tt>: <tt>((a b) c d)</tt> and <tt>y</tt>: <tt>(e f)</tt>.
-
-<pre>
-     +---+---+     +---+---+     +---+---+
-x -->| * | *-+---->| * | *-+---->| * | / |
-     +-|-+---+     +-|-+---+     +-|-+---+
-       |             V             V
-       |           +---+         +---+
-       |           | c |         | d |
-       |           +---+         +---+
-       |           +---+---+     +---+---+
-       +---------->| * | *-+---->| * | / |
-                   +-|-+---+     +-|-+---+
-                     V             V
-                   +---+         +---+
-                   | a |         | b |
-                   +---+         +---+
-                   +---+---+     +---+---+
-              y -->| * | *-+---->| * | / |
-                   +-|-+---+     +-|-+---+
-                     V             V
-                   +---+         +---+
-                   | e |         | f |
-                   +---+         +---+
-</pre>
+<div class="figure">
+<img src="http://mitpress.mit.edu/sicp/full-text/book/ch3-Z-G-13.gif">
+<p> <b>Figure 3.12:</b> Lists <tt>x</tt>: <tt>((a b) c d)</tt> and <tt>y</tt>: <tt>(e f)</tt>.
 </div>
 
-<div class="exercise">
-<b>Figure 3.13:</b> Effect of <tt>(set-car! x y)</tt> on the lists in Figure 3-12.
-
-<pre>
-     +---+---+     +---+---+     +---+---+
-x -->| * | *-+---->| * | *-+---->| * | / |
-     +-|-+---+     +-|-+---+     +-|-+---+
-       |             V             V
-       |           +---+         +---+
-       |           | c |         | d |
-       |           +---+         +---+
-       |           +---+---+     +---+---+
-       |           | * | *-+---->| * | / |
-       |           +-|-+---+     +-|-+---+
-       |             V             V
-       |           +---+         +---+
-       |           | a |         | b |
-       |           +---+         +---+
-       +---------->+---+---+     +---+---+
-                   | * | *-+---->| * | / |
-              y -->+-|-+---+     +-|-+---+
-                     V             V
-                   +---+         +---+
-                   | e |         | f |
-                   +---+         +---+
-</pre>
+<div class="figure">
+<img src="http://mitpress.mit.edu/sicp/full-text/book/ch3-Z-G-14.gif">
+<p> <b>Figure 3.13:</b> Effect of <tt>(set-car! x y)</tt> on the lists in Figure 3-12.
 </div>
 
-<div class="exercise">
-<b>Figure 3.14:</b> Effect of <tt>(define z (cons y (cdr x)))</tt> on the lists in Figure 3-12.
-
-<pre>
-     +---+---+     +---+---+     +---+---+
-x -->| * | *-+---->| * | *-+---->| * | / |
-     +-|-+---+ +-->+-|-+---+     +-|-+---+
-       |       |     V             V
-       |       |   +---+         +---+
-       |       |   | c |         | d |
-       |       |   +---+         +---+
-       |       |   +---+---+     +---+---+
-       +-------+-->| * | *-+---->| * | / |
-               |   +-|-+---+     +-|-+---+
-     +---+---+ |     V             V
-z -->| * | *-+-+   +---+         +---+
-     +-|-+---+     | a |         | b |
-       |           +---+         +---+
-       +---------->+---+---+     +---+---+
-                   | * | *-+---->| * | / |
-              y -->+-|-+---+     +-|-+---+
-                     V             V
-                   +---+         +---+
-                   | e |         | f |
-                   +---+         +---+
-</pre>
+<div class="figure">
+<img src="http://mitpress.mit.edu/sicp/full-text/book/ch3-Z-G-15.gif">
+<p> <b>Figure 3.14:</b> Effect of <tt>(define z (cons y (cdr x)))</tt> on the lists in Figure 3-12.
 </div>
 
-<div class="exercise">
-<b>Figure 3.15:</b> Effect of <tt>(set-cdr! x y)</tt> on the lists in Figure 3-12.
-
-<pre>
-     +---+---+     +---+---+     +---+---+
-x -->| * | * |     | * | *-+---->| * | / |
-     +-|-+-|-+     +-|-+---+     +-|-+---+
-       |   |         V             V
-       |   |       +---+         +---+
-       |   |       | c |         | d |
-       |   |       +---+         +---+
-       |   |       +---+---+     +---+---+
-       +---+------>| * | *-+---->| * | / |
-           |       +-|-+---+     +-|-+---+
-           |         V             V
-           |       +---+         +---+
-           |       | a |         | b |
-           |       +---+         +---+
-           +------>+---+---+     +---+---+
-                   | * | *-+---->| * | / |
-              y -->+-|-+---+     +-|-+---+
-                     V             V
-                   +---+         +---+
-                   | e |         | f |
-                   +---+         +---+
-</pre>
+<div class="figure">
+<img src="http://mitpress.mit.edu/sicp/full-text/book/ch3-Z-G-16.gif">
+<p> <b>Figure 3.15:</b> Effect of <tt>(set-cdr! x y)</tt> on the lists in Figure 3-12.
 </div>
 
-<p> The primitive mutators for pairs are <tt>set-car!</tt> and <tt>set-cdr!</tt>. <tt>Set-car!</tt> takes two arguments, the first of which must be a pair. It modifies this pair, replacing the <tt>car</tt> pointer by a pointer to the second argument of <tt>set-car!</tt>.@footnote{<tt>Set-car!</tt> and <tt>set-cdr!</tt> return implementation-dependent values. Like <tt>set!</tt>, they should be used only for their effect.}
+<p> The primitive mutators for pairs are <tt>set-car!</tt> and <tt>set-cdr!</tt>. <tt>Set-car!</tt> takes two arguments, the first of which must be a pair. It modifies this pair, replacing the <tt>car</tt> pointer by a pointer to the second argument of <tt>set-car!</tt>.<a name="footnote_link_3-16" class="footnote_link" href="#footnote_3-16">16</a>
 
-<p> As an example, suppose that <tt>x</tt> is bound to the list <tt>((a b) c d)</tt> and <tt>y</tt> to the list <tt>(e f)</tt> as illustrated in Figure 3-12. Evaluating the expression <tt>(set-car!  x y)</tt> modifies the pair to which <tt>x</tt> is bound, replacing its <tt>car</tt> by the value of <tt>y</tt>. The result of the operation is shown in Figure 3-13. The structure <tt>x</tt> has been modified and would now be printed as <tt>((e f) c d)</tt>. The pairs representing the list <tt>(a b)</tt>, identified by the pointer that was replaced, are now detached from the original structure.@footnote{We see from this that mutation operations on lists can create ``garbage'' that is not part of any accessible structure. We will see in section 5-3-2 that Lisp memory-management systems include a <tt>garbage collector</tt> , which identifies and recycles the memory space used by unneeded pairs.}
+<p> As an example, suppose that <tt>x</tt> is bound to the list <tt>((a b) c d)</tt> and <tt>y</tt> to the list <tt>(e f)</tt> as illustrated in Figure 3-12. Evaluating the expression <tt>(set-car!  x y)</tt> modifies the pair to which <tt>x</tt> is bound, replacing its <tt>car</tt> by the value of <tt>y</tt>. The result of the operation is shown in Figure 3-13. The structure <tt>x</tt> has been modified and would now be printed as <tt>((e f) c d)</tt>. The pairs representing the list <tt>(a b)</tt>, identified by the pointer that was replaced, are now detached from the original structure.<a name="footnote_link_3-17" class="footnote_link" href="#footnote_3-17">17</a>
 
 <p> Compare Figure 3-13 with Figure 3-14, which illustrates the result of executing <tt>(define z (cons y (cdr x)))</tt> with <tt>x</tt> and <tt>y</tt> bound to the original lists of Figure 3-12. The variable <tt>z</tt> is now bound to a new pair created by the <tt>cons</tt> operation; the list to which <tt>x</tt> is bound is unchanged.
 
 <p> The <tt>set-cdr!</tt> operation is similar to <tt>set-car!</tt>. The only difference is that the <tt>cdr</tt> pointer of the pair, rather than the <tt>car</tt> pointer, is replaced. The effect of executing <tt>(set-cdr! x y)</tt> on the lists of Figure 3-12 is shown in Figure 3-15. Here the <tt>cdr</tt> pointer of <tt>x</tt> has been replaced by the pointer to <tt>(e f)</tt>. Also, the list <tt>(c d)</tt>, which used to be the <tt>cdr</tt> of <tt>x</tt>, is now detached from the structure.
 
-<p> <tt>Cons</tt> builds new list structure by creating new pairs, while <tt>set-car!</tt> and <tt>set-cdr!</tt> modify existing pairs. Indeed, we could implement <tt>cons</tt> in terms of the two mutators, together with a procedure <tt>get-new-pair</tt>, which returns a new pair that is not part of any existing list structure. We obtain the new pair, set its <tt>car</tt> and <tt>cdr</tt> pointers to the designated objects, and return the new pair as the result of the <tt>cons</tt>.@footnote{<tt>Get-new-pair</tt> is one of the operations that must be implemented as part of the memory management required by a Lisp implementation. We will discuss this in section 5-3-1.}
+<p> <tt>Cons</tt> builds new list structure by creating new pairs, while <tt>set-car!</tt> and <tt>set-cdr!</tt> modify existing pairs. Indeed, we could implement <tt>cons</tt> in terms of the two mutators, together with a procedure <tt>get-new-pair</tt>, which returns a new pair that is not part of any existing list structure. We obtain the new pair, set its <tt>car</tt> and <tt>cdr</tt> pointers to the designated objects, and return the new pair as the result of the <tt>cons</tt>.<a name="footnote_link_3-18" class="footnote_link" href="#footnote_3-18">18</a>
 
-<div id="">
+<div id="scheme-define-cons-with-set">
+(define (get-new-pair) '(() ()))
+
 (define (cons x y)
   (let ((new (get-new-pair)))
     (set-car! new x)
@@ -247,48 +157,50 @@ x -->| * | * |     | * | *-+---->| * | / |
     new))
 </div>
 <script>
-prompt();
+prompt("scheme-define-cons-with-set");
 </script>
+
+<p>
 
 <div class="exercise">
 <p> <b>Exercise 3.12:</b> The following procedure for appending lists was introduced in section 2-2-1:
 
-<div id="">
+<div id="scheme-define-append">
 (define (append x y)
   (if (null? x)
       y
       (cons (car x) (append (cdr x) y))))
 </div>
 <script>
-prompt();
+prompt("scheme-define-append");
 </script>
 
-<p> <tt>Append</tt> forms a new list by successively <tt>cons</tt>ing the elements of <tt>x</tt> onto <tt>y</tt>. The procedure <tt>append!</tt> is similar to <tt>append</tt>, but it is a mutator rather than a constructor. It appends the lists by splicing them together, modifying the final pair of <tt>x</tt> so that its <tt>cdr</tt> is now <tt>y</tt>. (It is an error to call <tt>append!</tt> with an empty <tt>x</tt>.)
+<p> <tt>append</tt> forms a new list by successively <tt>cons</tt>ing the elements of <tt>x</tt> onto <tt>y</tt>. The procedure <tt>append!</tt> is similar to <tt>append</tt>, but it is a mutator rather than a constructor. It appends the lists by splicing them together, modifying the final pair of <tt>x</tt> so that its <tt>cdr</tt> is now <tt>y</tt>. (It is an error to call <tt>append!</tt> with an empty <tt>x</tt>.)
 
-<div id="">
+<div id="scheme-define-append-inplace">
 (define (append! x y)
   (set-cdr! (last-pair x) y)
   x)
 </div>
 <script>
-prompt();
+prompt("scheme-define-append-inplace", ["scheme-define-last-pair"]);
 </script>
 
 <p> Here <tt>last-pair</tt> is a procedure that returns the last pair in its argument:
 
-<div id="">
+<div id="scheme-define-last-pair">
 (define (last-pair x)
   (if (null? (cdr x))
       x
       (last-pair (cdr x))))
 </div>
 <script>
-prompt();
+prompt("scheme-define-last-pair");
 </script>
 
 <p> Consider the interaction
 
-<div id="">
+<div id="scheme-define-test-append-inplace">
 (define x (list 'a 'b))
 
 (define y (list 'c 'd))
@@ -296,54 +208,58 @@ prompt();
 (define z (append x y))
 
 z
-(a b c d)
+;(a b c d)
 
 (cdr x)
-<response>
+;&lt;response&gt;
 
 (define w (append! x y))
 
 w
-(a b c d)
+;(a b c d)
 
 (cdr x)
-<response>
+;&lt;response&gt;
 </div>
 <script>
-prompt();
+prompt("scheme-define-test-append-inplace", ["scheme-define-append-inplace"]);
 </script>
 
-<p> What are the missing <response>s?  Draw box-and-pointer diagrams to explain your answer.
-
+<p> What are the missing &lt;response&gt;s?  Draw box-and-pointer diagrams to explain your answer.
 </div>
+
+<p>
 
 <div class="exercise">
 <p> <b>Exercise 3.13:</b> Consider the following <tt>make-cycle</tt> procedure, which uses the <tt>last-pair</tt> procedure defined in Exercise 3-12:
 
-<div id="">
+<div id="scheme-define-make-cycle">
 (define (make-cycle x)
   (set-cdr! (last-pair x) x)
   x)
 </div>
 <script>
-prompt();
+prompt("scheme-define-make-cycle", ["scheme-define-last-pair"]);
 </script>
 
 <p> Draw a box-and-pointer diagram that shows the structure <tt>z</tt> created by
 
-<div id="">
+<div id="scheme-define-z-cycle">
 (define z (make-cycle (list 'a 'b 'c)))
 </div>
 <script>
-prompt();
+prompt("scheme-define-z-cycle", ["scheme-define-make-cycle"]);
 </script>
 
 <p> What happens if we try to compute <tt>(last-pair z)</tt>?
 </div>
+
+<p>
+
 <div class="exercise">
 <p> <b>Exercise 3.14:</b> The following procedure is quite useful, although obscure:
 
-<div id="">
+<div id="scheme-define-mystery">
 (define (mystery x)
   (define (loop x y)
     (if (null? x)
@@ -354,115 +270,114 @@ prompt();
   (loop x '()))
 </div>
 <script>
-prompt();
+prompt("scheme-define-mystery");
 </script>
 
-<p> <tt>Loop</tt> uses the ``temporary'' variable <tt>temp</tt> to hold the old value of the <tt>cdr</tt> of <tt>x</tt>, since the <tt>set-cdr!</tt>  on the next line destroys the <tt>cdr</tt>. Explain what <tt>mystery</tt> does in general. Suppose <tt>v</tt> is defined by <tt>(define v (list 'a 'b 'c 'd))</tt>. Draw the box-and-pointer diagram that represents the list to which <tt>v</tt> is bound. Suppose that we now evaluate <tt>(define w (mystery v))</tt>. Draw box-and-pointer diagrams that show the structures <tt>v</tt> and <tt>w</tt> after evaluating this expression. What would be printed as the values of <tt>v</tt> and <tt>w</tt>? </div>
+<p> <tt>loop</tt> uses the ``temporary'' variable <tt>temp</tt> to hold the old value of the <tt>cdr</tt> of <tt>x</tt>, since the <tt>set-cdr!</tt>  on the next line destroys the <tt>cdr</tt>. Explain what <tt>mystery</tt> does in general. Suppose <tt>v</tt> is defined by <tt>(define v (list 'a 'b 'c 'd))</tt>. Draw the box-and-pointer diagram that represents the list to which <tt>v</tt> is bound. Suppose that we now evaluate <tt>(define w (mystery v))</tt>. Draw box-and-pointer diagrams that show the structures <tt>v</tt> and <tt>w</tt> after evaluating this expression. What would be printed as the values of <tt>v</tt> and <tt>w</tt>? </div>
 
 <h4> Sharing and identity </h4> 
 
 <p> We mentioned in section 3-1-3 the theoretical issues of ``sameness'' and ``change'' raised by the introduction of assignment. These issues arise in practice when individual pairs are <tt>shared</tt> among different data objects. For example, consider the structure formed by
 
-<div id="">
+<div id="scheme-define-x">
 (define x (list 'a 'b))
+</div>
+<script>
+prompt("scheme-define-x");
+</script>
+
+<div id="scheme-define-z1">
 (define z1 (cons x x))
 </div>
 <script>
-prompt();
+prompt("scheme-define-z1", ["scheme-define-x"]);
 </script>
 
 <p> As shown in Figure 3-16, <tt>z1</tt> is a pair whose <tt>car</tt> and <tt>cdr</tt> both point to the same pair <tt>x</tt>. This sharing of <tt>x</tt> by the <tt>car</tt> and <tt>cdr</tt> of <tt>z1</tt> is a consequence of the straightforward way in which <tt>cons</tt> is implemented. In general, using <tt>cons</tt> to construct lists will result in an interlinked structure of pairs in which many individual pairs are shared by many different structures.
 
-<div class="exercise">
+<div class="figure">
+<img src="http://mitpress.mit.edu/sicp/full-text/book/ch3-Z-G-17.gif">
 <p> <b>Figure 3.16:</b> The list <tt>z1</tt> formed by <tt>(cons x x)</tt>.
-
-<pre>
-      +---+---+
-z1 -->| * | * |
-      +-|-+-|-+
-        V   V
-      +---+---+     +---+---+
- x -->| * | *-+---->| * | / |
-      +-|-+---+     +-|-+---+
-        V             V
-      +---+         +---+
-      | a |         | b |
-      +---+         +---+
-</pre>
 </div>
 
-<div class="exercise">
-<b>Figure 3.17:</b> The list <tt>z2</tt> formed by <tt>(cons (list 'a 'b) (list 'a 'b))</tt>.
-
-<pre>
-      +---+---+     +---+---+     +---+---+
-z2 -->| * | *-+---->| * | *-+---->| * | / |
-      +-|-+---+     +-|-+---+     +-|-+---+
-        |             V             V
-        |           +---+         +---+
-        |           | a |         | b |
-        |           +---+         +---+
-        |             ^             ^
-        |             |             |
-        |           +-|-+---+     +-|-+---+
-        +---------->| * | *-+---->| * | / |
-                    +---+---+     +---+---+
-</pre>
+<div class="figure">
+<img src="http://mitpress.mit.edu/sicp/full-text/book/ch3-Z-G-18.gif">
+<p> <b>Figure 3.17:</b> The list <tt>z2</tt> formed by <tt>(cons (list 'a 'b) (list 'a 'b))</tt>.
 </div>
 
 <p> In contrast to Figure 3-16, Figure 3-17 shows the structure created by
 
-<div id="">
+<div id="scheme-define-z2">
 (define z2 (cons (list 'a 'b) (list 'a 'b)))
 </div>
 <script>
-prompt();
+prompt("scheme-define-z2");
 </script>
 
-<p> In this structure, the pairs in the two <tt>(a b)</tt> lists are distinct, although the actual symbols are shared.@footnote{The two pairs are distinct because each call to <tt>cons</tt> returns a new pair. The symbols are shared; in Scheme there is a unique symbol with any given name. Since Scheme provides no way to mutate a symbol, this sharing is undetectable. Note also that the sharing is what enables us to compare symbols using <tt>eq?</tt>, which simply checks equality of pointers.}
+<p> In this structure, the pairs in the two <tt>(a b)</tt> lists are distinct, although the actual symbols are shared.<a name="footnote_link_3-19" class="footnote_link" href="#footnote_3-19">19</a>
 
 <p> When thought of as a list, <tt>z1</tt> and <tt>z2</tt> both represent ``the same''list, <tt>((a b) a b)</tt>. In general, sharing is completely undetectable if we operate on lists using only <tt>cons</tt>, <tt>car</tt>, and <tt>cdr</tt>. However, if we allow mutators on list structure, sharing becomes significant. As an example of the difference that sharing can make, consider the following procedure, which modifies the <tt>car</tt> of the structure to which it is applied:
 
-<div id="">
+<div id="scheme-define-set-to-wow">
 (define (set-to-wow! x)
   (set-car! (car x) 'wow)
   x)
 </div>
 <script>
-prompt();
+prompt("scheme-define-set-to-wow");
 </script>
 
-<p> Even though <tt>z1</tt> and <tt>z2</tt> are ``the same'' structure, applying <tt>set-to-wow!</tt> to them yields different results. With <tt>z1</tt>, altering the <tt>car</tt> also changes the <tt>cdr</tt>, because in <tt>z1</tt> the <tt>car</tt> and the <tt>cdr</tt> are the same pair. With <tt>z2</tt>, the <tt>car</tt> and <tt>cdr</tt> are distinct, so <tt>set-to-wow!</tt> modifies only the <tt>car</tt>:
+<p> Even though <tt>z1</tt> and <tt>z2</tt> are "the same" structure, applying <tt>set-to-wow!</tt> to them yields different results. With <tt>z1</tt>, altering the <tt>car</tt> also changes the <tt>cdr</tt>, because in <tt>z1</tt> the <tt>car</tt> and the <tt>cdr</tt> are the same pair. With <tt>z2</tt>, the <tt>car</tt> and <tt>cdr</tt> are distinct, so <tt>set-to-wow!</tt> modifies only the <tt>car</tt>:
 
-<div id="">
+
+<div id="scheme-z1">
 z1
-((a b) a b)
-
-(set-to-wow! z1)
-((wow b) wow b)
-
-z2
-((a b) a b)
-
-(set-to-wow! z2)
-((wow b) a b)
 </div>
 <script>
-prompt();
+prompt("scheme-z1", ["scheme-define-z1"]);
+</script>
+
+<p>
+
+<div id="scheme-test-set-to-wow-z1">
+(set-to-wow! z1)
+</div>
+<script>
+prompt("scheme-test-set-to-wow-z1", ["scheme-define-z1", "scheme-define-set-to-wow"]);
+</script>
+
+<p>
+
+<div id="scheme-z2">
+z2
+</div>
+<script>
+prompt("scheme-z2", ["scheme-define-z2"]);
+</script>
+
+<p>
+
+<div id="scheme-test-set-to-wow-z2">
+(set-to-wow! z2)
+</div>
+<script>
+prompt("scheme-test-set-to-wow-z2", ["scheme-define-z2", "scheme-define-set-to-wow"]);
 </script>
 
 <p> One way to detect sharing in list structures is to use the predicate <tt>eq?</tt>, which we introduced in section 2-3-1 as a way to test whether two symbols are equal. More generally, <tt>(eq?  x y)</tt> tests whether <tt>x</tt> and <tt>y</tt> are the same object (that is, whether <tt>x</tt> and <tt>y</tt> are equal as pointers). Thus, with <tt>z1</tt> and <tt>z2</tt> as defined in figures Figure 3-16 and Figure 3-17, <tt>(eq?  (car z1) (cdr z1))</tt> is true and <tt>(eq? (car z2) (cdr z2))</tt> is false.
 
-<p> As will be seen in the following sections, we can exploit sharing to greatly extend the repertoire of data structures that can be represented by pairs. On the other hand, sharing can also be dangerous, since modifications made to structures will also affect other structures that happen to share the modified parts. The mutation operations <tt>set-car!</tt> and <tt>set-cdr!</tt> should be used with care; unless we have a good understanding of how our data objects are shared, mutation can have unanticipated results.@footnote{The subtleties of dealing with sharing of mutable data objects reflect the underlying issues of ``sameness'' and ``change'' that were raised in section 3-1-3. We mentioned there that admitting change to our language requires that a compound object must have an ``identity'' that is something different from the pieces from which it is composed. In Lisp, we consider this ``identity'' to be the quality that is tested by <tt>eq?</tt>, i.e., by equality of pointers. Since in most Lisp implementations a pointer is essentially a memory address, we are ``solving the problem'' of defining the identity of objects by stipulating that a data object ``itself'' is the information stored in some particular set of memory locations in the computer. This suffices for simple Lisp programs, but is hardly a general way to resolve the issue of ``sameness'' in computational models.}
+<p> As will be seen in the following sections, we can exploit sharing to greatly extend the repertoire of data structures that can be represented by pairs. On the other hand, sharing can also be dangerous, since modifications made to structures will also affect other structures that happen to share the modified parts. The mutation operations <tt>set-car!</tt> and <tt>set-cdr!</tt> should be used with care; unless we have a good understanding of how our data objects are shared, mutation can have unanticipated results.<a name="footnote_link_3-20" class="footnote_link" href="#footnote_3-20">20</a>
 
 <div class="exercise">
 <p> <b>Exercise 3.15:</b> Draw box-and-pointer diagrams to explain the effect of <tt>set-to-wow!</tt> on the structures <tt>z1</tt> and <tt>z2</tt> above.
 </div>
 
+<p>
+
 <div class="exercise">
 <p> <b>Exercise 3.16:</b> Ben Bitdiddle decides to write a procedure to count the number of pairs in any list structure. ``It's easy,''he reasons. ``The number of pairs in any structure is the number in the <tt>car</tt> plus the number in the <tt>cdr</tt> plus one more to count the current pair.''  So Ben writes the following procedure:
 
-<div id="">
+<div id="scheme-define-count-pairs">
 (define (count-pairs x)
   (if (not (pair? x))
       0
@@ -471,19 +386,25 @@ prompt();
          1)))
 </div>
 <script>
-prompt();
+prompt("scheme-define-count-pairs");
 </script>
 
 <p> Show that this procedure is not correct. In particular, draw box-and-pointer diagrams representing list structures made up of exactly three pairs for which Ben's procedure would return 3; return 4; return 7; never return at all.
 </div>
 
+<p>
+
 <div class="exercise">
 <p> <b>Exercise 3.17:</b> Devise a correct version of the <tt>count-pairs</tt> procedure of Exercise 3-16 that returns the number of distinct pairs in any structure. (Hint: Traverse the structure, maintaining an auxiliary data structure that is used to keep track of which pairs have already been counted.)
 </div>
 
+<p>
+
 <div class="exercise">
 <p> <b>Exercise 3.18:</b> Write a procedure that examines a list and determines whether it contains a cycle, that is, whether a program that tried to find the end of the list by taking successive <tt>cdr</tt>s would go into an infinite loop. Exercise 3-13 constructed such lists.
 </div>
+
+<p>
 
 <div class="exercise">
 <p> <b>Exercise 3.19:</b> Redo Exercise 3-18 using an algorithm that takes only a constant amount of space. (This requires a very clever idea.) 
@@ -493,7 +414,7 @@ prompt();
 
 <p> When we introduced compound data, we observed in section 2-1-3 that pairs can be represented purely in terms of procedures:
 
-<div id="">
+<div id="scheme-define-cons">
 (define (cons x y)
   (define (dispatch m)
     (cond ((eq? m 'car) x)
@@ -506,12 +427,12 @@ prompt();
 (define (cdr z) (z 'cdr))
 </div>
 <script>
-prompt();
+prompt("scheme-define-cons");
 </script>
 
 <p> The same observation is true for mutable data. We can implement mutable data objects as procedures using assignment and local state. For instance, we can extend the above pair implementation to handle <tt>set-car!</tt> and <tt>set-cdr!</tt> in a manner analogous to the way we implemented bank accounts using <tt>make-account</tt> in section 3-1-1:
 
-<div id="">
+<div id="scheme-define-cons-set-car-cdr">
 (define (cons x y)
   (define (set-x! v) (set! x v))
   (define (set-y! v) (set! y v))
@@ -536,24 +457,24 @@ prompt();
   z)
 </div>
 <script>
-prompt();
+prompt("scheme-define-cons-set-car-cdr");
 </script>
 
-<p> Assignment is all that is needed, theoretically, to account for the behavior of mutable data. As soon as we admit <tt>set!</tt> to our language, we raise all the issues, not only of assignment, but of mutable data in general.@footnote{On the other hand, from the viewpoint of implementation, assignment requires us to modify the environment, which is itself a mutable data structure. Thus, assignment and mutation are equipotent: Each can be implemented in terms of the other.}
+<p> Assignment is all that is needed, theoretically, to account for the behavior of mutable data. As soon as we admit <tt>set!</tt> to our language, we raise all the issues, not only of assignment, but of mutable data in general.<a name="footnote_link_3-21" class="footnote_link" href="#footnote_3-21">21</a>
 
 <div class="exercise">
 <p> <b>Exercise 3.20:</b> Draw environment diagrams to illustrate the evaluation of the sequence of expressions
 
-<div id="">
+<div id="scheme-test-procedural-set-car-cdr">
 (define x (cons 1 2))
 (define z (cons x x))
 (set-car! (cdr z) 17)
 
 (car x)
-17
+;17
 </div>
 <script>
-prompt();
+prompt("scheme-test-procedural-set-car-cdr");
 </script>
 
 <p> using the procedural implementation of pairs given above. (Compare Exercise 3-11.)
@@ -565,19 +486,18 @@ prompt();
 
 <p> A <tt>queue</tt> is a sequence in which items are inserted at one end (called the <tt>rear</tt> of the queue) and deleted from the other end (the <tt>front</tt> ). Figure 3-18 shows an initially empty queue in which the items <tt>a</tt> and <tt>b</tt> are inserted. Then <tt>a</tt> is removed, <tt>c</tt> and <tt>d</tt> are inserted, and <tt>b</tt> is removed. Because items are always removed in the order in which they are inserted, a queue is sometimes called a <tt>FIFO</tt> (first in, first out) buffer.
 
-<div class="exercise">
-<p> <b>Figure 3.18:</b> Queue operations.
-
-<pre>
+<pre style="margin-left:30%">
 Operation                Resulting Queue
-(define q (make-queue))
-(insert-queue! q 'a)     a
-(insert-queue! q 'b)     a b
+(define q (make-queue))        
+(insert-queue! q 'a)     a     
+(insert-queue! q 'b)     a b   
 (delete-queue! q)        b
 (insert-queue! q 'c)     b c
 (insert-queue! q 'd)     b c d
 (delete-queue! q)        c d
 </pre>
+<div class="figure">
+<p> <b>Figure 3.18:</b> Queue operations.
 </div>
 
 <p> In terms of data abstraction, we can regard a queue as defined by the following set of operations:
@@ -585,59 +505,23 @@ Operation                Resulting Queue
 <ul>
 
 <li>
-a constructor: <tt>(make-queue)</tt> returns an empty queue (a queue containing
-no items).
+<p> a constructor: <tt>(make-queue)</tt> returns an empty queue (a queue containing no items).
 </li>
 
 <li>
-two selectors:
+<p> two selectors: 
 
-<div id="">
-(empty-queue? <queue>)
-</div>
-<script>
-prompt();
-</script>
+<p> <tt>(empty-queue? &lt;queue&gt;)</tt> tests if the queue is empty. 
 
-
-tests if the queue is empty.
-
-<div id="">
-(front-queue <queue>)
-</div>
-<script>
-prompt();
-</script>
-
-
-returns the object at the front of the queue, signaling an error if the queue
-is empty; it does not modify the queue.
+<p> <tt>(front-queue &lt;queue&gt;)</tt> returns the object at the front of the queue, signaling an error if the queueis empty; it does not modify the queue.
 </li>
 
 <li>
-two mutators:
+<p> two mutators: 
 
-<div id="">
-(insert-queue! <queue> <item>)
-</div>
-<script>
-prompt();
-</script>
+<p> <tt> (insert-queue! &lt;queue&gt; &lt;item&gt;)</tt> inserts the item at the rear of the queue and returns the modified queue as its value. 
 
-
-inserts the item at the rear of the queue and returns the modified queue as its
-value.
-
-<div id="">
-(delete-queue! <queue>)
-</div>
-<script>
-prompt();
-</script>
-
-
-removes the item at the front of the queue and returns the modified queue as
-its value, signaling an error if the queue is empty before the deletion.
+<p> <tt> (delete-queue! &lt;queue&gt;)</tt> removes the item at the front of the queue and returns the modified queue as its value, signaling an error if the queue is empty before the deletion.
 </li>
 </ul>
 
@@ -751,7 +635,7 @@ q 'd)</tt> on the queue of Figure 3-19.
 prompt();
 </script>
 
-<p> To delete the item at the front of the queue, we merely modify the front pointer so that it now points at the second item in the queue, which can be found by following the <tt>cdr</tt> pointer of the first item (see Figure 3-21):@footnote{If the first item is the final item in the queue, the front pointer will be the empty list after the deletion, which will mark the queue as empty; we needn't worry about updating the rear pointer, which will still point to the deleted item, because <tt>empty-queue?</tt> looks only at the front pointer.}
+<p> To delete the item at the front of the queue, we merely modify the front pointer so that it now points at the second item in the queue, which can be found by following the <tt>cdr</tt> pointer of the first item (see Figure 3-21):<a name="footnote_link_3-22" class="footnote_link" href="#footnote_3-22">22</a>
 
 <div class="exercise">
 <p> <b>Figure 3.21:</b> Result of using <tt>(delete-queue! q)</tt> on the queue of Figure 3-20.
@@ -832,7 +716,7 @@ prompt();
 </div>
 
 <div class="exercise">
-<p> <b>Exercise 3.23:</b> A <tt>deque</tt> (``double-ended queue'') is a sequence in which items can be inserted and deleted at either the front or the rear. Operations on deques are the constructor <tt>make-deque</tt>, the predicate <tt>empty-deque?</tt>, selectors <tt>front-deque</tt> and <tt>rear-deque</tt>, and mutators <tt>front-insert-deque!</tt>, <tt>rear-insert-deque!</tt>, <tt>front-delete-deque!</tt>, and <tt>rear-delete-deque!</tt>. Show how to represent deques using pairs, and give implementations of the operations.@footnote{Be careful not to make the interpreter try to print a structure that contains cycles. (See Exercise 3-13.)}  All operations should be accomplished in [theta](1) steps.
+<p> <b>Exercise 3.23:</b> A <tt>deque</tt> (``double-ended queue'') is a sequence in which items can be inserted and deleted at either the front or the rear. Operations on deques are the constructor <tt>make-deque</tt>, the predicate <tt>empty-deque?</tt>, selectors <tt>front-deque</tt> and <tt>rear-deque</tt>, and mutators <tt>front-insert-deque!</tt>, <tt>rear-insert-deque!</tt>, <tt>front-delete-deque!</tt>, and <tt>rear-delete-deque!</tt>. Show how to represent deques using pairs, and give implementations of the operations.<a name="footnote_link_3-23" class="footnote_link" href="#footnote_3-23">23</a>  All operations should be accomplished in [theta](1) steps.
 </div>
 
 <h3> Representing Tables </h3> 
@@ -870,7 +754,7 @@ prompt();
 </pre>
 </div>
 
-<p> To extract information from a table we use the <tt>lookup</tt> procedure, which takes a key as argument and returns the associated value (or false if there is no value stored under that key). <tt>Lookup</tt> is defined in terms of the <tt>assoc</tt> operation, which expects a key and a list of records as arguments. Note that <tt>assoc</tt> never sees the dummy record. <tt>Assoc</tt> returns the record that has the given key as its <tt>car</tt>.@footnote{Because <tt>assoc</tt> uses <tt>equal?</tt>, it can recognize keys that are symbols, numbers, or list structure.}  <tt>Lookup</tt> then checks to see that the resulting record returned by <tt>assoc</tt> is not false, and returns the value (the <tt>cdr</tt>) of the record.
+<p> To extract information from a table we use the <tt>lookup</tt> procedure, which takes a key as argument and returns the associated value (or false if there is no value stored under that key). <tt>Lookup</tt> is defined in terms of the <tt>assoc</tt> operation, which expects a key and a list of records as arguments. Note that <tt>assoc</tt> never sees the dummy record. <tt>Assoc</tt> returns the record that has the given key as its <tt>car</tt>.<a name="footnote_link_3-24" class="footnote_link" href="#footnote_3-24">24</a>  <tt>Lookup</tt> then checks to see that the resulting record returned by <tt>assoc</tt> is not false, and returns the value (the <tt>cdr</tt>) of the record.
 
 <div id="">
 (define (lookup key table)
@@ -888,7 +772,7 @@ prompt();
 prompt();
 </script>
 
-<p> To insert a value in a table under a specified key, we first use <tt>assoc</tt> to see if there is already a record in the table with this key. If not, we form a new record by <tt>cons</tt>ing the key with the value, and insert this at the head of the table's list of records, after the dummy record. If there already is a record with this key, we set the <tt>cdr</tt> of this record to the designated new value. The header of the table provides us with a fixed location to modify in order to insert the new record.@footnote{Thus, the first backbone pair is the object that represents the table ``itself''; that is, a pointer to the table is a pointer to this pair. This same backbone pair always starts the table. If we did not arrange things in this way, <tt>insert!</tt> would have to return a new value for the start of the table when it added a new record.}
+<p> To insert a value in a table under a specified key, we first use <tt>assoc</tt> to see if there is already a record in the table with this key. If not, we form a new record by <tt>cons</tt>ing the key with the value, and insert this at the head of the table's list of records, after the dummy record. If there already is a record with this key, we set the <tt>cdr</tt> of this record to the designated new value. The header of the table provides us with a fixed location to modify in order to insert the new record.<a name="footnote_link_3-25" class="footnote_link" href="#footnote_3-25">25</a>
 
 <div id="">
 (define (insert! key value table)
@@ -1208,7 +1092,7 @@ prompt();
 prompt();
 </script>
 
-<p> The advantage of making this definition is that we can use <tt>half-adder</tt> itself as a building block in creating more complex circuits. Figure 3-26, for example, shows a <tt>full-adder</tt> composed of two half-adders and an or-gate.@footnote{A full-adder is a basic circuit element used in adding two binary numbers. Here A and B are the bits at corresponding positions in the two numbers to be added, and C_(in) is the carry bit from the addition one place to the right. The circuit generates SUM, which is the sum bit in the corresponding position, and C_(out), which is the carry bit to be propagated to the left.} We can construct a full-adder as follows:
+<p> The advantage of making this definition is that we can use <tt>half-adder</tt> itself as a building block in creating more complex circuits. Figure 3-26, for example, shows a <tt>full-adder</tt> composed of two half-adders and an or-gate.<a name="footnote_link_3-26" class="footnote_link" href="#footnote_3-26">26</a> We can construct a full-adder as follows:
 
 <div id="">
 (define (full-adder a b c-in sum c-out)
@@ -1402,7 +1286,7 @@ prompt();
 
 <p> The local procedure <tt>accept-action-procedure!</tt> adds the given procedure to the list of procedures to be run, and then runs the new procedure once. (See Exercise 3-31.)
 
-<p> With the local <tt>dispatch</tt> procedure set up as specified, we can provide the following procedures to access the local operations on wires:@footnote{[Footnote 27] These procedures are simply syntactic sugar that allow us to use ordinary procedural syntax to access the local procedures of objects. It is striking that we can interchange the role of ``procedures'' and ``data'' in such a simple way. For example, if we write <tt>(wire 'get-signal)</tt> we think of <tt>wire</tt> as a procedure that is called with the message <tt>get-signal</tt> as input. Alternatively, writing <tt>(get-signal wire)</tt> encourages us to think of <tt>wire</tt> as a data object that is the input to a procedure <tt>get-signal</tt>. The truth of the matter is that, in a language in which we can deal with procedures as objects, there is no fundamental difference between ``procedures'' and ``data,'' and we can choose our syntactic sugar to allow us to program in whatever style we choose.}
+<p> With the local <tt>dispatch</tt> procedure set up as specified, we can provide the following procedures to access the local operations on wires:<a name="footnote_link_3-27" class="footnote_link" href="#footnote_3-27">27</a>
 
 <div id="">
 (define (get-signal wire)
@@ -1603,7 +1487,7 @@ prompt();
 
 <p> The agenda itself is a one-dimensional table of time segments. It differs from the tables described in section 3-3-3 in that the segments will be sorted in order of increasing time. In addition, we store the <tt>current time</tt>
 
-<p> (i.e., the time of the last action that was processed) at the head of the agenda. A newly constructed agenda has no time segments and has a current time of 0:@footnote{The agenda is a headed list, like the tables in section 3-3-3, but since the list is headed by the time, we do not need an additional dummy header (such as the <tt>*table*</tt> symbol used with tables).}
+<p> (i.e., the time of the last action that was processed) at the head of the agenda. A newly constructed agenda has no time segments and has a current time of 0:<a name="footnote_link_3-28" class="footnote_link" href="#footnote_3-28">28</a>
 
 <div id="">
 (define (make-agenda) (list 0))
@@ -1670,7 +1554,7 @@ prompt();
 prompt();
 </script>
 
-<p> The procedure that removes the first item from the agenda deletes the item at the front of the queue in the first time segment. If this deletion makes the time segment empty, we remove it from the list of segments:@footnote{Observe that the <tt>if</tt> expression in this procedure has no <alternative> expression. Such a ``one-armed <tt>if</tt> statement'' is used to decide whether to do something, rather than to select between two expressions. An <tt>if</tt> expression returns an unspecified value if the predicate is false and there is no <alternative>.}
+<p> The procedure that removes the first item from the agenda deletes the item at the front of the queue in the first time segment. If this deletion makes the time segment empty, we remove it from the list of segments:<a name="footnote_link_3-29" class="footnote_link" href="#footnote_3-29">29</a>
 
 <div id="">
 (define (remove-first-agenda-item! agenda)
@@ -1683,8 +1567,7 @@ prompt();
 prompt();
 </script>
 
-<p> The first agenda item is found at the head of the queue in the first time segment. Whenever we extract an item, we also update the current time:@footnote{In this way, the current time will always be the time of the action most recently processed. Storing this time at the head of the agenda ensures that it will still be available even if the associated time segment has been deleted.}
-
+<p> The first agenda item is found at the head of the queue in the first time segment. Whenever we extract an item, we also update the current time:<a name="footnote_link_3-30" class="footnote_link" href="#footnote_3-30">30</a>
 <div id="">
 (define (first-agenda-item agenda)
   (if (empty-agenda? agenda)
@@ -1710,7 +1593,7 @@ prompt();
 dAE = FL
 </pre>
 
-<p> Such an equation is not one-directional. Given any four of the quantities, we can use it to compute the fifth. Yet translating the equation into a traditional computer language would force us to choose one of the quantities to be computed in terms of the other four. Thus, a procedure for computing the area A could not be used to compute the deflection d, even though the computations of A and d arise from the same equation.@footnote{Constraint propagation first appeared in the incredibly forward-looking @acronym{SKETCHPAD} system of Ivan Sutherland (1963). A beautiful constraint-propagation system based on the Smalltalk language was developed by Alan Borning (1977) at Xerox Palo Alto Research Center. Sussman, Stallman, and Steele applied constraint propagation to electrical circuit analysis (Sussman and Stallman 1975; Sussman and Steele 1980). TK!Solver (Konopasek and Jayaraman 1984) is an extensive modeling environment based on constraints.}
+<p> Such an equation is not one-directional. Given any four of the quantities, we can use it to compute the fifth. Yet translating the equation into a traditional computer language would force us to choose one of the quantities to be computed in terms of the other four. Thus, a procedure for computing the area A could not be used to compute the deflection d, even though the computations of A and d arise from the same equation.<a name="footnote_link_3-31" class="footnote_link" href="#footnote_3-31">31</a>
 
 <p> In this section, we sketch the design of a language that enables us to work in terms of relations themselves. The primitive elements of the language are <tt>primitive constraints</tt> , which state that certain relations hold between quantities. For example, <tt>(adder a b c)</tt> specifies that the quantities a, b, and c must be related by the equation a + b = c, <tt>(multiplier x y z)</tt> expresses the constraint xy = z, and <tt>(constant 3.14 x)</tt> says that the value of x must be 3.14.
 
@@ -2057,7 +1940,7 @@ prompt();
 prompt();
 </script>
 
-<p> The connector's local procedure <tt>set-my-value</tt> is called when there is a request to set the connector's value. If the connector does not currently have a value, it will set its value and remember as <tt>informant</tt> the constraint that requested the value to be set.@footnote{The <tt>setter</tt> might not be a constraint. In our temperature example, we used <tt>user</tt> as the <tt>setter</tt>.}  Then the connector will notify all of its participating constraints except the constraint that requested the value to be set. This is accomplished using the following iterator, which applies a designated procedure to all items in a list except a given one:
+<p> The connector's local procedure <tt>set-my-value</tt> is called when there is a request to set the connector's value. If the connector does not currently have a value, it will set its value and remember as <tt>informant</tt> the constraint that requested the value to be set.<a name="footnote_link_3-32" class="footnote_link" href="#footnote_3-32">32</a>  Then the connector will notify all of its participating constraints except the constraint that requested the value to be set. This is accomplished using the following iterator, which applies a designated procedure to all items in a list except a given one:
 
 <div id="">
 (define (for-each-except exception procedure list)
@@ -2189,27 +2072,7 @@ prompt();
 prompt();
 </script>
 
-<p> Define analogous procedures <tt>c-</tt>, <tt>c*</tt>, <tt>c/</tt>, and <tt>cv</tt> (constant value) that enable us to define compound constraints as in the converter example above.@footnote{The expression-oriented format is convenient because it avoids the need to name the intermediate expressions in a computation. Our original formulation of the constraint language is cumbersome in the same way that many languages are cumbersome when dealing with operations on compound data. For example, if we wanted to compute the product (a + b) * (c + d), where the variables represent vectors, we could work in ``imperative style,'' using procedures that set the values of designated vector arguments but do not themselves return vectors as values:
-
-<div id="">
-(v-sum a b temp1)
-(v-sum c d temp2)
-(v-prod temp1 temp2 answer)
-</div>
-<script>
-prompt();
-</script>
-
-<p> Alternatively, we could deal with expressions, using procedures that return vectors as values, and thus avoid explicitly mentioning <tt>temp1</tt> and <tt>temp2</tt>:
-
-<div id="">
-(define answer (v-prod (v-sum a b) (v-sum c d)))
-</div>
-<script>
-prompt();
-</script>
-
-<p> Since Lisp allows us to return compound objects as values of procedures, we can transform our imperative-style constraint language into an expression-oriented style as shown in this exercise. In languages that are impoverished in handling compound objects, such as Algol, Basic, and Pascal (unless one explicitly uses Pascal pointer variables), one is usually stuck with the imperative style when manipulating compound objects. Given the advantage of the expression-oriented format, one might ask if there is any reason to have implemented the system in imperative style, as we did in this section. One reason is that the non-expression-oriented constraint language provides a handle on constraint objects (e.g., the value of the <tt>adder</tt> procedure) as well as on connector objects. This is useful if we wish to extend the system with new operations that communicate with constraints directly rather than only indirectly via operations on connectors. Although it is easy to implement the expression-oriented style in terms of the imperative implementation, it is very difficult to do the converse.}
+<p> Define analogous procedures <tt>c-</tt>, <tt>c*</tt>, <tt>c/</tt>, and <tt>cv</tt> (constant value) that enable us to define compound constraints as in the converter example above.<a name="footnote_link_3-33" class="footnote_link" href="#footnote_3-33">33</a>
  </div>
 
 <br>
@@ -2219,7 +2082,87 @@ prompt();
 
 <div id="footnotes">
 <h3 id='Notes'> Notes </h3>
- </div>
+<div id="footnote_3-16" class="footnote">
+<p><a href="#footnote_link_3-16" class="footnote_backlink">16</a> Set-car! and set-cdr! return implementation-dependent values. Like set!, they should be used only for their effect.
+</div>
+
+<div id="footnote_3-17" class="footnote">
+<p><a href="#footnote_link_3-17" class="footnote_backlink">17</a> We see from this that mutation operations on lists can create ``garbage'' that is not part of any accessible structure. We will see in section 5.3.2 that Lisp memory-management systems include a garbage collector, which identifies and recycles the memory space used by unneeded pairs.
+</div>
+
+<div id="footnote_3-18" class="footnote">
+<p><a href="#footnote_link_3-18" class="footnote_backlink">18</a> Get-new-pair is one of the operations that must be implemented as part of the memory management required by a Lisp implementation. We will discuss this in section 5.3.1.
+</div>
+
+<div id="footnote_3-19" class="footnote">
+<p><a href="#footnote_link_3-19" class="footnote_backlink">19</a> The two pairs are distinct because each call to cons returns a new pair. The symbols are shared; in Scheme there is a unique symbol with any given name. Since Scheme provides no way to mutate a symbol, this sharing is undetectable. Note also that the sharing is what enables us to compare symbols using eq?, which simply checks equality of pointers.
+</div>
+
+<div id="footnote_3-20" class="footnote">
+<p><a href="#footnote_link_3-20" class="footnote_backlink">20</a> The subtleties of dealing with sharing of mutable data objects reflect the underlying issues of ``sameness'' and ``change'' that were raised in section 3.1.3. We mentioned there that admitting change to our language requires that a compound object must have an ``identity'' that is something different from the pieces from which it is composed. In Lisp, we consider this ``identity'' to be the quality that is tested by eq?, i.e., by equality of pointers. Since in most Lisp implementations a pointer is essentially a memory address, we are ``solving the problem'' of defining the identity of objects by stipulating that a data object ``itself'' is the information stored in some particular set of memory locations in the computer. This suffices for simple Lisp programs, but is hardly a general way to resolve the issue of ``sameness'' in computational models.
+</div>
+
+<div id="footnote_3-21" class="footnote">
+<p><a href="#footnote_link_3-21" class="footnote_backlink">21</a> On the other hand, from the viewpoint of implementation, assignment requires us to modify the environment, which is itself a mutable data structure. Thus, assignment and mutation are equipotent: Each can be implemented in terms of the other.
+</div>
+
+<div id="footnote_3-22" class="footnote">
+<p><a href="#footnote_link_3-22" class="footnote_backlink">22</a> If the first item is the final item in the queue, the front pointer will be the empty list after the deletion, which will mark the queue as empty; we needn't worry about updating the rear pointer, which will still point to the deleted item, because empty-queue? looks only at the front pointer.
+</div>
+
+<div id="footnote_3-23" class="footnote">
+<p><a href="#footnote_link_3-23" class="footnote_backlink">23</a> Be careful not to make the interpreter try to print a structure that contains cycles. (See exercise 3.13.)
+</div>
+
+<div id="footnote_3-24" class="footnote">
+<p><a href="#footnote_link_3-24" class="footnote_backlink">24</a> Because assoc uses equal?, it can recognize keys that are symbols, numbers, or list structure.
+</div>
+
+<div id="footnote_3-25" class="footnote">
+<p><a href="#footnote_link_3-25" class="footnote_backlink">25</a> Thus, the first backbone pair is the object that represents the table ``itself''; that is, a pointer to the table is a pointer to this pair. This same backbone pair always starts the table. If we did not arrange things in this way, insert! would have to return a new value for the start of the table when it added a new record.
+</div>
+
+<div id="footnote_3-26" class="footnote">
+<p><a href="#footnote_link_3-26" class="footnote_backlink">26</a> A full-adder is a basic circuit element used in adding two binary numbers. Here A and B are the bits at corresponding positions in the two numbers to be added, and Cin is the carry bit from the addition one place to the right. The circuit generates SUM, which is the sum bit in the corresponding position, and Cout, which is the carry bit to be propagated to the left.
+</div>
+
+<div id="footnote_3-27" class="footnote">
+<p><a href="#footnote_link_3-27" class="footnote_backlink">27</a> These procedures are simply syntactic sugar that allow us to use ordinary procedural syntax to access the local procedures of objects. It is striking that we can interchange the role of ``procedures'' and ``data'' in such a simple way. For example, if we write (wire 'get-signal) we think of wire as a procedure that is called with the message get-signal as input. Alternatively, writing (get-signal wire) encourages us to think of wire as a data object that is the input to a procedure get-signal. The truth of the matter is that, in a language in which we can deal with procedures as objects, there is no fundamental difference between ``procedures'' and ``data,'' and we can choose our syntactic sugar to allow us to program in whatever style we choose.
+</div>
+
+<div id="footnote_3-28" class="footnote">
+<p><a href="#footnote_link_3-28" class="footnote_backlink">28</a> The agenda is a headed list, like the tables in section 3.3.3, but since the list is headed by the time, we do not need an additional dummy header (such as the *table* symbol used with tables).
+</div>
+
+<div id="footnote_3-29" class="footnote">
+<p><a href="#footnote_link_3-29" class="footnote_backlink">29</a> Observe that the if expression in this procedure has no <alternative> expression. Such a ``one-armed if statement'' is used to decide whether to do something, rather than to select between two expressions. An if expression returns an unspecified value if the predicate is false and there is no <alternative>.
+</div>
+
+<div id="footnote_3-30" class="footnote">
+<p><a href="#footnote_link_3-30" class="footnote_backlink">30</a> In this way, the current time will always be the time of the action most recently processed. Storing this time at the head of the agenda ensures that it will still be available even if the associated time segment has been deleted.
+</div>
+
+<div id="footnote_3-31" class="footnote">
+<p><a href="#footnote_link_3-31" class="footnote_backlink">31</a> Constraint propagation first appeared in the incredibly forward-looking SKETCHPAD system of Ivan Sutherland (1963). A beautiful constraint-propagation system based on the Smalltalk language was developed by Alan Borning (1977) at Xerox Palo Alto Research Center. Sussman, Stallman, and Steele applied constraint propagation to electrical circuit analysis (Sussman and Stallman 1975; Sussman and Steele 1980). TK!Solver (Konopasek and Jayaraman 1984) is an extensive modeling environment based on constraints.
+</div>
+
+<div id="footnote_3-32" class="footnote">
+<p><a href="#footnote_link_3-32" class="footnote_backlink">32</a> The setter might not be a constraint. In our temperature example, we used user as the setter.
+</div>
+
+<div id="footnote_3-33" class="footnote">
+<p><a href="#footnote_link_3-33" class="footnote_backlink">33</a> The expression-oriented format is convenient because it avoids the need to name the intermediate expressions in a computation. Our original formulation of the constraint language is cumbersome in the same way that many languages are cumbersome when dealing with operations on compound data. For example, if we wanted to compute the product (a + b) · (c + d), where the variables represent vectors, we could work in ``imperative style,'' using procedures that set the values of designated vector arguments but do not themselves return vectors as values:
+
+(v-sum a b temp1)
+(v-sum c d temp2)
+(v-prod temp1 temp2 answer)
+
+Alternatively, we could deal with expressions, using procedures that return vectors as values, and thus avoid explicitly mentioning temp1 and temp2:
+
+(define answer (v-prod (v-sum a b) (v-sum c d)))
+
+Since Lisp allows us to return compound objects as values of procedures, we can transform our imperative-style constraint language into an expression-oriented style as shown in this exercise. In languages that are impoverished in handling compound objects, such as Algol, Basic, and Pascal (unless one explicitly uses Pascal pointer variables), one is usually stuck with the imperative style when manipulating compound objects. Given the advantage of the expression-oriented format, one might ask if there is any reason to have implemented the system in imperative style, as we did in this section. One reason is that the non-expression-oriented constraint language provides a handle on constraint objects (e.g., the value of the adder procedure) as well as on connector objects. This is useful if we wish to extend the system with new operations that communicate with constraints directly rather than only indirectly via operations on connectors. Although it is easy to implement the expression-oriented style in terms of the imperative implementation, it is very difficult to do the converse.
+</div> </div>
 
 <hr>
 
