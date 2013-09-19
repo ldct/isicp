@@ -435,29 +435,14 @@ Operation                Resulting Queue
 
 <p> A queue is represented, then, as a pair of pointers, <tt>front-ptr</tt> and <tt>rear-ptr</tt>, which indicate, respectively, the first and last pairs in an ordinary list. Since we would like the queue to be an identifiable object, we can use <tt>cons</tt> to combine the two pointers. Thus, the queue itself will be the <tt>cons</tt> of the two pointers. Figure 3-19 illustrates this representation.
 
-<div class="exercise">
+<div class="figure">
+<img src="http://mitpress.mit.edu/sicp/full-text/book/ch3-Z-G-19.gif">
 <p> <b>Figure 3.19:</b> Implementation of a queue as a list with front and rear pointers.
-
-<pre>
-       +---+---+
-  q -->| * | *-+-------------------+
-       +-|-+---+                   |
-         |                         |
-         | front-ptr               | rear-ptr
-         V                         V
-     +---+---+    +---+---+    +---+---+
-     | * | *-+--->| * | *-+--->| * | / |
-     +-|-+---+    +-|-+---+    +-|-+---+
-       V            V            V
-     +---+        +---+        +---+
-     | a |        | b |        | c |
-     +---+        +---+        +---+
-</pre>
 </div>
 
 <p> To define the queue operations we use the following procedures, which enable us to select and to modify the front and rear pointers of a queue:
 
-<div id="">
+<div id="scheme-define-queue">
 (define (front-ptr queue) (car queue))
 
 (define (rear-ptr queue) (cdr queue))
@@ -467,16 +452,16 @@ Operation                Resulting Queue
 (define (set-rear-ptr! queue item) (set-cdr! queue item))
 </div>
 <script>
-prompt();
+prompt("scheme-define-queue");
 </script>
 
 <p> Now we can implement the actual queue operations. We will consider a queue to be empty if its front pointer is the empty list:
 
-<div id="">
+<div id="scheme-define-empty-queue?">
 (define (empty-queue? queue) (null? (front-ptr queue)))
 </div>
 <script>
-prompt();
+prompt("scheme-define-empty-queue");
 </script>
 
 <p> The <tt>make-queue</tt> constructor returns, as an initially empty queue, a pair whose <tt>car</tt> and <tt>cdr</tt> are both the empty list:
