@@ -537,7 +537,7 @@ Operation                Resulting Queue
 
 <p> To define the queue operations we use the following procedures, which enable us to select and to modify the front and rear pointers of a queue:
 
-<div id="scheme-define-queue">
+<div id="scheme-define-queue-accessors">
 (define (front-ptr queue) (car queue))
 
 (define (rear-ptr queue) (cdr queue))
@@ -547,7 +547,7 @@ Operation                Resulting Queue
 (define (set-rear-ptr! queue item) (set-cdr! queue item))
 </div>
 <script>
-prompt("scheme-define-queue");
+prompt("scheme-define-queue-accessors");
 </script>
 
 <p> Now we can implement the actual queue operations. We will consider a queue to be empty if its front pointer is the empty list:
@@ -556,54 +556,38 @@ prompt("scheme-define-queue");
 (define (empty-queue? queue) (null? (front-ptr queue)))
 </div>
 <script>
-prompt("scheme-define-empty-queue");
+prompt("scheme-define-empty-queue?", ["scheme-define-queue-accessors"]);
 </script>
 
 <p> The <tt>make-queue</tt> constructor returns, as an initially empty queue, a pair whose <tt>car</tt> and <tt>cdr</tt> are both the empty list:
 
-<div id="">
+<div id="scheme-define-make-queue">
 (define (make-queue) (cons '() '()))
 </div>
 <script>
-prompt();
+prompt("scheme-define-make-queue", ["scheme-define-empty-queue?"]);
 </script>
 
 <p> To select the item at the front of the queue, we return the <tt>car</tt> of the pair indicated by the front pointer:
 
-<div id="">
+<div id="scheme-define-front-queue">
 (define (front-queue queue)
   (if (empty-queue? queue)
       (error "FRONT called with an empty queue" queue)
       (car (front-ptr queue))))
 </div>
 <script>
-prompt();
+prompt("scheme-define-front-queue", ["scheme-define-make-queue"]);
 </script>
 
 <p> To insert an item in a queue, we follow the method whose result is indicated in Figure 3-20. We first create a new pair whose <tt>car</tt> is the item to be inserted and whose <tt>cdr</tt> is the empty list. If the queue was initially empty, we set the front and rear pointers of the queue to this new pair. Otherwise, we modify the final pair in the queue to point to the new pair, and also set the rear pointer to the new pair.
 
-<div class="exercise">
-<b>Figure 3.20:</b> Result of using <tt>(insert-queue!
-q 'd)</tt> on the queue of Figure 3-19.
-
-<pre>
-       +---+---+
-  q -->| * | *-+--------------------------------+
-       +-|-+---+                                |
-         |                                      |
-         | front-ptr                            | rear-ptr
-         V                                      V
-     +---+---+    +---+---+    +---+---+    +---+---+
-     | * | *-+--->| * | *-+--->| * | *-+--->| * | / |
-     +-|-+---+    +-|-+---+    +-|-+---+    +-|-+---+
-       V            V            V            V
-     +---+        +---+        +---+        +---+
-     | a |        | b |        | c |        | d |
-     +---+        +---+        +---+        +---+
-</pre>
+<div class="figure">
+<img src="http://mitpress.mit.edu/sicp/full-text/book/ch3-Z-G-20.gif">
+<p> <b>Figure 3.20:</b> Result of using <tt>(insert-queue! q 'd)</tt> on the queue of Figure 3-19.
 </div>
 
-<div id="">
+<div id="scheme-define-insert-queue">
 (define (insert-queue! queue item)
   (let ((new-pair (cons item '())))
     (cond ((empty-queue? queue)
@@ -616,32 +600,19 @@ q 'd)</tt> on the queue of Figure 3-19.
            queue))))
 </div>
 <script>
-prompt();
+prompt("scheme-define-insert-queue", ["scheme-define-front-queue"]);
 </script>
 
 <p> To delete the item at the front of the queue, we merely modify the front pointer so that it now points at the second item in the queue, which can be found by following the <tt>cdr</tt> pointer of the first item (see Figure 3-21):<a name="footnote_link_3-22" class="footnote_link" href="#footnote_3-22">22</a>
 
-<div class="exercise">
+<div class="figure">
+<img src="http://mitpress.mit.edu/sicp/full-text/book/ch3-Z-G-21.gif">
 <p> <b>Figure 3.21:</b> Result of using <tt>(delete-queue! q)</tt> on the queue of Figure 3-20.
-
-<pre>
-       +---+---+
-  q -->| * | *-+--------------------------------+
-       +-|-+---+                                |
-         +------------+                         |
-            front-ptr |                         | rear-ptr
-                      V                         V
-     +---+---+    +---+---+    +---+---+    +---+---+
-     | * | *-+--->| * | *-+--->| * | *-+--->| * | / |
-     +-|-+---+    +-|-+---+    +-|-+---+    +-|-+---+
-       V            V            V            V
-     +---+        +---+        +---+        +---+
-     | a |        | b |        | c |        | d |
-     +---+        +---+        +---+        +---+
-</pre>
 </div>
 
-<div id="">
+<p>
+
+<div id="scheme-define-queue">
 (define (delete-queue! queue)
   (cond ((empty-queue? queue)
          (error "DELETE! called with an empty queue" queue))
@@ -650,57 +621,56 @@ prompt();
          queue)))
 </div>
 <script>
-prompt();
+prompt("scheme-define-queue", ["scheme-define-insert-queue"]);
 </script>
+
+<p>
 
 <div class="exercise">
 <p> <b>Exercise 3.21:</b> Ben Bitdiddle decides to test the queue implementation described above. He types in the procedures to the Lisp interpreter and proceeds to try them out:
 
-<div id="">
+<div id="scheme-test-queue">
 (define q1 (make-queue))
 
 (insert-queue! q1 'a)
-((a) a)
 
 (insert-queue! q1 'b)
-((a b) b)
 
 (delete-queue! q1)
-((b) b)
 
 (delete-queue! q1)
-(() b)
 </div>
 <script>
-prompt();
+prompt("scheme-test-queue", ["scheme-define-queue"]);
 </script>
 
 <p> ``It's all wrong!'' he complains. ``The interpreter's response shows that the last item is inserted into the queue twice. And when I delete both items, the second <tt>b</tt> is still there, so the queue isn't empty, even though it's supposed to be.''  Eva Lu Ator suggests that Ben has misunderstood what is happening. ``It's not that the items are going into the queue twice,'' she explains. ``It's just that the standard Lisp printer doesn't know how to make sense of the queue representation. If you want to see the queue printed correctly, you'll have to define your own print procedure for queues.'' Explain what Eva Lu is talking about. In particular, show why Ben's examples produce the printed results that they do. Define a procedure <tt>print-queue</tt> that takes a queue as input and prints the sequence of items in the queue.
 </div>
 
-<div class="exercise">
-<p> <b>Exercise 3.22:</b> Instead of representing a queue
-as a pair of pointers, we can build a queue as a procedure with local state.
-The local state will consist of pointers to the beginning and the end of an
-ordinary list. Thus, the <tt>make-queue</tt> procedure will have the form
+<p>
 
-<div id="">
+<div class="exercise">
+<p> <b>Exercise 3.22:</b> Instead of representing a queue as a pair of pointers, we can build a queue as a procedure with local state. The local state will consist of pointers to the beginning and the end of an ordinary list. Thus, the <tt>make-queue</tt> procedure will have the form
+
+<div id="scheme-define-make-queue-dispatch">
 (define (make-queue)
   (let ((front-ptr ... )
         (rear-ptr ... ))
-    <definitions of internal procedures>
+    ;&lt;definitions of internal procedures&gt;
     (define (dispatch m) ...)
     dispatch))
 </div>
 <script>
-prompt();
+prompt("scheme-define-make-queue-dispatch");
 </script>
 
 <p> Complete the definition of <tt>make-queue</tt> and provide implementations of the queue operations using this representation.
 </div>
 
+<p>
+
 <div class="exercise">
-<p> <b>Exercise 3.23:</b> A <tt>deque</tt> (``double-ended queue'') is a sequence in which items can be inserted and deleted at either the front or the rear. Operations on deques are the constructor <tt>make-deque</tt>, the predicate <tt>empty-deque?</tt>, selectors <tt>front-deque</tt> and <tt>rear-deque</tt>, and mutators <tt>front-insert-deque!</tt>, <tt>rear-insert-deque!</tt>, <tt>front-delete-deque!</tt>, and <tt>rear-delete-deque!</tt>. Show how to represent deques using pairs, and give implementations of the operations.<a name="footnote_link_3-23" class="footnote_link" href="#footnote_3-23">23</a>  All operations should be accomplished in [theta](1) steps.
+<p> <b>Exercise 3.23:</b> A <em>deque</em> ("double-ended queue") is a sequence in which items can be inserted and deleted at either the front or the rear. Operations on deques are the constructor <tt>make-deque</tt>, the predicate <tt>empty-deque?</tt>, selectors <tt>front-deque</tt> and <tt>rear-deque</tt>, and mutators <tt>front-insert-deque!</tt>, <tt>rear-insert-deque!</tt>, <tt>front-delete-deque!</tt>, and <tt>rear-delete-deque!</tt>. Show how to represent deques using pairs, and give implementations of the operations.<a name="footnote_link_3-23" class="footnote_link" href="#footnote_3-23">23</a>  All operations should be accomplished in $\Theta(1)$ steps.
 </div>
 
 <h3> Representing Tables </h3> 
@@ -709,56 +679,43 @@ prompt();
 
 <p> We first consider a one-dimensional table, in which each value is stored under a single key. We implement the table as a list of records, each of which is implemented as a pair consisting of a key and the associated value. The records are glued together to form a list by pairs whose <tt>car</tt>s point to successive records. These gluing pairs are called the <tt>backbone</tt> of the table. In order to have a place that we can change when we add a new record to the table, we build the table as a <tt>headed list</tt> . A headed list has a special backbone pair at the beginning, which holds a dummy ``record''---in this case the arbitrarily chosen symbol <tt>*table*</tt>. Figure 3-22 shows the box-and-pointer diagram for the table
 
-<div id="">
+<pre>
 a:  1
 b:  2
 c:  3
-</div>
-<script>
-prompt();
-</script>
-
-<div class="exercise">
-<p> <b>Figure 3.22:</b> A table represented as a headed list.
-
-<pre>
- +---+---+    +---+---+    +---+---+    +---+---+
- | * | *-+--->| * | *-+--->| * | *-+--->| * | / |
- +-|-+---+    +-|-+---+    +-|-+---+    +-|-+---+
-   |            |            |            |
-   V            V            V            V
-+---------+   +---+---+   +---+---+   +---+---+
-| *table* |   | * | * |   | * | * |   | * | * |
-+---------+   +-|-+-|-+   +-|-+-|-+   +-|-+-|-+
-                |   |       |   |       |   |
-                V   V       V   V       V   V
-             +---+ +---+ +---+ +---+ +---+ +---+
-             | a | | 1 | | b | | 2 | | c | | 3 |
-             +---+ +---+ +---+ +---+ +---+ +---+
 </pre>
+
+<div class="figure">
+<img src="http://mitpress.mit.edu/sicp/full-text/book/ch3-Z-G-22.gif">
+<p> <b>Figure 3.22:</b> A table represented as a headed list.
 </div>
 
 <p> To extract information from a table we use the <tt>lookup</tt> procedure, which takes a key as argument and returns the associated value (or false if there is no value stored under that key). <tt>Lookup</tt> is defined in terms of the <tt>assoc</tt> operation, which expects a key and a list of records as arguments. Note that <tt>assoc</tt> never sees the dummy record. <tt>Assoc</tt> returns the record that has the given key as its <tt>car</tt>.<a name="footnote_link_3-24" class="footnote_link" href="#footnote_3-24">24</a>  <tt>Lookup</tt> then checks to see that the resulting record returned by <tt>assoc</tt> is not false, and returns the value (the <tt>cdr</tt>) of the record.
 
-<div id="">
+<div id="scheme-define-lookup">
 (define (lookup key table)
   (let ((record (assoc key (cdr table))))
     (if record
         (cdr record)
         false)))
+</div>
+<script>
+prompt("scheme-define-lookup");
+</script>
 
+<div id="scheme-define-assoc">
 (define (assoc key records)
   (cond ((null? records) false)
-        ((equal? key (caar records)) (car records))
+        ((equal? key (car (car records))) (car records)) ;todo: caar
         (else (assoc key (cdr records)))))
 </div>
 <script>
-prompt();
+prompt("scheme-define-assoc");
 </script>
 
 <p> To insert a value in a table under a specified key, we first use <tt>assoc</tt> to see if there is already a record in the table with this key. If not, we form a new record by <tt>cons</tt>ing the key with the value, and insert this at the head of the table's list of records, after the dummy record. If there already is a record with this key, we set the <tt>cdr</tt> of this record to the designated new value. The header of the table provides us with a fixed location to modify in order to insert the new record.<a name="footnote_link_3-25" class="footnote_link" href="#footnote_3-25">25</a>
 
-<div id="">
+<div id="scheme-define-insert-table">
 (define (insert! key value table)
   (let ((record (assoc key (cdr table))))
     (if record
@@ -768,17 +725,17 @@ prompt();
   'ok)
 </div>
 <script>
-prompt();
+prompt("scheme-define-insert-table", ["scheme-define-lookup", "scheme-define-assoc"]);
 </script>
 
 <p> To construct a new table, we simply create a list containing the symbol <tt>*table*</tt>:
 
-<div id="">
+<div id="scheme-define-table">
 (define (make-table)
   (list '*table*))
 </div>
 <script>
-prompt();
+prompt("scheme-define-table", ["scheme-define-insert-table"]);
 </script>
 
 <h4> Two-dimensional tables </h4> 
@@ -797,46 +754,14 @@ letters:
 
 <p> which has two subtables. (The subtables don't need a special header symbol, since the key that identifies the subtable serves this purpose.)
 
-<div class="exercise">
+<div class="figure">
+<img src="http://mitpress.mit.edu/sicp/full-text/book/ch3-Z-G-23.gif">
 <p> <b>Figure 3.23:</b> A two-dimensional table.
-
-<pre>
-table
-  |
-  V
-+---+---+   +---+---+   +---+---+
-| * | *-+-->| * | *-+-->| * | / |
-+-|-+---+   +-|-+---+   +-|-+---+
-  V           |           V
-+-------+     |         +---+---+   +---+---+   +---+---+
-|*table*|     |         | * | *-+-->| * | *-+-->| * | / |
-+-------+     |         +-|-+---+   +-|-+---+   +-|-+---+
-              |           V           V           V
-              |       +-------+     +---+---+   +---+---+
-              |       |letters|     | * | * |   | * | * |
-              |       +-------+     +-|-+-|-+   +-|-+-|-+
-              |                       V   V       V   V
-              |                    +---+ +---+ +---+ +---+
-              |                    | a | | 97| | b | | 98|
-              |                    +---+ +---+ +---+ +---+
-              V
-            +---+---+   +---+---+   +---+---+   +---+---+
-            | * | *-+-->| * | *-+-->| * | *-+-->| * | / |
-            +-|-+---+   +-|-+---+   +-|-+---+   +-|-+---+
-              V           V           V           V
-          +------+      +---+---+   +---+---+   +---+---+
-          | math |      | * | * |   | * | * |   | * | * |
-          +------+      +-|-+-|-+   +-|-+-|-+   +-|-+-|-+
-                          V   V       V   V       V   V
-                       +---+ +---+ +---+ +---+ +---+ +---+
-                       | + | | 43| | - | | 45| | * | | 42|
-                       +---+ +---+ +---+ +---+ +---+ +---+
-</pre>
 </div>
 
 <p> When we look up an item, we use the first key to identify the correct subtable. Then we use the second key to identify the record within the subtable.
 
-<div id="">
+<div id="scheme-define-lookup-2table">
 (define (lookup key-1 key-2 table)
   (let ((subtable (assoc key-1 (cdr table))))
     (if subtable
@@ -847,12 +772,12 @@ table
         false)))
 </div>
 <script>
-prompt();
+prompt("scheme-define-lookup-2table");
 </script>
 
 <p> To insert a new item under a pair of keys, we use <tt>assoc</tt> to see if there is a subtable stored under the first key. If not, we build a new subtable containing the single record (<tt>key-2</tt>, <tt>value</tt>) and insert it into the table under the first key. If a subtable already exists for the first key, we insert the new record into this subtable, using the insertion method for one-dimensional tables described above:
 
-<div id="">
+<div id="scheme-define-insert-2table">
 (define (insert! key-1 key-2 value table)
   (let ((subtable (assoc key-1 (cdr table))))
     (if subtable
@@ -869,14 +794,14 @@ prompt();
   'ok)
 </div>
 <script>
-prompt();
+prompt("scheme-define-insert-2table", ["scheme-define-assoc", "scheme-define-lookup-2table"]);
 </script>
 
 <h4> Creating local tables </h4> 
 
-<p> The <tt>lookup</tt> and <tt>insert!</tt> operations defined above take the table as an argument. This enables us to use programs that access more than one table. Another way to deal with multiple tables is to have separate <tt>lookup</tt> and <tt>insert!</tt> procedures for each table. We can do this by representing a table procedurally, as an object that maintains an internal table as part of its local state. When sent an appropriate message, this ``table object''supplies the procedure with which to operate on the internal table. Here is a generator for two-dimensional tables represented in this fashion:
+<p> The <tt>lookup</tt> and <tt>insert!</tt> operations defined above take the table as an argument. This enables us to use programs that access more than one table. Another way to deal with multiple tables is to have separate <tt>lookup</tt> and <tt>insert!</tt> procedures for each table. We can do this by representing a table procedurally, as an object that maintains an internal table as part of its local state. When sent an appropriate message, this "table object" supplies the procedure with which to operate on the internal table. Here is a generator for two-dimensional tables represented in this fashion:
 
-<div id="">
+<div id="scheme-define-make-2table">
 (define (make-table)
   (let ((local-table (list '*table*)))
     (define (lookup key-1 key-2)
@@ -908,18 +833,18 @@ prompt();
     dispatch))
 </div>
 <script>
-prompt();
+prompt("scheme-define-make-2table", ["scheme-define-insert-2table"]);
 </script>
 
 <p> Using <tt>make-table</tt>, we could implement the <tt>get</tt> and <tt>put</tt> operations used in section 2-4-3 for data-directed programming, as follows:
 
-<div id="">
+<div id="scheme-define-get-put">
 (define operation-table (make-table))
 (define get (operation-table 'lookup-proc))
 (define put (operation-table 'insert-proc!))
 </div>
 <script>
-prompt();
+prompt("scheme-define-get-put", ["scheme-define-make-2table"]);
 </script>
 
 <p> <tt>Get</tt> takes as arguments two keys, and <tt>put</tt> takes as arguments two keys and a value. Both operations access the same local table, which is encapsulated within the object created by the call to <tt>make-table</tt>.
@@ -928,18 +853,24 @@ prompt();
 <p> <b>Exercise 3.24:</b> In the table implementations above, the keys are tested for equality using <tt>equal?</tt> (called by <tt>assoc</tt>). This is not always the appropriate test. For instance, we might have a table with numeric keys in which we don't need an exact match to the number we're looking up, but only a number within some tolerance of it. Design a table constructor <tt>make-table</tt> that takes as an argument a <tt>same-key?</tt> procedure that will be used to test ``equality'' of keys. <tt>Make-table</tt> should return a <tt>dispatch</tt> procedure that can be used to access appropriate <tt>lookup</tt> and <tt>insert!</tt> procedures for a local table.
 </div>
 
+<p>
+
 <div class="exercise">
 <p> <b>Exercise 3.25:</b> Generalizing one- and two-dimensional tables, show how to implement a table in which values are stored under an arbitrary number of keys and different values may be stored under different numbers of keys. The <tt>lookup</tt> and <tt>insert!</tt> procedures should take as input a list of keys used to access the table.
 </div>
+
+<p>
 
 <div class="exercise">
 <p> <b>Exercise 3.26:</b> To search a table as implemented above, one needs to scan through the list of records. This is basically the unordered list representation of section 2-3-3. For large tables, it may be more efficient to structure the table in a different manner. Describe a table implementation where the (key, value) records are organized using a binary tree, assuming that keys can be ordered in some way (e.g., numerically or alphabetically). (Compare Exercise 2-66 of Chapter 2.)
 </div>
 
+<p>
+
 <div class="exercise">
 <p> <b>Exercise 3.27:</b> <tt>Memoization</tt> (also called <tt>tabulation</tt> ) is a technique that enables a procedure to record, in a local table, values that have previously been computed. This technique can make a vast difference in the performance of a program. A memoized procedure maintains a table in which values of previous calls are stored using as keys the arguments that produced the values. When the memoized procedure is asked to compute a value, it first checks the table to see if the value is already there and, if so, just returns that value. Otherwise, it computes the new value in the ordinary way and stores this in the table. As an example of memoization, recall from section 1-2-2 the exponential process for computing Fibonacci numbers:
 
-<div id="">
+<div id="scheme-define-fib">
 (define (fib n)
   (cond ((= n 0) 0)
         ((= n 1) 1)
@@ -947,12 +878,12 @@ prompt();
                  (fib (- n 2))))))
 </div>
 <script>
-prompt();
+prompt("scheme-define-fib");
 </script>
 
 <p> The memoized version of the same procedure is
 
-<div id="">
+<div id="scheme-define-memo-fib">
 (define memo-fib
   (memoize (lambda (n)
              (cond ((= n 0) 0)
@@ -961,12 +892,12 @@ prompt();
                             (memo-fib (- n 2))))))))
 </div>
 <script>
-prompt();
+prompt("scheme-define-memo-fib", ["scheme-define-memoize"]);
 </script>
 
 <p> where the memoizer is defined as
 
-<div id="">
+<div id="scheme-define-memoize">
 (define (memoize f)
   (let ((table (make-table)))
     (lambda (x)
@@ -977,59 +908,36 @@ prompt();
               result))))))
 </div>
 <script>
-prompt();
+prompt("scheme-define-memoize", ["scheme-define-table"]);
 </script>
 
 <p> Draw an environment diagram to analyze the computation of <tt>(memo-fib 3)</tt>. Explain why <tt>memo-fib</tt> computes the nth Fibonacci number in a number of steps proportional to n. Would the scheme still work if we had simply defined <tt>memo-fib</tt> to be <tt>(memoize fib)</tt>? </div>
 
 <h3> A Simulator for Digital Circuits </h3> 
 
-<p> Designing complex digital systems, such as computers, is an important engineering activity. Digital systems are constructed by interconnecting simple elements. Although the behavior of these individual elements is simple, networks of them can have very complex behavior. Computer simulation of proposed circuit designs is an important tool used by digital systems engineers. In this section we design a system for performing digital logic simulations. This system typifies a kind of program called an <tt>event-driven simulation</tt> , in which actions (``events'') trigger further events that happen at a later time, which in turn trigger more events, and so so.
+<p> Designing complex digital systems, such as computers, is an important engineering activity. Digital systems are constructed by interconnecting simple elements. Although the behavior of these individual elements is simple, networks of them can have very complex behavior. Computer simulation of proposed circuit designs is an important tool used by digital systems engineers. In this section we design a system for performing digital logic simulations. This system typifies a kind of program called an <em>event-driven simulation</em> , in which actions ("events") trigger further events that happen at a later time, which in turn trigger more events, and so so.
 
 <p> Our computational model of a circuit will be composed of objects that correspond to the elementary components from which the circuit is constructed. There are <tt>wires</tt> , which carry <tt>digital signals</tt> . A digital signal may at any moment have only one of two possible values, 0 and 1. There are also various types of digital <tt>function boxes</tt> , which connect wires carrying input signals to other output wires. Such boxes produce output signals computed from their input signals. The output signal is delayed by a time that depends on the type of the function box. For example, an <tt>inverter</tt> is a primitive function box that inverts its input. If the input signal to an inverter changes to 0, then one inverter-delay later the inverter will change its output signal to 1. If the input signal to an inverter changes to 1, then one inverter-delay later the inverter will change its output signal to 0. We draw an inverter symbolically as in Figure 3-24. An <tt>and-gate</tt> , also shown in Figure 3-24, is a primitive function box with two inputs and one output. It drives its output signal to a value that is the <tt>logical and</tt> of the inputs. That is, if both of its input signals become 1, then one and-gate-delay time later the and-gate will force its output signal to be 1; otherwise the output will be 0. An <tt>or-gate</tt> is a similar two-input primitive function box that drives its output signal to a value that is the <tt>logical or</tt> of the inputs. That is, the output will become 1 if at least one of the input signals is 1; otherwise the output will become 0.
 
-<div class="exercise">
+<div class="figure">
+<img src="http://mitpress.mit.edu/sicp/full-text/book/ch3-Z-G-24.gif">
 <p> <b>Figure 3.24:</b> Primitive functions in the digital logic simulator.
-
-<pre>
-               __          ___
-  |\        --|  \       --\  \
---| >o--      |   )--       )  >--
-  |/        --|__/       --/__/
-
-Inverter    And-gate     Or-gate
-</pre>
 </div>
 
 <p> We can connect primitive functions together to construct more complex functions. To accomplish this we wire the outputs of some function boxes to the inputs of other function boxes. For example, the <tt>half-adder</tt>
 
 <p> circuit shown in Figure 3-25 consists of an or-gate, two and-gates, and an inverter. It takes two input signals, A and B, and has two output signals, S and C. S will become 1 whenever precisely one of A and B is 1, and C will become 1 whenever A and B are both 1. We can see from the figure that, because of the delays involved, the outputs may be generated at different times. Many of the difficulties in the design of digital circuits arise from this fact.
 
-<div class="exercise">
-<b>Figure 3.25:</b> A half-adder circuit.
-
-<pre>
-    +--------------------------------------+
-    |         ____                         |
-A --------*---\   \ D               ___    |
-    |     |    >   >---------------|   \   |
-    |  +--|---/___/                |    )----- S
-    |  |  |              |\  E  +--|___/   |
-    |  |  |           +--| >o---+          |
-    |  |  |    ___    |  |/                |
-    |  |  +---|   \   |                    |
-    |  |      |    )--*----------------------- C
-B -----*------|___/                        |
-    |                                      |
-    +--------------------------------------+
-</pre>
+<div class="figure">
+<img src="http://mitpress.mit.edu/sicp/full-text/book/ch3-Z-G-25.gif">
+<p> <b>Figure 3.25:</b> A half-adder circuit.
 </div>
 
 <p> We will now build a program for modeling the digital logic circuits we wish to study. The program will construct computational objects modeling the wires, which will ``hold'' the signals. Function boxes will be modeled by procedures that enforce the correct relationships among the signals.
 
 <p> One basic element of our simulation will be a procedure <tt>make-wire</tt>, which constructs wires. For example, we can construct six wires as follows:
 
-<div id="">
+<div id="scheme-define-6-wires">
 (define a (make-wire))
 (define b (make-wire))
 (define c (make-wire))
@@ -1039,31 +947,31 @@ B -----*------|___/                        |
 (define s (make-wire))
 </div>
 <script>
-prompt();
+prompt("scheme-define-6-wires", ["scheme-define-make-wire"]);
 </script>
 
 <p> We attach a function box to a set of wires by calling a procedure that constructs that kind of box. The arguments to the constructor procedure are the wires to be attached to the box. For example, given that we can construct and-gates, or-gates, and inverters, we can wire together the half-adder shown in Figure 3-25:
 
-<div id="">
+<div id="scheme-wire-up-wires">
 (or-gate a b d)
-ok
+;ok
 
 (and-gate a b c)
-ok
+;ok
 
 (inverter c e)
-ok
+;ok
 
 (and-gate d e s)
-ok
+;ok
 </div>
 <script>
-prompt();
+prompt("scheme-wire-up-wires");
 </script>
 
 <p> Better yet, we can explicitly name this operation by defining a procedure <tt>half-adder</tt> that constructs this circuit, given the four external wires to be attached to the half-adder:
 
-<div id="">
+<div id="scheme-define-half-adder">
 (define (half-adder a b s c)
   (let ((d (make-wire)) (e (make-wire)))
     (or-gate a b d)
@@ -1073,12 +981,12 @@ prompt();
     'ok))
 </div>
 <script>
-prompt();
+prompt("scheme-define-half-adder");
 </script>
 
 <p> The advantage of making this definition is that we can use <tt>half-adder</tt> itself as a building block in creating more complex circuits. Figure 3-26, for example, shows a <tt>full-adder</tt> composed of two half-adders and an or-gate.<a name="footnote_link_3-26" class="footnote_link" href="#footnote_3-26">26</a> We can construct a full-adder as follows:
 
-<div id="">
+<div id="scheme-define-full-adder">
 (define (full-adder a b c-in sum c-out)
   (let ((s (make-wire))
         (c1 (make-wire))
@@ -1089,25 +997,14 @@ prompt();
     'ok))
 </div>
 <script>
-prompt();
+prompt("scheme-define-full-adder", ["scheme-define-half-adder"]);
 </script>
 
 <p> Having defined <tt>full-adder</tt> as a procedure, we can now use it as a building block for creating still more complex circuits. (For example, see Exercise 3-30.)
 
-<div class="exercise">
-<b>Figure 3.26:</b> A full-adder circuit.
-
-<pre>
-    +----------------------------------+
-    |              +-------+           |
-A -----------------+ full  +-------------- SUM
-    |  +-------+   | adder |   ____    |
-B -----+ half  +---+       +---\   \   |
-    |  | adder |   +-------+    >or >----- Cout
-C -----+       +---------------/___/   |
-    |  +-------+                       |
-    +----------------------------------+
-</pre>
+<div class="figure">
+<img src="http://mitpress.mit.edu/sicp/full-text/book/ch3-Z-G-26.gif">
+<p> <b>Figure 3.26:</b> A full-adder circuit.
 </div>
 
 <p> In essence, our simulator provides us with the tools to construct a language of circuits. If we adopt the general perspective on languages with which we approached the study of Lisp in section 1-1, we can say that the primitive function boxes form the primitive elements of the language, that wiring boxes together provides a means of combination, and that specifying wiring patterns as procedures serves as a means of abstraction.
@@ -1118,36 +1015,40 @@ C -----+       +---------------/___/   |
 
 <ul>
 
-@item
+<li>
 
-<div id="">
-(get-signal <wire>)
+<div id="scheme-get-signal-syntax">
+(get-signal &lt;wire&gt;)
 </div>
 <script>
-prompt();
+no_output_frozen_prompt("scheme-get-signal-syntax");
 </script>
 
 <p> returns the current value of the signal on the wire.
 
-@item
+</li>
 
-<div id="">
-(set-signal! <wire> <new value>)
+<li>
+
+<div id="scheme-set-signal-syntax">
+(set-signal! &lt;wire&gt; &lt;new value&gt;)
 </div>
 <script>
-prompt();
+no_output_frozen_prompt("scheme-set-signal-syntax");
 </script>
 
 
 <p> changes the value of the signal on the wire to the new value.
 
-@item
+</li>
 
-<div id="">
-(add-action! <wire> <procedure of no arguments>)
+<li>
+
+<div id="scheme-add-action-syntax">
+(add-action! &lt;wire&gt; &lt;procedure of no arguments&gt;)
 </div>
 <script>
-prompt();
+no_output_frozen_prompt("scheme-add-action-syntax")
 </script>
 
 <p> asserts that the designated procedure should be run whenever the signal on the wire changes value. Such procedures are the vehicles by which changes in the signal value on the wire are communicated to other wires.
@@ -1158,7 +1059,7 @@ prompt();
 
 <p> Using these procedures, we can define the primitive digital logic functions. To connect an input to an output through an inverter, we use <tt>add-action!</tt> to associate with the input wire a procedure that will be run whenever the signal on the input wire changes value. The procedure computes the <tt>logical-not</tt> of the input signal, and then, after one <tt>inverter-delay</tt>, sets the output signal to be this new value:
 
-<div id="">
+<div id="scheme-define-inverter">
 (define (inverter input output)
   (define (invert-input)
     (let ((new-value (logical-not (get-signal input))))
@@ -1174,7 +1075,7 @@ prompt();
         (else (error "Invalid signal" s))))
 </div>
 <script>
-prompt();
+prompt("scheme-define-inverter");
 </script>
 
 <p> An and-gate is a little more complex. The action procedure must be run if either of the inputs to the gate changes. It computes the <tt>logical-and</tt> (using a procedure analogous to <tt>logical-not</tt>) of the values of the signals on the input wires and sets up a change to the new value to occur on the output wire after one <tt>and-gate-delay</tt>.
@@ -1230,7 +1131,7 @@ C ------+   |     +-----+   |     +-----+   |     :  ------+   |
 
 <p> A wire in our simulation will be a computational object with two local state variables: a <tt>signal-value</tt> (initially taken to be 0) and a collection of <tt>action-procedures</tt> to be run when the signal changes value. We implement the wire, using message-passing style, as a collection of local procedures together with a <tt>dispatch</tt> procedure that selects the appropriate local operation, just as we did with the simple bank-account object in section 3-1-1:
 
-<div id="">
+<div id="scheme-define-make-wire">
 (define (make-wire)
   (let ((signal-value 0) (action-procedures '()))
     (define (set-my-signal! new-value)
@@ -1251,7 +1152,7 @@ C ------+   |     +-----+   |     +-----+   |     :  ------+   |
     dispatch))
 </div>
 <script>
-prompt();
+prompt("scheme-define-make-wire");
 </script>
 
 <p> The local procedure <tt>set-my-signal!</tt> tests whether the new signal value changes the signal on the wire. If so, it runs each of the action procedures, using the following procedure <tt>call-each</tt>, which calls each of the items in a list of no-argument procedures:
@@ -1301,33 +1202,30 @@ prompt();
 </li>
 
 <li>
-<tt>(empty-agenda? <agenda</tt>>) is true if the specified agenda is
+<tt>(empty-agenda? &lt;agenda&gt;)</tt> is true if the specified agenda is
 empty.
 </li>
 
 <li>
-<tt>(first-agenda-item <agenda</tt>>) returns the first item on the
+<tt>(first-agenda-item &lt;agenda&gt;)</tt> returns the first item on the
 agenda.
 </li>
 
 <li>
-<tt>(remove-first-agenda-item! <agenda</tt>>) modifies the agenda by
+<tt>(remove-first-agenda-item! &lt;agenda&gt;)</tt> modifies the agenda by
 removing the first item.
 </li>
 
 <li>
-<tt>(add-to-agenda! <time</tt>> <@var{action>
-<agenda>)} modifies the agenda by adding the given action procedure
-to be run at the specified time.
+<tt>(add-to-agenda! &lt;time&gt; &lt;action&gt; &lt;agenda&gt;)</tt> modifies the agenda by adding the given action procedure to be run at the specified time.
 </li>
 
 <li>
-<tt>(current-time <agenda</tt>>) returns the current simulation time.
+<tt>(current-time &lt;agenda&gt;)</tt> returns the current simulation time.
 </li>
 </ul>
 
-The particular agenda that we use is denoted by <tt>the-agenda</tt>. The
-procedure <tt>after-delay</tt> adds new elements to <tt>the-agenda</tt>:
+<p> The particular agenda that we use is denoted by <tt>the-agenda</tt>. The procedure <tt>after-delay</tt> adds new elements to <tt>the-agenda</tt>:
 
 <div id="">
 (define (after-delay delay action)
@@ -1715,27 +1613,26 @@ prompt();
 <ul>
 
 <li>
-<tt>(has-value? <connector</tt>>) tells whether the connector has a value.
+<tt>(has-value? &lt;connector&gt;) tells whether the connector has a value.
 </li>
 
 <li>
-<tt>(get-value <connector</tt>>) returns the connector's current value.
+<tt>(get-value &lt;connector&gt;) returns the connector's current value.
 </li>
 
 <li>
-<tt>(set-value! <connector</tt>> <@var{new-value> <informant>)}
+<tt>(set-value! &lt;connector&gt; &lt;new-value&gt; &lt;informant&gt;)
 indicates that the informant is requesting the connector to set its value to
 the new value.
 </li>
 
 <li>
-<tt>(forget-value! <connector</tt>> <@var{retractor>)} tells the connector
+<tt>(forget-value! &lt;connector&gt; &lt;retractor&gt;) tells the connector
 that the retractor is requesting it to forget its value.
 </li>
 
 <li>
-<tt>(connect <connector</tt>> <@var{new-constraint>)} tells the connector
-to participate in the new constraint.
+<tt>(connect &lt;connector&gt; &lt;new-constraint&gt;) tells the connector to participate in the new constraint.
 </li>
 
 </ul>
