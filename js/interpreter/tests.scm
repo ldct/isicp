@@ -1,17 +1,17 @@
 ;;; Test cases for Scheme.
 ;;;
 ;;; How to use:
-;;; 
+;;;
 ;;; Each test is determined by a block of code followed by lines starting with
 ;;; "; expect ". There can be multiple "expect" lines, to test code that output
 ;;; multiple lines.
-;;; 
-;;; Copy and Paste these tests into the textarea in test_scheme_worker.html, 
+;;;
+;;; Copy and Paste these tests into the textarea in test_scheme_worker.html,
 ;;; and hit Run Tests to start.
-;;; 
+;;;
 ;;; If a test outputs more lines than what is expected, all the tests after that
 ;;; one would fail.
-;;; 
+;;;
 ;;; CAUTION: every expression that evaluates to a value must be followed by an
 ;;; expect statement. Otherwise all the tests after that one will fail!
 ;;;
@@ -94,6 +94,18 @@
 (or 4 #t (/ 1 0))
 ; expect 4
 
+(and '(1) '(2))
+; expect (2)
+
+(or '(1) '(2))
+; expect (1)
+
+(and '(3))
+; expect (3)
+
+(or '(3))
+; expect (3)
+
 (cond ((= 4 3) 'nope)
       ((= 4 4) 'hi)
       (else 'wait))
@@ -120,7 +132,7 @@
 ; expect (42 50)
 ; expect (hi bye)
 
-(define (november) 
+(define (november)
   (let ((election 7))
     (let ((president (+ election 5)))
       (* president election))))
@@ -201,7 +213,7 @@ circumference
 ; expect 441
 
 (define square (lambda (x) (* x x))) ; See Section 1.3.2
-(square 21) 
+(square 21)
 (square (+ 2 5))
 ; expect 441
 ; expect 49
@@ -756,7 +768,7 @@ one-through-four
       (begin (define (sum-part total)
 	       (if (> 0 total)
 		   0
-		   (+ (sum-part (- total max-value)) 
+		   (+ (sum-part (- total max-value))
 		      (count-partitions total (- max-value 1)))))
 	     (sum-part total))))
 
@@ -867,8 +879,8 @@ one-through-four
 
 (define (foo . args) args)
 
-(foo)           
-(foo 1)         
+(foo)
+(foo 1)
 (foo 1 '(2 3))
 
 ; expect ()
@@ -902,9 +914,9 @@ one-through-four
   (set! x 4)
   x)
 
-(foo) 
-x     
-(bar) 
+(foo)
+x
+(bar)
 x
 
 ; expect 4

@@ -15,7 +15,7 @@ importScripts("reader.js", "tokenizer.js");
 
 onmessage = function(event) {
     var env = create_global_frame();
-    
+
     var codebuffer = new Buffer(tokenize_lines(event.data.split("\n")));
 
     while (codebuffer.current() != null) {
@@ -377,18 +377,21 @@ function do_if_form(vals, env) {
 function do_and_form(vals, env) {
     // Evaluate short-circuited and with parameters VALS in environment ENV
     if (vals.length == 0) {return true;}
-    for (var i = 0; i < vals.length; i++) {
-        var pred = scheme_eval(vals.getitem(i), env);
+
+    while (vals.second != nil) {
+        var pred = scheme_eval(vals.first, env);
         if (scheme_false(pred)) {return false;}
+        vals = vals.second;
     }
-    return pred;
+    return vals.first;
 }
 
 function do_or_form(vals, env) {
     // Evaluate short-circuited or with parameters VALS in environment ENV
-    for (var i = 0; i < vals.length; i++) {
-        var pred = scheme_eval(vals.getitem(i), env);
-        if (scheme_true(pred)) {return pred;}
+    while (vals != nil) {
+        var pred = scheme_eval(vals.first, env);
+        if (scheme_true(pred)) {return vals.first;}
+        vals = vals.second;
     }
     return false;
 }
@@ -475,7 +478,7 @@ function check_formals(formals) {
     // in which each symbol is distinct.
     // FORMALS can also be a single symbol.
     // Returns false when FORMALS is a well-formed list. Return true otherwise.
-    
+
     var last;
     var symbols = [];
 
@@ -488,14 +491,14 @@ function check_formals(formals) {
         formals = a[0];
         last = a[1];
     }
-        
+
     check_form(formals, 0);
     for (var i = 0; i < formals.length; i++) {
         var symbol = formals.getitem(i);
         check_symbol(symbol, symbols);
         symbols.push(symbol);
     }
-    
+
     if (last !== undefined) {
         check_symbol(last, symbols);
         return true;
@@ -851,7 +854,7 @@ function scheme_string_append() {
     for (var i = 0; i < arguments.length; i++) {
         s += arguments[i].toString();
     }
-    return s;        
+    return s;
 }
 _PRIMITIVES["string-append"] = new PrimitiveProcedure(scheme_string_append);
 
