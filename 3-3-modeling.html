@@ -12,7 +12,7 @@
 <script src="js/codemirror/lib/codemirror.js"></script>
 <script src="js/codemirror/mode/scheme/scheme.js"></script>
 <script src="js/jquery.min.js"></script>
-<script src="js/coding.js"> </script>
+<script src="web-worker-interpreter/coding.js"> </script>
 <script src="js/footnotes.js"></script>
 
 <script type="text/x-mathjax-config">
@@ -1152,12 +1152,12 @@ C ------+   |     +-----+   |     +-----+   |     :  ------+   |
     dispatch))
 </div>
 <script>
-prompt("scheme-define-make-wire");
+prompt("scheme-define-make-wire", ["scheme-define-call-each"]);
 </script>
 
 <p> The local procedure <tt>set-my-signal!</tt> tests whether the new signal value changes the signal on the wire. If so, it runs each of the action procedures, using the following procedure <tt>call-each</tt>, which calls each of the items in a list of no-argument procedures:
 
-<div id="">
+<div id="scheme-define-call-each">
 (define (call-each procedures)
   (if (null? procedures)
       'done
@@ -1166,14 +1166,14 @@ prompt("scheme-define-make-wire");
         (call-each (cdr procedures)))))
 </div>
 <script>
-prompt();
+prompt("scheme-define-call-each");
 </script>
 
 <p> The local procedure <tt>accept-action-procedure!</tt> adds the given procedure to the list of procedures to be run, and then runs the new procedure once. (See Exercise 3-31.)
 
 <p> With the local <tt>dispatch</tt> procedure set up as specified, we can provide the following procedures to access the local operations on wires:<a name="footnote_link_3-27" class="footnote_link" href="#footnote_3-27">27</a>
 
-<div id="">
+<div id="scheme-define-get-set-signal-add-action">
 (define (get-signal wire)
   (wire 'get-signal))
 
@@ -1184,7 +1184,7 @@ prompt();
   ((wire 'add-action!) action-procedure))
 </div>
 <script>
-prompt();
+prompt("scheme-define-get-set-signal-add-action");
 </script>
 
 <p> Wires, which have time-varying signals and may be incrementally attached to devices, are typical of mutable objects. We have modeled them as procedures with local state variables that are modified by assignment. When a new wire is created, a new set of state variables is allocated (by the <tt>let</tt> expression in <tt>make-wire</tt>) and a new <tt>dispatch</tt> procedure is constructed and returned, capturing the environment with the new state variables.
