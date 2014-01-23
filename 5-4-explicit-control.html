@@ -830,25 +830,6 @@ Much worse is the problem of handling errors that are signaled by applying primi
 
 </div>
 
-<script> 
-
-var todo = Object.keys(editorOf);
-
-(function proc() {
-  if (todo.length == 0) {
-    return;
-  }
-  try {
-    var first = todo.shift();
-    editorOf[first].getOption("onBlur")().then(proc);
-  } catch (err) {
-    proc();
-  }    
-})();
-
-
-</script>
-
 <a href="https://github.com/zodiac/isicp" target="_blank"><img style="position: absolute; top: 0; right: 0; border: 0;" src="https://s3.amazonaws.com/github/ribbons/forkme_right_green_007200.png" alt="Fork me on GitHub"></a>
 
 </body>
