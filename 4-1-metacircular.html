@@ -118,6 +118,13 @@ $(document).ready(createTOC);
 
 <div id="main">
 
+<a href='index.html' style="float:left"> <img src='images/chevron-up.svg' height=64 width=64> </a>
+<span style="float:right">
+<a href='4-0-metalinguistic-abstraction.html'> <img src='images/chevron-left.svg' height=64 width=64> </a>
+<a href='4-2-lazy.html'> <img src='images/chevron-right.svg' height=64 width=64> </a>
+
+</span>
+<br> <br>
 <h2> The Metacircular Evaluator </h2> 
 
 Our evaluator for Lisp will be implemented as a Lisp program. It may seem circular to think about evaluating Lisp programs using an evaluator that is itself implemented in Lisp. However, evaluation is a process, so it is appropriate to describe the evaluation process using Lisp, which, after all, is our tool for describing processes.@footnote{Even so, there will remain important aspects of the evaluation process that are not elucidated by our evaluator. The most important of these are the detailed mechanisms by which procedures call other procedures and return values to their callers. We will address these issues in Chapter 5, where we take a closer look at the evaluation process by implementing the evaluator as a simple register machine.} An evaluator that is written in the same language that it evaluates is said to be <tt>metacircular</tt>  . 

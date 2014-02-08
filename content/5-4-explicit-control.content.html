@@ -3,6 +3,13 @@
 @@
 
 {{main_text}}
+<a href='index.html' style="float:left"> <img src='images/chevron-up.svg' height=64 width=64> </a>
+<span style="float:right">
+<a href='5-3-storage.html'> <img src='images/chevron-left.svg' height=64 width=64> </a>
+<a href='5-5-compilation.html'> <img src='images/chevron-right.svg' height=64 width=64> </a>
+
+</span>
+<br> <br>
 <h2> The Explicit-Control Evaluator </h2> 
 
 <p> In section 5-1 we saw how to transform simple Scheme programs into descriptions of register machines. We will now perform this transformation on a more complex program, the metacircular evaluator of sections 4-1-1-4-1-4, which shows how the behavior of a Scheme interpreter can be described in terms of the procedures <tt>eval</tt> and <tt>apply</tt>. The <tt>explicit-control evaluator</tt> that we develop in this section shows how the underlying procedure-calling and argument-passing mechanisms used in the evaluation process can be described in terms of operations on registers and stacks. In addition, the explicit-control evaluator can serve as an implementation of a Scheme interpreter, written in a language that is very similar to the native machine language of conventional computers. The evaluator can be executed by the register-machine simulator of section 5-2. Alternatively, it can be used as a starting point for building a machine-language implementation of a Scheme evaluator, or even a special-purpose machine for evaluating Scheme expressions. Figure 5-16 shows such a hardware implementation: a silicon chip that acts as an evaluator for Scheme. The chip designers started with the data-path and controller specifications for a register machine similar to the evaluator described in this section and used design automation programs to construct the integrated-circuit layout.@footnote{See Batali et al. 1982 for more information on the chip and the method by which it was designed.}

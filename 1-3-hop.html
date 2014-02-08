@@ -121,7 +121,7 @@ $(document).ready(createTOC);
 <a href='index.html' style="float:left"> <img src='images/chevron-up.svg' height=64 width=64> </a>
 <span style="float:right">
 <a href='1-2-procedures.html'> <img src='images/chevron-left.svg' height=64 width=64> </a>
-<a href='2-1-data.html'> <img src='images/chevron-right.svg' height=64 width=64> </a>
+<a href='2-0-building-abstractions-with-data.html'> <img src='images/chevron-right.svg' height=64 width=64> </a>
 </span>
 
 <br> <br>
@@ -307,7 +307,7 @@ prompt("scheme-define-pi-sum-sum");
 depsOf["scheme-define-pi-sum-sum"] = ["scheme-define-sum"];
 </script>
 
-<p> Using these procedures, we can compute an approximation to  :
+<p> Using these procedures, we can compute an approximation to $\pi$:
 
 <div id="scheme-pi-sum-pi">
 (* 8 (pi-sum 1 1000))
@@ -320,7 +320,11 @@ depsOf["scheme-pi-sum-pi"] = ["scheme-define-pi-sum-sum"];
 <p> Once we have sum, we can use it as a building block in formulating further concepts. For instance, the definite integral of a function f between the limits a and b can be approximated numerically using the formula
 
 $$
-\int_a^b = \left[f(a + \frac{dx}{2}) + f(a + dx + \frac{dx}{2}) + f(a + 2dx + \frac{dx}{2}) + \cdots\right] dx
+{\int_a^b f}
+  = {\left[\;f\left(a + \frac{d x}{2}\right)\right.}
+  + {f\left(a + dx + \frac{dx}{2}\right)}
+  + {\left. f\left(a + 2dx + \frac{dx}{2}\right)
+  + \dots \;\right] dx}
 $$
 
 <p> for small values of dx. We can express this directly as a procedure:
