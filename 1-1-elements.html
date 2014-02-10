@@ -119,6 +119,7 @@ $(document).ready(createTOC);
 
 <a href='index.html' style="float:left"> <img src='images/chevron-up.svg' height=64 width=64> </a>
 <span style="float:right">
+<a href='1-0-abstractions.html'> <img src='images/chevron-left.svg' height=64 width=64> </a>
 <a href='1-2-procedures.html'> <img src='images/chevron-right.svg' height=64 width=64> </a>
 </span>
 <br> <br>
@@ -1241,7 +1242,7 @@ prompt("scheme-square-sqrt", ["scheme-define-square", "scheme-define-sqrt"]);
 
 <div class="exercise">
 
-<p> <b> Exercise 1.6. </b> Alyssa P. Hacker doesn’t see why if needs to be provided as q special form. “Why can’t  I just define it as an ordinary procedure in terms of cond?” she asks. Alyssa’s friend Eva Lu Ator claims  this can indeed be done, and she defines a new version of if:
+<p> <b> Exercise 1.6. </b> Alyssa P. Hacker doesn’t see why <tt>if</tt> needs to be provided as a special form. “Why can’t I just define it as an ordinary procedure in terms of <tt>cond?</tt>” she asks. Alyssa’s friend Eva Lu Ator claims  this can indeed be done, and she defines a new version of <tt>if</tt>:
 
 <div id="scheme-define-new-if">
 (define (new-if predicate then-clause else-clause)       

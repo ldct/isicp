@@ -26,7 +26,7 @@ MathJax.Hub.Config({
 </script>
 <script type="text/javascript" src="http://cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML"></script>
 
-<title> iSICP 2.4 - Multiple Representations for Abstract Data </title>
+<title> iSICP 4.2 - Variations on a Scheme &ndash; Lazy Evaluation </title>
 
 <script type="text/javascript">
   var _gaq = _gaq || [];
@@ -117,6 +117,13 @@ $(document).ready(createTOC);
 
 <div id="main">
 
+<a href='index.html' style="float:left"> <img src='images/chevron-up.svg' height=64 width=64> </a>
+<span style="float:right">
+<a href='4-1-metacircular.html'> <img src='images/chevron-left.svg' height=64 width=64> </a>
+<a href='4-3-nondeterministic.html'> <img src='images/chevron-right.svg' height=64 width=64> </a>
+
+</span>
+<br> <br>
 <h2> Variations on a Scheme &ndash; Lazy Evaluation </h2> 
 
 <p> Now that we have an evaluator expressed as a Lisp program, we can experiment with alternative choices in language design simply by modifying the evaluator. Indeed, new languages are often invented by first writing an evaluator that embeds the new language within an existing high-level language. For example, if we wish to discuss some aspect of a proposed modification to Lisp with another member of the Lisp community, we can supply an evaluator that embodies the change. The recipient can then experiment with the new evaluator and send back comments as further modifications. Not only does the high-level implementation base make it easier to test and debug the evaluator; in addition, the embedding enables the designer to snarf@footnote{Snarf: ``To grab, especially a large document or file for the purpose of using it either with or without the owner's permission.''  Snarf down: ``To snarf, sometimes with the connotation of absorbing, processing, or understanding.''  (These definitions were snarfed from Steele et al. 1983. See also Raymond 1993.)} features from the underlying language, just as our embedded Lisp evaluator uses primitives and control structure from the underlying Lisp. Only later (if ever) need the designer go to the trouble of building a complete implementation in a low-level language or in hardware. In this section and the next we explore some variations on Scheme that provide significant additional expressive power.

@@ -1,12 +1,12 @@
 {{title}}
-<title>iSICP 1.3 - Higher-Order Procedures</title>
+<title>iSICP 1.3 - Formulating Abstractions with Higher-Order Procedures</title>
 @@
 
 {{main_text}}
 <a href='index.html' style="float:left"> <img src='images/chevron-up.svg' height=64 width=64> </a>
 <span style="float:right">
 <a href='1-2-procedures.html'> <img src='images/chevron-left.svg' height=64 width=64> </a>
-<a href='2-1-data.html'> <img src='images/chevron-right.svg' height=64 width=64> </a>
+<a href='2-0-building-abstractions-with-data.html'> <img src='images/chevron-right.svg' height=64 width=64> </a>
 </span>
 
 <br> <br>
@@ -49,7 +49,7 @@ no_output_prompt("scheme-cube-ex");
 
 <h3> Procedures as Arguments </h3>
 
-<p> Consider the following three procedures. The first computes the sum of the integers from a through b:
+<p> Consider the following three procedures. The first computes the sum of the integers from <i>a</i> through <i>b</i>:
 
 <div id="scheme-define-sum-integers">
 (define (sum-integers a b)
@@ -91,7 +91,7 @@ $$
 prompt("scheme-define-pi-sum");
 </script>
 
-<p> These three procedures clearly share a common underlying pattern. They are for the most part identical, differing only in the name of the procedure, the function of a used to compute the term to be added, and the function that provides the next value of a. We could generate each of the procedures by filling in slots in the same template:
+<p> These three procedures clearly share a common underlying pattern. They are for the most part identical, differing only in the name of the procedure, the function of <i>a</i> used to compute the term to be added, and the function that provides the next value of <i>a</i>. We could generate each of the procedures by filling in slots in the same template:
 
 <div id="scheme-sum-template">
 (define (&lt;name&gt; a b)
@@ -104,7 +104,7 @@ prompt("scheme-define-pi-sum");
 prompt("scheme-sum-template");
 </script>
 
-<p> The presence of such a common pattern is strong evidence that there is a useful abstraction waiting to be brought to the surface. Indeed, mathematicians long ago identified the abstraction of summation of a series and invented &ldquo;sigma notation,&rdquo; for example
+<p> The presence of such a common pattern is strong evidence that there is a useful abstraction waiting to be brought to the surface. Indeed, mathematicians long ago identified the abstraction of <em>summation of a series</em> and invented &ldquo;sigma notation,&rdquo; for example
 
 $$
 \sum_{n=a}^b f(n) = f(a) + \cdots + f(b)
@@ -125,7 +125,7 @@ $$
 prompt("scheme-define-sum");
 </script>
 
-<p> Notice that sum takes as its arguments the lower and upper bounds a and b together with the procedures term and next. We can use sum just as we would any procedure. For example, we can use it (along with a procedure inc that increments its argument by 1) to define sum-cubes:
+<p> Notice that sum takes as its arguments the lower and upper bounds <i>a</i> and <i>b</i> together with the procedures <tt>term</tt> and <tt>next</tt>. We can use <tt>sum</tt> just as we would any procedure. For example, we can use it (along with a procedure <tt>inc</tt> that increments its argument by 1) to define <tt>sum-cubes</tt>:
 
 <div id="scheme-define-inc">
 (define (inc n) (+ n 1))
@@ -154,7 +154,7 @@ prompt("scheme-sum-cubes-1-10");
 depsOf["scheme-sum-cubes-1-10"] = ["scheme-define-sum-cubes-sum"];
 </script>
 
-<p> With the aid of an identity procedure to compute the term, we can define sum-integers in terms of sum:
+<p> With the aid of an identity procedure to compute the term, we can define <tt>sum-integers</tt> in terms of <tt>sum</tt>:
 
 <div id="scheme-define-sum-integers-sum">
 (define (identity x) x)
@@ -177,7 +177,7 @@ prompt("scheme-sum-integers-1-10");
 depsOf["scheme-sum-integers-1-10"] = ["scheme-define-sum-integers-sum"];
 </script>
 
-<p> We can also define pi-sum in the same way:<a name="footnote_link_1-50" class="footnote_link" href="#footnote_1-50">50</a>
+<p> We can also define <tt>pi-sum</tt> in the same way:<a name="footnote_link_1-50" class="footnote_link" href="#footnote_1-50">50</a>
 
 <div id="scheme-define-pi-sum-sum">
 (define (pi-sum a b)
@@ -192,7 +192,7 @@ prompt("scheme-define-pi-sum-sum");
 depsOf["scheme-define-pi-sum-sum"] = ["scheme-define-sum"];
 </script>
 
-<p> Using these procedures, we can compute an approximation to  :
+<p> Using these procedures, we can compute an approximation to $\pi$:
 
 <div id="scheme-pi-sum-pi">
 (* 8 (pi-sum 1 1000))
@@ -202,13 +202,17 @@ prompt("scheme-pi-sum-pi");
 depsOf["scheme-pi-sum-pi"] = ["scheme-define-pi-sum-sum"];
 </script>
 
-<p> Once we have sum, we can use it as a building block in formulating further concepts. For instance, the definite integral of a function f between the limits a and b can be approximated numerically using the formula
+<p> Once we have <tt>sum,</tt> we can use it as a building block in formulating further concepts. For instance, the definite integral of a function <i>f</i> between the limits <i>a</i> and <i>b</i> can be approximated numerically using the formula
 
 $$
-\int_a^b = \left[f(a + \frac{dx}{2}) + f(a + dx + \frac{dx}{2}) + f(a + 2dx + \frac{dx}{2}) + \cdots\right] dx
+{\int_a^b f}
+  = {\left[\;f\left(a + \frac{d x}{2}\right)\right.}
+  + {f\left(a + dx + \frac{dx}{2}\right)}
+  + {\left. f\left(a + 2dx + \frac{dx}{2}\right)
+  + \dots \;\right] dx}
 $$
 
-<p> for small values of dx. We can express this directly as a procedure:
+<p> for small values of <i>dx</i>. We can express this directly as a procedure:
 
 <div id="scheme-define-integral">
 (define (integral f a b dx)
@@ -242,13 +246,13 @@ depsOf["scheme-integral-cube-finer"] = ["scheme-define-cube", "scheme-define-int
 <p> (The exact value of the integral of cube between $0$ and $1$ is $1/4$.)
 
 <div class="exercise">
-<p> <b> Exercise 1.29. </b> Simpson's Rule is a more accurate method of numerical integration than the method illustrated above. Using Simpson's Rule, the integral of a function f between a and b is approximated as
+<p> <b> Exercise 1.29. </b> Simpson's Rule is a more accurate method of numerical integration than the method illustrated above. Using Simpson's Rule, the integral of a function <i>f</i> between <i>a</i> and <i>b</i> is approximated as
 
 $$
 \frac{h}{3} \left[ y_0 + 4y_1 + 2y_2 + 4y_3 + 2y_4 + \cdots + 2y_{n-2} + 4y_{n-1} + y_n\right]
 $$
 
-<p> where $h = \frac{b - a}{n}$, for some even integer $n$, and $y_k = f(a + kh)$. (Increasing n increases the accuracy of the approximation.) Define a procedure that takes as arguments f, a, b, and n and returns the value of the integral, computed using Simpson's Rule. Use your procedure to integrate cube between 0 and 1 (with n = 100 and n = 1000), and compare the results to those of the integral procedure shown above.
+<p> where $h = \frac{b - a}{n}$, for some even integer $n$, and $y_k = f(a + kh)$. (Increasing <i>n</i> increases the accuracy of the approximation.) Define a procedure that takes as arguments <i>f</i>, <i>a</i>, <i>b</i>, and <i>n</i> and returns the value of the integral, computed using Simpson's Rule. Use your procedure to integrate cube between 0 and 1 (with <i>n</i> = 100 and <i>n</i> = 1000), and compare the results to those of the integral procedure shown above.
 
 <div id="scheme-define-feq">
 (define (feq a b)
@@ -453,7 +457,7 @@ makeEditable("scheme-ex-define-accumulate").setOption("onBlur", function() {
 <p>
 
 <div class="exercise">
-<p> <b> Exercise 1.33. </b> You can obtain an even more general version of accumulate (exercise 1.32) by introducing the notion of a filter on the terms to be combined. That is, combine only those terms derived from values in the range that satisfy a specified condition. The resulting filtered-accumulate abstraction takes the same arguments as accumulate, together with an additional predicate of one argument that specifies the filter. Write filtered-accumulate as a procedure. 
+<p> <b> Exercise 1.33. </b> You can obtain an even more general version of accumulate (exercise 1.32) by introducing the notion of a <em>filter</em> on the terms to be combined. That is, combine only those terms derived from values in the range that satisfy a specified condition. The resulting filtered-accumulate abstraction takes the same arguments as accumulate, together with an additional predicate of one argument that specifies the filter. Write filtered-accumulate as a procedure. 
 
 <div id="scheme-ex-define-filtered-accumulate">
 (define (filtered-accumulate combiner null-value term a next b filter?)
@@ -489,11 +493,11 @@ makeEditable("scheme-ex-define-filtered-accumulate").setOption("onBlur", functio
 
 <ol style="list-style-type: lower-alpha">
 <li>
-<p> the sum of the squares of the prime numbers in the interval a to b (assuming that you have a <tt>prime?</tt> predicate already written)
+<p> the sum of the squares of the prime numbers in the interval <i>a</i> to <i>b</i> (assuming that you have a <tt>prime?</tt> predicate already written)
 </li>
 
 <li>
-<p> the product of all the positive integers less than n that are relatively prime to n (i.e., all positive integers $ &lt; n$ such that $\text{GCD}(i,n) = 1$).
+<p> the product of all the positive integers less than <i>n</i> that are relatively prime to <i>n</i> (i.e., all positive integers $i &lt; n$ such that $\text{GCD}(i,n) = 1$).
 </li>
 </ol>
 
@@ -823,7 +827,7 @@ makeMCQ("scheme-ex-f-f-mcq",
 
 <h4> Finding roots of equations by the half-interval method </h4>
 
-<p> The <em> half-interval method </em> is a simple but powerful technique for finding roots of an equation <em> f(x) = 0 </em>, where <em> f </em> is a continuous function. The idea is that, if we are given points $ a $ and $ b $ such that $ f(a) &lt; 0 &lt; f (b) $, then $ f $ must have at least one zero between $ a $ and $ b $. To locate a zero, let $ x $ be the average of $ a $ and $ b $ and compute $ f(x) $. If $ f(x) &gt; 0  $, then $ f $ must have a zero between $ a $ and $ x $. If $ f(x) &lt; 0$, then $ f $ must have a zero between $ x $ and $ b $. Continuing in this way, we can identify smaller and smaller intervals on which $ f $ must have a zero. When we reach a point where the interval is small enough, the process stops. Since the interval of uncertainty is reduced by half at each step of the process, the number of steps required grows as $\Theta(\log(L/T))$, where $L$ is the length of the original interval and $T$ is the error tolerance (that is, the size of the interval we will consider &ldquo;small enough&rdquo;). Here is a procedure that implements this strategy:
+<p> The <em> half-interval method </em> is a simple but powerful technique for finding roots of an equation $ f(x) = 0 $ where <em> f </em> is a continuous function. The idea is that, if we are given points $ a $ and $ b $ such that $ f(a) &lt; 0 &lt; f (b) $, then $ f $ must have at least one zero between $ a $ and $ b $. To locate a zero, let $ x $ be the average of $ a $ and $ b $ and compute $ f(x) $. If $ f(x) &gt; 0  $, then $ f $ must have a zero between $ a $ and $ x $. If $ f(x) &lt; 0$, then $ f $ must have a zero between $ x $ and $ b $. Continuing in this way, we can identify smaller and smaller intervals on which $ f $ must have a zero. When we reach a point where the interval is small enough, the process stops. Since the interval of uncertainty is reduced by half at each step of the process, the number of steps required grows as $\Theta(\log(L/T))$, where $L$ is the length of the original interval and $T$ is the error tolerance (that is, the size of the interval we will consider &ldquo;small enough&rdquo;). Here is a procedure that implements this strategy:
 
 <div id="scheme-define-average">
 (define (average x y)

@@ -1,8 +1,15 @@
 {{title}}
-<title> iSICP 2.4 - Multiple Representations for Abstract Data </title>
+<title> iSICP 5.2 - A Register-Machine Simulator </title>
 @@
 
 {{main_text}}
+<a href='index.html' style="float:left"> <img src='images/chevron-up.svg' height=64 width=64> </a>
+<span style="float:right">
+<a href='5-1-register.html'> <img src='images/chevron-left.svg' height=64 width=64> </a>
+<a href='5-3-storage.html'> <img src='images/chevron-right.svg' height=64 width=64> </a>
+
+</span>
+<br> <br>
 <h2> A Register-Machine Simulator </h2> 
 
 <p> In order to gain a good understanding of the design of register machines, we must test the machines we design to see if they perform as expected. One way to test a design is to hand-simulate the operation of the controller, as in Exercise 5-5. But this is extremely tedious for all but the simplest machines. In this section we construct a simulator for machines described in the register-machine language. The simulator is a Scheme program with four interface procedures. The first uses a description of a register machine to construct a model of the machine (a data structure whose parts correspond to the parts of the machine to be simulated), and the other three allow us to simulate the machine by manipulating the model:

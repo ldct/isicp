@@ -117,6 +117,12 @@ $(document).ready(createTOC);
 
 <div id="main">
 
+<a href='index.html' style="float:left"> <img src='images/chevron-up.svg' height=64 width=64> </a>
+<span style="float:right">
+<a href='3-2-environment.html'> <img src='images/chevron-left.svg' height=64 width=64> </a>
+<a href='3-4-concurrency.html'> <img src='images/chevron-right.svg' height=64 width=64> </a>
+</span>
+<br> <br>
 <h2> Modeling with Mutable Data </h2> 
 
 <p> Chapter 2 dealt with compound data as a means for constructing computational objects that have several parts, in order to model real-world objects that have several aspects. In that chapter we introduced the discipline of data abstraction, according to which data structures are specified in terms of constructors, which create data objects, and selectors, which access the parts of compound data objects. But we now know that there is another aspect of data that Chapter 2 did not address. The desire to model systems composed of objects that have changing state leads us to the need to modify compound data objects, as well as to construct and select from them. In order to model compound objects with changing state, we will design data abstractions to include, in addition to selectors and constructors, operations called <tt>mutators</tt> , which modify data objects. For instance, modeling a banking system requires us to change account balances. Thus, a data structure for representing bank accounts might admit an operation

@@ -1,8 +1,15 @@
 {{title}}
-<title> iSICP 2.4 - Multiple Representations for Abstract Data </title>
+<title> iSICP 5.3 - Storage Allocation and Garbage Collection </title>
 @@
 
 {{main_text}}
+<a href='index.html' style="float:left"> <img src='images/chevron-up.svg' height=64 width=64> </a>
+<span style="float:right">
+<a href='5-2-simulator.html'> <img src='images/chevron-left.svg' height=64 width=64> </a>
+<a href='5-4-explicit-control.html'> <img src='images/chevron-right.svg' height=64 width=64> </a>
+
+</span>
+<br> <br>
 <h2> Storage Allocation and Garbage Collection </h2> 
 
 <p> In section 5-4, we will show how to implement a Scheme evaluator as a register machine. In order to simplify the discussion, we will assume that our register machines can be equipped with a <tt>list-structured memory</tt> , in which the basic operations for manipulating list-structured data are primitive. Postulating the existence of such a memory is a useful abstraction when one is focusing on the mechanisms of control in a Scheme interpreter, but this does not reflect a realistic view of the actual primitive data operations of contemporary computers. To obtain a more complete picture of how a Lisp system operates, we must investigate how list structure can be represented in a way that is compatible with conventional computer memories.
