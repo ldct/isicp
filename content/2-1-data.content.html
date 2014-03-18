@@ -71,7 +71,7 @@ $$
      (* (numer y) (denom x))))
 </div>
 <script>
-promptDep("scheme-define-arith-rat", ["scheme-define-rat"]);
+prompt("scheme-define-arith-rat", ["scheme-define-rat"]);
 </script>
 
 <p> Now we have the operations on rational numbers defined in terms of the selector and constructor procedures <tt>numer, denom,</tt> and <tt>make-rat</tt>. But we haven't yet defined these. What we need is some way to glue together a numerator and a denominator to form a rational number.
@@ -91,14 +91,14 @@ prompt("scheme-define-x-cons-1-2");
 (car x)
 </div>
 <script>
-promptDep("scheme-car-x", ["scheme-define-x-cons-1-2"]);
+prompt("scheme-car-x", ["scheme-define-x-cons-1-2"]);
 </script>
 
 <div id="scheme-cdr-x">
 (cdr x)
 </div>
 <script>
-promptDep("scheme-cdr-x", ["scheme-define-x-cons-1-2"]);
+prompt("scheme-cdr-x", ["scheme-define-x-cons-1-2"]);
 </script>
 
 <p> Notice that a pair is a data object that can be given a name and manipulated, just like a primitive data object. Moreover, <tt>cons</tt> can be used to form pairs whose elements are pairs, and so on:
@@ -118,7 +118,7 @@ prompt("scheme-define-xyz");
 (car (car z))
 </div>
 <script>
-promptDep("scheme-car-car-z", ["scheme-define-xyz"]);
+prompt("scheme-car-car-z", ["scheme-define-xyz"]);
 </script>
 
 <p>
@@ -127,7 +127,7 @@ promptDep("scheme-car-car-z", ["scheme-define-xyz"]);
 (car (cdr z))
 </div>
 <script>
-promptDep("scheme-car-cdr-z", ["scheme-define-xyz"]);
+prompt("scheme-car-cdr-z", ["scheme-define-xyz"]);
 </script>
 
 <p> In section 2-2 we will see how this ability to combine pairs means that pairs can be used as general-purpose building blocks to create all sorts of complex data structures. The single compound-data primitive <em>pair</em>, implemented by the procedures <tt>cons</tt>, <tt>car</tt>, and <tt>cdr</tt>, is the only glue we need. Data objects constructed from pairs are called <em>list-structured</em> data.
@@ -155,7 +155,7 @@ prompt("scheme-define-rat");
   (newline))
 </div>
 <script>
-promptDep("scheme-define-print-rat", ["scheme-define-rat"]);
+prompt("scheme-define-print-rat", ["scheme-define-rat"]);
 </script>
 
 <p> Now we can try our rational-number procedures:
@@ -164,14 +164,14 @@ promptDep("scheme-define-print-rat", ["scheme-define-rat"]);
 (define one-half (make-rat 1 2))
 </div>
 <script>
-promptDep("scheme-define-one-half", ["scheme-define-rat"]);
+prompt("scheme-define-one-half", ["scheme-define-rat"]);
 </script>
 
 <div id="scheme-print-one-half">
 (print-rat one-half)
 </div>
 <script>
-promptDep("scheme-print-one-half", ["scheme-define-print-rat", "scheme-define-one-half"]);
+prompt("scheme-print-one-half", ["scheme-define-print-rat", "scheme-define-one-half"]);
 </script>
 
 <p>
@@ -180,7 +180,7 @@ promptDep("scheme-print-one-half", ["scheme-define-print-rat", "scheme-define-on
 (define one-third (make-rat 1 3))
 </div>
 <script>
-promptDep("scheme-define-one-third", ["scheme-define-rat"]);
+prompt("scheme-define-one-third", ["scheme-define-rat"]);
 </script>
 
 <p>
@@ -189,7 +189,7 @@ promptDep("scheme-define-one-third", ["scheme-define-rat"]);
 (print-rat (add-rat one-half one-third))
 </div>
 <script>
-promptDep("scheme-print-half-plus-third", ["scheme-define-one-half", "scheme-define-one-third", "scheme-define-arith-rat", "scheme-define-print-rat"]);
+prompt("scheme-print-half-plus-third", ["scheme-define-one-half", "scheme-define-one-third", "scheme-define-arith-rat", "scheme-define-print-rat"]);
 </script>
 
 <p>
@@ -198,7 +198,7 @@ promptDep("scheme-print-half-plus-third", ["scheme-define-one-half", "scheme-def
 (print-rat (mul-rat one-half one-third))
 </div>
 <script>
-promptDep("scheme-print-half-times-third", ["scheme-define-one-half", "scheme-define-one-third", "scheme-define-arith-rat", "scheme-define-print-rat"]);
+prompt("scheme-print-half-times-third", ["scheme-define-one-half", "scheme-define-one-third", "scheme-define-arith-rat", "scheme-define-print-rat"]);
 </script>
 
 <p>
@@ -207,7 +207,7 @@ promptDep("scheme-print-half-times-third", ["scheme-define-one-half", "scheme-de
 (print-rat (add-rat one-third one-third))
 </div>
 <script>
-promptDep("scheme-print-third-plus-third", ["scheme-define-one-half", "scheme-define-one-third", "scheme-define-arith-rat", "scheme-define-print-rat"]);
+prompt("scheme-print-third-plus-third", ["scheme-define-one-half", "scheme-define-one-third", "scheme-define-arith-rat", "scheme-define-print-rat"]);
 </script>
 
 <p> As the final example shows, our rational-number implementation does not reduce rational numbers to lowest terms. We can remedy this by changing <tt>make-rat.</tt> If we have a <tt>gcd</tt> procedure like the one in section 1-2-5 that produces the greatest common divisor of two integers, we can use <tt>gcd</tt> to reduce the numerator and the denominator to lowest terms before constructing the pair:
@@ -228,7 +228,7 @@ hidden_prompt("scheme-define-gcd");
     (cons (/ n g) (/ d g))))
 </div>
 <script>
-promptDep("scheme-define-make-rat-reduce", ["scheme-define-gcd"]);
+prompt("scheme-define-make-rat-reduce", ["scheme-define-gcd"]);
 </script>
 
 <p> Now we have
@@ -237,7 +237,7 @@ promptDep("scheme-define-make-rat-reduce", ["scheme-define-gcd"]);
 (print-rat (add-rat one-third one-third))
 </div>
 <script>
-promptDep("scheme-test-rat-reduce", ["scheme-define-arith-rat", "scheme-define-one-half", "scheme-define-one-third", "scheme-define-print-rat", "scheme-define-make-rat-reduce"]);
+prompt("scheme-test-rat-reduce", ["scheme-define-arith-rat", "scheme-define-one-half", "scheme-define-one-third", "scheme-define-print-rat", "scheme-define-make-rat-reduce"]);
 </script>
 
 <p> as desired. This modification was accomplished by changing the constructor <tt>make-rat</tt> without changing any of the procedures (such as <tt>add-rat</tt> and <tt>mul-rat</tt>) that implement the actual operations.
@@ -273,7 +273,7 @@ promptDep("scheme-test-rat-reduce", ["scheme-define-arith-rat", "scheme-define-o
     (/ (cdr x) g)))
 </div>
 <script>
-promptDep("scheme-define-rat-reduce-in-constructor", ["scheme-define-gcd"]);
+prompt("scheme-define-rat-reduce-in-constructor", ["scheme-define-gcd"]);
 </script>
 
 <p> The difference between this implementation and the previous one lies in when we compute the <tt>gcd</tt>. If in our typical use of rational numbers we access the numerators and denominators of the same rational numbers many times, it would be preferable to compute the <tt>gcd</tt> when the rational numbers are constructed. If not, we may be better off waiting until access time to compute the <tt>gcd</tt>. In any case, when we change from one representation to the other, the procedures <tt>add-rat</tt>, <tt>sub-rat</tt>, and so on do not have to be modified at all.

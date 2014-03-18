@@ -197,7 +197,7 @@ prompt("scheme-define-type-tag");
   (eq? (type-tag z) 'polar))
 </div>
 <script>
-promptDep("scheme-define-recognise-rectangular-polar-tags", ["scheme-define-type-tag"]);
+prompt("scheme-define-recognise-rectangular-polar-tags", ["scheme-define-type-tag"]);
 </script>
 
 <p> With type tags, Ben and Alyssa can now modify their code so that their two different representations can coexist in the same system. Whenever Ben constructs a complex number, he tags it as rectangular. Whenever Alyssa constructs a complex number, she tags it as polar. In addition, Ben and Alyssa must make sure that the names of their procedures do not conflict. One way to do this is for Ben to append the suffix <tt>rectangular</tt> to the name of each of his representation procedures and for Alyssa to append <tt>polar</tt> to the names of hers. Here is Ben's revised rectangular representation from section 2-4-1:

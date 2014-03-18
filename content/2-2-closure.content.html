@@ -93,7 +93,7 @@ prompt("scheme-define-one-through-four");
 one-through-four
 </div>
 <script>
-promptDep("scheme-test-one-through-four", ["scheme-define-one-through-four"]);
+prompt("scheme-test-one-through-four", ["scheme-define-one-through-four"]);
 </script>
 
 <p> Be careful not to confuse the expression <tt>(list 1 2 3 4)</tt> with the list <tt>(1 2 3 4)</tt>, which is the result obtained when the expression is evaluated. Attempting to evaluate the expression <tt>(1 2 3 4)</tt> will signal an error when the interpreter tries to apply the procedure <tt>1</tt> to arguments <tt>2</tt>, <tt>3</tt>, and <tt>4</tt>.
@@ -104,7 +104,7 @@ promptDep("scheme-test-one-through-four", ["scheme-define-one-through-four"]);
 (car one-through-four)
 </div>
 <script>
-promptDep("scheme-car-one-through-four", ["scheme-define-one-through-four"]);
+prompt("scheme-car-one-through-four", ["scheme-define-one-through-four"]);
 </script>
 
 <p>
@@ -113,7 +113,7 @@ promptDep("scheme-car-one-through-four", ["scheme-define-one-through-four"]);
 (cdr one-through-four)
 </div>
 <script>
-promptDep("scheme-cdr-one-through-four", ["scheme-define-one-through-four"]);
+prompt("scheme-cdr-one-through-four", ["scheme-define-one-through-four"]);
 </script>
 
 <p>
@@ -122,7 +122,7 @@ promptDep("scheme-cdr-one-through-four", ["scheme-define-one-through-four"]);
 (car (cdr one-through-four))
 </div>
 <script>
-promptDep("scheme-car-cdr-one-through-four", ["scheme-define-one-through-four"]);
+prompt("scheme-car-cdr-one-through-four", ["scheme-define-one-through-four"]);
 </script>
 
 <p>
@@ -131,7 +131,7 @@ promptDep("scheme-car-cdr-one-through-four", ["scheme-define-one-through-four"])
 (cons 10 one-through-four)
 </div>
 <script>
-promptDep("scheme-cons-10-one-through-four", ["scheme-define-one-through-four"]);
+prompt("scheme-cons-10-one-through-four", ["scheme-define-one-through-four"]);
 </script>
 
 <p>
@@ -140,7 +140,7 @@ promptDep("scheme-cons-10-one-through-four", ["scheme-define-one-through-four"])
 (cons 5 one-through-four)
 </div>
 <script>
-promptDep("scheme-cons-5-one-through-four", ["scheme-define-one-through-four"]);
+prompt("scheme-cons-5-one-through-four", ["scheme-define-one-through-four"]);
 </script>
 
 <p> The value of <tt>nil</tt>, used to terminate the chain of pairs, can be thought of as a sequence of no elements, the <tt>empty list</tt>  . The word <tt>nil</tt>  is a contraction of the Latin word <em>nihil</em>, which means ``nothing.''<a name="footnote_link_2-10" class="footnote_link" href="#footnote_2-10">10</a>
@@ -181,7 +181,7 @@ prompt("scheme-define-squares");
 (list-ref squares 3)
 </div>
 <script>
-promptDep("scheme-list-ref-squares-3", ["scheme-define-list-ref", "scheme-define-squares"]);
+prompt("scheme-list-ref-squares-3", ["scheme-define-list-ref", "scheme-define-squares"]);
 </script>
 
 <p> Often we <tt>cdr</tt> down the whole list. To aid in this, Scheme includes a primitive predicate <tt>null?</tt>, which tests whether its argument is the empty list. The procedure <tt>length</tt>, which returns the number of items in a list, illustrates this typical pattern of use:
@@ -211,7 +211,7 @@ prompt("scheme-define-odds");
 (length odds)
 </div>
 <script>
-promptDep("scheme-length-odds", ["scheme-define-length", "scheme-define-odds"]);
+prompt("scheme-length-odds", ["scheme-define-length", "scheme-define-odds"]);
 </script>
 <p> The <tt>length</tt> procedure implements a simple recursive plan. The reduction step is:
 
@@ -253,7 +253,7 @@ prompt("scheme-define-length-iterative");
 (append squares odds)
 </div>
 <script>
-promptDep("scheme-append-squares-odds", ["scheme-define-squares", "scheme-define-odds"]);
+prompt("scheme-append-squares-odds", ["scheme-define-squares", "scheme-define-odds"]);
 </script>
 
 <p>
@@ -262,7 +262,7 @@ promptDep("scheme-append-squares-odds", ["scheme-define-squares", "scheme-define
 (append odds squares)
 </div>
 <script>
-promptDep("scheme-append-odds-squares", ["scheme-define-squares", "scheme-define-odds"]);
+prompt("scheme-append-odds-squares", ["scheme-define-squares", "scheme-define-odds"]);
 </script>
 
 <p> <tt>append</tt> is also implemented using a recursive plan. To <tt>append</tt> lists <tt>list1</tt> and <tt>list2</tt>, do the following:
@@ -2175,13 +2175,12 @@ prompt("scheme-ex-define-reverse-with-foldr");
 
 <p> We can extend the sequence paradigm to include many computations that are commonly expressed using nested loops.<a name="footnote_link_2-18" class="footnote_link" href="#footnote_2-18">18</a> Consider this problem: Given a positive integer n, find all ordered pairs of distinct positive integers i and j, where 1 &lt;= j&lt; i&lt;= n, such that i + j is prime. For example, if n is 6, then the pairs are the following:
 
-$$ 
 \begin{array}{c|ccc}
 i &amp; 2 &amp; 3 &amp; 4 &amp; 4 &amp; 5 &amp; 6 &amp; 6 \\
 j &amp; 1 &amp; 2 &amp; 1 &amp; 3 &amp; 2 &amp; 1 &amp; 5 \\
 \hline \\
-i+j &amp; 3 &amp; 5 &amp; 5 &amp; 7 &amp; 7 &amp; 7 &amp; 11 \end{array}
-$$
+i+j &amp; 3 &amp; 5 &amp; 5 &amp; 7 &amp; 7 &amp; 7 &amp; 11 
+\end{array}
 
 
 <p> A natural way to organize this computation is to generate the sequence of all ordered pairs of positive integers less than or equal to $n$, filter to select those pairs whose sum is prime, and then, for each pair $(i, j)$ that passes through the filter, produce the triple $(i,j,i+j)$.

@@ -58,7 +58,7 @@ prompt("scheme-define-a-b");
 (list a b)
 </div>
 <script>
-promptDep("scheme-list-a-b", ["scheme-define-a-b"]);
+prompt("scheme-list-a-b", ["scheme-define-a-b"]);
 </script>
 
 <p>
@@ -67,7 +67,7 @@ promptDep("scheme-list-a-b", ["scheme-define-a-b"]);
 (list 'a 'b)
 </div>
 <script>
-promptDep("scheme-list-qa-qb", ["scheme-define-a-b"]);
+prompt("scheme-list-qa-qb", ["scheme-define-a-b"]);
 </script>
 
 <p>
@@ -76,7 +76,7 @@ promptDep("scheme-list-qa-qb", ["scheme-define-a-b"]);
 (list 'a b)
 </div>
 <script>
-promptDep("scheme-list-qa-b", ["scheme-define-a-b"]);
+prompt("scheme-list-qa-b", ["scheme-define-a-b"]);
 </script>
 
 <p> Quotation also allows us to type in compound objects, using the conventional printed representation for lists:<a name="footnote_link_2-34" class="footnote_link" href="#footnote_2-34">34</a>
@@ -117,7 +117,7 @@ prompt("scheme-define-memq");
 (memq 'apple '(pear banana prune))
 </div>
 <script>
-promptDep("scheme-memq-apple-pear-banana-prune", ["scheme-define-memq"]);
+prompt("scheme-memq-apple-pear-banana-prune", ["scheme-define-memq"]);
 </script>
 
 <p> is false, whereas the value of
@@ -126,7 +126,7 @@ promptDep("scheme-memq-apple-pear-banana-prune", ["scheme-define-memq"]);
 (memq 'apple '(x (apple sauce) y apple pear))
 </div>
 <script>
-promptDep("scheme-memq-apple-apple-sauce-apple-pear", ["scheme-define-memq"]);
+prompt("scheme-memq-apple-apple-sauce-apple-pear", ["scheme-define-memq"]);
 </script>
 
 <p> is <tt>(apple pear)</tt>.
@@ -382,7 +382,7 @@ prompt("scheme-define-multiplicand");
 (deriv '(+ x 3) 'x)
 </div>
 <script>
-promptDep("scheme-deriv-x-3", ["scheme-define-deriv"]);
+prompt("scheme-deriv-x-3", ["scheme-define-deriv"]);
 </script>
 
 <p>
@@ -391,7 +391,7 @@ promptDep("scheme-deriv-x-3", ["scheme-define-deriv"]);
 (deriv '(* x y) 'x)
 </div>
 <script>
-promptDep("scheme-deriv-x-y", ["scheme-define-deriv"]);
+prompt("scheme-deriv-x-y", ["scheme-define-deriv"]);
 </script>
 
 <p>
@@ -400,7 +400,7 @@ promptDep("scheme-deriv-x-y", ["scheme-define-deriv"]);
 (deriv '(* (* x y) (+ x 3)) 'x)
 </div>
 <script>
-promptDep("scheme-deriv-x-y-x-3", ["scheme-define-deriv"]);
+prompt("scheme-deriv-x-y-x-3", ["scheme-define-deriv"]);
 </script>
 
 <p> The program produces answers that are correct; however, they are unsimplified. It is true that
@@ -422,7 +422,7 @@ $$
         (else (list '+ a1 a2))))
 </div>
 <script>
-promptDep("scheme-define-simplifying-make-sum", ["scheme-define-equal-numberp"]);
+prompt("scheme-define-simplifying-make-sum", ["scheme-define-equal-numberp"]);
 </script>
 
 <p> This uses the procedure <tt>=number?</tt>, which checks whether an expression is equal to a given number:
