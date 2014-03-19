@@ -8,6 +8,8 @@ Click on (almost) any code fragment to edit. Ctrl-Enter will re-run the script.
 
 ## Contributing
 
+NOTE: a lot of the code lives in a separate repository, [web-worker-interpreter](github.com/yuanchenyang/web-worker-interpreter)
+
 This project is a work-in-progress and we need your help!
 
 - Report any bugs, typos etc that you find
@@ -66,7 +68,7 @@ editor.setOption('onBlur', function() {
 
 ## Internals
 
-Most of the magic happens in [coding.js](https://github.com/zodiac/appspot-grading/tree/master/isicp/coding.js). We use the [CodeMirror](http://codemirror.net/) editor and a custom scheme interpreter.
+Most of the magic happens in web-worker-interpreter. We use the [CodeMirror](http://codemirror.net/) editor and a custom scheme interpreter.
 
 #### makeEditable
 
