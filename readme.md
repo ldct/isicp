@@ -22,7 +22,9 @@ This project is a work-in-progress and we need your help!
 - Display hints as to why user did not pass an exercise
 - Make code changes persist between page reloads by linking to a google account
 
-## API
+## Contributing
+
+iSICP is built on the [web-worker-interpreter/coding.js](https://github.com/yuanchenyang/web-worker-interpreter) library. We use the [CodeMirror](http://codemirror.net/) editor and a custom scheme interpreter.
 
 Most of the prompts in the book are defined like so.
 
@@ -35,40 +37,11 @@ prompt("scheme-times-size", ["scheme-define-size"]);
 </script>
 ```
 
-the div contains the initial text. The second argument to ``prompt`` is optional and specifies dependencies. Autograded input is written as such
-
-```html
-<div class='exercise'>
-
-<p> <b> Exercise 1.2. </b>  Translate the following expression into prefix form.
-
-$$
-\frac{5 + 4 + (2 - (3 - (6 + \frac{4}{5})))}{3(6-2)(2-7)}
-$$
-
-<div id="scheme-ex-12-input" class='input'></div>
-
-<script>
-makePromptingInput("scheme-ex-12-input");
-addOutput("scheme-ex-12-input");
-var editor = editorOf["scheme-ex-12-input"];
-editor.setOption('onBlur', function() {
-  var code = "(equal? (quote " + editor.getValue() + ") " + 
-      "'(/ (+ 5 4 (- 2 (- 3 (+ 6 (/ 4 5))))) (* 3 (- 6 2) (- 2 7))))";
-
-  eval_scheme(code).then(function(res){
-    if (res == "true\n") {
-      $_("scheme-ex-12-input-output").empty().append($("<div class='right-answer'> \u2713 </div>"));
-    } else {
-      $_("scheme-ex-12-input-output").empty().append($("<div class='wrong-answer'> \u2717 </div>"));
-    }
-  })
-});
-```
+the div contains the initial text. The second argument to ``prompt`` is optional and specifies dependencies.
 
 ## Internals
 
-Most of the magic happens in web-worker-interpreter. We use the [CodeMirror](http://codemirror.net/) editor and a custom scheme interpreter.
+
 
 #### makeEditable
 
