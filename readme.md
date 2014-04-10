@@ -26,7 +26,7 @@ This project is a work-in-progress and we need your help!
 
 iSICP is built on the [web-worker-interpreter/coding.js](https://github.com/yuanchenyang/web-worker-interpreter) library. We use the [CodeMirror](http://codemirror.net/) editor and a custom scheme interpreter.
 
-Most of the prompts in the book are defined like so.
+If you just wish to help port more of SICP to this site, here is how to create an interactive code fragment.
 
 ```html
 <div id="scheme-times-size">
@@ -38,19 +38,3 @@ prompt("scheme-times-size", ["scheme-define-size"]);
 ```
 
 the div contains the initial text. The second argument to ``prompt`` is optional and specifies dependencies.
-
-## Internals
-
-
-
-#### makeEditable
-
-makeEditable(_editor) converts the div with id _editor into a CodeMirror editor. CodeMirror emits a blur event when the editor is unfocused; we additionally emit this event when ctrl-enter is pressed.
-
-#### no_output_frozen_prompt
-
-same as makeEditable, except editing is disabled. Used for exercises and the like where user should not be able to cheat in that way.
-
-#### eval_scheme
-
-This is for running custom autograder code, and returns a jQuery deferred object; consume it by calling its ``.then(function(res){...})`` method and pasing a callback of one argument (the result of the execution).
