@@ -222,3 +222,7 @@ img.center {
 .CodeMirror {
   line-height: 1.3em;
 }
+
+.CodeMirror-scrollbar {
+  display: none !important;
+}
