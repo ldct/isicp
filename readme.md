@@ -8,7 +8,7 @@ Click on (almost) any code fragment to edit. Ctrl-Enter will re-run the script.
 
 ## Contributing
 
-NOTE: a lot of the code lives in a separate repository, [web-worker-interpreter](github.com/yuanchenyang/web-worker-interpreter)
+NOTE: a lot of the code lives in a separate repository, [web-worker-interpreter](https://github.com/yuanchenyang/web-worker-interpreter)
 
 This project is a work-in-progress and we need your help!
 
