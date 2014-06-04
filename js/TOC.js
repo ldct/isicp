@@ -7,7 +7,7 @@ create_TOC = function () {
 
         current.attr("id", title);
 
-        var a = $("<a>", {href: "#" + title, html: current.text().slice(0,50), 'class': current[0].coding.nodeName.toLowerCase()});
+        var a = $("<a>", {href: "#" + title, html: current.text().slice(0,50), 'class': current[0].nodeName.toLowerCase()});
 
         a.click(function() {
             $('html, body').animate({
