@@ -32,21 +32,21 @@
 <p> The use of compound data leads to a real increase in the expressive power of our programming language. Consider the idea of forming a ``linear combination'' ax + by. We might like to write a procedure that would accept a, b, x, and y as arguments and return the value of ax + by. This presents no difficulty if the arguments are to be numbers, because we can readily define the procedure
 
 <div id="scheme-define-linear-combination">
-(define (linear-combination a b x y) 
+(define (linear-combination a b x y)
   (+ (* a x) (* b y)))
 </div>
 <script>
-no_output_frozen_prompt("scheme-define-linear-combination")
+C.no_output_frozen_prompt("scheme-define-linear-combination")
 </script>
 
 <p> But suppose we are not concerned only with numbers. Suppose we would like to express, in procedural terms, the idea that one can form linear combinations whenever addition and multiplication are defined -- for rational numbers, complex numbers, polynomials, or whatever. We could express this as a procedure of the form
 
 <div id="scheme-define-general-linear-combination">
-(define (linear-combination a b x y) 
-  (add (mul a x) (mul b y))) 
+(define (linear-combination a b x y)
+  (add (mul a x) (mul b y)))
 </div>
 <script>
-no_output_frozen_prompt("scheme-define-general-linear-combination")
+C.no_output_frozen_prompt("scheme-define-general-linear-combination")
 </script>
 
 <p> where add and mul are not the primitive procedures + and * but rather more complex things that will perform the appropriate operations for whatever kinds of data we pass in as the arguments a, b, x, and y. The key point is that the only thing linear-combination should need to know about a, b, x, and y is that the procedures add and mul will perform the appropriate manipulations. From the perspective of the procedure linear-combination, it is irrelevant what a, b, x, and y are and even more irrelevant how they might happen to be represented in terms of more primitive data. This same example shows why it is important that our programming language provide the ability to manipulate compound objects directly: Without this, there is no way for a procedure such as linear-combination to pass its arguments along to add and mul without having to know their detailed structure.1 We begin this chapter by implementing the rational-number arithmetic system mentioned above. This will form the background for our discussion of compound data and data abstraction. As with compound procedures, the main issue to be addressed is that of abstraction as a technique for coping with complexity, and we will see how data abstraction enables us to erect suitable abstraction barriers between different parts of a program.

@@ -10,7 +10,7 @@
 
 </span>
 <br> <br>
-<h2> Designing Register Machines </h2> 
+<h2> Designing Register Machines </h2>
 
 <p> To design a register machine, we must design its <tt>data paths</tt> (registers and operations) and the <tt>controller</tt> that sequences these operations. To illustrate the design of a simple register machine, let us examine Euclid's Algorithm, which is used to compute the greatest common divisor (GCD) of two integers. As we saw in section 1-2-5, Euclid's Algorithm can be carried out by an iterative process, as specified by the following procedure:
 
@@ -21,7 +21,7 @@
       (gcd b (remainder a b))))
 </div>
 <script>
-prompt();
+C.prompt();
 </script>
 
 <p> A machine to carry out this algorithm must keep track of two numbers, a and b, so let us assume that these numbers are stored in two registers with those names. The basic operations required are testing whether the contents of register <tt>b</tt> is zero and computing the remainder of the contents of register <tt>a</tt> divided by the contents of register <tt>b</tt>. The remainder operation is a complex process, but assume for the moment that we have a primitive device that computes remainders. On each cycle of the GCD algorithm, the contents of register <tt>a</tt> must be replaced by the contents of register <tt>b</tt>, and the contents of <tt>b</tt> must be replaced by the remainder of the old contents of <tt>a</tt> divided by the old contents of <tt>b</tt>. It would be convenient if these replacements could be done simultaneously, but in our model of register machines we will assume that only one register can be assigned a new value at each step. To accomplish the replacements, our machine will use a third ``temporary'' register, which we call <tt>t</tt>. (First the remainder will be placed in <tt>t</tt>, then the contents of <tt>b</tt> will be placed in <tt>a</tt>, and finally the remainder stored in <tt>t</tt> will be placed in <tt>b</tt>.)
@@ -97,11 +97,11 @@ prompt();
   (iter 1 1))
 </div>
 <script>
-prompt();
+C.prompt();
 </script>
 </div>
 
-<h3> A Language for Describing Register Machines </h3> 
+<h3> A Language for Describing Register Machines </h3>
 
 <p> Data-path and controller diagrams are adequate for representing simple machines such as GCD, but they are unwieldy for describing large machines such as a Lisp interpreter. To make it possible to deal with complex machines, we will create a language that presents, in textual form, all the information given by the data-path and controller diagrams. We will start with a notation that directly mirrors the diagrams.
 
@@ -113,14 +113,14 @@ prompt();
 
 <ul>
 <li>
-The name of a data-path button to push to assign a value to a register. (This corresponds to a box in the controller diagram.) 
+The name of a data-path button to push to assign a value to a register. (This corresponds to a box in the controller diagram.)
 </li>
 
 <li>
-A <tt>test</tt> instruction, that performs a specified test. 
+A <tt>test</tt> instruction, that performs a specified test.
 </li>
 <li>
-A conditional branch (<tt>branch</tt> instruction) to a location indicated by a controller label, based on the result of the previous test. (The test and branch together correspond to a diamond in the controller diagram.)  If the test is false, the controller should continue with the next instruction in the sequence. Otherwise, the controller should continue with the instruction after the label. 
+A conditional branch (<tt>branch</tt> instruction) to a location indicated by a controller label, based on the result of the previous test. (The test and branch together correspond to a diamond in the controller diagram.)  If the test is false, the controller should continue with the next instruction in the sequence. Otherwise, the controller should continue with the instruction after the label.
 </li>
 
 <li>
@@ -161,7 +161,7 @@ machine.
  gcd-done)                        ; label
 </div>
 <script>
-prompt();
+C.prompt();
 </script>
 
 </div>
@@ -184,7 +184,7 @@ prompt();
  gcd-done)
 </div>
 <script>
-prompt();
+C.prompt();
 </script>
 
 <p> This form of description is easier to read than the kind illustrated in Figure 5-3, but it also has disadvantages:
@@ -207,7 +207,7 @@ Because the controller instructions in a machine definition look like Lisp expre
 to describe the iterative factorial machine of Exercise 5-1.
 </div>
 
-<h4> Actions </h4> 
+<h4> Actions </h4>
 
 <p> Let us modify the GCD machine so that we can type in the numbers whose GCD we want and get the answer printed at our terminal. We will not discuss how to make a machine that can read and print, but will assume (as we do when we use <tt>read</tt> and <tt>display</tt> in Scheme) that they are available as primitive operations.@footnote{This assumption glosses over a great deal of complexity. Usually a large portion of the implementation of a Lisp system is dedicated to making reading and printing work.}
 
@@ -219,7 +219,7 @@ to describe the iterative factorial machine of Exercise 5-1.
 (perform (op print) (reg a))
 </div>
 <script>
-prompt();
+C.prompt();
 </script>
 
 <p> Figure 5-4 shows the data paths and controller for the new GCD machine. Instead of having the machine stop after printing the answer, we have made it start over, so that it repeatedly reads a pair of numbers, computes their GCD, and prints the result. This structure is like the driver loops we used in the interpreters of Chapter 4.
@@ -273,12 +273,12 @@ prompt();
     (goto (label gcd-loop)))
 </div>
 <script>
-prompt();
+C.prompt();
 </script>
 
 </div>
 
-<h3> Abstraction in Machine Design </h3> 
+<h3> Abstraction in Machine Design </h3>
 
 <p> We will often define a machine to include ``primitive'' operations that are actually very complex. For example, in sections 5-4 and 5-5 we will treat Scheme's environment manipulations as primitive. Such abstraction is valuable because it allows us to ignore the details of parts of a machine so that we can concentrate on other aspects of the design. The fact that we have swept a lot of complexity under the rug, however, does not mean that a machine design is unrealistic. We can always replace the complex ``primitives'' by simpler primitive operations.
 
@@ -291,7 +291,7 @@ prompt();
       (remainder (- n d) d)))
 </div>
 <script>
-prompt();
+C.prompt();
 </script>
 
 <p> We can thus replace the remainder operation in the GCD machine's data paths with a subtraction operation and a comparison test. Figure 5-5 shows the data paths and controller for the elaborated machine. The instruction
@@ -348,7 +348,7 @@ prompt();
 (assign t (op rem) (reg a) (reg b))
 </div>
 <script>
-prompt();
+C.prompt();
 </script>
 
 
@@ -375,7 +375,7 @@ prompt();
  gcd-done)
 </div>
 <script>
-prompt();
+C.prompt();
 </script>
 
 </div>
@@ -396,13 +396,13 @@ prompt();
   (sqrt-iter 1.0))
 </div>
 <script>
-prompt();
+C.prompt();
 </script>
 
 <p> Begin by assuming that <tt>good-enough?</tt> and <tt>improve</tt> operations are available as primitives. Then show how to expand these in terms of arithmetic operations. Describe each version of the <tt>sqrt</tt> machine design by drawing a data-path diagram and writing a controller definition in the register-machine language.
 </div>
 
-<h3> Subroutines </h3> 
+<h3> Subroutines </h3>
 
 <p> When designing a machine to perform a computation, we would often prefer to arrange for components to be shared by different parts of the computation rather than duplicate the components. Consider a machine that includes two GCD computations---one that finds the GCD of the contents of registers <tt>a</tt> and <tt>b</tt> and one that finds the GCD of the contents of registers <tt>c</tt> and <tt>d</tt>. We might start by assuming we have a primitive <tt>gcd</tt> operation, then expand the two instances of <tt>gcd</tt> in terms of more primitive operations. Figure 5-7 shows just the GCD portions of the resulting machine's data paths, without showing how they connect to the rest of the machine. The figure also shows the corresponding portions of the machine's controller sequence.
 
@@ -410,23 +410,23 @@ prompt();
 <p> <b>Figure 5.7:</b> Portions of the data paths and controller sequence for a machine with two GCD computations.
 
 <pre>
-                            ___                                 ___  
-+-----+        +-----+     /   \    +-----+        +-----+     /   \ 
+                            ___                                 ___
++-----+        +-----+     /   \    +-----+        +-----+     /   \
 |  a  |<-(X)---+  b  |--->|  =  |   |  c  |<-(X)---+  d  |--->|  =  |
-+--+--+  a<-b  ++----+     \___/    +--+--+  c<-d  ++----+     \___/ 
-   |            |  ^         ^         |            |  ^         ^   
-   `----.  .---'  |         |         `----.  .---'  |         |   
-        V   V     (X) b<-t   |              V   V     (X) d<-t   |   
-       -------     |        / \            -------     |        / \  
-       \ rem /     |       /_0_\           \ rem /     |       /_0_\ 
-        --+--      |                        --+--      |             
-          |        |                          |        |             
-         (X) t<-r  |                         (X) s<-r  |             
-          |        |                          |        |             
-          V        |                          V        |             
-       +-----+     |                       +-----+     |             
-       |  t  +-----'                       |  s  +-----'             
-       +-----+                             +-----+                   
++--+--+  a<-b  ++----+     \___/    +--+--+  c<-d  ++----+     \___/
+   |            |  ^         ^         |            |  ^         ^
+   `----.  .---'  |         |         `----.  .---'  |         |
+        V   V     (X) b<-t   |              V   V     (X) d<-t   |
+       -------     |        / \            -------     |        / \
+       \ rem /     |       /_0_\           \ rem /     |       /_0_\
+        --+--      |                        --+--      |
+          |        |                          |        |
+         (X) t<-r  |                         (X) s<-r  |
+          |        |                          |        |
+          V        |                          V        |
+       +-----+     |                       +-----+     |
+       |  t  +-----'                       |  s  +-----'
+       +-----+                             +-----+
 </pre>
 
 <div id="">
@@ -449,7 +449,7 @@ gcd-2
 after-gcd-2
 </div>
 <script>
-prompt();
+C.prompt();
 </script>
 
 </div>
@@ -481,7 +481,7 @@ gcd-2
 after-gcd-2
 </div>
 <script>
-prompt();
+C.prompt();
 </script>
 
 </div>
@@ -514,7 +514,7 @@ after-gcd-1
 after-gcd-2
 </div>
 <script>
-prompt();
+C.prompt();
 </script>
 
 </div>
@@ -545,7 +545,7 @@ after-gcd-1
 after-gcd-2
 </div>
 <script>
-prompt();
+C.prompt();
 </script>
 
 </div>
@@ -556,7 +556,7 @@ prompt();
 
 <p> A machine with more than one subroutine could use multiple continuation registers (e.g., <tt>gcd-continue</tt>, <tt>factorial-continue</tt>) or we could have all subroutines share a single <tt>continue</tt> register. Sharing is more economical, but we must be careful if we have a subroutine (<tt>sub1</tt>) that calls another subroutine (<tt>sub2</tt>). Unless <tt>sub1</tt> saves the contents of <tt>continue</tt> in some other register before setting up <tt>continue</tt> for the call to <tt>sub2</tt>, <tt>sub1</tt> will not know where to go when it is finished. The mechanism developed in the next section to handle recursion also provides a better solution to this problem of nested subroutine calls.
 
-<h3> Using a Stack to Implement Recursion </h3> 
+<h3> Using a Stack to Implement Recursion </h3>
 
 <p> With the ideas illustrated so far, we can implement any iterative process by specifying a register machine that has a register corresponding to each state variable of the process. The machine repeatedly executes a controller loop, changing the contents of the registers, until some termination condition is satisfied. At each point in the controller sequence, the state of the machine (representing the state of the iterative process) is completely determined by the contents of the registers (the values of the state variables).
 
@@ -569,7 +569,7 @@ prompt();
       (* (factorial (- n 1)) n)))
 </div>
 <script>
-prompt();
+C.prompt();
 </script>
 
 <p> As we see from the procedure, computing n! requires computing (n - 1)!. Our GCD machine, modeled on the procedure
@@ -581,7 +581,7 @@ prompt();
       (gcd b (remainder a b))))
 </div>
 <script>
-prompt();
+C.prompt();
 </script>
 
 <p> similarly had to compute another GCD. But there is an important difference between the <tt>gcd</tt> procedure, which reduces the original computation to a new GCD computation, and <tt>factorial</tt>, which requires computing another factorial as a subproblem. In GCD, the answer to the new GCD computation is the answer to the original problem. To compute the next GCD, we simply place the new arguments in the input registers of the GCD machine and reuse the machine's data paths by executing the same controller sequence. When the machine is finished solving the final GCD problem, it has completed the entire computation.
@@ -600,7 +600,7 @@ prompt();
 
 <p> Although in principle the factorial computation requires an infinite machine, the machine in Figure 5-11 is actually finite except for the stack, which is potentially unbounded. Any particular physical implementation of a stack, however, will be of finite size, and this will limit the depth of recursive calls that can be handled by the machine. This implementation of factorial illustrates the general strategy for realizing recursive algorithms as ordinary register machines augmented by stacks. When a recursive subproblem is encountered, we save on the stack the registers whose current values will be required after the subproblem is solved, solve the recursive subproblem, then restore the saved registers and continue execution on the main problem. The <tt>continue</tt> register must always be saved. Whether there are other registers that need to be saved depends on the particular machine, since not all recursive computations need the original values of registers that are modified during solution of the subproblem (see Exercise 5-4).
 
-<h4> A double recursion </h4> 
+<h4> A double recursion </h4>
 
 <p> Let us examine a more complex recursive process, the tree-recursive computation of the Fibonacci numbers, which we introduced in section 1-2-2:
 
@@ -611,7 +611,7 @@ prompt();
       (+ (fib (- n 1)) (fib (- n 2)))))
 </div>
 <script>
-prompt();
+C.prompt();
 </script>
 
 <p> Just as with factorial, we can implement the recursive Fibonacci computation as a register machine with registers <tt>n</tt>, <tt>val</tt>, and <tt>continue</tt>. The machine is more complex than the one for factorial, because there are two places in the controller sequence where we need to perform recursive calls---once to compute Fib(n - 1) and once to compute Fib(n - 2). To set up for each of these calls, we save the registers whose values will be needed later, set the <tt>n</tt> register to the number whose Fib we need to compute recursively (n - 1 or n - 2), and assign to <tt>continue</tt> the entry point in the main sequence to which to return (<tt>afterfib-n-1</tt> or <tt>afterfib-n-2</tt>, respectively). We then go to <tt>fib-loop</tt>. When we return from the recursive call, the answer is in <tt>val</tt>. Figure 5-12 shows the controller sequence for this machine.
@@ -673,7 +673,7 @@ prompt();
  fact-done)
 </div>
 <script>
-prompt();
+C.prompt();
 </script>
 
 </div>
@@ -716,7 +716,7 @@ Fibonacci numbers.
  fib-done)
 </div>
 <script>
-prompt();
+C.prompt();
 </script>
 
 </div>
@@ -735,7 +735,7 @@ Recursive exponentiation:
       (* b (expt b (- n 1)))))
 </div>
 <script>
-prompt();
+C.prompt();
 </script>
 
 @item
@@ -750,7 +750,7 @@ Iterative exponentiation:
   (expt-iter n 1))
 </div>
 <script>
-prompt();
+C.prompt();
 </script>
 
 </ul>
@@ -764,7 +764,7 @@ prompt();
 <p> <b>Exercise 5.6:</b> Ben Bitdiddle observes that the Fibonacci machine's controller sequence has an extra <tt>save</tt> and an extra <tt>restore</tt>, which can be removed to make a faster machine. Where are these instructions?
 </div>
 
-<h3> Instruction Summary </h3> 
+<h3> Instruction Summary </h3>
 
 <p> A controller instruction in our register-machine language has one of the following forms, where each <input_i> is either <tt>(reg <register-name</tt>>) or <tt>(const <constant-value</tt>>). These instructions were introduced in section 5-1-1:
 
@@ -784,7 +784,7 @@ prompt();
 (goto (label &lt;label-name&gt;))
 </div>
 <script>
-prompt();
+C.prompt();
 </script>
 
 <p> The use of registers to hold labels was introduced in section 5-1-3:
@@ -795,7 +795,7 @@ prompt();
 (goto (reg <register-name>))
 </div>
 <script>
-prompt();
+C.prompt();
 </script>
 
 <p> Instructions to use the stack were introduced in section 5-1-4:
@@ -806,7 +806,7 @@ prompt();
 (restore <register-name>)
 </div>
 <script>
-prompt();
+C.prompt();
 </script>
 
 <p> The only kind of <constant-value> we have seen so far is a number, but later we will use strings, symbols, and lists. For example,@* <tt>(const "abc")</tt> is the string <tt>"abc"</tt>,@* <tt>(const abc)</tt> is the symbol <tt>abc</tt>,@* <tt>(const (a b c))</tt> is the list <tt>(a b c)</tt>,@* and <tt>(const ())</tt> is the empty list.

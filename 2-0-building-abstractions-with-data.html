@@ -3,19 +3,18 @@
 <head>
 <meta charset="UTF-8">
 
-<link rel="stylesheet" type="text/css" href="web-worker-interpreter/deps/codemirror/lib/codemirror.css" />
+<link rel="stylesheet" type="text/css" href="coding-js/deps/codemirror/lib/codemirror.css" />
 <link rel="stylesheet" type="text/css" href="css/isicp.css" />
 <link rel="stylesheet" type="text/css" href="css/footnotes.css" />
 <link rel="stylesheet" type="text/css" href="css/theme.css" />
 
-<script src="js/helper.js"></script>
+<script src="js/TOC.js"></script>
 <script src="js/jquery.min.js"></script>
-<script src="web-worker-interpreter/deps/codemirror/lib/codemirror.js"></script>
-<script src="web-worker-interpreter/deps/codemirror/mode/scheme/scheme.js"></script>
-<script src="web-worker-interpreter/coding.js"> </script>
+<script src="coding-js/deps/codemirror/lib/codemirror.js"></script>
+<script src="coding-js/deps/codemirror/mode/scheme/scheme.js"></script>
+<script src="coding-js/coding.js"> </script>
 <script>
-  set_interpreter_path("web-worker-interpreter/");
-  set_language("scheme");
+  C = new CodingJS("coding-js/");
 </script>
 <script src="js/footnotes.js"></script>
 
@@ -46,13 +45,13 @@ MathJax.Hub.Config({
 <div id="sidebox">
   <div class="tab"></div>
   <div class="content">
-    
-    <p> 
-    
+
+    <p>
+
     <a href="index.html" class="navlink"> <img src='images/home.svg' width=32 height=32> </a>
     <span id="toc-link" class="navlink"> <img src='images/list.svg' width=32 height=32> </span>
     <span id="currently-editing-link" class="navlink"> <img src='images/file-edit.svg' width=32 height=32> </span>
-    
+
     <script src="http://cdn.jotfor.ms/static/feedback2.js?3.2.310" type="text/javascript">
     new JotformFeedback({
     formId:'40222623177447',
@@ -68,50 +67,50 @@ MathJax.Hub.Config({
     <a class="lightbox-40222623177447" style="cursor:pointer;color:blue;text-decoration:underline;"><img src='images/envelope.svg' width=32 height=32></a>
 
     <p>
-    
+
     <div id="currently-editing"> </div>
 
 
-    
+
     <script>
-    
+
     function hideAll() {
       $("#currently-editing").hide();
       $("#toc").hide();
     }
-    
+
     $("#currently-editing-link").click(function() {
       hideAll();
       $("#currently-editing").show();
     });
-    
+
     $("#toc-link").click(function() {
       hideAll();
       $("#toc").show();
     });
-    
+
     </script>
-    
+
     <div id="toc"> </div>
-    
+
     <p style='font-size:12px'> (Click on the left edge of this green box to hide it!)
-    
+
     <script>
     hideAll();
     $("#toc").show();
     </script>
-  
+
   </div>
 </div>
 
-<script> 
+<script>
 $('#sidebox .tab').toggle(function(){
     $('#sidebox').animate({'right':'0%'});
 }, function(){
     $('#sidebox').animate({'right':'-30%'});
 });
 
-$(document).ready(createTOC);
+$(document).ready(create_TOC);
 
 </script>
 
@@ -146,21 +145,21 @@ $(document).ready(createTOC);
 <p> The use of compound data leads to a real increase in the expressive power of our programming language. Consider the idea of forming a ``linear combination'' ax + by. We might like to write a procedure that would accept a, b, x, and y as arguments and return the value of ax + by. This presents no difficulty if the arguments are to be numbers, because we can readily define the procedure
 
 <div id="scheme-define-linear-combination">
-(define (linear-combination a b x y) 
+(define (linear-combination a b x y)
   (+ (* a x) (* b y)))
 </div>
 <script>
-no_output_frozen_prompt("scheme-define-linear-combination")
+C.no_output_frozen_prompt("scheme-define-linear-combination")
 </script>
 
 <p> But suppose we are not concerned only with numbers. Suppose we would like to express, in procedural terms, the idea that one can form linear combinations whenever addition and multiplication are defined -- for rational numbers, complex numbers, polynomials, or whatever. We could express this as a procedure of the form
 
 <div id="scheme-define-general-linear-combination">
-(define (linear-combination a b x y) 
-  (add (mul a x) (mul b y))) 
+(define (linear-combination a b x y)
+  (add (mul a x) (mul b y)))
 </div>
 <script>
-no_output_frozen_prompt("scheme-define-general-linear-combination")
+C.no_output_frozen_prompt("scheme-define-general-linear-combination")
 </script>
 
 <p> where add and mul are not the primitive procedures + and * but rather more complex things that will perform the appropriate operations for whatever kinds of data we pass in as the arguments a, b, x, and y. The key point is that the only thing linear-combination should need to know about a, b, x, and y is that the procedures add and mul will perform the appropriate manipulations. From the perspective of the procedure linear-combination, it is irrelevant what a, b, x, and y are and even more irrelevant how they might happen to be represented in terms of more primitive data. This same example shows why it is important that our programming language provide the ability to manipulate compound objects directly: Without this, there is no way for a procedure such as linear-combination to pass its arguments along to add and mul without having to know their detailed structure.1 We begin this chapter by implementing the rational-number arithmetic system mentioned above. This will form the background for our discussion of compound data and data abstraction. As with compound procedures, the main issue to be addressed is that of abstraction as a technique for coping with complexity, and we will see how data abstraction enables us to erect suitable abstraction barriers between different parts of a program.

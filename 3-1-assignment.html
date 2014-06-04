@@ -3,19 +3,18 @@
 <head>
 <meta charset="UTF-8">
 
-<link rel="stylesheet" type="text/css" href="web-worker-interpreter/deps/codemirror/lib/codemirror.css" />
+<link rel="stylesheet" type="text/css" href="coding-js/deps/codemirror/lib/codemirror.css" />
 <link rel="stylesheet" type="text/css" href="css/isicp.css" />
 <link rel="stylesheet" type="text/css" href="css/footnotes.css" />
 <link rel="stylesheet" type="text/css" href="css/theme.css" />
 
-<script src="js/helper.js"></script>
+<script src="js/TOC.js"></script>
 <script src="js/jquery.min.js"></script>
-<script src="web-worker-interpreter/deps/codemirror/lib/codemirror.js"></script>
-<script src="web-worker-interpreter/deps/codemirror/mode/scheme/scheme.js"></script>
-<script src="web-worker-interpreter/coding.js"> </script>
+<script src="coding-js/deps/codemirror/lib/codemirror.js"></script>
+<script src="coding-js/deps/codemirror/mode/scheme/scheme.js"></script>
+<script src="coding-js/coding.js"> </script>
 <script>
-  set_interpreter_path("web-worker-interpreter/");
-  set_language("scheme");
+  C = new CodingJS("coding-js/");
 </script>
 <script src="js/footnotes.js"></script>
 
@@ -46,13 +45,13 @@ MathJax.Hub.Config({
 <div id="sidebox">
   <div class="tab"></div>
   <div class="content">
-    
-    <p> 
-    
+
+    <p>
+
     <a href="index.html" class="navlink"> <img src='images/home.svg' width=32 height=32> </a>
     <span id="toc-link" class="navlink"> <img src='images/list.svg' width=32 height=32> </span>
     <span id="currently-editing-link" class="navlink"> <img src='images/file-edit.svg' width=32 height=32> </span>
-    
+
     <script src="http://cdn.jotfor.ms/static/feedback2.js?3.2.310" type="text/javascript">
     new JotformFeedback({
     formId:'40222623177447',
@@ -68,50 +67,50 @@ MathJax.Hub.Config({
     <a class="lightbox-40222623177447" style="cursor:pointer;color:blue;text-decoration:underline;"><img src='images/envelope.svg' width=32 height=32></a>
 
     <p>
-    
+
     <div id="currently-editing"> </div>
 
 
-    
+
     <script>
-    
+
     function hideAll() {
       $("#currently-editing").hide();
       $("#toc").hide();
     }
-    
+
     $("#currently-editing-link").click(function() {
       hideAll();
       $("#currently-editing").show();
     });
-    
+
     $("#toc-link").click(function() {
       hideAll();
       $("#toc").show();
     });
-    
+
     </script>
-    
+
     <div id="toc"> </div>
-    
+
     <p style='font-size:12px'> (Click on the left edge of this green box to hide it!)
-    
+
     <script>
     hideAll();
     $("#toc").show();
     </script>
-  
+
   </div>
 </div>
 
-<script> 
+<script>
 $('#sidebox .tab').toggle(function(){
     $('#sidebox').animate({'right':'0%'});
 }, function(){
     $('#sidebox').animate({'right':'-30%'});
 });
 
-$(document).ready(createTOC);
+$(document).ready(create_TOC);
 
 </script>
 
@@ -123,7 +122,7 @@ $(document).ready(createTOC);
 <a href='3-2-environment.html'> <img src='images/chevron-right.svg' height=64 width=64> </a>
 </span>
 <br> <br>
-<h2> Assignment and Local State </h2> 
+<h2> Assignment and Local State </h2>
 
 <p> We ordinarily view the world as populated by independent objects, each of which has a state that changes over time. An object is said to "have state" if its behavior is influenced by its history. A bank account, for example, has state in that the answer to the question "Can I withdraw $100?"  depends upon the history of deposit and withdrawal transactions. We can characterize an object's state by one or more <tt>state variables</tt> , which among them maintain enough information about history to determine the object's current behavior. In a simple banking system, we could characterize the state of an account by a current balance rather than by remembering the entire history of account transactions.
 
@@ -131,7 +130,7 @@ $(document).ready(createTOC);
 
 <p> This view of a system can be a powerful framework for organizing computational models of the system. For such a model to be modular, it should be decomposed into computational objects that model the actual objects in the system. Each computational object must have its own <tt>local state variables</tt> describing the actual object's state. Since the states of objects in the system being modeled change over time, the state variables of the corresponding computational objects must also change. If we choose to model the flow of time in the system by the elapsed time in the computer, then we must have a way to construct computational objects whose behaviors change as our programs run. In particular, if we wish to model state variables by ordinary symbolic names in the programming language, then the language must provide an <tt>assignment operator</tt> to enable us to change the value associated with a name.
 
-<h3> Local State Variables </h3> 
+<h3> Local State Variables </h3>
 
 <p> To illustrate what we mean by having a computational object with time-varying state, let us model the situation of withdrawing money from a bank account. We will do this using a procedure <tt>withdraw</tt>, which takes as argument an <tt>amount</tt> to be withdrawn. If there is enough money in the account to accommodate the withdrawal, then <tt>withdraw</tt> should return the balance remaining after the withdrawal. Otherwise, <tt>withdraw</tt> should return the message <em>Insufficient funds</em>. For example, if we begin with $100 in the account, we should obtain the following sequence of responses using <tt>withdraw</tt>:
 
@@ -142,7 +141,7 @@ $(document).ready(createTOC);
 (withdraw 15)
 </div>
 <script>
-prompt("scheme-withdraw-25-25-60-15", ["scheme-define-withdraw"]);
+C.prompt("scheme-withdraw-25-25-60-15", ["scheme-define-withdraw"]);
 </script>
 
 <p> Observe that the expression <tt>(withdraw 25)</tt>, evaluated twice, yields different values. This is a new kind of behavior for a procedure. Until now, all our procedures could be viewed as specifications for computing mathematical functions. A call to a procedure computed the value of the function applied to the given arguments, and two calls to the same procedure with the same arguments always produced the same result.<a name="footnote_link_3-1" class="footnote_link" href="#footnote_3-1">1</a>
@@ -159,7 +158,7 @@ prompt("scheme-withdraw-25-25-60-15", ["scheme-define-withdraw"]);
       "Insufficient funds"))
 </div>
 <script>
-prompt("scheme-define-withdraw");
+C.prompt("scheme-define-withdraw");
 </script>
 
 <p> Decrementing <tt>balance</tt> is accomplished by the expression
@@ -168,7 +167,7 @@ prompt("scheme-define-withdraw");
 (set! balance (- balance amount))
 </div>
 <script>
-no_output_frozen_prompt("scheme-decrement-balance");
+C.no_output_frozen_prompt("scheme-decrement-balance");
 </script>
 
 <p> This uses the <tt>set!</tt> special form, whose syntax is
@@ -177,7 +176,7 @@ no_output_frozen_prompt("scheme-decrement-balance");
 (set! &lt;name&gt; &lt;new-value&gt;)
 </div>
 <script>
-no_output_frozen_prompt("scheme-set-syntax");
+C.no_output_frozen_prompt("scheme-set-syntax");
 </script>
 
 <p> Here <name> is a symbol and <new-value> is any expression. <tt>Set!</tt> changes <name> so that its value is the result obtained by evaluating <new-value>. In the case at hand, we are changing <tt>balance</tt> so that its new value will be the result of subtracting <tt>amount</tt> from the previous value of <tt>balance</tt>.<a name="footnote_link_3-2" class="footnote_link" href="#footnote_3-2">2</a>
@@ -188,7 +187,7 @@ no_output_frozen_prompt("scheme-set-syntax");
 (begin &lt;exp_1&gt; &lt;exp_2&gt; ... &lt;exp_k>&gt;
 </div>
 <script>
-no_output_frozen_prompt("scheme-begin-syntax");
+C.no_output_frozen_prompt("scheme-begin-syntax");
 </script>
 
 <p> causes the expressions <tt><em>&lt;exp_1&gt;</em></tt> through <tt><em>&lt;exp_k&gt;</em></tt> to be evaluated in sequence and the value of the final expression <exp_k> to be returned as the value of the entire <tt>begin</tt> form.<a name="footnote_link_3-3" class="footnote_link" href="#footnote_3-3">3</a>
@@ -207,7 +206,7 @@ no_output_frozen_prompt("scheme-begin-syntax");
           "Insufficient funds"))))
 </div>
 <script>
-prompt("scheme-define-new-withdraw");
+C.prompt("scheme-define-new-withdraw");
 </script>
 
 <p> What we have done here is use <tt>let</tt> to establish an environment with a local variable <tt>balance</tt>, bound to the initial value 100. Within this local environment, we use <tt>lambda</tt> to create a procedure that takes <tt>amount</tt> as an argument and behaves like our previous <tt>withdraw</tt> procedure. This procedure &ndash; returned as the result of evaluating the <tt>let</tt> expression &ndash; is <tt>new-withdraw</tt>, which behaves in precisely the same way as <tt>withdraw</tt> but whose variable <tt>balance</tt> is not accessible by any other procedure.<a name="footnote_link_3-4" class="footnote_link" href="#footnote_3-4">4</a>
@@ -225,7 +224,7 @@ prompt("scheme-define-new-withdraw");
         "Insufficient funds")))
 </div>
 <script>
-prompt("scheme-define-make-withdraw");
+C.prompt("scheme-define-make-withdraw");
 </script>
 
 <p> <tt>make-withdraw</tt> can be used as follows to create two objects <tt>W1</tt> and <tt>W2</tt>:
@@ -240,7 +239,7 @@ prompt("scheme-define-make-withdraw");
 (W1 40)
 </div>
 <script>
-prompt("scheme-define-W1-W2", ["scheme-define-make-withdraw"]);
+C.prompt("scheme-define-W1-W2", ["scheme-define-make-withdraw"]);
 </script>
 
 <p> Observe that <tt>W1</tt> and <tt>W2</tt> are completely independent objects, each with its own local state variable <tt>balance</tt>. Withdrawals from one do not affect the other.
@@ -265,7 +264,7 @@ prompt("scheme-define-W1-W2", ["scheme-define-make-withdraw"]);
   dispatch)
 </div>
 <script>
-prompt("scheme-define-make-account");
+C.prompt("scheme-define-make-account");
 </script>
 
 <p> Each call to <tt>make-account</tt> sets up an environment with a local state variable <tt>balance</tt>. Within this environment, <tt>make-account</tt> defines procedures <tt>deposit</tt> and <tt>withdraw</tt> that access <tt>balance</tt> and an additional procedure <tt>dispatch</tt> that takes a ``message'' as input and returns one of the two local procedures. The <tt>dispatch</tt> procedure itself is returned as the value that represents the bank-account object. This is precisely the <tt>message-passing</tt> style of programming that we saw in section 2-4-3, although here we are using it in conjunction with the ability to modify local variables.
@@ -281,7 +280,7 @@ prompt("scheme-define-make-account");
 ((acc 'withdraw) 60)
 </div>
 <script>
-prompt("scheme-test-make-account", ["scheme-define-make-account"]);
+C.prompt("scheme-test-make-account", ["scheme-define-make-account"]);
 </script>
 
 <p> Each call to <tt>acc</tt> returns the locally defined <tt>deposit</tt> or <tt>withdraw</tt> procedure, which is then applied to the specified <tt>amount</tt>. As was the case with <tt>make-withdraw</tt>, another call to <tt>make-account</tt>
@@ -290,7 +289,7 @@ prompt("scheme-test-make-account", ["scheme-define-make-account"]);
 (define acc2 (make-account 100))
 </div>
 <script>
-prompt("scheme-define-acc-2", ["scheme-define-make-account"]);
+C.prompt("scheme-define-acc-2", ["scheme-define-make-account"]);
 </script>
 
 <p> will produce a completely separate account object, which maintains its own local <tt>balance</tt>.
@@ -308,7 +307,7 @@ prompt("scheme-define-acc-2", ["scheme-define-make-account"]);
 25
 </div>
 <script>
-prompt("scheme-define-make-accumulator");
+C.prompt("scheme-define-make-accumulator");
 </script>
 </div>
 
@@ -327,7 +326,7 @@ prompt("scheme-define-make-accumulator");
 1
 </div>
 <script>
-prompt("scheme-define-make-monitored");
+C.prompt("scheme-define-make-monitored");
 </script>
 </div>
 
@@ -340,7 +339,7 @@ prompt("scheme-define-make-monitored");
 (define acc (make-account 100 'secret-password))
 </div>
 <script>
-prompt("scheme-define-passworded-acc");
+C.prompt("scheme-define-passworded-acc");
 </script>
 
 <p> The resulting account object should process a request only if it is accompanied by the password with which the account was created, and should otherwise return a complaint:
@@ -353,7 +352,7 @@ prompt("scheme-define-passworded-acc");
 "Incorrect password"
 </div>
 <script>
-prompt("scheme-test-passworded-acc");
+C.prompt("scheme-test-passworded-acc");
 </script>
 </div>
 
@@ -362,7 +361,7 @@ prompt("scheme-test-passworded-acc");
 <div class="exercise">
 <p> <b>Exercise 3.4:</b> Modify the <tt>make-account</tt> procedure of Exercise 3-3 by adding another local state variable so that, if an account is accessed more than seven consecutive times with an incorrect password, it invokes the procedure <tt>call-the-cops</tt>. </div>
 
-<h3> The Benefits of Introducing Assignment </h3> 
+<h3> The Benefits of Introducing Assignment </h3>
 
 <p> As we shall see, introducing assignment into our programming language leads us into a thicket of difficult conceptual issues. Nevertheless, viewing systems as collections of objects with local state is a powerful technique for maintaining a modular design. As a simple example, consider the design of a procedure <tt>rand</tt> that, whenever it is called, returns an integer chosen at random.
 
@@ -373,7 +372,7 @@ x_2 = (rand-update x_1)
 x_3 = (rand-update x_2)
 </div>
 <script>
-no_output_frozen_prompt("scheme-rand-update");
+C.no_output_frozen_prompt("scheme-rand-update");
 </script>
 
 <p> then the sequence of values $x_1, x_2, x_3, \ldots$ will have the desired statistical properties.<a name="footnote_link_3-6" class="footnote_link" href="#footnote_3-6">6</a>
@@ -386,7 +385,7 @@ no_output_frozen_prompt("scheme-rand-update");
 (define random-init 42)
 </div>
 <script>
-hidden_prompt("scheme-hidden-define-rand-update-init")
+C.hidden_prompt("scheme-hidden-define-rand-update-init")
 </script>
 
 <div id="scheme-define-rand">
@@ -397,7 +396,7 @@ hidden_prompt("scheme-hidden-define-rand-update-init")
       x)))
 </div>
 <script>
-prompt("scheme-define-rand", ["scheme-hidden-define-rand-update-init"]);
+C.prompt("scheme-define-rand", ["scheme-hidden-define-rand-update-init"]);
 </script>
 
 <p> Of course, we could generate the same sequence of random numbers without using assignment by simply calling <tt>rand-update</tt> directly. However, this would mean that any part of our program that used random numbers would have to explicitly remember the current value of <tt>x</tt> to be passed as an argument to <tt>rand-update</tt>. To realize what an annoyance this would be, consider using random numbers to implement a technique called <em>Monte Carlo simulation</em> .
@@ -416,7 +415,7 @@ prompt("scheme-define-rand", ["scheme-hidden-define-rand-update-init"]);
       (gcd b (remainder a b))))
 </div>
 <script>
-hidden_prompt("scheme-define-hidden-sqrt-gcd");
+C.hidden_prompt("scheme-define-hidden-sqrt-gcd");
 </script>
 
 <div id="scheme-define-monte-carlo">
@@ -437,7 +436,7 @@ hidden_prompt("scheme-define-hidden-sqrt-gcd");
   (iter trials 0))
 </div>
 <script>
-prompt("scheme-define-monte-carlo", ["scheme-define-rand", "scheme-define-hidden-sqrt-gcd"]);
+C.prompt("scheme-define-monte-carlo", ["scheme-define-rand", "scheme-define-hidden-sqrt-gcd"]);
 </script>
 
 <p> Now let us try the same computation using <tt>rand-update</tt> directly rather than <tt>rand</tt>, the way we would be forced to proceed if we did not use assignment to model local state:
@@ -463,7 +462,7 @@ prompt("scheme-define-monte-carlo", ["scheme-define-rand", "scheme-define-hidden
   (iter trials 0 initial-x))
 </div>
 <script>
-prompt("scheme-define-monte-carlo-with-rand", ["scheme-hidden-define-rand-update-init", "scheme-define-hidden-sqrt-gcd"]);
+C.prompt("scheme-define-monte-carlo-with-rand", ["scheme-hidden-define-rand-update-init", "scheme-define-hidden-sqrt-gcd"]);
 </script>
 
 <p> While the program is still simple, it betrays some painful breaches of modularity. In our first version of the program, using <tt>rand</tt>, we can express the Monte Carlo method directly as a general <tt>monte-carlo</tt> procedure that takes as an argument an arbitrary <tt>experiment</tt> procedure. In our second version of the program, with no local state for the random-number generator, <tt>random-gcd-test</tt> must explicitly manipulate the random numbers <tt>x1</tt> and <tt>x2</tt> and recycle <tt>x2</tt> through the iterative loop as the new input to <tt>rand-update</tt>. This explicit handling of the random numbers intertwines the structure of accumulating test results with the fact that our particular experiment uses two random numbers, whereas other Monte Carlo experiments might use one random number or three. Even the top-level procedure <tt>estimate-pi</tt> has to be concerned with supplying an initial random number. The fact that the random-number generator's insides are leaking out into other parts of the program makes it difficult for us to isolate the Monte Carlo idea so that it can be applied to other tasks. In the first version of the program, assignment encapsulates the state of the random-number generator within the <tt>rand</tt> procedure, so that the details of random-number generation remain independent of the rest of the program.
@@ -485,7 +484,7 @@ prompt("scheme-define-monte-carlo-with-rand", ["scheme-hidden-define-rand-update
     (+ low (random range))))
 </div>
 <script>
-prompt("scheme-define-random-in-range");
+C.prompt("scheme-define-random-in-range");
 </script>
 </div>
 
@@ -494,7 +493,7 @@ prompt("scheme-define-random-in-range");
 <div class="exercise">
 <p> <b>Exercise 3.6:</b> It is useful to be able to reset a random-number generator to produce a sequence starting from a given value. Design a new <tt>rand</tt> procedure that is called with an argument that is either the symbol <tt>generate</tt> or the symbol <tt>reset</tt> and behaves as follows: <tt>(rand 'generate)</tt> produces a new random number; <tt>((rand 'reset) &lt;new-value&gt;)</tt> resets the internal state variable to the designated <tt>&lt;new-value&gt;</tt>. Thus, by resetting the state, one can generate repeatable sequences. These are very handy to have when testing and debugging programs that use random numbers. </div>
 
-<h3> The Costs of Introducing Assignment </h3> 
+<h3> The Costs of Introducing Assignment </h3>
 
 <p> As we have seen, the <tt>set!</tt> operation enables us to model objects that have local state. However, this advantage comes at a price. Our programming language can no longer be interpreted in terms of the substitution model of procedure application that we introduced in section 1-1-5. Moreover, no simple model with ``nice'' mathematical properties can be an adequate framework for dealing with objects and assignment in programming languages.
 
@@ -509,7 +508,7 @@ prompt("scheme-define-random-in-range");
     balance))
 </div>
 <script>
-prompt("scheme-define-make-simplified-withdraw");
+C.prompt("scheme-define-make-simplified-withdraw");
 </script>
 
 <div id="scheme-test-make-simplified-withdraw">
@@ -519,7 +518,7 @@ prompt("scheme-define-make-simplified-withdraw");
 (W 10)
 </div>
 <script>
-prompt("scheme-test-make-simplified-withdraw", ["scheme-define-make-simplified-withdraw"]);
+C.prompt("scheme-test-make-simplified-withdraw", ["scheme-define-make-simplified-withdraw"]);
 </script>
 
 <p> Compare this procedure with the following <tt>make-decrementer</tt> procedure, which does not use <tt>set!</tt>:
@@ -530,7 +529,7 @@ prompt("scheme-test-make-simplified-withdraw", ["scheme-define-make-simplified-w
     (- balance amount)))
 </div>
 <script>
-prompt("scheme-define-make-decrementer");
+C.prompt("scheme-define-make-decrementer");
 </script>
 
 <p> <tt>make-decrementer</tt> returns a procedure that subtracts its input from a designated amount <tt>balance</tt>, but there is no accumulated effect over successive calls, as with <tt>make-simplified-withdraw</tt>:
@@ -542,7 +541,7 @@ prompt("scheme-define-make-decrementer");
 (D 10)
 </div>
 <script>
-prompt("scheme-test-decrementer", ["scheme-define-make-decrementer"]);
+C.prompt("scheme-test-decrementer", ["scheme-define-make-decrementer"]);
 </script>
 
 <p> We can use the substitution model to explain how <tt>make-decrementer</tt> works. For instance, let us analyze the evaluation of the expression
@@ -551,7 +550,7 @@ prompt("scheme-test-decrementer", ["scheme-define-make-decrementer"]);
 ((make-decrementer 25) 20)
 </div>
 <script>
-no_output_frozen_prompt("scheme-make-decrementer-25-20");
+C.no_output_frozen_prompt("scheme-make-decrementer-25-20");
 </script>
 
 <p> We first simplify the operator of the combination by substituting 25 for <tt>balance</tt> in the body of <tt>make-decrementer</tt>. This reduces the expression to
@@ -560,7 +559,7 @@ no_output_frozen_prompt("scheme-make-decrementer-25-20");
 ((lambda (amount) (- 25 amount)) 20)
 </div>
 <script>
-no_output_frozen_prompt("scheme-lambda-decrementer");
+C.no_output_frozen_prompt("scheme-lambda-decrementer");
 </script>
 
 <p> Now we apply the operator by substituting 20 for <tt>amount</tt> in the body of the <tt>lambda</tt> expression:
@@ -569,7 +568,7 @@ no_output_frozen_prompt("scheme-lambda-decrementer");
 (- 25 20)
 </div>
 <script>
-no_output_frozen_prompt("scheme-decrementer-final");
+C.no_output_frozen_prompt("scheme-decrementer-final");
 </script>
 
 <p> The final answer is <tt>5</tt>.
@@ -580,7 +579,7 @@ no_output_frozen_prompt("scheme-decrementer-final");
 ((make-simplified-withdraw 25) 20)
 </div>
 <script>
-no_output_frozen_prompt("scheme-make-simplified-withdraw-25-20");
+C.no_output_frozen_prompt("scheme-make-simplified-withdraw-25-20");
 </script>
 
 <p> We first simplify the operator by substituting 25 for <tt>balance</tt> in the body of <tt>make-simplified-withdraw</tt>. This reduces the expression to <a name="footnote_link_3-9" class="footnote_link" href="#footnote_3-9">9</a>
@@ -589,7 +588,7 @@ no_output_frozen_prompt("scheme-make-simplified-withdraw-25-20");
 ((lambda (amount) (set! balance (- 25 amount)) 25) 20)
 </div>
 <script>
-no_output_frozen_prompt("scheme-lambda-make-simplified-withdraw");
+C.no_output_frozen_prompt("scheme-lambda-make-simplified-withdraw");
 </script>
 
 <p> Now we apply the operator by substituting 20 for <tt>amount</tt> in the body of the <tt>lambda</tt> expression:
@@ -598,14 +597,14 @@ no_output_frozen_prompt("scheme-lambda-make-simplified-withdraw");
 (set! balance (- 25 20)) 25
 </div>
 <script>
-no_output_frozen_prompt("scheme-set-balance-substituted");
+C.no_output_frozen_prompt("scheme-set-balance-substituted");
 </script>
 
 <p> If we adhered to the substitution model, we would have to say that the meaning of the procedure application is to first set <tt>balance</tt> to 5 and then return 25 as the value of the expression. This gets the wrong answer. In order to get the correct answer, we would have to somehow distinguish the first occurrence of <tt>balance</tt> (before the effect of the <tt>set!</tt>)  from the second occurrence of <tt>balance</tt> (after the effect of the <tt>set!</tt>), and the substitution model cannot do this.
 
 <p> The trouble here is that substitution is based ultimately on the notion that the symbols in our language are essentially names for values. But as soon as we introduce <tt>set!</tt> and the idea that the value of a variable can change, a variable can no longer be simply a name. Now a variable somehow refers to a place where a value can be stored, and the value stored at this place can change. In section 3-2 we will see how environments play this role of "place" in our computational model.
 
-<h4> Sameness and change </h4> 
+<h4> Sameness and change </h4>
 
 <p> The issue surfacing here is more profound than the mere breakdown of a particular model of computation. As soon as we introduce change into our computational models, many notions that were previously straightforward become problematical. Consider the concept of two things being "the same."
 
@@ -617,7 +616,7 @@ no_output_frozen_prompt("scheme-set-balance-substituted");
 (define D2 (make-decrementer 25))
 </div>
 <script>
-prompt("scheme-define-d12", ["scheme-define-make-decrementer"]);
+C.prompt("scheme-define-d12", ["scheme-define-make-decrementer"]);
 </script>
 
 <p> Are <tt>D1</tt> and <tt>D2</tt> the same?  An acceptable answer is yes, because <tt>D1</tt> and <tt>D2</tt> have the same computational behavior---each is a procedure that subtracts its input from 25. In fact, <tt>D1</tt> could be substituted for <tt>D2</tt> in any computation without changing the result.
@@ -630,7 +629,7 @@ prompt("scheme-define-d12", ["scheme-define-make-decrementer"]);
 (define W2 (make-simplified-withdraw 25))
 </div>
 <script>
-prompt("scheme-define-w12", ["scheme-define-make-simplified-withdraw"]);
+C.prompt("scheme-define-w12", ["scheme-define-make-simplified-withdraw"]);
 </script>
 
 <p> Are <tt>W1</tt> and <tt>W2</tt> the same?  Surely not, because calls to <tt>W1</tt> and <tt>W2</tt> have distinct effects, as shown by the following sequence of interactions:
@@ -641,7 +640,7 @@ prompt("scheme-define-w12", ["scheme-define-make-simplified-withdraw"]);
 (W2 20)
 </div>
 <script>
-prompt("scheme-test-w12", ["scheme-define-w12"]);
+C.prompt("scheme-test-w12", ["scheme-define-w12"]);
 </script>
 
 <p> Even though <tt>W1</tt> and <tt>W2</tt> are "equal" in the sense that they are both created by evaluating the same expression, <tt>(make-simplified-withdraw 25)</tt>, it is not true that <tt>W1</tt> could be substituted for <tt>W2</tt> in any expression without changing the result of evaluating the expression.
@@ -657,7 +656,7 @@ prompt("scheme-test-w12", ["scheme-define-w12"]);
 (define paul-acc (make-account 100))
 </div>
 <script>
-prompt("scheme-define-peter-paul-acc", ["scheme-define-make-account"]);
+C.prompt("scheme-define-peter-paul-acc", ["scheme-define-make-account"]);
 </script>
 
 <p> and modeling it as
@@ -667,14 +666,14 @@ prompt("scheme-define-peter-paul-acc", ["scheme-define-make-account"]);
 (define paul-acc peter-acc)
 </div>
 <script>
-prompt("scheme-define-peter-as-paul-acc", ["scheme-define-make-account"]);
+C.prompt("scheme-define-peter-as-paul-acc", ["scheme-define-make-account"]);
 </script>
 
 <p> In the first situation, the two bank accounts are distinct. Transactions made by Peter will not affect Paul's account, and vice versa. In the second situation, however, we have defined <tt>paul-acc</tt> to be <em>the same thing</em> as <tt>peter-acc</tt>. In effect, Peter and Paul now have a joint bank account, and if Peter makes a withdrawal from <tt>peter-acc</tt> Paul will observe less money in <tt>paul-acc</tt>. These two similar but distinct situations can cause confusion in building computational models. With the shared account, in particular, it can be especially confusing that there is one object (the bank account) that has two different names (<tt>peter-acc</tt> and <tt>paul-acc</tt>); if we are searching for all the places in our program where <tt>paul-acc</tt> can be changed, we must remember to look also at things that change <tt>peter-acc</tt>.<a name="footnote_link_3-10" class="footnote_link" href="#footnote_3-10">10</a>
 
 <p> With reference to the above remarks on "sameness" and "change," observe that if Peter and Paul could only examine their bank balances, and could not perform operations that changed the balance, then the issue of whether the two accounts are distinct would be moot. In general, so long as we never modify data objects, we can regard a compound data object to be precisely the totality of its pieces. For example, a rational number is determined by giving its numerator and its denominator. But this view is no longer valid in the presence of change, where a compound data object has an ``identity'' that is something different from the pieces of which it is composed. A bank account is still ``the same'' bank account even if we change the balance by making a withdrawal; conversely, we could have two different bank accounts with the same state information. This complication is a consequence, not of our programming language, but of our perception of a bank account as an object. We do not, for example, ordinarily regard a rational number as a changeable object with identity, such that we could change the numerator and still have ``the same''rational number.
 
-<h4> Pitfalls of imperative programming </h4> 
+<h4> Pitfalls of imperative programming </h4>
 
 <p> In contrast to functional programming, programming that makes extensive use of assignment is known as <tt>imperative programming</tt> . In addition to raising complications about computational models, programs written in imperative style are susceptible to bugs that cannot occur in functional programs. For example, recall the iterative factorial program from section 1-2-1:
 
@@ -688,7 +687,7 @@ prompt("scheme-define-peter-as-paul-acc", ["scheme-define-make-account"]);
   (iter 1 1))
 </div>
 <script>
-prompt("scheme-define-factorial");
+C.prompt("scheme-define-factorial");
 </script>
 
 <p> Instead of passing arguments in the internal iterative loop, we could adopt a more imperative style by using explicit assignment to update the values of the variables <tt>product</tt> and <tt>counter</tt>:
@@ -706,7 +705,7 @@ prompt("scheme-define-factorial");
     (iter)))
 </div>
 <script>
-prompt("scheme-define-factorial-imperative");
+C.prompt("scheme-define-factorial-imperative");
 </script>
 
 <p> This does not change the results produced by the program, but it does introduce a subtle trap. How do we decide the order of the assignments?  As it happens, the program is correct as written. But writing the assignments in the opposite order
@@ -716,7 +715,7 @@ prompt("scheme-define-factorial-imperative");
 (set! product (* counter product))
 </div>
 <script>
-no_output_frozen_prompt("scheme-wrong-order-assign-factorial");
+C.no_output_frozen_prompt("scheme-wrong-order-assign-factorial");
 </script>
 
 <p> would have produced a different, incorrect result. In general, programming with assignment forces us to carefully consider the relative orders of the assignments to make sure that each statement is using the correct version of the variables that have been changed. This issue simply does not arise in functional programs.<a name="footnote_link_3-11" class="footnote_link" href="#footnote_3-11">11</a>
@@ -731,7 +730,7 @@ no_output_frozen_prompt("scheme-wrong-order-assign-factorial");
   (make-joint peter-acc 'open-sesame 'rosebud))
 </div>
 <script>
-prompt("scheme-define-paul-acc-joint");
+C.prompt("scheme-define-paul-acc-joint");
 </script>
 
 <p> will allow one to make transactions on <tt>peter-acc</tt> using the name <tt>paul-acc</tt> and the password <tt>rosebud</tt>. You may wish to modify your solution to Exercise 3-3 to accommodate this new feature
@@ -751,7 +750,7 @@ prompt("scheme-define-paul-acc-joint");
 <div id="footnotes">
 <h3 id='Notes'> Notes </h3>
 <div id="footnote_3-1" class="footnote">
-<p><a href="#footnote_link_3-1" class="footnote_backlink">1</a> Actually, this is not quite true. One exception was the random-number generator in section 1.2.6. Another exception involved the operation/type tables we introduced in section 2.4.3, where the values of two calls to get with the same arguments depended on intervening calls to put. On the other hand, until we introduce assignment, we have no way to create such procedures ourselves. 
+<p><a href="#footnote_link_3-1" class="footnote_backlink">1</a> Actually, this is not quite true. One exception was the random-number generator in section 1.2.6. Another exception involved the operation/type tables we introduced in section 2.4.3, where the values of two calls to get with the same arguments depended on intervening calls to put. On the other hand, until we introduce assignment, we have no way to create such procedures ourselves.
 </div>
 
 <div id="footnote_3-2" class="footnote">

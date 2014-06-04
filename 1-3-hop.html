@@ -3,19 +3,18 @@
 <head>
 <meta charset="UTF-8">
 
-<link rel="stylesheet" type="text/css" href="web-worker-interpreter/deps/codemirror/lib/codemirror.css" />
+<link rel="stylesheet" type="text/css" href="coding-js/deps/codemirror/lib/codemirror.css" />
 <link rel="stylesheet" type="text/css" href="css/isicp.css" />
 <link rel="stylesheet" type="text/css" href="css/footnotes.css" />
 <link rel="stylesheet" type="text/css" href="css/theme.css" />
 
-<script src="js/helper.js"></script>
+<script src="js/TOC.js"></script>
 <script src="js/jquery.min.js"></script>
-<script src="web-worker-interpreter/deps/codemirror/lib/codemirror.js"></script>
-<script src="web-worker-interpreter/deps/codemirror/mode/scheme/scheme.js"></script>
-<script src="web-worker-interpreter/coding.js"> </script>
+<script src="coding-js/deps/codemirror/lib/codemirror.js"></script>
+<script src="coding-js/deps/codemirror/mode/scheme/scheme.js"></script>
+<script src="coding-js/coding.js"> </script>
 <script>
-  set_interpreter_path("web-worker-interpreter/");
-  set_language("scheme");
+  C = new CodingJS("coding-js/");
 </script>
 <script src="js/footnotes.js"></script>
 
@@ -46,13 +45,13 @@ MathJax.Hub.Config({
 <div id="sidebox">
   <div class="tab"></div>
   <div class="content">
-    
-    <p> 
-    
+
+    <p>
+
     <a href="index.html" class="navlink"> <img src='images/home.svg' width=32 height=32> </a>
     <span id="toc-link" class="navlink"> <img src='images/list.svg' width=32 height=32> </span>
     <span id="currently-editing-link" class="navlink"> <img src='images/file-edit.svg' width=32 height=32> </span>
-    
+
     <script src="http://cdn.jotfor.ms/static/feedback2.js?3.2.310" type="text/javascript">
     new JotformFeedback({
     formId:'40222623177447',
@@ -68,50 +67,50 @@ MathJax.Hub.Config({
     <a class="lightbox-40222623177447" style="cursor:pointer;color:blue;text-decoration:underline;"><img src='images/envelope.svg' width=32 height=32></a>
 
     <p>
-    
+
     <div id="currently-editing"> </div>
 
 
-    
+
     <script>
-    
+
     function hideAll() {
       $("#currently-editing").hide();
       $("#toc").hide();
     }
-    
+
     $("#currently-editing-link").click(function() {
       hideAll();
       $("#currently-editing").show();
     });
-    
+
     $("#toc-link").click(function() {
       hideAll();
       $("#toc").show();
     });
-    
+
     </script>
-    
+
     <div id="toc"> </div>
-    
+
     <p style='font-size:12px'> (Click on the left edge of this green box to hide it!)
-    
+
     <script>
     hideAll();
     $("#toc").show();
     </script>
-  
+
   </div>
 </div>
 
-<script> 
+<script>
 $('#sidebox .tab').toggle(function(){
     $('#sidebox').animate({'right':'0%'});
 }, function(){
     $('#sidebox').animate({'right':'-30%'});
 });
 
-$(document).ready(createTOC);
+$(document).ready(create_TOC);
 
 </script>
 
@@ -135,7 +134,7 @@ $(document).ready(createTOC);
 (define (cube x) (* x x x))
 </div>
 <script>
-prompt("scheme-define-cube");
+C.prompt("scheme-define-cube");
 </script>
 
 <div id="scheme-define-square">
@@ -143,7 +142,7 @@ prompt("scheme-define-cube");
   (* x x))
 </div>
 <script>
-hidden_prompt("scheme-define-square");
+C.hidden_prompt("scheme-define-square");
 </script>
 
 <p> we are not talking about the cube of a particular number, but rather about a method for obtaining the cube of any number. Of course we could get along without ever defining this procedure, by always writing expressions such as
@@ -154,7 +153,7 @@ hidden_prompt("scheme-define-square");
 (* y y y)
 </div>
 <script>
-no_output_prompt("scheme-cube-ex");
+C.no_output_prompt("scheme-cube-ex");
 </script>
 
 <p> and never mentioning cube explicitly. This would place us at a serious disadvantage, forcing us to work always at the level of the particular operations that happen to be primitives in the language (multiplication, in this case) rather than in terms of higher-level operations. Our programs would be able to compute cubes, but our language would lack the ability to express the concept of cubing. One of the things we should demand from a powerful programming language is the ability to build abstractions by assigning names to common patterns and then to work in terms of the abstractions directly. Procedures provide this ability. This is why all but the most primitive programming languages include mechanisms for defining procedures.
@@ -172,7 +171,7 @@ no_output_prompt("scheme-cube-ex");
       (+ a (sum-integers (+ a 1) b))))
 </div>
 <script>
-prompt("scheme-define-sum-integers");
+C.prompt("scheme-define-sum-integers");
 </script>
 
 <p> The second computes the sum of the cubes of the integers in the given range:
@@ -184,7 +183,7 @@ prompt("scheme-define-sum-integers");
       (+ (cube a) (sum-cubes (+ a 1) b))))
 </div>
 <script>
-prompt("scheme-define-sum-cubes", ["scheme-define-cube"]);
+C.prompt("scheme-define-sum-cubes", ["scheme-define-cube"]);
 </script>
 
 <p> The third computes the sum of a sequence of terms in the series
@@ -202,7 +201,7 @@ $$
       (+ (/ 1.0 (* a (+ a 2))) (pi-sum (+ a 4) b))))
 </div>
 <script>
-prompt("scheme-define-pi-sum");
+C.prompt("scheme-define-pi-sum");
 </script>
 
 <p> These three procedures clearly share a common underlying pattern. They are for the most part identical, differing only in the name of the procedure, the function of <i>a</i> used to compute the term to be added, and the function that provides the next value of <i>a</i>. We could generate each of the procedures by filling in slots in the same template:
@@ -215,7 +214,7 @@ prompt("scheme-define-pi-sum");
          (&lt;name&gt; (&lt;next&gt; a) b))))
 </div>
 <script>
-prompt("scheme-sum-template");
+C.prompt("scheme-sum-template");
 </script>
 
 <p> The presence of such a common pattern is strong evidence that there is a useful abstraction waiting to be brought to the surface. Indeed, mathematicians long ago identified the abstraction of <em>summation of a series</em> and invented &ldquo;sigma notation,&rdquo; for example
@@ -236,7 +235,7 @@ $$
          (sum term (next a) next b))))
 </div>
 <script>
-prompt("scheme-define-sum");
+C.prompt("scheme-define-sum");
 </script>
 
 <p> Notice that sum takes as its arguments the lower and upper bounds <i>a</i> and <i>b</i> together with the procedures <tt>term</tt> and <tt>next</tt>. We can use <tt>sum</tt> just as we would any procedure. For example, we can use it (along with a procedure <tt>inc</tt> that increments its argument by 1) to define <tt>sum-cubes</tt>:
@@ -245,7 +244,7 @@ prompt("scheme-define-sum");
 (define (inc n) (+ n 1))
 </div>
 <script>
-prompt("scheme-define-inc");
+C.prompt("scheme-define-inc");
 </script>
 
 <div id="scheme-define-sum-cubes-sum">
@@ -254,8 +253,8 @@ prompt("scheme-define-inc");
   (sum cube a inc b))
 </div>
 <script>
-prompt("scheme-define-sum-cubes-sum");
-depsOf["scheme-define-sum-cubes-sum"] = ["scheme-define-cube", "scheme-define-inc", "scheme-define-sum"];
+C.prompt("scheme-define-sum-cubes-sum");
+C.deps_of["scheme-define-sum-cubes-sum"] = ["scheme-define-cube", "scheme-define-inc", "scheme-define-sum"];
 </script>
 
 <p> Using this, we can compute the sum of the cubes of the integers from 1 to 10:
@@ -264,8 +263,8 @@ depsOf["scheme-define-sum-cubes-sum"] = ["scheme-define-cube", "scheme-define-in
 (sum-cubes 1 10)
 </div>
 <script>
-prompt("scheme-sum-cubes-1-10");
-depsOf["scheme-sum-cubes-1-10"] = ["scheme-define-sum-cubes-sum"];
+C.prompt("scheme-sum-cubes-1-10");
+C.deps_of["scheme-sum-cubes-1-10"] = ["scheme-define-sum-cubes-sum"];
 </script>
 
 <p> With the aid of an identity procedure to compute the term, we can define <tt>sum-integers</tt> in terms of <tt>sum</tt>:
@@ -277,8 +276,8 @@ depsOf["scheme-sum-cubes-1-10"] = ["scheme-define-sum-cubes-sum"];
   (sum identity a inc b))
 </div>
 <script>
-prompt("scheme-define-sum-integers-sum");
-depsOf["scheme-define-sum-integers-sum"] = ["scheme-define-inc", "scheme-define-sum"];
+C.prompt("scheme-define-sum-integers-sum");
+C.deps_of["scheme-define-sum-integers-sum"] = ["scheme-define-inc", "scheme-define-sum"];
 </script>
 
 <p> Then we can add up the integers from 1 to 10:
@@ -287,8 +286,8 @@ depsOf["scheme-define-sum-integers-sum"] = ["scheme-define-inc", "scheme-define-
 (sum-integers 1 10)
 </div>
 <script>
-prompt("scheme-sum-integers-1-10");
-depsOf["scheme-sum-integers-1-10"] = ["scheme-define-sum-integers-sum"];
+C.prompt("scheme-sum-integers-1-10");
+C.deps_of["scheme-sum-integers-1-10"] = ["scheme-define-sum-integers-sum"];
 </script>
 
 <p> We can also define <tt>pi-sum</tt> in the same way:<a name="footnote_link_1-50" class="footnote_link" href="#footnote_1-50">50</a>
@@ -302,8 +301,8 @@ depsOf["scheme-sum-integers-1-10"] = ["scheme-define-sum-integers-sum"];
   (sum pi-term a pi-next b))
 </div>
 <script>
-prompt("scheme-define-pi-sum-sum");
-depsOf["scheme-define-pi-sum-sum"] = ["scheme-define-sum"];
+C.prompt("scheme-define-pi-sum-sum");
+C.deps_of["scheme-define-pi-sum-sum"] = ["scheme-define-sum"];
 </script>
 
 <p> Using these procedures, we can compute an approximation to $\pi$:
@@ -312,8 +311,8 @@ depsOf["scheme-define-pi-sum-sum"] = ["scheme-define-sum"];
 (* 8 (pi-sum 1 1000))
 </div>
 <script>
-prompt("scheme-pi-sum-pi");
-depsOf["scheme-pi-sum-pi"] = ["scheme-define-pi-sum-sum"];
+C.prompt("scheme-pi-sum-pi");
+C.deps_of["scheme-pi-sum-pi"] = ["scheme-define-pi-sum-sum"];
 </script>
 
 <p> Once we have <tt>sum,</tt> we can use it as a building block in formulating further concepts. For instance, the definite integral of a function <i>f</i> between the limits <i>a</i> and <i>b</i> can be approximated numerically using the formula
@@ -335,8 +334,8 @@ $$
      dx))
 </div>
 <script>
-prompt("scheme-define-integral");
-depsOf["scheme-define-integral"] = ["scheme-define-sum"];
+C.prompt("scheme-define-integral");
+C.deps_of["scheme-define-integral"] = ["scheme-define-sum"];
 </script>
 
 <p>
@@ -351,10 +350,10 @@ depsOf["scheme-define-integral"] = ["scheme-define-sum"];
 (integral cube 0 1 0.001)
 </div>
 <script>
-prompt("scheme-integral-cube");
-depsOf["scheme-integral-cube"] = ["scheme-define-cube", "scheme-define-integral"];
-prompt("scheme-integral-cube-finer");
-depsOf["scheme-integral-cube-finer"] = ["scheme-define-cube", "scheme-define-integral"];
+C.prompt("scheme-integral-cube");
+C.deps_of["scheme-integral-cube"] = ["scheme-define-cube", "scheme-define-integral"];
+C.prompt("scheme-integral-cube-finer");
+C.deps_of["scheme-integral-cube-finer"] = ["scheme-define-cube", "scheme-define-integral"];
 </script>
 
 <p> (The exact value of the integral of cube between $0$ and $1$ is $1/4$.)
@@ -374,8 +373,8 @@ $$
         0.000001))
 </div>
 <script>
-hidden_prompt("scheme-define-feq")
-</script>      
+C.hidden_prompt("scheme-define-feq")
+</script>
 
 <div id="scheme-ex-simpson-input">
 (define (simpson f a b n)
@@ -416,8 +415,8 @@ function simpson(f, a, b, n) {
   return sum * h / 3;
 }
 
-addOutput("scheme-ex-simpson-input");
-makeEditable("scheme-ex-simpson-input").setOption("onBlur", function() {
+C.add_output("scheme-ex-simpson-input");
+C.make_editable("scheme-ex-simpson-input").setOption("onBlur", function() {
 
   function ss(f, fl, a, b, n) {
     return "(feq (simpson {0} {1} {2} {3}) {4}) ".format(fl, a, b, n, simpson(f, a, b, n));
@@ -429,18 +428,18 @@ makeEditable("scheme-ex-simpson-input").setOption("onBlur", function() {
 
   polyl = "(lambda (x) (* 2 x))"
 
-  var code = editorOf["scheme-ex-simpson-input"].getValue() + "\n" + editorOf["scheme-define-feq"].getValue() + "\n" + editorOf["scheme-define-sum"].getValue() +
-             "(and " + ss(poly,polyl,2,3,10) + 
-                       ss(poly,polyl,4,5,8) + 
+  var code = C.editor_of["scheme-ex-simpson-input"].getValue() + "\n" + C.editor_of["scheme-define-feq"].getValue() + "\n" + C.editor_of["scheme-define-sum"].getValue() +
+             "(and " + ss(poly,polyl,2,3,10) +
+                       ss(poly,polyl,4,5,8) +
                        ss(poly,polyl,2,10,12) + ") "
 
-  eval_scheme(code).then(function(res){
+  C.eval_scheme(code).then(function(res){
     if (res[res.length - 1] === "true") {
-      $_("scheme-ex-simpson-input-output").empty().append($("<div class='right-answer'> \u2713 </div>"));
+      C.$_("scheme-ex-simpson-input-output").empty().append($("<div class='right-answer'> \u2713 </div>"));
     } else {
-      $_("scheme-ex-simpson-input-output").empty().append($("<div class='wrong-answer'> \u2717 </div>"));
+      C.$_("scheme-ex-simpson-input-output").empty().append($("<div class='wrong-answer'> \u2717 </div>"));
     }
-    $_("scheme-ex-simpson-input-output").append(res.slice(0,-1));
+    C.$_("scheme-ex-simpson-input-output").append(res.slice(0,-1));
   });
 });
 </script>
@@ -458,21 +457,21 @@ makeEditable("scheme-ex-simpson-input").setOption("onBlur", function() {
     (if &lt;??&gt;
         &lt;??&gt;
         (iter &lt;??&gt; &lt;??&gt;)))
-  (iter &lt;??&gt; &lt;??&gt;))  
+  (iter &lt;??&gt; &lt;??&gt;))
 </div>
 <script>
-addOutput("scheme-ex-sum-iter");
+C.add_output("scheme-ex-sum-iter");
 
-makeEditable("scheme-ex-sum-iter").setOption("onBlur", function() {
-  var code = editorOf["scheme-ex-sum-iter"].getValue() + "\n" +
+C.make_editable("scheme-ex-sum-iter").setOption("onBlur", function() {
+  var code = C.editor_of["scheme-ex-sum-iter"].getValue() + "\n" +
              "(= (sum (lambda (x) (* x x x)) 1 (lambda (n) (+ n 1)) 10) 3025)";
 
-  eval_scheme(code).then(function(res){
+  C.eval_scheme(code).then(function(res){
     if (res[res.length - 1] === "true") {
-      $_("scheme-ex-sum-iter-output").empty().append($("<div class='right-answer'> \u2713 </div>"));
+      C.$_("scheme-ex-sum-iter-output").empty().append($("<div class='right-answer'> \u2713 </div>"));
     } else {
-      $_("scheme-ex-sum-iter-output").empty().append($("<div class='wrong-answer'> \u2717 </div>"));
-      $_("scheme-ex-sum-iter-output").append(res);
+      C.$_("scheme-ex-sum-iter-output").empty().append($("<div class='wrong-answer'> \u2717 </div>"));
+      C.$_("scheme-ex-sum-iter-output").append(res);
     }
   });
 });
@@ -495,17 +494,17 @@ $$
   'your-code-here)
 </div>
 <script>
-addOutput("scheme-ex-define-product");
-makeEditable("scheme-ex-define-product").setOption("onBlur", function() {
-  var code = editorOf["scheme-ex-define-product"].getValue() + "\n" +
+C.add_output("scheme-ex-define-product");
+C.make_editable("scheme-ex-define-product").setOption("onBlur", function() {
+  var code = C.editor_of["scheme-ex-define-product"].getValue() + "\n" +
              "(= (product (lambda (x) (* x x)) 1 (lambda (n) (+ n 1)) 5) 14400)"
 
-  eval_scheme(code).then(function(res){
+  C.eval_scheme(code).then(function(res){
     if (res[res.length - 1] === "true") {
-      $_("scheme-ex-define-product-output").empty().append($("<div class='right-answer'> \u2713 </div>"));
+      C.$_("scheme-ex-define-product-output").empty().append($("<div class='right-answer'> \u2713 </div>"));
     } else {
-      $_("scheme-ex-define-product-output").empty().append($("<div class='wrong-answer'> \u2717 </div>"));
-      $_("scheme-ex-define-product-output").append(res);
+      C.$_("scheme-ex-define-product-output").empty().append($("<div class='wrong-answer'> \u2717 </div>"));
+      C.$_("scheme-ex-define-product-output").append(res);
     }
   });
 });
@@ -533,7 +532,7 @@ makeEditable("scheme-ex-define-product").setOption("onBlur", function() {
 (accumulate combiner null-value term a next b)
 </div>
 <script>
-no_output_frozen_prompt("scheme-accumulate-signature");
+C.no_output_frozen_prompt("scheme-accumulate-signature");
 </script>
 
 <p> Accumulate takes as arguments the same term and range specifications as sum and product, together with a combiner procedure (of two arguments) that specifies how the current term is to be combined with the accumulation of the preceding terms and a null-value that specifies what base value to use when the terms run out. Write accumulate and show how sum and product can both be defined as simple calls to accumulate. Write two procedures, one that generates a recursive process and one iterative.
@@ -543,17 +542,17 @@ no_output_frozen_prompt("scheme-accumulate-signature");
   'your-code-here)
 </div>
 <script>
-addOutput("scheme-ex-define-accumulate");
-makeEditable("scheme-ex-define-accumulate").setOption("onBlur", function() {
-  var code = editorOf["scheme-ex-define-accumulate"].getValue() + "\n" +
+C.add_output("scheme-ex-define-accumulate");
+C.make_editable("scheme-ex-define-accumulate").setOption("onBlur", function() {
+  var code = C.editor_of["scheme-ex-define-accumulate"].getValue() + "\n" +
              "(= (accumulate + 0 (lambda (x) (* x x)) 1 (lambda (n) (+ n 1)) 5) 55)"
 
-  eval_scheme(code).then(function(res){
+  C.eval_scheme(code).then(function(res){
     if (res[res.length - 1] === "true") {
-      $_("scheme-ex-define-accumulate-output").empty().append($("<div class='right-answer'> \u2713 </div>"));
+      C.$_("scheme-ex-define-accumulate-output").empty().append($("<div class='right-answer'> \u2713 </div>"));
     } else {
-      $_("scheme-ex-define-accumulate-output").empty().append($("<div class='wrong-answer'> \u2717 </div>"));
-      $_("scheme-ex-define-accumulate-output").append(res);
+      C.$_("scheme-ex-define-accumulate-output").empty().append($("<div class='wrong-answer'> \u2717 </div>"));
+      C.$_("scheme-ex-define-accumulate-output").append(res);
     }
   });
 });
@@ -571,24 +570,24 @@ makeEditable("scheme-ex-define-accumulate").setOption("onBlur", function() {
 <p>
 
 <div class="exercise">
-<p> <b> Exercise 1.33. </b> You can obtain an even more general version of accumulate (exercise 1.32) by introducing the notion of a <em>filter</em> on the terms to be combined. That is, combine only those terms derived from values in the range that satisfy a specified condition. The resulting filtered-accumulate abstraction takes the same arguments as accumulate, together with an additional predicate of one argument that specifies the filter. Write filtered-accumulate as a procedure. 
+<p> <b> Exercise 1.33. </b> You can obtain an even more general version of accumulate (exercise 1.32) by introducing the notion of a <em>filter</em> on the terms to be combined. That is, combine only those terms derived from values in the range that satisfy a specified condition. The resulting filtered-accumulate abstraction takes the same arguments as accumulate, together with an additional predicate of one argument that specifies the filter. Write filtered-accumulate as a procedure.
 
 <div id="scheme-ex-define-filtered-accumulate">
 (define (filtered-accumulate combiner null-value term a next b filter?)
   'your-code-here)
 </div>
 <script>
-addOutput("scheme-ex-define-filtered-accumulate");
-makeEditable("scheme-ex-define-filtered-accumulate").setOption("onBlur", function() {
-  var code = editorOf["scheme-ex-define-filtered-accumulate"].getValue() + "\n" +
+C.add_output("scheme-ex-define-filtered-accumulate");
+C.make_editable("scheme-ex-define-filtered-accumulate").setOption("onBlur", function() {
+  var code = C.editor_of["scheme-ex-define-filtered-accumulate"].getValue() + "\n" +
              "(= (filtered-accumulate + 0 (lambda (x) (* x x)) 1 (lambda (n) (+ n 1)) 5 (lambda (x) #t)) 55)"
 
-  eval_scheme(code).then(function(res){
+  C.eval_scheme(code).then(function(res){
     if (res[res.length] === "true") {
-      $_("scheme-ex-define-filtered-accumulate-output").empty().append($("<div class='right-answer'> \u2713 </div>"));
+      C.$_("scheme-ex-define-filtered-accumulate-output").empty().append($("<div class='right-answer'> \u2713 </div>"));
     } else {
-      $_("scheme-ex-define-filtered-accumulate-output").empty().append($("<div class='wrong-answer'> \u2717 </div>"));
-      $_("scheme-ex-define-filtered-accumulate-output").append(res);
+      C.$_("scheme-ex-define-filtered-accumulate-output").empty().append($("<div class='wrong-answer'> \u2717 </div>"));
+      C.$_("scheme-ex-define-filtered-accumulate-output").append(res);
     }
   });
 });
@@ -625,7 +624,7 @@ makeEditable("scheme-ex-define-filtered-accumulate").setOption("onBlur", functio
 (lambda (x) (+ x 4))
 </div>
 <script>
-prompt("scheme-lambda-plus-4");
+C.prompt("scheme-lambda-plus-4");
 </script>
 
 <p> and
@@ -634,7 +633,7 @@ prompt("scheme-lambda-plus-4");
 (lambda (x) (/ 1.0 (* x (+ x 2))))
 </div>
 <script>
-prompt("scheme-lambda-inv-poly");
+C.prompt("scheme-lambda-inv-poly");
 </script>
 
 <p> Then our pi-sum procedure can be expressed without defining any auxiliary procedures as
@@ -647,8 +646,8 @@ prompt("scheme-lambda-inv-poly");
        b))
 </div>
 <script>
-prompt("scheme-define-pi-sum-lambda");
-depsOf["scheme-define-pi-sum-lambda"] = ["scheme-define-sum"];
+C.prompt("scheme-define-pi-sum-lambda");
+C.deps_of["scheme-define-pi-sum-lambda"] = ["scheme-define-sum"];
 </script>
 
 <p> Again using lambda, we can write the integral procedure without having to define the auxiliary procedure add-dx:
@@ -662,8 +661,8 @@ depsOf["scheme-define-pi-sum-lambda"] = ["scheme-define-sum"];
      dx))
 </div>
 <script>
-prompt("scheme-define-integral-lambda");
-depsOf["scheme-define-integral-lambda"] = ["scheme-define-sum"];
+C.prompt("scheme-define-integral-lambda");
+C.deps_of["scheme-define-integral-lambda"] = ["scheme-define-sum"];
 </script>
 
 <p> In general, lambda is used to create procedures in the same way as define, except that no name is specified for the procedure:
@@ -672,7 +671,7 @@ depsOf["scheme-define-integral-lambda"] = ["scheme-define-sum"];
 (lambda (&lt;formal-parameters&gt;) &lt;body&gt;)
 </div>
 <script>
-makeStatic("scheme-lambda-syntax");
+C.make_static("scheme-lambda-syntax");
 </script>
 
 <p> The resulting procedure is just as much a procedure as one that is created using define. The only difference is that it has not been associated with any name in the environment. In fact,
@@ -681,7 +680,7 @@ makeStatic("scheme-lambda-syntax");
 (define (plus4 x) (+ x 4))
 </div>
 <script>
-prompt("scheme-define-plus4");
+C.prompt("scheme-define-plus4");
 </script>
 
 <p> is equivalent to
@@ -690,7 +689,7 @@ prompt("scheme-define-plus4");
 (define plus4 (lambda (x) (+ x 4)))
 </div>
 <script>
-prompt("scheme-define-plus4-lambda");
+C.prompt("scheme-define-plus4-lambda");
 </script>
 
 <p> We can read a lambda expression as follows:
@@ -706,8 +705,8 @@ prompt("scheme-define-plus4-lambda");
 ((lambda (x y z) (+ x y (square z))) 1 2 3)
 </div>
 <script>
-prompt("scheme-apply-lambda");
-depsOf["scheme-apply-lambda"] = ["scheme-define-square"];
+C.prompt("scheme-apply-lambda");
+C.deps_of["scheme-apply-lambda"] = ["scheme-define-square"];
 </script>
 
 <p> or, more generally, in any context where we would normally use a procedure name.<a name="footnote_link_1-53" class="footnote_link" href="#footnote_1-53">53</a>
@@ -722,7 +721,7 @@ $$
 
 <p> which we could also express as
 
-\begin{align} 
+\begin{align}
 a &amp;= 1 + xy \\
 b &amp;= 1 - y \\
 f(x,y) &amp;= xa^2 + yb + ab
@@ -740,8 +739,8 @@ f(x,y) &amp;= xa^2 + yb + ab
             (- 1 y)))
 </div>
 <script>
-prompt("scheme-define-f-helpers");
-depsOf["scheme-define-f-helpers"] = ["scheme-define-square"];
+C.prompt("scheme-define-f-helpers");
+C.deps_of["scheme-define-f-helpers"] = ["scheme-define-square"];
 </script>
 
 <p> Of course, we could use a <tt>lambda</tt> expression to specify an anonymous procedure for binding our local variables. The body of <tt>f</tt> then becomes a single call to that procedure:
@@ -756,8 +755,8 @@ depsOf["scheme-define-f-helpers"] = ["scheme-define-square"];
    (- 1 y)))
 </div>
 <script>
-prompt("scheme-define-f-lambda");
-depsOf["scheme-define-f-lambda"] = ["scheme-define-square"];
+C.prompt("scheme-define-f-lambda");
+C.deps_of["scheme-define-f-lambda"] = ["scheme-define-square"];
 </script>
 
 <p> This construct is so useful that there is a special form called <tt>let</tt> to make its use more convenient. Using <tt>let</tt>, the <tt>f</tt> procedure could be written as
@@ -771,8 +770,8 @@ depsOf["scheme-define-f-lambda"] = ["scheme-define-square"];
        (* a b))))
 </div>
 <script>
-prompt("scheme-define-f-let");
-depsOf["scheme-define-f-let"] = ["scheme-define-square"];
+C.prompt("scheme-define-f-let");
+C.deps_of["scheme-define-f-let"] = ["scheme-define-square"];
 </script>
 
 <p> The general form of a <tt>let</tt> expression is
@@ -785,7 +784,7 @@ depsOf["scheme-define-f-let"] = ["scheme-define-square"];
    &lt;body&gt;)
 </div>
 <script>
-makeStatic("scheme-let-syntax");
+C.make_static("scheme-let-syntax");
 </script>
 
 <p> which can be thought of as saying
@@ -801,14 +800,14 @@ in  &lt;body&gt;
 <p> The first part of the <tt>let</tt> expression is a list of name-expression pairs. When the <tt>let</tt> is evaluated, each name is associated with the value of the corresponding expression. The body of the <tt>let</tt> is evaluated with these names bound as local variables. The way this happens is that the <tt>let</tt> expression is interpreted as an alternate syntax for
 
 <div id="scheme-let-expanded-syntax">
-((lambda (&lt;var_1&gt; ... &lt;var_n&gt;) 
+((lambda (&lt;var_1&gt; ... &lt;var_n&gt;)
     &lt;body&gt;)
   &lt;exp_1&gt;
   ...
   &lt;exp_n&gt;)
 </div>
 <script>
-makeStatic("scheme-let-expanded-syntax");
+C.make_static("scheme-let-expanded-syntax");
 </script>
 
 <p> No new mechanism is required in the interpreter in order to provide local variables. A <tt>let</tt> expression is simply syntactic sugar for the underlying <tt>lambda</tt> application.
@@ -834,12 +833,12 @@ makeStatic("scheme-let-expanded-syntax");
 <p> is  <span id="scheme-let-close-output" class="output"> </span>
 
 <script>
-hidden_prompt("scheme-let-close-prelude");
+C.hidden_prompt("scheme-let-close-prelude");
 
-no_output_prompt("scheme-let-close", ["scheme-let-close-prelude"]);
-editorOf["scheme-let-close"].setOption("onBlur", function(){
-  eval_editor("scheme-let-close").then(function(res){
-    $_("scheme-let-close-output").empty().append($("<span>" + res + "</span>"));    
+C.no_output_prompt("scheme-let-close", ["scheme-let-close-prelude"]);
+C.editor_of["scheme-let-close"].setOption("onBlur", function(){
+  C.eval_editor("scheme-let-close").then(function(res){
+    C.$_("scheme-let-close-output").empty().append($("<span>" + res + "</span>"));
   });
 });
 </script>
@@ -854,7 +853,7 @@ editorOf["scheme-let-close"].setOption("onBlur", function(){
 (define x 2)
 </div>
 <script>
-hidden_prompt("scheme-let-shadow-prelude");
+C.hidden_prompt("scheme-let-shadow-prelude");
 </script>
 
 <div id="scheme-let-shadow">
@@ -864,10 +863,10 @@ hidden_prompt("scheme-let-shadow-prelude");
 </div>
 
 <script>
-no_output_prompt("scheme-let-shadow", ["scheme-let-shadow-prelude"]);
-editorOf["scheme-let-shadow"].setOption("onBlur", function(){
-  eval_editor("scheme-let-shadow").then(function(res){
-    $_("scheme-let-shadow-output").empty().append($("<span>" + res + "</span>"));    
+C.no_output_prompt("scheme-let-shadow", ["scheme-let-shadow-prelude"]);
+C.editor_of["scheme-let-shadow"].setOption("onBlur", function(){
+  C.eval_editor("scheme-let-shadow").then(function(res){
+    C.$_("scheme-let-shadow-output").empty().append($("<span>" + res + "</span>"));
   });
 });
 </script>
@@ -887,8 +886,8 @@ editorOf["scheme-let-shadow"].setOption("onBlur", function(){
      (* a b)))
 </div>
 <script>
-prompt("scheme-define-f-close-define");
-depsOf["scheme-define-f-close-define"] = ["scheme-define-square"];
+C.prompt("scheme-define-f-close-define");
+C.deps_of["scheme-define-f-close-define"] = ["scheme-define-square"];
 </script>
 
 <p> We prefer, however, to use <tt>let</tt> in situations like this and to use internal <tt>define</tt> only for internal procedures.<a name="footnote_link_1-54" class="footnote_link" href="#footnote_1-54">54</a>
@@ -901,7 +900,7 @@ depsOf["scheme-define-f-close-define"] = ["scheme-define-square"];
   (g 2))
 </div>
 <script>
-prompt("scheme-define-f-g2");
+C.prompt("scheme-define-f-g2");
 </script>
 
 <p> Then we have
@@ -910,14 +909,14 @@ prompt("scheme-define-f-g2");
 (f square)
 </div>
 <script>
-prompt("scheme-f-square", ["scheme-define-f-g2", "scheme-define-square"]);
+C.prompt("scheme-f-square", ["scheme-define-f-g2", "scheme-define-square"]);
 </script>
 
 <div id="scheme-f-lambda-poly">
 (f (lambda (z) (* z (+ z 1))))
 </div>
 <script>
-prompt("scheme-f-lambda-poly", ["scheme-define-f-g2"]);
+C.prompt("scheme-f-lambda-poly", ["scheme-define-f-g2"]);
 </script>
 
 <p> What happens if we (perversely) ask the interpreter to evaluate the combination
@@ -925,7 +924,7 @@ prompt("scheme-f-lambda-poly", ["scheme-define-f-g2"]);
 
 <div id="scheme-ex-f-f-mcq"></div>
 <script>
-makeMCQ("scheme-ex-f-f-mcq", 
+C.make_MCQ("scheme-ex-f-f-mcq",
     ["An error occurs, because <tt>2</tt> is not a procedure."],
     ["It evaluates to <tt>(2 2)</tt>, which is <tt>4</tt>.",
      "The interpreter enters an infinite loop.",
@@ -949,7 +948,7 @@ makeMCQ("scheme-ex-f-f-mcq",
      2))
 </div>
 <script>
-hidden_prompt("scheme-define-average");
+C.hidden_prompt("scheme-define-average");
 </script>
 
 <div id="scheme-define-search">
@@ -965,8 +964,8 @@ hidden_prompt("scheme-define-average");
                 (else midpoint))))))
 </div>
 <script>
-prompt("scheme-define-search");
-depsOf["scheme-define-search"] = ["scheme-define-average", "scheme-define-close-enough"];
+C.prompt("scheme-define-search");
+C.deps_of["scheme-define-search"] = ["scheme-define-average", "scheme-define-close-enough"];
 </script>
 
 <p> We assume that we are initially given the function <em> f </em> together with points at which its values are negative and positive. We first compute the midpoint of the two given points. Next we check to see if the given interval is small enough, and if so we simply return the midpoint as our answer. Otherwise, we compute as a test value the value of <em> f </em> at the midpoint. If the test value is positive, then we continue the process with a new interval running from the original negative point to the midpoint. If the test value is negative, we continue with the interval from the midpoint to the positive point. Finally, there is the possibility that the test value is 0, in which case the midpoint is itself the root we are searching for.
@@ -978,7 +977,7 @@ depsOf["scheme-define-search"] = ["scheme-define-average", "scheme-define-close-
   (&lt; (abs (- x y)) 0.001))
 </div>
 <script>
-prompt("scheme-define-close-enough");
+C.prompt("scheme-define-close-enough");
 </script>
 
 <p> <tt>search</tt> is awkward to use directly, because we can accidentally give it points at which <em> f </em>'s values do not have the required sign, in which case we get a wrong answer. Instead we will use <tt>search</tt> via the following procedure, which checks to see which of the endpoints has a negative function value and which has a positive value, and calls the <tt>search</tt> procedure accordingly. If the function has the same sign on the two given points, the half-interval method cannot be used, in which case the procedure signals an error.<a name="footnote_link_1-56" class="footnote_link" href="#footnote_1-56">56</a>
@@ -991,7 +990,7 @@ prompt("scheme-define-close-enough");
   (> x 0))
 </div>
 <script>
-hidden_prompt("scheme-define-negative-positive")
+C.hidden_prompt("scheme-define-negative-positive")
 </script>
 
 <div id="scheme-define-half-interval-method">
@@ -1006,8 +1005,8 @@ hidden_prompt("scheme-define-negative-positive")
            (error "Values are not of opposite sign" a b)))))
 </div>
 <script>
-prompt("scheme-define-half-interval-method");
-depsOf["scheme-define-half-interval-method"] = ["scheme-define-search", "scheme-define-negative-positive"];
+C.prompt("scheme-define-half-interval-method");
+C.deps_of["scheme-define-half-interval-method"] = ["scheme-define-search", "scheme-define-negative-positive"];
 </script>
 
 <p> The following example uses the half-interval method to approximate pi as the root between 2 and 4 of sin(x) = 0:
@@ -1016,8 +1015,8 @@ depsOf["scheme-define-half-interval-method"] = ["scheme-define-search", "scheme-
 (half-interval-method sin 2.0 4.0)
 </div>
 <script>
-prompt("scheme-half-interval-method-sine");
-depsOf["scheme-half-interval-method-sine"] = ["scheme-define-half-interval-method"];
+C.prompt("scheme-half-interval-method-sine");
+C.deps_of["scheme-half-interval-method-sine"] = ["scheme-define-half-interval-method"];
 </script>
 
 <p> Here is another example, using the half-interval method to search for a root of the equation x<sup>3</sup> - 2x - 3 = 0 between 1 and 2:
@@ -1028,8 +1027,8 @@ depsOf["scheme-half-interval-method-sine"] = ["scheme-define-half-interval-metho
                       2.0)
 </div>
 <script>
-prompt("scheme-half-interval-method-poly");
-depsOf["scheme-half-interval-method-poly"] = ["scheme-define-half-interval-method"];
+C.prompt("scheme-half-interval-method-poly");
+C.deps_of["scheme-half-interval-method-poly"] = ["scheme-define-half-interval-method"];
 </script>
 
 <h4> Finding fixed points of functions </h4>
@@ -1056,7 +1055,7 @@ $$
   (try first-guess))
 </div>
 <script>
-prompt("scheme-define-fixed-point", ["scheme-define-close-enough"]);
+C.prompt("scheme-define-fixed-point", ["scheme-define-close-enough"]);
 </script>
 
 <p> For example, we can use this method to approximate the fixed point of the cosine function, starting with 1 as an initial approximation:<a name="footnote_link_1-57" class="footnote_link" href="#footnote_1-57">57</a>
@@ -1065,7 +1064,7 @@ prompt("scheme-define-fixed-point", ["scheme-define-close-enough"]);
 (fixed-point cos 1.0)
 </div>
 <script>
-prompt("scheme-fixed-point-cos", ["scheme-define-fixed-point"]);
+C.prompt("scheme-fixed-point-cos", ["scheme-define-fixed-point"]);
 </script>
 
 <p> Similarly, we can find a solution to the equation $y = sin(y) + cos(y)$:
@@ -1075,7 +1074,7 @@ prompt("scheme-fixed-point-cos", ["scheme-define-fixed-point"]);
              1.0)
 </div>
 <script>
-prompt("scheme-fixed-point-sin-cos", ["scheme-define-fixed-point"]);
+C.prompt("scheme-fixed-point-sin-cos", ["scheme-define-fixed-point"]);
 </script>
 
 <p> The fixed-point process is reminiscent of the process we used for finding square roots in section 1.1.7. Both are based on the idea of repeatedly improving a guess until the result satisfies some criterion. In fact, we can readily formulate the square-root computation as a fixed-point search. Computing the square root of some number $x$ requires finding a $y$ such that $y^2 = x$. Putting this equation into the equivalent form $y = x/y$, we recognize that we are looking for a fixed point of the function<a name="footnote_link_1-58" class="footnote_link" href="#footnote_1-58">58</a> $y \mapsto x/y$, and we can therefore try to compute square roots as
@@ -1086,7 +1085,7 @@ prompt("scheme-fixed-point-sin-cos", ["scheme-define-fixed-point"]);
                1.0))
 </div>
 <script>
-prompt("scheme-define-sqrt", ["scheme-define-fixed-point"]);
+C.prompt("scheme-define-sqrt", ["scheme-define-fixed-point"]);
 </script>
 
 <p> Unfortunately, this fixed-point search does not converge. Consider an initial guess $y_1$. The next guess is $y_2 = x/y_1$ and the next guess is $y_3 = x/y_2 = x/(x/y_1) = y_1$. This results in an infinite loop in which the two guesses $y_1$ and $y_2$ repeat over and over, oscillating about the answer.
@@ -1099,8 +1098,8 @@ prompt("scheme-define-sqrt", ["scheme-define-fixed-point"]);
                1.0))
 </div>
 <script>
-prompt("scheme-define-sqrt-average");
-depsOf["scheme-define-sqrt-average"] = ["scheme-define-fixed-point", "scheme-define-average"];
+C.prompt("scheme-define-sqrt-average");
+C.deps_of["scheme-define-sqrt-average"] = ["scheme-define-fixed-point", "scheme-define-average"];
 </script>
 
 <p> (Note that $y = \frac{1}{2}(y + \frac{x}{y})$ is a simple transformation of the equation $y = \frac{x}{y}$; to derive it, add $y$ to both sides of the equation and divide by $2$.)
@@ -1115,7 +1114,7 @@ depsOf["scheme-define-sqrt-average"] = ["scheme-define-fixed-point", "scheme-def
   (fixed-point 'your-answer-here))
 </div>
 <script>
-prompt("scheme-define-phi-fixed-point", ["scheme-define-fixed-point"]); //todo: mark this?
+C.prompt("scheme-define-phi-fixed-point", ["scheme-define-fixed-point"]); //todo: mark this?
 </script>
 
 </div>
@@ -1139,7 +1138,7 @@ prompt("scheme-define-phi-fixed-point", ["scheme-define-fixed-point"]); //todo: 
   (try first-guess))
 </div>
 <script>
-prompt("scheme-ex-define-printing-fixed-point", ["scheme-define-close-enough"]);
+C.prompt("scheme-ex-define-printing-fixed-point", ["scheme-define-close-enough"]);
 /*
 (define tolerance 0.00001)
 
@@ -1155,38 +1154,38 @@ prompt("scheme-ex-define-printing-fixed-point", ["scheme-define-close-enough"]);
           (try next))))
   (try first-guess))
 
-(fixed-point (lambda (x) 
-               (/ (+ x (/ (log 1000) (log x))) 
+(fixed-point (lambda (x)
+               (/ (+ x (/ (log 1000) (log x)))
                   2))
                1.1)
 */
 </script>
 
-</div> 
+</div>
 
 <p>
 
 <div class="exercise">
 <p> <b> Exercise 1.37. </b> An infinite continued fraction is an expression of the form
- 
+
 $$
-f = \cfrac{N_1}{D_1 + \cfrac{N_2}{D_2 + \cfrac{N_3}{D_3 + \cdots}}} 
+f = \cfrac{N_1}{D_1 + \cfrac{N_2}{D_2 + \cfrac{N_3}{D_3 + \cdots}}}
 $$
 
 <p> As an example, one can show that the infinite continued fraction expansion with the $N_i$ and the $D_i$ all equal to $1$ produces $\frac{1}{\phi}$, where $\phi$ is the golden ratio (described in section 1.2.2). One way to approximate an infinite continued fraction is to truncate the expansion after a given number of terms. Such a truncation &mdash; a so-called <em> k-term finite continued fraction </em> &mdash; has the form
 
 $$
-f = \cfrac{N_1}{D_1 + \cfrac{N_2}{\ddots + \cfrac{N_k}{D_k}}} 
+f = \cfrac{N_1}{D_1 + \cfrac{N_2}{\ddots + \cfrac{N_k}{D_k}}}
 $$
 
-<p> Suppose that <tt>n</tt> and <tt>d</tt> are procedures of one argument (the term index $i$ that return the $N_i$ and $D_i$ of the terms of the continued fraction. Define a procedure <tt>cont-frac</tt> such that evaluating <tt>(cont-frac n d k)</tt> computes the value of the $k$-term finite continued fraction. 
+<p> Suppose that <tt>n</tt> and <tt>d</tt> are procedures of one argument (the term index $i$ that return the $N_i$ and $D_i$ of the terms of the continued fraction. Define a procedure <tt>cont-frac</tt> such that evaluating <tt>(cont-frac n d k)</tt> computes the value of the $k$-term finite continued fraction.
 
 <div id="scheme-ex-define-cont-frac">
 (define (cont-frac n d k)
   'your-code-here)
 </div>
 <script>
-prompt("scheme-ex-define-cont-frac");
+C.prompt("scheme-ex-define-cont-frac");
 /*
 (define (cont-frac n d k)
   (define (frac i)
@@ -1207,7 +1206,7 @@ prompt("scheme-ex-define-cont-frac");
            k)
 </div>
 <script>
-prompt("scheme-test-cont-frac", ["scheme-ex-define-cont-frac"]);
+C.prompt("scheme-test-cont-frac", ["scheme-ex-define-cont-frac"]);
 </script>
 
 <p> for successive values of <tt>k</tt>. How large must you make <tt>k</tt> in order to get an approximation that is accurate to 4 decimal places?
@@ -1225,7 +1224,7 @@ prompt("scheme-test-cont-frac", ["scheme-ex-define-cont-frac"]);
 (cont-frac n d 10)
 </div>
 <script>
-prompt("scheme-ex-euler", ["scheme-ex-define-cont-frac"]);
+C.prompt("scheme-ex-euler", ["scheme-ex-define-cont-frac"]);
 /*
 (cont-frac (lambda (i) 1)
            (lambda (i)
@@ -1252,7 +1251,7 @@ $$
   'your-code-here)
 </div>
 <script>
-prompt("scheme-ex-define-tan-cf", ["scheme-ex-define-cont-frac"]);
+C.prompt("scheme-ex-define-tan-cf", ["scheme-ex-define-cont-frac"]);
 /*
 (define (square x) (* x x))
 
@@ -1285,7 +1284,7 @@ average of $x$ and $f(x)$.
   (lambda (x) (average x (f x))))
 </div>
 <script>
-prompt("scheme-define-average-damp", ["scheme-define-average"]);
+C.prompt("scheme-define-average-damp", ["scheme-define-average"]);
 </script>
 
 <p> <tt>average-damp</tt> is a procedure that takes as its argument a procedure f and returns as its value a procedure (produced by the lambda) that, when applied to a number <tt>x</tt>, produces the average of <tt>x</tt> and <tt>(f x)</tt>. For example, applying average-damp to the square procedure produces a procedure whose value at some number $x$ is the average of $x$ and $x^2$. Applying this resulting procedure to $10$ returns the average of $10$ and $100$, or $55$:<a name="footnote_link_1-59" class="footnote_link" href="#footnote_1-59">59</a>
@@ -1294,7 +1293,7 @@ prompt("scheme-define-average-damp", ["scheme-define-average"]);
 ((average-damp square) 10)
 </div>
 <script>
-prompt("scheme-average-damp-square-10", ["scheme-define-average-damp", "scheme-define-square"]);
+C.prompt("scheme-average-damp-square-10", ["scheme-define-average-damp", "scheme-define-square"]);
 </script>
 
 <p> Using <tt>average-damp</tt>, we can reformulate the square-root procedure as follows:
@@ -1305,8 +1304,8 @@ prompt("scheme-average-damp-square-10", ["scheme-define-average-damp", "scheme-d
                1.0))
 </div>
 <script>
-prompt("scheme-define-sqrt-average-damp");
-addDep("scheme-define-sqrt-average-damp", ["scheme-define-fixed-point", "scheme-define-average-damp"]);
+C.prompt("scheme-define-sqrt-average-damp");
+C.add_dep("scheme-define-sqrt-average-damp", ["scheme-define-fixed-point", "scheme-define-average-damp"]);
 </script>
 
 <p> Notice how this formulation makes explicit the three ideas in the method: fixed-point search, average damping, and the function $y \mapsto \frac{x}{y}$. It is instructive to compare this formulation of the square-root method with the original version given in section 1.1.7. Bear in mind that these procedures express the same process, and notice how much clearer the idea becomes when we express the process in terms of these abstractions. In general, there are many ways to formulate a process as a procedure. Experienced programmers know how to choose procedural formulations that are particularly perspicuous, and where useful elements of the process are exposed as separate entities that can be reused in other applications. As a simple example of reuse, notice that the cube root of $x$ is a fixed point of the function $y \mapsto $\frac{}{y^2}$, so we can immediately generalize our square-root procedure to one that extracts cube roots:<a name="footnote_link_1-60" class="footnote_link" href="#footnote_1-60">60</a>
@@ -1317,8 +1316,8 @@ addDep("scheme-define-sqrt-average-damp", ["scheme-define-fixed-point", "scheme-
                1.0))
 </div>
 <script>
-prompt("scheme-define-cube-root-average-damp");
-addDep("scheme-define-cube-root-average-damp", ["scheme-define-fixed-point", "scheme-define-average-damp", "scheme-define-square"]);
+C.prompt("scheme-define-cube-root-average-damp");
+C.add_dep("scheme-define-cube-root-average-damp", ["scheme-define-fixed-point", "scheme-define-average-damp", "scheme-define-square"]);
 </script>
 
 <h4> Newton's method </h4>
@@ -1346,7 +1345,7 @@ $$
        dx)))
 </div>
 <script>
-prompt("scheme-define-deriv");
+C.prompt("scheme-define-deriv");
 </script>
 
 <p> along with the definition
@@ -1355,7 +1354,7 @@ prompt("scheme-define-deriv");
 (define dx 0.00001)
 </div>
 <script>
-prompt("scheme-define-dx");
+C.prompt("scheme-define-dx");
 </script>
 
 <p> Like average-damp, deriv is a procedure that takes a procedure as argument and returns a procedure as value. For example, to approximate the derivative of $f(x) = x^3$ at $5$ (whose exact value is $75$) we can evaluate
@@ -1366,7 +1365,7 @@ prompt("scheme-define-dx");
 ((deriv cube) 5)
 </div>
 <script>
-prompt("scheme-deriv-cube", ["scheme-define-deriv", "scheme-define-dx"]);
+C.prompt("scheme-deriv-cube", ["scheme-define-deriv", "scheme-define-dx"]);
 </script>
 
 <p> With the aid of <tt>deriv</tt>, we can express Newton's method as a fixed-point process:
@@ -1380,7 +1379,7 @@ prompt("scheme-deriv-cube", ["scheme-define-deriv", "scheme-define-dx"]);
   (fixed-point (newton-transform g) guess))
 </div>
 <script>
-prompt("scheme-define-newton-transform", ["scheme-define-deriv", "scheme-define-dx", "scheme-define-fixed-point"]);
+C.prompt("scheme-define-newton-transform", ["scheme-define-deriv", "scheme-define-dx", "scheme-define-fixed-point"]);
 </script>
 
 <p> The newton-transform procedure expresses the formula at the beginning of this section, and newtons-method is readily defined in terms of this. It takes as arguments a procedure that computes the function for which we want to find a zero, together with an initial guess. For instance, to find the square root of x, we can use Newton's method to find a zero of the function y  y2 - x starting with an initial guess of 1.<a name="footnote_link_1-63" class="footnote_link" href="#footnote_1-63">63</a> This provides yet another form of the square-root procedure:
@@ -1391,7 +1390,7 @@ prompt("scheme-define-newton-transform", ["scheme-define-deriv", "scheme-define-
                   1.0))
 </div>
 <script>
-prompt("scheme-define-sqrt-newton", ["scheme-define-newton-transform", "scheme-define-square"]);
+C.prompt("scheme-define-sqrt-newton", ["scheme-define-newton-transform", "scheme-define-square"]);
 </script>
 
 <h4> Abstractions and first-class procedures </h4>
@@ -1403,8 +1402,8 @@ prompt("scheme-define-sqrt-newton", ["scheme-define-newton-transform", "scheme-d
   (fixed-point (transform g) guess))
 </div>
 <script>
-prompt("scheme-define-fixed-point-of-transform");
-addDep("scheme-define-fixed-point-of-transform", ["scheme-define-fixed-point"]);
+C.prompt("scheme-define-fixed-point-of-transform");
+C.add_dep("scheme-define-fixed-point-of-transform", ["scheme-define-fixed-point"]);
 </script>
 
 <p> This very general procedure takes as its arguments a procedure $g$ that computes some function, a procedure that transforms $g$, and an initial guess. The returned result is a fixed point of the transformed function.
@@ -1419,7 +1418,7 @@ addDep("scheme-define-fixed-point-of-transform", ["scheme-define-fixed-point"]);
                             1.0))
 </div>
 <script>
-prompt("scheme-define-sqrt-fixed-point-of-transform", ["scheme-define-fixed-point-of-transform", "scheme-define-average-damp"]);
+C.prompt("scheme-define-sqrt-fixed-point-of-transform", ["scheme-define-fixed-point-of-transform", "scheme-define-average-damp"]);
 </script>
 
 <p> Similarly, we can express the second square-root computation from this section (an instance of Newton's method that finds a fixed point of the Newton transform of $y \mapsto y^2 - x$) as
@@ -1431,7 +1430,7 @@ prompt("scheme-define-sqrt-fixed-point-of-transform", ["scheme-define-fixed-poin
                             1.0))
 </div>
 <script>
-prompt("scheme-define-sqrt-fixed-point-of-newton-transform", ["scheme-define-fixed-point-of-transform", "scheme-define-square", "scheme-define-newton-transform"]);
+C.prompt("scheme-define-sqrt-fixed-point-of-newton-transform", ["scheme-define-fixed-point-of-transform", "scheme-define-square", "scheme-define-newton-transform"]);
 </script>
 
 <p> We began section 1.3 with the observation that compound procedures are a crucial abstraction mechanism, because they permit us to express general methods of computing as explicit elements in our programming language. Now we've seen how higher-order procedures permit us to manipulate these general methods to create further abstractions.
@@ -1464,7 +1463,7 @@ expressions of the form
 (newtons-method (cubic a b c) 1)
 </div>
 <script>
-prompt("scheme-newtons-method-cubic", ["scheme-define-newton-transform"]);
+C.prompt("scheme-newtons-method-cubic", ["scheme-define-newton-transform"]);
 </script>
 
 <p> to approximate zeros of the cubic $x^3 + ax^2 + bx + c$.
@@ -1481,19 +1480,19 @@ prompt("scheme-newtons-method-cubic", ["scheme-define-newton-transform"]);
   'your-answer-here)
 </div>
 <script>
-makeEditable("scheme-ex-define-double");
-addOutput("scheme-ex-define-double");
-editorOf["scheme-ex-define-double"].setOption("onBlur", function(){
-  
-  var code = "{0} \n (= ((double (lambda (i) (+ 1 i))) 1) 3)".format(editorOf["scheme-ex-define-double"].getValue());
+C.make_editable("scheme-ex-define-double");
+C.add_output("scheme-ex-define-double");
+C.editor_of["scheme-ex-define-double"].setOption("onBlur", function(){
 
-  eval_scheme(code).then(function(res){
+  var code = "{0} \n (= ((double (lambda (i) (+ 1 i))) 1) 3)".format(C.editor_of["scheme-ex-define-double"].getValue());
+
+  C.eval_scheme(code).then(function(res){
     if (res[res.length - 1] === "true\n") {
-      $_("scheme-ex-define-double-output").empty().append($("<div class='right-answer'> \u2713 </div>"));
+      C.$_("scheme-ex-define-double-output").empty().append($("<div class='right-answer'> \u2713 </div>"));
     } else {
-      $_("scheme-ex-define-double-output").empty().append($("<div class='wrong-answer'> \u2717 </div>"));
+      C.$_("scheme-ex-define-double-output").empty().append($("<div class='wrong-answer'> \u2717 </div>"));
     }
-    $_("scheme-ex-define-double-output").append(res.slice(0,-1));
+    C.$_("scheme-ex-define-double-output").append(res.slice(0,-1));
   });
 });
 </script>
@@ -1504,7 +1503,7 @@ editorOf["scheme-ex-define-double"].setOption("onBlur", function(){
 (((double (double double)) inc) 5)
 </div>
 <script>
-answer("scheme-double-itered-inc", 21);
+C.answer("scheme-double-itered-inc", 21);
 </script>
 
 <p>
@@ -1513,27 +1512,27 @@ answer("scheme-double-itered-inc", 21);
 <p>
 
 <div class="exercise">
-<p> <b> Exercise 1.42. </b> Let f and g be two one-argument functions. The composition f after g is defined to be the function x f(g(x)). Define a procedure compose that implements composition. 
+<p> <b> Exercise 1.42. </b> Let f and g be two one-argument functions. The composition f after g is defined to be the function x f(g(x)). Define a procedure compose that implements composition.
 
 <div id="scheme-ex-define-compose">
 (define (compose f g)
   'your-answer-here)
 </div>
 <script>
-makeEditable("scheme-ex-define-compose");
-addOutput("scheme-ex-define-compose");
-editorOf["scheme-ex-define-compose"].setOption("onBlur", function(){
+C.make_editable("scheme-ex-define-compose");
+C.add_output("scheme-ex-define-compose");
+C.editor_of["scheme-ex-define-compose"].setOption("onBlur", function(){
 
-  var code = "{0} \n (define (square x) (* x x)) \n (= ((compose square square) 2) 16)".format(editorOf["scheme-ex-define-compose"].getValue());
+  var code = "{0} \n (define (square x) (* x x)) \n (= ((compose square square) 2) 16)".format(C.editor_of["scheme-ex-define-compose"].getValue());
 
-  eval_scheme(code).then(function(res){
+  C.eval_scheme(code).then(function(res){
     if (res[res.length - 1] === "true\n") {
-      $_("scheme-ex-define-compose-output").empty().append($("<div class='right-answer'> \u2713 </div>"));
+      C.$_("scheme-ex-define-compose-output").empty().append($("<div class='right-answer'> \u2713 </div>"));
     } else {
-      $_("scheme-ex-define-compose-output").empty().append($("<div class='wrong-answer'> \u2717 </div>"));
+      C.$_("scheme-ex-define-compose-output").empty().append($("<div class='wrong-answer'> \u2717 </div>"));
     }
-    $_("scheme-ex-define-compose-output").append(res.slice(0,-1));
-    compute("scheme-compose-square-inc")
+    C.$_("scheme-ex-define-compose-output").append(res.slice(0,-1));
+    C.compute("scheme-compose-square-inc")
   });
 });
 
@@ -1549,7 +1548,7 @@ editorOf["scheme-ex-define-compose"].setOption("onBlur", function(){
 ((compose square inc) 6)
 </div>
 <script>
-prompt("scheme-compose-square-inc", ["scheme-define-square", "scheme-define-inc", "scheme-ex-define-compose"]);
+C.prompt("scheme-compose-square-inc", ["scheme-define-square", "scheme-define-inc", "scheme-ex-define-compose"]);
 </script>
 
 <p> should return 49.
@@ -1565,20 +1564,20 @@ prompt("scheme-compose-square-inc", ["scheme-define-square", "scheme-define-inc"
   'your-answer-here)
 </div>
 <script>
-makeEditable("scheme-ex-define-repeated");
-addOutput("scheme-ex-define-repeated");
-editorOf["scheme-ex-define-repeated"].setOption("onBlur", function(){
+C.make_editable("scheme-ex-define-repeated");
+C.add_output("scheme-ex-define-repeated");
+C.editor_of["scheme-ex-define-repeated"].setOption("onBlur", function(){
 
-  var code = "{0} \n (define (square x) (* x x)) \n (= ((repeated square 2) 5) 625)".format(editorOf["scheme-ex-define-repeated"].getValue());
+  var code = "{0} \n (define (square x) (* x x)) \n (= ((repeated square 2) 5) 625)".format(C.editor_of["scheme-ex-define-repeated"].getValue());
 
-  eval_scheme(code).then(function(res){
+  C.eval_scheme(code).then(function(res){
     if (res[res.length - 1] === "true\n") {
-      $_("scheme-ex-define-repeated-output").empty().append($("<div class='right-answer'> \u2713 </div>"));
+      C.$_("scheme-ex-define-repeated-output").empty().append($("<div class='right-answer'> \u2713 </div>"));
     } else {
-      $_("scheme-ex-define-repeated-output").empty().append($("<div class='wrong-answer'> \u2717 </div>"));
+      C.$_("scheme-ex-define-repeated-output").empty().append($("<div class='wrong-answer'> \u2717 </div>"));
     }
-    $_("scheme-ex-define-repeated-output").append(res.slice(0,-1));
-    compute("scheme-repeated-square-2-5")
+    C.$_("scheme-ex-define-repeated-output").append(res.slice(0,-1));
+    C.compute("scheme-repeated-square-2-5")
   });
 });
 
@@ -1599,7 +1598,7 @@ editorOf["scheme-ex-define-repeated"].setOption("onBlur", function(){
 ((repeated square 2) 5)
 </div>
 <script>
-frozen_prompt("scheme-repeated-square-2-5", ["scheme-ex-define-repeated", "scheme-define-square"]);
+C.frozen_prompt("scheme-repeated-square-2-5", ["scheme-ex-define-repeated", "scheme-define-square"]);
 </script>
 
 <p> and should return 625. Hint: You may find it convenient to use <tt>compose</tt> from Exercise 1-42.
@@ -1618,19 +1617,19 @@ frozen_prompt("scheme-repeated-square-2-5", ["scheme-ex-define-repeated", "schem
   'your-answer-here)
 </div>
 <script>
-makeEditable("scheme-ex-define-smooth");
-addOutput("scheme-ex-define-smooth");
-editorOf["scheme-ex-define-smooth"].setOption("onBlur", function(){
+C.make_editable("scheme-ex-define-smooth");
+C.add_output("scheme-ex-define-smooth");
+C.editor_of["scheme-ex-define-smooth"].setOption("onBlur", function(){
 
-  var code = "{0} \n {1} \n (feq ((smooth cos) 0) 0.99666944)".format(editorOf["scheme-define-feq"].getValue(), editorOf["scheme-ex-define-smooth"].getValue());
+  var code = "{0} \n {1} \n (feq ((smooth cos) 0) 0.99666944)".format(C.editor_of["scheme-define-feq"].getValue(), C.editor_of["scheme-ex-define-smooth"].getValue());
 
-  eval_scheme(code).then(function(res){
+  C.eval_scheme(code).then(function(res){
     if (res[res.length - 1] === "true\n") {
-      $_("scheme-ex-define-smooth-output").empty().append($("<div class='right-answer'> \u2713 </div>"));
+      C.$_("scheme-ex-define-smooth-output").empty().append($("<div class='right-answer'> \u2713 </div>"));
     } else {
-      $_("scheme-ex-define-smooth-output").empty().append($("<div class='wrong-answer'> \u2717 </div>"));
+      C.$_("scheme-ex-define-smooth-output").empty().append($("<div class='wrong-answer'> \u2717 </div>"));
     }
-    $_("scheme-ex-define-smooth-output").append(res.slice(0,-1));
+    C.$_("scheme-ex-define-smooth-output").append(res.slice(0,-1));
   });
 });
 
@@ -1656,7 +1655,7 @@ editorOf["scheme-ex-define-smooth"].setOption("onBlur", function(){
   'your-answer-here)
 </div>
 <script>
-prompt("scheme-ex-define-nth-root");
+C.prompt("scheme-ex-define-nth-root");
 </script>
 
 </div>
@@ -1671,7 +1670,7 @@ prompt("scheme-ex-define-nth-root");
   'your-answer-here)
 </div>
 <script>
-prompt("scheme-ex-define-iterative-improve");
+C.prompt("scheme-ex-define-iterative-improve");
 </script>
 
 </div>

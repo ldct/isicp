@@ -3,19 +3,18 @@
 <head>
 <meta charset="UTF-8">
 
-<link rel="stylesheet" type="text/css" href="web-worker-interpreter/deps/codemirror/lib/codemirror.css" />
+<link rel="stylesheet" type="text/css" href="coding-js/deps/codemirror/lib/codemirror.css" />
 <link rel="stylesheet" type="text/css" href="css/isicp.css" />
 <link rel="stylesheet" type="text/css" href="css/footnotes.css" />
 <link rel="stylesheet" type="text/css" href="css/theme.css" />
 
-<script src="js/helper.js"></script>
+<script src="js/TOC.js"></script>
 <script src="js/jquery.min.js"></script>
-<script src="web-worker-interpreter/deps/codemirror/lib/codemirror.js"></script>
-<script src="web-worker-interpreter/deps/codemirror/mode/scheme/scheme.js"></script>
-<script src="web-worker-interpreter/coding.js"> </script>
+<script src="coding-js/deps/codemirror/lib/codemirror.js"></script>
+<script src="coding-js/deps/codemirror/mode/scheme/scheme.js"></script>
+<script src="coding-js/coding.js"> </script>
 <script>
-  set_interpreter_path("web-worker-interpreter/");
-  set_language("scheme");
+  C = new CodingJS("coding-js/");
 </script>
 <script src="js/footnotes.js"></script>
 
@@ -46,13 +45,13 @@ MathJax.Hub.Config({
 <div id="sidebox">
   <div class="tab"></div>
   <div class="content">
-    
-    <p> 
-    
+
+    <p>
+
     <a href="index.html" class="navlink"> <img src='images/home.svg' width=32 height=32> </a>
     <span id="toc-link" class="navlink"> <img src='images/list.svg' width=32 height=32> </span>
     <span id="currently-editing-link" class="navlink"> <img src='images/file-edit.svg' width=32 height=32> </span>
-    
+
     <script src="http://cdn.jotfor.ms/static/feedback2.js?3.2.310" type="text/javascript">
     new JotformFeedback({
     formId:'40222623177447',
@@ -68,50 +67,50 @@ MathJax.Hub.Config({
     <a class="lightbox-40222623177447" style="cursor:pointer;color:blue;text-decoration:underline;"><img src='images/envelope.svg' width=32 height=32></a>
 
     <p>
-    
+
     <div id="currently-editing"> </div>
 
 
-    
+
     <script>
-    
+
     function hideAll() {
       $("#currently-editing").hide();
       $("#toc").hide();
     }
-    
+
     $("#currently-editing-link").click(function() {
       hideAll();
       $("#currently-editing").show();
     });
-    
+
     $("#toc-link").click(function() {
       hideAll();
       $("#toc").show();
     });
-    
+
     </script>
-    
+
     <div id="toc"> </div>
-    
+
     <p style='font-size:12px'> (Click on the left edge of this green box to hide it!)
-    
+
     <script>
     hideAll();
     $("#toc").show();
     </script>
-  
+
   </div>
 </div>
 
-<script> 
+<script>
 $('#sidebox .tab').toggle(function(){
     $('#sidebox').animate({'right':'0%'});
 }, function(){
     $('#sidebox').animate({'right':'-30%'});
 });
 
-$(document).ready(createTOC);
+$(document).ready(create_TOC);
 
 </script>
 
@@ -124,7 +123,7 @@ $(document).ready(createTOC);
 
 </span>
 <br> <br>
-<h2> Storage Allocation and Garbage Collection </h2> 
+<h2> Storage Allocation and Garbage Collection </h2>
 
 <p> In section 5-4, we will show how to implement a Scheme evaluator as a register machine. In order to simplify the discussion, we will assume that our register machines can be equipped with a <tt>list-structured memory</tt> , in which the basic operations for manipulating list-structured data are primitive. Postulating the existence of such a memory is a useful abstraction when one is focusing on the mechanisms of control in a Scheme interpreter, but this does not reflect a realistic view of the actual primitive data operations of contemporary computers. To obtain a more complete picture of how a Lisp system operates, we must investigate how list structure can be represented in a way that is compatible with conventional computer memories.
 
@@ -136,7 +135,7 @@ $(document).ready(createTOC);
 * 5-3-2::            Maintaining the Illusion of Infinite Memory
 @end menu
 
-<h3> Memory as Vectors </h3> 
+<h3> Memory as Vectors </h3>
 
 <p> A conventional computer memory can be thought of as an array of cubbyholes, each of which can contain a piece of information. Each cubbyhole has a unique name, called its <tt>address</tt> or <tt>location</tt> . Typical memory systems provide two primitive operations: one that fetches the data stored in a specified location and one that assigns new data to a specified location. Memory addresses can be incremented to support sequential access to some set of the cubbyholes. More generally, many important data operations require that memory addresses be treated as data, which can be stored in memory locations and manipulated in machine registers. The representation of list structure is one application of such <tt>address arithmetic</tt>.
 
@@ -156,7 +155,7 @@ sets the nth element of the vector to the designated value.
 
 <p> For example, if <tt>v</tt> is a vector, then <tt>(vector-ref v 5)</tt> gets the fifth entry in the vector <tt>v</tt> and <tt>(vector-set! v 5 7)</tt> changes the value of the fifth entry of the vector <tt>v</tt> to 7.@footnote{For completeness, we should specify a <tt>make-vector</tt> operation that constructs vectors. However, in the present application we will use vectors only to model fixed divisions of the computer memory.}  For computer memory, this access can be implemented through the use of address arithmetic to combine a <tt>base address</tt> that specifies the beginning location of a vector in memory with an <tt>index</tt> that specifies the offset of a particular element of the vector.
 
-<h4> Representing Lisp data </h4> 
+<h4> Representing Lisp data </h4>
 
 <p> We can use vectors to implement the basic pair structures required for a list-structured memory. Let us imagine that computer memory is divided into two vectors: <tt>the-cars</tt> and <tt>the-cdrs</tt>. We will represent list structure as follows: A pointer to a pair is an index into the two vectors. The <tt>car</tt> of the pair is the entry in <tt>the-cars</tt> with the designated index, and the <tt>cdr</tt> of the pair is the entry in <tt>the-cdrs</tt> with the designated index. We also need a representation for objects other than pairs (such as numbers and symbols) and a way to distinguish one kind of data from another. There are many methods of accomplishing this, but they all reduce to using <tt>typed pointers</tt> , that is, to extending the notion of ``pointer''to include information on data type.@footnote{This is precisely the same ``tagged data'' idea we introduced in Chapter 2 for dealing with generic operations. Here, however, the data types are included at the primitive machine level rather than constructed through the use of lists.} The data type enables the system to distinguish a pointer to a pair (which consists of the ``pair'' data type and an index into the memory vectors) from pointers to other kinds of data (which consist of some other data type and whatever is being used to represent data of that type). Two data objects are considered to be the same (<tt>eq?</tt>) if their pointers are identical.@footnote{Type information may be encoded in a variety of ways, depending on the details of the machine on which the Lisp system is to be implemented. The execution efficiency of Lisp programs will be strongly dependent on how cleverly this choice is made, but it is difficult to formulate general design rules for good choices. The most straightforward way to implement typed pointers is to allocate a fixed set of bits in each pointer to be a <tt>type field</tt> that encodes the data type. Important questions to be addressed in designing such a representation include the following: How many type bits are required?  How large must the vector indices be?  How efficiently can the primitive machine instructions be used to manipulate the type fields of pointers?  Machines that include special hardware for the efficient handling of type fields are said to have <tt>tagged architectures</tt> .} Figure 5-14 illustrates the use of this method to represent the list <tt>((1 2) 3 4)</tt>, whose box-and-pointer diagram is also shown. We use letter prefixes to denote the data-type information. Thus, a pointer to the pair with index 5 is denoted <tt>p5</tt>, the empty list is denoted by the pointer <tt>e0</tt>, and a pointer to the number 4 is denoted <tt>n4</tt>. In the box-and-pointer diagram, we have indicated at the lower left of each pair the vector index that specifies where the <tt>car</tt> and <tt>cdr</tt> of the pair are stored. The blank locations in <tt>the-cars</tt> and <tt>the-cdrs</tt> may contain parts of other list structures (not of interest here).
 
@@ -191,7 +190,7 @@ the-cdrs |    | p2 | p4 |    | e0 | p7 |    | e0 |    | ...
 
 <p> A symbol might be represented as a typed pointer that designates a sequence of the characters that form the symbol's printed representation. This sequence is constructed by the Lisp reader when the character string is initially encountered in input. Since we want two instances of a symbol to be recognized as the ``same'' symbol by <tt>eq?</tt> and we want <tt>eq?</tt> to be a simple test for equality of pointers, we must ensure that if the reader sees the same character string twice, it will use the same pointer (to the same sequence of characters) to represent both occurrences. To accomplish this, the reader maintains a table, traditionally called the <tt>obarray</tt> , of all the symbols it has ever encountered. When the reader encounters a character string and is about to construct a symbol, it checks the obarray to see if it has ever before seen the same character string. If it has not, it uses the characters to construct a new symbol (a typed pointer to a new character sequence) and enters this pointer in the obarray. If the reader has seen the string before, it returns the symbol pointer stored in the obarray. This process of replacing character strings by unique pointers is called <tt>interning</tt> symbols.
 
-<h4> Implementing the primitive list operations </h4> 
+<h4> Implementing the primitive list operations </h4>
 
 <p> Given the above representation scheme, we can replace each ``primitive'' list operation of a register machine with one or more primitive vector operations. We will use two registers, <tt>the-cars</tt> and <tt>the-cdrs</tt>, to identify the memory vectors, and will assume that <tt>vector-ref</tt> and <tt>vector-set!</tt> are available as primitive operations. We also assume that numeric operations on pointers (such as incrementing a pointer, using a pair pointer to index a vector, or adding two numbers) use only the index portion of the typed pointer.
 
@@ -203,7 +202,7 @@ the-cdrs |    | p2 | p4 |    | e0 | p7 |    | e0 |    | ...
 (assign <reg_1> (op cdr) (reg <reg_2>))
 </div>
 <script>
-prompt();
+C.prompt();
 </script>
 
 <p> if we implement these, respectively, as
@@ -214,7 +213,7 @@ prompt();
 (assign <reg_1> (op vector-ref) (reg the-cdrs) (reg <reg_2>))
 </div>
 <script>
-prompt();
+C.prompt();
 </script>
 
 <p> The instructions
@@ -225,7 +224,7 @@ prompt();
 (perform (op set-cdr!) (reg <reg_1>) (reg <reg_2>))
 </div>
 <script>
-prompt();
+C.prompt();
 </script>
 
 <p> are implemented as
@@ -238,7 +237,7 @@ prompt();
  (op vector-set!) (reg the-cdrs) (reg <reg_1>) (reg <reg_2>))
 </div>
 <script>
-prompt();
+C.prompt();
 </script>
 
 <p> <tt>Cons</tt> is performed by allocating an unused index and storing the arguments to <tt>cons</tt> in <tt>the-cars</tt> and <tt>the-cdrs</tt> at that indexed vector position. We presume that there is a special register, <tt>free</tt>, that always holds a pair pointer containing the next available index, and that we can increment the index part of that pointer to find the next free location.@footnote{There are other ways of finding free storage. For example, we could link together all the unused pairs into a <tt>free list</tt> . Our free locations are consecutive (and hence can be accessed by incrementing a pointer) because we are using a compacting garbage collector, as we will see in section 5-3-2.}  For example, the instruction
@@ -247,7 +246,7 @@ prompt();
 (assign <reg_1> (op cons) (reg <reg_2>) (reg <reg_3>))
 </div>
 <script>
-prompt();
+C.prompt();
 </script>
 
 <p> is implemented as the following sequence of vector operations:@footnote{This is essentially the implementation of <tt>cons</tt> in terms of <tt>set-car!</tt> and <tt>set-cdr!</tt>, as described in section 3-3-1. The operation <tt>get-new-pair</tt> used in that implementation is realized here by the <tt>free</tt> pointer.}
@@ -261,7 +260,7 @@ prompt();
 (assign free (op +) (reg free) (const 1))
 </div>
 <script>
-prompt();
+C.prompt();
 </script>
 
 <p> The <tt>eq?</tt> operation
@@ -270,12 +269,12 @@ prompt();
 (op eq?) (reg <reg_1>) (reg <reg_2>)
 </div>
 <script>
-prompt();
+C.prompt();
 </script>
 
 <p> simply tests the equality of all fields in the registers, and predicates such as <tt>pair?</tt>, <tt>null?</tt>, <tt>symbol?</tt>, and <tt>number?</tt> need only check the type field.
 
-<h4> Implementing stacks </h4> 
+<h4> Implementing stacks </h4>
 
 <p> Although our register machines use stacks, we need do nothing special here, since stacks can be modeled in terms of lists. The stack can be a list of the saved values, pointed to by a special register <tt>the-stack</tt>. Thus, <tt>(save <reg</tt>>) can be implemented as
 
@@ -283,7 +282,7 @@ prompt();
 (assign the-stack (op cons) (reg <reg>) (reg the-stack))
 </div>
 <script>
-prompt();
+C.prompt();
 </script>
 
 <p> Similarly, <tt>(restore <reg</tt>>) can be implemented as
@@ -293,7 +292,7 @@ prompt();
 (assign the-stack (op cdr) (reg the-stack))
 </div>
 <script>
-prompt();
+C.prompt();
 </script>
 
 <p> and <tt>(perform (op initialize-stack))</tt> can be implemented as
@@ -302,7 +301,7 @@ prompt();
 (assign the-stack (const ()))
 </div>
 <script>
-prompt();
+C.prompt();
 </script>
 
 <p> These operations can be further expanded in terms of the vector operations given above. In conventional computer architectures, however, it is usually advantageous to allocate the stack as a separate vector. Then pushing and popping the stack can be accomplished by incrementing or decrementing an index into that vector.
@@ -315,7 +314,7 @@ prompt();
 (define y (list x x))
 </div>
 <script>
-prompt();
+C.prompt();
 </script>
 
 
@@ -337,7 +336,7 @@ Recursive <tt>count-leaves</tt>:
                  (count-leaves (cdr tree))))))
 </div>
 <script>
-prompt();
+C.prompt();
 </script>
 </li>
 
@@ -354,7 +353,7 @@ Recursive <tt>count-leaves</tt> with explicit counter:
   (count-iter tree 0))
 </div>
 <script>
-prompt();
+C.prompt();
 </script>
 </li>
 </ul>
@@ -364,7 +363,7 @@ prompt();
 <p> <b>Exercise 5.22:</b> Exercise 3-12 of section 3-3-1 presented an <tt>append</tt> procedure that appends two lists to form a new list and an <tt>append!</tt> procedure that splices two lists together. Design a register machine to implement each of these procedures. Assume that the list-structure memory operations are available as primitive operations.
 </div>
 
-<h3> Maintaining the Illusion of Infinite Memory </h3> 
+<h3> Maintaining the Illusion of Infinite Memory </h3>
 
 <p> The representation method outlined in section 5-3-1 solves the problem of implementing list structure, provided that we have an infinite amount of memory. With a real computer we will eventually run out of free space in which to construct new pairs.@footnote{This may not be true eventually, because memories may get large enough so that it would be impossible to run out of free memory in the lifetime of the computer. For example, there are about 3*(10^13), microseconds in a year, so if we were to <tt>cons</tt> once per microsecond we would need about 10^15 cells of memory to build a machine that could operate for 30 years without running out of memory. That much memory seems absurdly large by today's standards, but it is not physically impossible. On the other hand, processors are getting faster and a future computer may have large numbers of processors operating in parallel on a single memory, so it may be possible to use up memory much faster than we have postulated.}  However, most of the pairs generated in a typical computation are used only to hold intermediate results. After these results are accessed, the pairs are no longer needed---they are <tt>garbage</tt> . For instance, the computation
 
@@ -372,7 +371,7 @@ prompt();
 (accumulate + 0 (filter odd? (enumerate-interval 0 n)))
 </div>
 <script>
-prompt();
+C.prompt();
 </script>
 
 
@@ -386,7 +385,7 @@ prompt();
 
 <p> The Minsky-Fenichel-Yochelson algorithm is the dominant algorithm in use for large-memory systems because it examines only the useful part of memory. This is in contrast to mark-sweep, in which the sweep phase must check all of memory. A second advantage of stop-and-copy is that it is a <tt>compacting</tt> garbage collector. That is, at the end of the garbage-collection phase the useful data will have been moved to consecutive memory locations, with all garbage pairs compressed out. This can be an extremely important performance consideration in machines with virtual memory, in which accesses to widely separated memory addresses may require extra paging operations.}
 
-<h4> Implementation of a stop-and-copy garbage collector </h4> 
+<h4> Implementation of a stop-and-copy garbage collector </h4>
 
 <p> We now use our register-machine language to describe the stop-and-copy algorithm in more detail. We will assume that there is a register called <tt>root</tt> that contains a pointer to a structure that eventually points at all accessible data. This can be arranged by storing the contents of all the machine registers in a pre-allocated list pointed at by <tt>root</tt> just before starting garbage collection.@footnote{This list of registers does not include the registers used by the storage-allocation system---<tt>root</tt>, <tt>the-cars</tt>, <tt>the-cdrs</tt>, and the other registers that will be introduced in this section.} We also assume that, in addition to the current working memory, there is free memory available into which we can copy the useful data. The current working memory consists of vectors whose base addresses are in registers called <tt>the-cars</tt> and <tt>the-cdrs</tt>, and the free memory is in registers called <tt>new-cars</tt> and <tt>new-cdrs</tt>.
 
@@ -407,7 +406,7 @@ the-cdrs |                                    |
                                             | free
 
          +------------------------------------+
-new-cars |                                    | free   
+new-cars |                                    | free
          |            free memory             | memory
 new-cdrs |                                    |
          +------------------------------------+
@@ -415,8 +414,8 @@ new-cdrs |                                    |
              Just after garbage collection
 
          +------------------------------------+
-new-cars |                                    | new  
-         |          discarded memory          | free  
+new-cars |                                    | new
+         |          discarded memory          | free
 new-cdrs |                                    | memory
          +------------------------------------+
 
@@ -448,7 +447,7 @@ reassign-root
   (goto (label gc-loop))
 </div>
 <script>
-prompt();
+C.prompt();
 </script>
 
 <p> In the main loop of the garbage collector we must determine whether there are any more objects to be scanned. We do this by testing whether the <tt>scan</tt> pointer is coincident with the <tt>free</tt> pointer. If the pointers are equal, then all accessible objects have been relocated, and we branch to <tt>gc-flip</tt>, which cleans things up so that we can continue the interrupted computation. If there are still pairs to be scanned, we call the relocate subroutine to relocate the <tt>car</tt> of the next pair (by placing the <tt>car</tt> pointer in <tt>old</tt>). The <tt>relocate-continue</tt> register is set up so that the subroutine will return to update the <tt>car</tt> pointer.
@@ -462,7 +461,7 @@ gc-loop
   (goto (label relocate-old-result-in-new))
 </div>
 <script>
-prompt();
+C.prompt();
 </script>
 
 <p> At <tt>update-car</tt>, we modify the <tt>car</tt> pointer of the pair being scanned, then proceed to relocate the <tt>cdr</tt> of the pair. We return to <tt>update-cdr</tt> when that relocation has been accomplished. After relocating and updating the <tt>cdr</tt>, we are finished scanning that pair, so we continue with the main loop.
@@ -482,7 +481,7 @@ update-cdr
   (goto (label gc-loop))
 </div>
 <script>
-prompt();
+C.prompt();
 </script>
 
 <p> The subroutine <tt>relocate-old-result-in-new</tt> relocates objects as follows: If the object to be relocated (pointed at by <tt>old</tt>) is not a pair, then we return the same pointer to the object unchanged (in <tt>new</tt>). (For example, we may be scanning a pair whose <tt>car</tt> is the number 4. If we represent the <tt>car</tt> by <tt>n4</tt>, as described in section 5-3-1, then we want the ``relocated'' <tt>car</tt> pointer to still be <tt>n4</tt>.)  Otherwise, we must perform the relocation. If the <tt>car</tt> position of the pair to be relocated contains a broken-heart tag, then the pair has in fact already been moved, so we retrieve the forwarding address (from the <tt>cdr</tt> position of the broken heart) and return this in <tt>new</tt>. If the pointer in <tt>old</tt> points at a yet-unmoved pair, then we move the pair to the first free cell in new memory (pointed at by <tt>free</tt>) and set up the broken heart by storing a broken-heart tag and forwarding address at the old location. <tt>Relocate-old-result-in-new</tt> uses a register <tt>oldcr</tt> to hold the <tt>car</tt> or the <tt>cdr</tt> of the object pointed at by <tt>old</tt>.@footnote{The garbage collector uses the low-level predicate <tt>pointer-to-pair?</tt> instead of the list-structure <tt>pair?</tt>  operation because in a real system there might be various things that are treated as pairs for garbage-collection purposes. For example, in a Scheme system that conforms to the @acronym{IEEE} standard a procedure object may be implemented as a special kind of ``pair'' that doesn't satisfy the <tt>pair?</tt> predicate. For simulation purposes, <tt>pointer-to-pair?</tt> can be implemented as <tt>pair?</tt>.}
@@ -517,7 +516,7 @@ already-moved
   (goto (reg relocate-continue))
 </div>
 <script>
-prompt();
+C.prompt();
 </script>
 
 <p> At the very end of the garbage-collection process, we interchange the role of old and new memories by interchanging pointers: interchanging <tt>the-cars</tt> with <tt>new-cars</tt>, and <tt>the-cdrs</tt> with <tt>new-cdrs</tt>. We will then be ready to perform another garbage collection the next time memory runs out.
@@ -532,7 +531,7 @@ gc-flip
   (assign new-cars (reg temp))
 </div>
 <script>
-prompt();
+C.prompt();
 </script>
 
 <br>

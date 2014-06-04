@@ -10,19 +10,19 @@
 
 </span>
 <br> <br>
-<h2> The Metacircular Evaluator </h2> 
+<h2> The Metacircular Evaluator </h2>
 
-Our evaluator for Lisp will be implemented as a Lisp program. It may seem circular to think about evaluating Lisp programs using an evaluator that is itself implemented in Lisp. However, evaluation is a process, so it is appropriate to describe the evaluation process using Lisp, which, after all, is our tool for describing processes.@footnote{Even so, there will remain important aspects of the evaluation process that are not elucidated by our evaluator. The most important of these are the detailed mechanisms by which procedures call other procedures and return values to their callers. We will address these issues in Chapter 5, where we take a closer look at the evaluation process by implementing the evaluator as a simple register machine.} An evaluator that is written in the same language that it evaluates is said to be <tt>metacircular</tt>  . 
+Our evaluator for Lisp will be implemented as a Lisp program. It may seem circular to think about evaluating Lisp programs using an evaluator that is itself implemented in Lisp. However, evaluation is a process, so it is appropriate to describe the evaluation process using Lisp, which, after all, is our tool for describing processes.@footnote{Even so, there will remain important aspects of the evaluation process that are not elucidated by our evaluator. The most important of these are the detailed mechanisms by which procedures call other procedures and return values to their callers. We will address these issues in Chapter 5, where we take a closer look at the evaluation process by implementing the evaluator as a simple register machine.} An evaluator that is written in the same language that it evaluates is said to be <tt>metacircular</tt>  .
 The metacircular evaluator is essentially a Scheme formulation of the
 environment model of evaluation described in section 3-2. Recall that
 the model has two basic parts:
 
 <ul>
 @item
-<p> To evaluate a combination (a compound expression other than a special form), evaluate the subexpressions and then apply the value of the operator subexpression to the values of the operand subexpressions. 
+<p> To evaluate a combination (a compound expression other than a special form), evaluate the subexpressions and then apply the value of the operator subexpression to the values of the operand subexpressions.
 
 @item
-<p> To apply a compound procedure to a set of arguments, evaluate the body of the procedure in a new environment. To construct this environment, extend the environment part of the procedure object by a frame in which the formal parameters of the procedure are bound to the arguments to which the procedure is applied. 
+<p> To apply a compound procedure to a set of arguments, evaluate the body of the procedure in a new environment. To construct this environment, extend the environment part of the procedure object by a frame in which the formal parameters of the procedure are bound to the arguments to which the procedure is applied.
 </ul>
 
 These two rules describe the essence of the evaluation process, a basic cycle in which expressions to be evaluated in environments are reduced to procedures to be applied to arguments, which in turn are reduced to new expressions to be evaluated in new environments, and so on, until we get down to symbols, whose values are looked up in the environment, and to primitive procedures, which are applied directly (see Figure 4-1).@footnote{If we grant ourselves the ability to apply primitives, then what remains for us to implement in the evaluator?  The job of the evaluator is not to specify the primitives of the language, but rather to provide the connective tissue---the means of combination and the means of abstraction---that binds a collection of primitives to form a language. Specifically:
@@ -58,7 +58,7 @@ described in section 4-1-1 (see Figure 4-1).
 * 4-1-7::            Separating Syntactic Analysis from Execution
 @end menu
 
-<h3> The Core of the Evaluator </h3> 
+<h3> The Core of the Evaluator </h3>
 
 <div class="exercise">
 <b>Figure 4.1:</b> The <tt>eval</tt>-<tt>apply</tt> cycle
@@ -92,7 +92,7 @@ Arguments   |  8     Eval          `888888888888888888) | Environment
 The evaluation process can be described as the interplay between two
 procedures: <tt>eval</tt> and <tt>apply</tt>.
 
-<h4> Eval </h4> 
+<h4> Eval </h4>
 
 <p> <tt>Eval</tt> takes as arguments an expression and an environment. It classifies the expression and directs its evaluation. <tt>Eval</tt> is structured as a case analysis of the syntactic type of the expression to be evaluated. In order to keep the procedure general, we express the determination of the type of an expression abstractly, making no commitment to any particular representation for the various types of expressions. Each type of expression has a predicate that tests for it and an abstract means for selecting its parts. This <tt>abstract syntax</tt> makes it easy to see how we can change the syntax of the language by using the same evaluator, but with a different collection of syntax procedures.
 
@@ -176,7 +176,7 @@ Here is the definition of <tt>eval</tt>:
          (error "Unknown expression type -- EVAL" exp))))
 </div>
 <script>
-prompt();
+C.prompt();
 </script>
 
 For clarity, <tt>eval</tt> has been implemented as a case analysis using
@@ -188,7 +188,7 @@ This allows a user to add new types of expressions that <tt>eval</tt> can
 distinguish, without modifying the definition of <tt>eval</tt> itself. (See
 Exercise 4-3.)
 
-<h4> Apply </h4> 
+<h4> Apply </h4>
 
 <tt>Apply</tt> takes two arguments, a procedure and a list of arguments to which
 the procedure should be applied. <tt>Apply</tt> classifies procedures into two
@@ -216,10 +216,10 @@ the definition of <tt>apply</tt>:
           "Unknown procedure type -- APPLY" procedure))))
 </div>
 <script>
-prompt();
+C.prompt();
 </script>
 
-<h4> Procedure arguments </h4> 
+<h4> Procedure arguments </h4>
 
 When <tt>eval</tt> processes a procedure application, it uses
 <tt>list-of-values</tt> to produce the list of arguments to which the procedure
@@ -242,10 +242,10 @@ procedures.}
             (list-of-values (rest-operands exps) env))))
 </div>
 <script>
-prompt();
+C.prompt();
 </script>
 
-<h4> Conditionals </h4> 
+<h4> Conditionals </h4>
 
 <tt>Eval-if</tt> evaluates the predicate part of an <tt>if</tt> expression in the
 given environment. If the result is true, <tt>eval-if</tt> evaluates the
@@ -258,7 +258,7 @@ consequent, otherwise it evaluates the alternative:
       (eval (if-alternative exp) env)))
 </div>
 <script>
-prompt();
+C.prompt();
 </script>
 
 The use of <tt>true?</tt> in <tt>eval-if</tt> highlights the issue of the
@@ -272,7 +272,7 @@ being implemented and the implementation language are the same. Contemplation
 of the meaning of <tt>true?</tt> here yields expansion of consciousness without
 the abuse of substance.}
 
-<h4> Sequences </h4> 
+<h4> Sequences </h4>
 
 <tt>Eval-sequence</tt> is used by <tt>apply</tt> to evaluate the sequence of
 expressions in a procedure body and by <tt>eval</tt> to evaluate the sequence of
@@ -287,10 +287,10 @@ which they occur. The value returned is the value of the final expression.
               (eval-sequence (rest-exps exps) env))))
 </div>
 <script>
-prompt();
+C.prompt();
 </script>
 
-<h4> Assignments and definitions </h4> 
+<h4> Assignments and definitions </h4>
 
 The following procedure handles assignments to variables. It calls <tt>eval</tt>
 to find the value to be assigned and transmits the variable and the resulting
@@ -305,7 +305,7 @@ environment.
   'ok)
 </div>
 <script>
-prompt();
+C.prompt();
 </script>
 
 
@@ -322,7 +322,7 @@ what the problem is and how to solve it in section 4-1-6.}
   'ok)
 </div>
 <script>
-prompt();
+C.prompt();
 </script>
 
 We have chosen here to return the symbol <tt>ok</tt> as the value of an
@@ -344,7 +344,7 @@ right regardless of the order of evaluation in the underlying Lisp. Also write
 a version of <tt>list-of-values</tt> that evaluates operands from right to left.
 </div>
 
-<h3> Representing Expressions </h3> 
+<h3> Representing Expressions </h3>
 
 The evaluator is reminiscent of the symbolic differentiation program discussed
 in section 2-3-2. Both programs operate on symbolic expressions. In
@@ -373,7 +373,7 @@ The only self-evaluating items are numbers and strings:
         (else false)))
 </div>
 <script>
-prompt();
+C.prompt();
 </script>
 
 @item
@@ -383,7 +383,7 @@ Variables are represented by symbols:
 (define (variable? exp) (symbol? exp))
 </div>
 <script>
-prompt();
+C.prompt();
 </script>
 
 @item
@@ -400,7 +400,7 @@ evaluator as <tt>(quote a)</tt>. See Exercise 2-55.}
 (define (text-of-quotation exp) (cadr exp))
 </div>
 <script>
-prompt();
+C.prompt();
 </script>
 
 <tt>Quoted?</tt> is defined in terms of the procedure <tt>tagged-list?</tt>, which
@@ -413,7 +413,7 @@ identifies lists beginning with a designated symbol:
       false))
 </div>
 <script>
-prompt();
+C.prompt();
 </script>
 
 @item
@@ -429,7 +429,7 @@ Assignments have the form <tt>(set! <var</tt>>
 (define (assignment-value exp) (caddr exp))
 </div>
 <script>
-prompt();
+C.prompt();
 </script>
 
 @item
@@ -439,7 +439,7 @@ Definitions have the form
 (define <var> <value>)
 </div>
 <script>
-prompt();
+C.prompt();
 </script>
 
 
@@ -450,7 +450,7 @@ or the form
   <body>)
 </div>
 <script>
-prompt();
+C.prompt();
 </script>
 
 The latter form (standard procedure definition) is syntactic sugar for
@@ -461,7 +461,7 @@ The latter form (standard procedure definition) is syntactic sugar for
     <body>))
 </div>
 <script>
-prompt();
+C.prompt();
 </script>
 
 The corresponding syntax procedures are the following:
@@ -482,7 +482,7 @@ The corresponding syntax procedures are the following:
                    (cddr exp)))) ; body
 </div>
 <script>
-prompt();
+C.prompt();
 </script>
 
 @item
@@ -496,7 +496,7 @@ prompt();
 (define (lambda-body exp) (cddr exp))
 </div>
 <script>
-prompt();
+C.prompt();
 </script>
 
 We also provide a constructor for <tt>lambda</tt> expressions, which is used by
@@ -507,7 +507,7 @@ We also provide a constructor for <tt>lambda</tt> expressions, which is used by
   (cons 'lambda (cons parameters body)))
 </div>
 <script>
-prompt();
+C.prompt();
 </script>
 
 @item
@@ -532,7 +532,7 @@ binding them in the global environment. See section 4-1-4.}
       'false))
 </div>
 <script>
-prompt();
+C.prompt();
 </script>
 
 We also provide a constructor for <tt>if</tt> expressions, to be used by
@@ -544,7 +544,7 @@ expressions:
   (list 'if predicate consequent alternative))
 </div>
 <script>
-prompt();
+C.prompt();
 </script>
 
 @item
@@ -570,7 +570,7 @@ evaluator in section 5-4.}
 (define (rest-exps seq) (cdr seq))
 </div>
 <script>
-prompt();
+C.prompt();
 </script>
 
 We also include a constructor <tt>sequence->exp</tt> (for use by <tt>cond->if</tt>)
@@ -586,7 +586,7 @@ necessary:
 (define (make-begin seq) (cons 'begin seq))
 </div>
 <script>
-prompt();
+C.prompt();
 </script>
 
 @item
@@ -608,12 +608,12 @@ expression types. The <tt>car</tt> of the expression is the operator, and the
 (define (rest-operands ops) (cdr ops))
 </div>
 <script>
-prompt();
+C.prompt();
 </script>
 
 </ul>
 
-<h4> Derived expressions </h4> 
+<h4> Derived expressions </h4>
 
 Some special forms in our language can be defined in terms of expressions
 involving other special forms, rather than being implemented directly. One
@@ -627,7 +627,7 @@ expression
       (else (- x)))
 </div>
 <script>
-prompt();
+C.prompt();
 </script>
 
 
@@ -643,7 +643,7 @@ to the problem of evaluating the following expression involving <tt>if</tt> and
         (- x)))
 </div>
 <script>
-prompt();
+C.prompt();
 </script>
 
 Implementing the evaluation of <tt>cond</tt> in this way simplifies the evaluator
@@ -689,17 +689,17 @@ it false.}
                      (expand-clauses rest))))))
 </div>
 <script>
-prompt();
+C.prompt();
 </script>
 
 Expressions (such as <tt>cond</tt>) that we choose to implement as syntactic
-transformations are called <tt>derived expressions</tt> 
+transformations are called <tt>derived expressions</tt>
 . <tt>Let</tt>
 expressions are also derived expressions (see Exercise
 4-6).@footnote{Practical Lisp systems provide a mechanism that allows a user
 to add new derived expressions and specify their implementation as syntactic
 transformations without modifying the evaluator. Such a user-defined
-transformation is called a <tt>macro</tt> 
+transformation is called a <tt>macro</tt>
 . Although it is easy to add an
 elementary mechanism for defining macros, the resulting language has subtle
 name-conflict problems. There has been much research on mechanisms for macro
@@ -780,7 +780,7 @@ the <tt>cond</tt> expression. For example
       (else false))
 </div>
 <script>
-prompt();
+C.prompt();
 </script>
 
 
@@ -797,7 +797,7 @@ expressions, because
   <body>)
 </div>
 <script>
-prompt();
+C.prompt();
 </script>
 
 
@@ -811,7 +811,7 @@ is equivalent to
  <exp_n>)
 </div>
 <script>
-prompt();
+C.prompt();
 </script>
 
 Implement a syntactic transformation <tt>let->combination</tt> that reduces
@@ -833,7 +833,7 @@ which all of the preceding bindings are visible. For example
   (* x z))
 </div>
 <script>
-prompt();
+C.prompt();
 </script>
 
 
@@ -847,7 +847,7 @@ is it sufficient to add a clause to <tt>eval</tt> whose action is
 (eval (let*->nested-lets exp) env)
 </div>
 <script>
-prompt();
+C.prompt();
 </script>
 
 
@@ -862,7 +862,7 @@ of <tt>let</tt> that has the form
 (let <var> <bindings> <body>)
 </div>
 <script>
-prompt();
+C.prompt();
 </script>
 
 The <bindings> and <body> are just as in ordinary <tt>let</tt>,
@@ -882,7 +882,7 @@ named <var>. For example, the iterative Fibonacci procedure (section
         (fib-iter (+ a b) a (- count 1)))))
 </div>
 <script>
-prompt();
+C.prompt();
 </script>
 
 Modify <tt>let->combination</tt> of Exercise 4-6 to also support named
@@ -907,7 +907,7 @@ and implement a new syntax for Scheme by modifying the procedures in this
 section, without changing <tt>eval</tt> or <tt>apply</tt>.
 </div>
 
-<h3> Evaluator Data Structures </h3> 
+<h3> Evaluator Data Structures </h3>
 
 In addition to defining the external syntax of expressions, the evaluator
 implementation must also define the data structures that the evaluator
@@ -915,7 +915,7 @@ manipulates internally, as part of the execution of a program, such as the
 representation of procedures and environments and the representation of true
 and false.
 
-<h4> Testing of predicates </h4> 
+<h4> Testing of predicates </h4>
 
 For conditionals, we accept anything to be true that is not the explicit
 <tt>false</tt> object.
@@ -928,10 +928,10 @@ For conditionals, we accept anything to be true that is not the explicit
   (eq? x false))
 </div>
 <script>
-prompt();
+C.prompt();
 </script>
 
-<h4> Representing procedures </h4> 
+<h4> Representing procedures </h4>
 
 To handle primitives, we assume that we have available the following
 procedures:
@@ -973,10 +973,10 @@ environments using the constructor <tt>make-procedure</tt>:
 (define (procedure-environment p) (cadddr p))
 </div>
 <script>
-prompt();
+C.prompt();
 </script>
 
-<h4> Operations on Environments </h4> 
+<h4> Operations on Environments </h4>
 
 The evaluator needs operations for manipulating environments. As explained in
 section 3-2, an environment is a sequence of frames, where each frame is
@@ -1026,7 +1026,7 @@ empty environment is simply the empty list.
 (define the-empty-environment '())
 </div>
 <script>
-prompt();
+C.prompt();
 </script>
 
 Each frame of an environment is represented as a pair of lists: a list of the
@@ -1050,7 +1050,7 @@ read.}
   (set-cdr! frame (cons val (cdr frame))))
 </div>
 <script>
-prompt();
+C.prompt();
 </script>
 
 To extend an environment by a new frame that associates variables with values,
@@ -1067,7 +1067,7 @@ variables does not match the number of values.
           (error "Too few arguments supplied" vars vals))))
 </div>
 <script>
-prompt();
+C.prompt();
 </script>
 
 To look up a variable in an environment, we scan the list of variables in the
@@ -1093,7 +1093,7 @@ environment, we signal an ``unbound variable'' error.
   (env-loop env))
 </div>
 <script>
-prompt();
+C.prompt();
 </script>
 
 To set a variable to a new value in a specified environment, we scan for the
@@ -1117,7 +1117,7 @@ value when we find it.
   (env-loop env))
 </div>
 <script>
-prompt();
+C.prompt();
 </script>
 
 To define a variable, we search the first frame for a binding for the variable,
@@ -1137,7 +1137,7 @@ If no such binding exists, we adjoin one to the first frame.
           (frame-values frame))))
 </div>
 <script>
-prompt();
+C.prompt();
 </script>
 
 The method described here is only one of many plausible ways to represent
@@ -1151,9 +1151,9 @@ conceptually simple, is not efficient and would not ordinarily be used in a
 production system.@footnote{The drawback of this representation (as well as the
 variant in Exercise 4-11) is that the evaluator may have to search
 through many frames in order to find the binding for a given variable. (Such
-an approach is referred to as <tt>deep binding</tt> 
+an approach is referred to as <tt>deep binding</tt>
 .)  One way to avoid this
-inefficiency is to make use of a strategy called <tt>lexical addressing</tt> 
+inefficiency is to make use of a strategy called <tt>lexical addressing</tt>
 ,
 which will be discussed in section 5-5-6.}
 
@@ -1184,7 +1184,7 @@ binding in the first frame of the environment?  Complete the specification and
 justify any choices you make.
 </div>
 
-<h3> Running the Evaluator as a Program </h3> 
+<h3> Running the Evaluator as a Program </h3>
 
 Given the evaluator, we have in our hands a description (expressed in Lisp) of
 the process by which Lisp expressions are evaluated. One advantage of
@@ -1219,7 +1219,7 @@ they can be used as variables in expressions to be evaluated.
 (define the-global-environment (setup-environment))
 </div>
 <script>
-prompt();
+C.prompt();
 </script>
 
 It does not matter how we represent the primitive procedure objects, so long as
@@ -1236,7 +1236,7 @@ implements that primitive.
 (define (primitive-implementation proc) (cadr proc))
 </div>
 <script>
-prompt();
+C.prompt();
 </script>
 
 <tt>Setup-environment</tt> will get the primitive names and implementation
@@ -1266,7 +1266,7 @@ the list of <tt>primitive-procedures</tt>.}
        primitive-procedures))
 </div>
 <script>
-prompt();
+C.prompt();
 </script>
 
 To apply a primitive procedure, we simply apply the implementation procedure to
@@ -1285,7 +1285,7 @@ instead that we have saved a reference to the underlying <tt>apply</tt> by doing
 (define apply-in-underlying-scheme apply)
 </div>
 <script>
-prompt();
+C.prompt();
 </script>
 
 
@@ -1298,16 +1298,16 @@ original version of <tt>apply</tt> under a different name.}
    (primitive-implementation proc) args))
 </div>
 <script>
-prompt();
+C.prompt();
 </script>
 
 For convenience in running the metacircular evaluator, we provide a
-<tt>driver loop</tt> 
+<tt>driver loop</tt>
  that models the read-eval-print loop of the underlying
-Lisp system. It prints a <tt>prompt</tt> 
+Lisp system. It prints a <tt>prompt</tt>
 , reads an input expression,
 evaluates this expression in the global environment, and prints the result. We
-precede each printed result by an <tt>output prompt</tt> 
+precede each printed result by an <tt>output prompt</tt>
  so as to distinguish
 the value of the expression from other output that may be printed.@footnote{The
 primitive procedure <tt>read</tt> waits for input from the user, and returns the
@@ -1336,7 +1336,7 @@ the symbol <tt>x</tt>.}
   (newline) (display string) (newline))
 </div>
 <script>
-prompt();
+C.prompt();
 </script>
 
 We use a special printing procedure, <tt>user-print</tt>, to avoid printing the
@@ -1353,7 +1353,7 @@ even contain cycles).
       (display object)))
 </div>
 <script>
-prompt();
+C.prompt();
 </script>
 
 Now all we need to do to run the evaluator is to initialize the global
@@ -1379,7 +1379,7 @@ ok
 (a b c d e f)
 </div>
 <script>
-prompt();
+C.prompt();
 </script>
 
 <div class="exercise">
@@ -1391,7 +1391,7 @@ primitive for the metacircular evaluator. When he tries it, things go terribly
 wrong. Explain why Louis's <tt>map</tt> fails even though Eva's works.
 </div>
 
-<h3> Data as Programs </h3> 
+<h3> Data as Programs </h3>
 
 In thinking about a Lisp program that evaluates Lisp expressions, an analogy
 might be helpful. One operational view of the meaning of a program is that a
@@ -1405,7 +1405,7 @@ For example, consider the familiar program to compute factorials:
       (* (factorial (- n 1)) n)))
 </div>
 <script>
-prompt();
+C.prompt();
 </script>
 
 We may regard this program as the description of a machine containing parts
@@ -1474,7 +1474,7 @@ machine.
 </div>
 
 From this perspective, our evaluator is seen to be a <tt>universal
-machine</tt> 
+machine</tt>
 . It mimics other machines when these are described as Lisp
 programs.@footnote{The fact that the machines are described in Lisp is
 inessential. If we give our evaluator a Lisp program that behaves as an
@@ -1485,14 +1485,14 @@ any Lisp program. The deep idea here is that any evaluator can emulate any
 other. Thus, the notion of ``what can in principle be computed'' (ignoring
 practicalities of time and memory required) is independent of the language or
 the computer, and instead reflects an underlying notion of
-<tt>computability</tt> 
+<tt>computability</tt>
 . This was first demonstrated in a clear way by Alan
 M. Turing (1912-1954), whose 1936 paper laid the foundations for theoretical
 computer science. In the paper, Turing presented a simple computational
-model---now known as a <tt>Turing machine</tt> 
+model---now known as a <tt>Turing machine</tt>
 ---and argued that any
 ``effective process'' can be formulated as a program for such a machine. (This
-argument is known as the <tt>Church-Turing thesis</tt> 
+argument is known as the <tt>Church-Turing thesis</tt>
 .)  Turing then
 implemented a universal machine, i.e., a Turing machine that behaves as an
 evaluator for Turing-machine programs. He used this framework to demonstrate
@@ -1511,7 +1511,7 @@ program.@footnote{Some people find it counterintuitive that an evaluator, which
 is implemented by a relatively simple procedure, can emulate programs that are
 more complex than the evaluator itself. The existence of a universal evaluator
 machine is a deep and wonderful property of computation. <tt>Recursion
-theory</tt> 
+theory</tt>
 , a branch of mathematical logic, is concerned with logical limits of
 computation. Douglas Hofstadter's beautiful book @cite{G@"odel, Escher, Bach}
 (1979) explores some of these ideas.}
@@ -1547,7 +1547,7 @@ in sections 4-1-3 and 4-1-4.} Thus,
 (eval '(* 5 5) user-initial-environment)
 </div>
 <script>
-prompt();
+C.prompt();
 </script>
 
 
@@ -1557,7 +1557,7 @@ and
 (eval (cons '* (list 5 5)) user-initial-environment)
 </div>
 <script>
-prompt();
+C.prompt();
 </script>
 
 
@@ -1585,7 +1585,7 @@ implement the following program:
       'halted))
 </div>
 <script>
-prompt();
+C.prompt();
 </script>
 
 Now consider evaluating the expression <tt>(try try)</tt> and show that any
@@ -1593,14 +1593,14 @@ possible outcome (either halting or running forever) violates the intended
 behavior of <tt>halts?</tt>.@footnote{Although we stipulated that <tt>halts?</tt>
 is given a procedure object, notice that this reasoning still applies even if
 <tt>halts?</tt> can gain access to the procedure's text and its environment.
-This is Turing's celebrated <tt>Halting Theorem</tt> 
+This is Turing's celebrated <tt>Halting Theorem</tt>
 , which gave the first
-clear example of a <tt>non-computable</tt> 
+clear example of a <tt>non-computable</tt>
  problem, i.e., a well-posed task
 that cannot be carried out as a computational procedure.}
 </div>
 
-<h3> Internal Definitions </h3> 
+<h3> Internal Definitions </h3>
 
 Our environment model of evaluation and our metacircular evaluator execute
 definitions in sequence, extending the environment frame one definition at a
@@ -1626,7 +1626,7 @@ Consider a procedure with internal definitions, such as
   <rest of body of <tt>f</tt>>)
 </div>
 <script>
-prompt();
+C.prompt();
 </script>
 
 Our intention here is that the name <tt>odd?</tt> in the body of the procedure
@@ -1679,7 +1679,7 @@ assignment. For example, the procedure
   <e3>)
 </div>
 <script>
-prompt();
+C.prompt();
 </script>
 
 
@@ -1694,7 +1694,7 @@ would be transformed into
     <e3>))
 </div>
 <script>
-prompt();
+C.prompt();
 </script>
 
 
@@ -1762,7 +1762,7 @@ for scanning out definitions that translates the example in the text to
     <e3>))
 </div>
 <script>
-prompt();
+C.prompt();
 </script>
 
 Here <tt>a</tt> and <tt>b</tt> are meant to represent new variable names, created
@@ -1776,7 +1776,7 @@ by the interpreter, that do not appear in the user's program. Consider the
   y)
 </div>
 <script>
-prompt();
+C.prompt();
 </script>
 
 Will this procedure work if internal definitions are scanned out as shown in
@@ -1797,7 +1797,7 @@ expression
   (f 10))
 </div>
 <script>
-prompt();
+C.prompt();
 </script>
 
 Ben asserts that the result should be obtained using the sequential rule for
@@ -1846,7 +1846,7 @@ the same meaning, as
     <rest of body of <tt>f</tt>>))
 </div>
 <script>
-prompt();
+C.prompt();
 </script>
 
 <tt>Letrec</tt> expressions, which have the form
@@ -1856,7 +1856,7 @@ prompt();
   <body>)
 </div>
 <script>
-prompt();
+C.prompt();
 </script>
 
 
@@ -1876,7 +1876,7 @@ example above, or the evaluation of 10 factorial with
   (fact 10))
 </div>
 <script>
-prompt();
+C.prompt();
 </script>
 
 <ul>
@@ -1908,7 +1908,7 @@ method for accomplishing this is much more subtle than Louis imagined. The
 following expression computes 10 factorial by applying a recursive factorial
 procedure:@footnote{This example illustrates a programming trick for
 formulating recursive procedures without using <tt>define</tt>. The most general
-trick of this sort is the Y <tt>operator</tt> 
+trick of this sort is the Y <tt>operator</tt>
 , which can be used to give a
 ``pure [lambda]-calculus'' implementation of recursion. (See Stoy 1977 for
 details on the [lambda] calculus, and Gabriel 1988 for an exposition of the
@@ -1925,7 +1925,7 @@ Y operator in Scheme.)}
  10)
 </div>
 <script>
-prompt();
+C.prompt();
 </script>
 
 <ul>
@@ -1950,7 +1950,7 @@ definitions:
   (even? x))
 </div>
 <script>
-prompt();
+C.prompt();
 </script>
 
 Fill in the missing expressions to complete an alternative definition of
@@ -1966,12 +1966,12 @@ Fill in the missing expressions to complete an alternative definition of
      (if (= n 0) false (ev? <??> <??> <??>)))))
 </div>
 <script>
-prompt();
+C.prompt();
 </script>
 </ul>
 </div>
 
-<h3> Separating Syntactic Analysis from Execution </h3> 
+<h3> Separating Syntactic Analysis from Execution </h3>
 
 The evaluator implemented above is simple, but it is very inefficient, because
 the syntactic analysis of expressions is interleaved with their execution.
@@ -1986,7 +1986,7 @@ definition of <tt>factorial</tt>:
       (* (factorial (- n 1)) n)))
 </div>
 <script>
-prompt();
+C.prompt();
 </script>
 
 Each time <tt>factorial</tt> is called, the evaluator must determine that the
@@ -2007,7 +2007,7 @@ also Feeley and Lapalme 1987) independently invented this technique in his
 master's thesis.} We split <tt>eval</tt>, which takes an expression and an
 environment, into two parts. The procedure <tt>analyze</tt> takes only the
 expression. It performs the syntactic analysis and returns a new procedure,
-the <tt>execution procedure</tt> 
+the <tt>execution procedure</tt>
 , that encapsulates the work to be done in
 executing the analyzed expression. The execution procedure takes an
 environment as its argument and completes the evaluation. This saves work
@@ -2021,7 +2021,7 @@ With the separation into analysis and execution, <tt>eval</tt> now becomes
   ((analyze exp) env))
 </div>
 <script>
-prompt();
+C.prompt();
 </script>
 
 The result of calling <tt>analyze</tt> is the execution procedure to be applied
@@ -2046,7 +2046,7 @@ procedures to which we dispatch perform only analysis, not full evaluation:
          (error "Unknown expression type -- ANALYZE" exp))))
 </div>
 <script>
-prompt();
+C.prompt();
 </script>
 
 Here is the simplest syntactic analysis procedure, which handles
@@ -2058,7 +2058,7 @@ its environment argument and just returns the expression:
   (lambda (env) exp))
 </div>
 <script>
-prompt();
+C.prompt();
 </script>
 
 For a quoted expression, we can gain a little efficiency by extracting the text
@@ -2071,7 +2071,7 @@ phase.
     (lambda (env) qval)))
 </div>
 <script>
-prompt();
+C.prompt();
 </script>
 
 Looking up a variable value must still be done in the execution phase, since
@@ -2087,7 +2087,7 @@ matches the variable.}
   (lambda (env) (lookup-variable-value exp env)))
 </div>
 <script>
-prompt();
+C.prompt();
 </script>
 
 <tt>Analyze-assignment</tt> also must defer actually setting the variable until
@@ -2113,7 +2113,7 @@ definitions.
       'ok)))
 </div>
 <script>
-prompt();
+C.prompt();
 </script>
 
 For <tt>if</tt> expressions, we extract and analyze the predicate, consequent,
@@ -2130,7 +2130,7 @@ and alternative at analysis time.
           (aproc env)))))
 </div>
 <script>
-prompt();
+C.prompt();
 </script>
 
 Analyzing a <tt>lambda</tt> expression also achieves a major gain in efficiency:
@@ -2144,7 +2144,7 @@ from evaluation of the <tt>lambda</tt> may be applied many times.
     (lambda (env) (make-procedure vars bproc env))))
 </div>
 <script>
-prompt();
+C.prompt();
 </script>
 
 Analysis of a sequence of expressions (as in a <tt>begin</tt> or the body of a
@@ -2170,7 +2170,7 @@ procedure with the environment as argument.
     (loop (car procs) (cdr procs))))
 </div>
 <script>
-prompt();
+C.prompt();
 </script>
 
 To analyze an application, we analyze the operator and operands and construct
@@ -2206,7 +2206,7 @@ for the body on the extended environment.
           proc))))
 </div>
 <script>
-prompt();
+C.prompt();
 </script>
 
 Our new evaluator uses the same data structures, syntax procedures, and
@@ -2237,7 +2237,7 @@ corresponding evaluation procedures (or <tt>eval</tt> clauses) in section
     (lambda (env) (execute-sequence procs env))))
 </div>
 <script>
-prompt();
+C.prompt();
 </script>
 
 Eva Lu Ator explains to Alyssa that the version in the text does more of the

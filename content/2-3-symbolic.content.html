@@ -10,11 +10,11 @@
 </span>
 
 <br> <br>
-<h2> Symbolic Data </h2> 
+<h2> Symbolic Data </h2>
 
 <p> All the compound data objects we have used so far were constructed ultimately from numbers. In this section we extend the representational capability of our language by introducing the ability to work with arbitrary symbols as data.
 
-<h3> Quotation </h3> 
+<h3> Quotation </h3>
 
 <p> If we can form compound data using symbols, we can have lists such as
 
@@ -24,7 +24,7 @@
 ((Norah 12) (Molly 9) (Anna 7) (Lauren 6) (Charlotte 4))
 </div>
 <script>
-no_output_prompt("scheme-list-eg");
+C.no_output_prompt("scheme-list-eg");
 </script>
 
 <p> Lists containing symbols can look just like the expressions of our language:
@@ -35,7 +35,7 @@ no_output_prompt("scheme-list-eg");
 (define (fact n) (if (= n 1) 1 (* n (fact (- n 1)))))
 </div>
 <script>
-no_output_prompt("scheme-list-exp-eg");
+C.no_output_prompt("scheme-list-exp-eg");
 </script>
 
 <p> In order to manipulate symbols we need a new element in our language: the ability to <tt>quote</tt> a data object. Suppose we want to construct the list <tt>(a b)</tt>. We can't accomplish this with <tt>(list a b)</tt>, because this expression constructs a list of the <tt>values</tt> of <tt>a</tt> and <tt>b</tt> rather than the symbols themselves. This issue is well known in the context of natural languages, where words and sentences may be regarded either as semantic entities or as character strings (syntactic entities). The common practice in natural languages is to use quotation marks to indicate that a word or a sentence is to be treated literally as a string of characters. For instance, the first letter of ``John'' is clearly ``J.''  If we tell somebody ``say your name aloud,'' we expect to hear that person's name. However, if we tell somebody ``say `your name' aloud,'' we expect to hear the words ``your name.''  Note that we are forced to nest quotation marks to describe what somebody else might say.<a name="footnote_link_2-32" class="footnote_link" href="#footnote_2-32">32</a>
@@ -49,7 +49,7 @@ no_output_prompt("scheme-list-exp-eg");
 (define b 2)
 </div>
 <script>
-prompt("scheme-define-a-b");
+C.prompt("scheme-define-a-b");
 </script>
 
 <p>
@@ -58,7 +58,7 @@ prompt("scheme-define-a-b");
 (list a b)
 </div>
 <script>
-prompt("scheme-list-a-b", ["scheme-define-a-b"]);
+C.prompt("scheme-list-a-b", ["scheme-define-a-b"]);
 </script>
 
 <p>
@@ -67,7 +67,7 @@ prompt("scheme-list-a-b", ["scheme-define-a-b"]);
 (list 'a 'b)
 </div>
 <script>
-prompt("scheme-list-qa-qb", ["scheme-define-a-b"]);
+C.prompt("scheme-list-qa-qb", ["scheme-define-a-b"]);
 </script>
 
 <p>
@@ -76,7 +76,7 @@ prompt("scheme-list-qa-qb", ["scheme-define-a-b"]);
 (list 'a b)
 </div>
 <script>
-prompt("scheme-list-qa-b", ["scheme-define-a-b"]);
+C.prompt("scheme-list-qa-b", ["scheme-define-a-b"]);
 </script>
 
 <p> Quotation also allows us to type in compound objects, using the conventional printed representation for lists:<a name="footnote_link_2-34" class="footnote_link" href="#footnote_2-34">34</a>
@@ -85,7 +85,7 @@ prompt("scheme-list-qa-b", ["scheme-define-a-b"]);
 (car '(a b c))
 </div>
 <script>
-prompt("scheme-car-qabc");
+C.prompt("scheme-car-qabc");
 </script>
 
 <p>
@@ -94,7 +94,7 @@ prompt("scheme-car-qabc");
 (cdr '(a b c))
 </div>
 <script>
-prompt("scheme-cdr-qabc");
+C.prompt("scheme-cdr-qabc");
 </script>
 
 <p> In keeping with this, we can obtain the empty list by evaluating <tt>'()</tt>, and thus dispense with the variable <tt>nil</tt>.
@@ -108,7 +108,7 @@ prompt("scheme-cdr-qabc");
         (else (memq item (cdr x)))))
 </div>
 <script>
-prompt("scheme-define-memq");
+C.prompt("scheme-define-memq");
 </script>
 
 <p> For example, the value of
@@ -117,7 +117,7 @@ prompt("scheme-define-memq");
 (memq 'apple '(pear banana prune))
 </div>
 <script>
-prompt("scheme-memq-apple-pear-banana-prune", ["scheme-define-memq"]);
+C.prompt("scheme-memq-apple-pear-banana-prune", ["scheme-define-memq"]);
 </script>
 
 <p> is false, whereas the value of
@@ -126,7 +126,7 @@ prompt("scheme-memq-apple-pear-banana-prune", ["scheme-define-memq"]);
 (memq 'apple '(x (apple sauce) y apple pear))
 </div>
 <script>
-prompt("scheme-memq-apple-apple-sauce-apple-pear", ["scheme-define-memq"]);
+C.prompt("scheme-memq-apple-apple-sauce-apple-pear", ["scheme-define-memq"]);
 </script>
 
 <p> is <tt>(apple pear)</tt>.
@@ -150,7 +150,7 @@ prompt("scheme-memq-apple-apple-sauce-apple-pear", ["scheme-define-memq"]);
 (memq 'red '(red shoes blue socks))
 </div>
 <script>
-prompt("scheme-ex-interpret-quotes");
+C.prompt("scheme-ex-interpret-quotes");
 </script>
 </div>
 
@@ -163,7 +163,7 @@ prompt("scheme-ex-interpret-quotes");
 (equal? '(this is a list) '(this is a list))
 </div>
 <script>
-prompt("scheme-equal?-this-is-a-list");
+C.prompt("scheme-equal?-this-is-a-list");
 </script>
 
 <p> is true, but
@@ -172,7 +172,7 @@ prompt("scheme-equal?-this-is-a-list");
 (equal? '(this is a list) '(this (is a) list))
 </div>
 <script>
-prompt("scheme-equal?-nested-this-is-a-list");
+C.prompt("scheme-equal?-nested-this-is-a-list");
 </script>
 
 
@@ -188,19 +188,19 @@ prompt("scheme-equal?-nested-this-is-a-list");
 (car ''abracadabra)
 </div>
 <script>
-no_output_frozen_prompt("scheme-car-qqabracadabra");
+C.no_output_frozen_prompt("scheme-car-qqabracadabra");
 </script>
 
 <p> To her surprise, the interpreter prints back <tt>quote</tt>. Explain.
 </div>
 
-<h3> Example: Symbolic Differentiation </h3> 
+<h3> Example: Symbolic Differentiation </h3>
 
 <p> As an illustration of symbol manipulation and a further illustration of data abstraction, consider the design of a procedure that performs symbolic differentiation of algebraic expressions. We would like the procedure to take as arguments an algebraic expression and a variable and to return the derivative of the expression with respect to the variable. For example, if the arguments to the procedure are ax^2 + bx + c and x, the procedure should return 2ax + b. Symbolic differentiation is of special historical significance in Lisp. It was one of the motivating examples behind the development of a computer language for symbol manipulation. Furthermore, it marked the beginning of the line of research that led to the development of powerful systems for symbolic mathematical work, which are currently being used by a growing number of applied mathematicians and physicists.
 
 <p> In developing the symbolic-differentiation program, we will follow the same strategy of data abstraction that we followed in developing the rational-number system of section 2-1-1. That is, we will first define a differentiation algorithm that operates on abstract objects such as ``sums,'' ``products,'' and ``variables'' without worrying about how these are to be represented. Only afterward will we address the representation problem.
 
-<h4> The differentiation program with abstract data </h4> 
+<h4> The differentiation program with abstract data </h4>
 
 <p> In order to keep things simple, we will consider a very simple symbolic-differentiation program that handles expressions that are built up using only the operations of addition and multiplication with two arguments. Differentiation of any such expression can be carried out by applying the following reduction rules:
 
@@ -248,7 +248,7 @@ $$
          (error "unknown expression type -- DERIV" exp))))
 </div>
 <script>
-prompt("scheme-define-deriv", 
+C.prompt("scheme-define-deriv",
   ["scheme-define-variablep",
    "scheme-define-same-variablep",
    "scheme-define-sump",
@@ -263,7 +263,7 @@ prompt("scheme-define-deriv",
 
 <p> This <tt>deriv</tt> procedure incorporates the complete differentiation algorithm. Since it is expressed in terms of abstract data, it will work no matter how we choose to represent algebraic expressions, as long as we design a proper set of selectors and constructors. This is the issue we must address next.
 
-<h4> Representing algebraic expressions </h4> 
+<h4> Representing algebraic expressions </h4>
 
 <p> We can imagine many ways to use list structure to represent algebraic expressions. For example, we could use lists of symbols that mirror the usual algebraic notation, representing $ax + b$ as the list <tt>(a * x + b)</tt> . However, one especially straightforward choice is to use the same parenthesized prefix notation that Lisp uses for combinations; that is, to represent $ax + b$ as <tt>(+ (* a x) b)</tt>. Then our data representation for the differentiation problem is as follows:
 
@@ -277,7 +277,7 @@ prompt("scheme-define-deriv",
 (define (variable? x) (symbol? x))
 </div>
 <script>
-prompt("scheme-define-variablep");
+C.prompt("scheme-define-variablep");
 </script>
 </li>
 
@@ -289,7 +289,7 @@ prompt("scheme-define-variablep");
   (and (variable? v1) (variable? v2) (eq? v1 v2)))
 </div>
 <script>
-prompt("scheme-define-same-variablep");
+C.prompt("scheme-define-same-variablep");
 </script>
 </li>
 
@@ -302,7 +302,7 @@ prompt("scheme-define-same-variablep");
 (define (make-product m1 m2) (list '* m1 m2))
 </div>
 <script>
-prompt("scheme-define-make-sum-product");
+C.prompt("scheme-define-make-sum-product");
 </script>
 </li>
 
@@ -314,7 +314,7 @@ prompt("scheme-define-make-sum-product");
   (and (pair? x) (eq? (car x) '+)))
 </div>
 <script>
-prompt("scheme-define-sump");
+C.prompt("scheme-define-sump");
 </script>
 </li>
 
@@ -325,7 +325,7 @@ prompt("scheme-define-sump");
 (define (addend s) (cadr s))
 </div>
 <script>
-prompt("scheme-define-addend");
+C.prompt("scheme-define-addend");
 </script>
 
 </li>
@@ -336,7 +336,7 @@ prompt("scheme-define-addend");
 (define (augend s) (caddr s))
 </div>
 <script>
-prompt("scheme-define-augend");
+C.prompt("scheme-define-augend");
 </script>
 </li>
 
@@ -348,7 +348,7 @@ prompt("scheme-define-augend");
   (and (pair? x) (eq? (car x) '*)))
 </div>
 <script>
-prompt("scheme-define-productp");
+C.prompt("scheme-define-productp");
 </script>
 </li>
 
@@ -360,7 +360,7 @@ prompt("scheme-define-productp");
 (define (multiplier p) (cadr p))
 </div>
 <script>
-prompt("scheme-define-multiplier");
+C.prompt("scheme-define-multiplier");
 </script>
 </li>
 
@@ -371,7 +371,7 @@ prompt("scheme-define-multiplier");
 (define (multiplicand p) (caddr p))
 </div>
 <script>
-prompt("scheme-define-multiplicand");
+C.prompt("scheme-define-multiplicand");
 </script>
 
 </ul>
@@ -382,7 +382,7 @@ prompt("scheme-define-multiplicand");
 (deriv '(+ x 3) 'x)
 </div>
 <script>
-prompt("scheme-deriv-x-3", ["scheme-define-deriv"]);
+C.prompt("scheme-deriv-x-3", ["scheme-define-deriv"]);
 </script>
 
 <p>
@@ -391,7 +391,7 @@ prompt("scheme-deriv-x-3", ["scheme-define-deriv"]);
 (deriv '(* x y) 'x)
 </div>
 <script>
-prompt("scheme-deriv-x-y", ["scheme-define-deriv"]);
+C.prompt("scheme-deriv-x-y", ["scheme-define-deriv"]);
 </script>
 
 <p>
@@ -400,7 +400,7 @@ prompt("scheme-deriv-x-y", ["scheme-define-deriv"]);
 (deriv '(* (* x y) (+ x 3)) 'x)
 </div>
 <script>
-prompt("scheme-deriv-x-y-x-3", ["scheme-define-deriv"]);
+C.prompt("scheme-deriv-x-y-x-3", ["scheme-define-deriv"]);
 </script>
 
 <p> The program produces answers that are correct; however, they are unsimplified. It is true that
@@ -422,7 +422,7 @@ $$
         (else (list '+ a1 a2))))
 </div>
 <script>
-prompt("scheme-define-simplifying-make-sum", ["scheme-define-equal-numberp"]);
+C.prompt("scheme-define-simplifying-make-sum", ["scheme-define-equal-numberp"]);
 </script>
 
 <p> This uses the procedure <tt>=number?</tt>, which checks whether an expression is equal to a given number:
@@ -432,7 +432,7 @@ prompt("scheme-define-simplifying-make-sum", ["scheme-define-equal-numberp"]);
   (and (number? exp) (= exp num)))
 </div>
 <script>
-prompt("scheme-define-equal-numberp");
+C.prompt("scheme-define-equal-numberp");
 </script>
 
 <p> Similarly, we will change <tt>make-product</tt> to build in the rules that 0 times anything is 0 and 1 times anything is the thing itself:
@@ -446,7 +446,7 @@ prompt("scheme-define-equal-numberp");
         (else (list '* m1 m2))))
 </div>
 <script>
-prompt("scheme-define-simplifying-make-product");
+C.prompt("scheme-define-simplifying-make-product");
 </script>
 
 <p> Here is how this version works on our three examples:
@@ -469,7 +469,7 @@ prompt("scheme-define-simplifying-make-product");
          (error "unknown expression type -- DERIV" exp))))
 </div>
 <script>
-hidden_prompt("scheme-define-simplifying-deriv", 
+C.hidden_prompt("scheme-define-simplifying-deriv",
   ["scheme-define-variablep",
    "scheme-define-same-variablep",
    "scheme-define-sump",
@@ -487,7 +487,7 @@ hidden_prompt("scheme-define-simplifying-deriv",
 (deriv '(+ x 3) 'x)
 </div>
 <script>
-prompt("scheme-test-simplifying-deriv-x-3", ["scheme-define-simplifying-deriv"]);
+C.prompt("scheme-test-simplifying-deriv-x-3", ["scheme-define-simplifying-deriv"]);
 </script>
 
 <p>
@@ -496,7 +496,7 @@ prompt("scheme-test-simplifying-deriv-x-3", ["scheme-define-simplifying-deriv"])
 (deriv '(* x y) 'x)
 </div>
 <script>
-prompt("scheme-test-simplifying-deriv-x-y", ["scheme-define-simplifying-deriv"]);
+C.prompt("scheme-test-simplifying-deriv-x-y", ["scheme-define-simplifying-deriv"]);
 </script>
 
 <p>
@@ -505,7 +505,7 @@ prompt("scheme-test-simplifying-deriv-x-y", ["scheme-define-simplifying-deriv"])
 (deriv '(* (* x y) (+ x 3)) 'x)
 </div>
 <script>
-prompt("scheme-test-simplifying-deriv-x-y-x-3", ["scheme-define-simplifying-deriv"]);
+C.prompt("scheme-test-simplifying-deriv-x-y-x-3", ["scheme-define-simplifying-deriv"]);
 </script>
 
 <p> Although this is quite an improvement, the third example shows that there is still a long way to go before we get a program that puts expressions into a form that we might agree is ``simplest.''  The problem of algebraic simplification is complex because, among other reasons, a form that may be simplest for one purpose may not be for another.
@@ -529,7 +529,7 @@ by adding a new clause to the <tt>deriv</tt> program and defining appropriate pr
 (deriv '(* x y (+ x 3)) 'x)
 </div>
 <script>
-prompt("scheme-ex-test-deriv-sum");
+C.prompt("scheme-ex-test-deriv-sum");
 </script>
 
 <p> Try to do this by changing only the representation for sums and products, without changing the <tt>deriv</tt> procedure at all. For example, the <tt>addend</tt> of a sum would be the first term, and the <tt>augend</tt> would be the sum of the rest of the terms.
@@ -542,7 +542,7 @@ prompt("scheme-ex-test-deriv-sum");
 
 <ul>
 <li>
-<p> Show how to do this in order to differentiate algebraic expressions presented in infix form, such as <tt>(x + (3 * (x + (y + 2))))</tt>. To simplify the task, assume that <tt>+</tt> and <tt>*</tt> always take two arguments and that expressions are fully parenthesized. 
+<p> Show how to do this in order to differentiate algebraic expressions presented in infix form, such as <tt>(x + (3 * (x + (y + 2))))</tt>. To simplify the task, assume that <tt>+</tt> and <tt>*</tt> always take two arguments and that expressions are fully parenthesized.
 </li>
 
 <li>
@@ -551,13 +551,13 @@ prompt("scheme-ex-test-deriv-sum");
 </ul>
 </div>
 
-<h3> Example: Representing Sets </h3> 
+<h3> Example: Representing Sets </h3>
 
 <p> In the previous examples we built representations for two kinds of compound data objects: rational numbers and algebraic expressions. In one of these examples we had the choice of simplifying (reducing) the expressions at either construction time or selection time, but other than that the choice of a representation for these structures in terms of lists was straightforward. When we turn to the representation of sets, the choice of a representation is not so obvious. Indeed, there are a number of possible representations, and they differ significantly from one another in several ways.
 
 <p> Informally, a set is simply a collection of distinct objects. To give a more precise definition we can employ the method of data abstraction. That is, we define ``set'' by specifying the operations that are to be used on sets. These are <tt>union-set</tt>, <tt>intersection-set</tt>, <tt>element-of-set?</tt>, and <tt>adjoin-set</tt>. <tt>Element-of-set?</tt> is a predicate that determines whether a given element is a member of a set. <tt>Adjoin-set</tt> takes an object and a set as arguments and returns a set that contains the elements of the original set and also the adjoined element. <tt>Union-set</tt> computes the union of two sets, which is the set containing each element that appears in either argument. <tt>Intersection-set</tt> computes the intersection of two sets, which is the set containing only elements that appear in both arguments. From the viewpoint of data abstraction, we are free to design any representation that implements these operations in a way consistent with the interpretations given above.<a name="footnote_link_2-37" class="footnote_link" href="#footnote_2-37">37</a>
 
-<h4> Sets as unordered lists </h4> 
+<h4> Sets as unordered lists </h4>
 
 <p> One way to represent a set is as a list of its elements in which no element appears more than once. The empty set is represented by the empty list. In this representation, <tt>element-of-set?</tt> is similar to the procedure <tt>memq</tt> of section 2-3-1. It uses <tt>equal?</tt>  instead of <tt>eq?</tt> so that the set elements need not be symbols:
 
@@ -568,7 +568,7 @@ prompt("scheme-ex-test-deriv-sum");
         (else (element-of-set? x (cdr set)))))
 </div>
 <script>
-prompt("scheme-define-element-of-setp");
+C.prompt("scheme-define-element-of-setp");
 </script>
 
 <p> Using this, we can write <tt>adjoin-set</tt>. If the object to be adjoined is already in the set, we just return the set. Otherwise, we use <tt>cons</tt> to add the object to the list that represents the set:
@@ -580,7 +580,7 @@ prompt("scheme-define-element-of-setp");
       (cons x set)))
 </div>
 <script>
-prompt("scheme-define-adjoin-set");
+C.prompt("scheme-define-adjoin-set");
 </script>
 
 <p> For <tt>intersection-set</tt> we can use a recursive strategy. If we know how to form the intersection of <tt>set2</tt> and the <tt>cdr</tt> of <tt>set1</tt>, we only need to decide whether to include the <tt>car</tt> of <tt>set1</tt> in this. But this depends on whether <tt>(car set1)</tt> is also in <tt>set2</tt>. Here is the resulting procedure:
@@ -594,22 +594,22 @@ prompt("scheme-define-adjoin-set");
         (else (intersection-set (cdr set1) set2))))
 </div>
 <script>
-prompt("scheme-define-intersection-set");
+C.prompt("scheme-define-intersection-set");
 </script>
 
 <p> In designing a representation, one of the issues we should be concerned with is efficiency. Consider the number of steps required by our set operations. Since they all use <tt>element-of-set?</tt>, the speed of this operation has a major impact on the efficiency of the set implementation as a whole. Now, in order to check whether an object is a member of a set, <tt>element-of-set?</tt> may have to scan the entire set. (In the worst case, the object turns out not to be in the set.)  Hence, if the set has n elements, <tt>element-of-set?</tt>  might take up to n steps. Thus, the number of steps required grows as $\Theta(n)$. The number of steps required by <tt>adjoin-set</tt>, which uses this operation, also grows as $\Theta(n)$. For <tt>intersection-set</tt>, which does an <tt>element-of-set?</tt> check for each element of <tt>set1</tt>, the number of steps required grows as the product of the sizes of the sets involved, or $\Theta(n^2)$ for two sets of size n. The same will be true of <tt>union-set</tt>.
 
 <div class="exercise">
-<p> <b>Exercise 2.59:</b> Implement the <tt>union-set</tt> operation for the unordered-list representation of sets. 
+<p> <b>Exercise 2.59:</b> Implement the <tt>union-set</tt> operation for the unordered-list representation of sets.
 </div>
 
 <p>
 
 <div class="exercise">
-<b>Exercise 2.60:</b> We specified that a set would be represented as a list with no duplicates. Now suppose we allow duplicates. For instance, the set <tt>{1,2,3}</tt> could be represented as the list <tt>(2 3 2 1 3 2 2)</tt>. Design procedures <tt>element-of-set?</tt>, <tt>adjoin-set</tt>, <tt>union-set</tt>, and <tt>intersection-set</tt> that operate on this representation. How does the efficiency of each compare with the corresponding procedure for the non-duplicate representation?  Are there applications for which you would use this representation in preference to the non-duplicate one? 
+<b>Exercise 2.60:</b> We specified that a set would be represented as a list with no duplicates. Now suppose we allow duplicates. For instance, the set <tt>{1,2,3}</tt> could be represented as the list <tt>(2 3 2 1 3 2 2)</tt>. Design procedures <tt>element-of-set?</tt>, <tt>adjoin-set</tt>, <tt>union-set</tt>, and <tt>intersection-set</tt> that operate on this representation. How does the efficiency of each compare with the corresponding procedure for the non-duplicate representation?  Are there applications for which you would use this representation in preference to the non-duplicate one?
 </div>
 
-<h4> Sets as ordered lists </h4> 
+<h4> Sets as ordered lists </h4>
 
 <p> One way to speed up our set operations is to change the representation so that the set elements are listed in increasing order. To do this, we need some way to compare two objects so that we can say which is bigger. For example, we could compare symbols lexicographically, or we could agree on some method for assigning a unique number to an object and then compare the elements by comparing the corresponding numbers. To keep our discussion simple, we will consider only the case where the set elements are numbers, so that we can compare elements using <tt>></tt> and <tt><</tt>. We will represent a set of numbers by listing its elements in increasing order. Whereas our first representation above allowed us to represent the set <tt>{1,3,6,10}</tt> by listing the elements in any order, our new representation allows only the list <tt>(1 3 6 10)</tt>.
 
@@ -623,7 +623,7 @@ prompt("scheme-define-intersection-set");
         (else (element-of-set? x (cdr set)))))
 </div>
 <script>
-prompt("scheme-define-ordered-element-of-setp");
+C.prompt("scheme-define-ordered-element-of-setp");
 </script>
 
 <p> How many steps does this save?  In the worst case, the item we are looking for may be the largest one in the set, so the number of steps is the same as for the unordered representation. On the other hand, if we search for items of many different sizes we can expect that sometimes we will be able to stop searching at a point near the beginning of the list and that other times we will still need to examine most of the list. On the average we should expect to have to examine about half of the items in the set. Thus, the average number of steps required will be about $\frac{n}{2}$. This is still $\Theta(n)$ growth, but it does save us, on the average, a factor of 2 in number of steps over the previous implementation.
@@ -645,7 +645,7 @@ prompt("scheme-define-ordered-element-of-setp");
                (intersection-set set1 (cdr set2)))))))
 </div>
 <script>
-prompt("scheme-define-ordered-intersection-set");
+C.prompt("scheme-define-ordered-intersection-set");
 </script>
 
 <p> To estimate the number of steps required by this process, observe that at each step we reduce the intersection problem to computing intersections of smaller sets---removing the first element from <tt>set1</tt> or <tt>set2</tt> or both. Thus, the number of steps required is at most the sum of the sizes of <tt>set1</tt> and <tt>set2</tt>, rather than the product of the sizes as with the unordered representation. This is $\Theta(n)$ growth rather than $\Theta(n^2)$ &ndash; a considerable speedup, even for sets of moderate size.
@@ -658,7 +658,7 @@ prompt("scheme-define-ordered-intersection-set");
 <p> <b>Exercise 2.62:</b> Give a $\Theta(n)$ implementation of <tt>union-set</tt> for sets represented as ordered lists.
 </div>
 
-<h4> Sets as binary trees </h4> 
+<h4> Sets as binary trees </h4>
 
 <p> We can do better than the ordered-list representation by arranging the set elements in the form of a tree. Each node of the tree holds one element of the set, called the ``entry'' at that node, and a link to each of two other (possibly empty) nodes. The ``left'' link points to elements smaller than the one at the node, and the ``right'' link to elements greater than the one at the node. Figure 2-16 shows some trees that represent the set <tt>{1,3,5,7,9,11}.</tt>  The same set may be represented by a tree in a number of different ways. The only thing we require for a valid representation is that all elements in the left subtree be smaller than the node entry and that all elements in the right subtree be larger.
 
@@ -682,7 +682,7 @@ prompt("scheme-define-ordered-intersection-set");
   (list entry left right))
 </div>
 <script>
-prompt("scheme-define-binary-entry-branch-make-tree");
+C.prompt("scheme-define-binary-entry-branch-make-tree");
 </script>
 
 <p> Now we can write the <tt>element-of-set?</tt> procedure using the strategy described above:
@@ -697,7 +697,7 @@ prompt("scheme-define-binary-entry-branch-make-tree");
          (element-of-set? x (right-branch set)))))
 </div>
 <script>
-prompt("scheme-define-binary-element-of-setp", ["scheme-define-entry-branch-make-tree"]);
+C.prompt("scheme-define-binary-element-of-setp", ["scheme-define-entry-branch-make-tree"]);
 </script>
 
 <p> Adjoining an item to a set is implemented similarly and also requires $\Theta(\log(n))$ steps. To adjoin an item $x$, we compare $x$ with the node entry to determine whether $x$ should be added to the right or to the left branch, and having adjoined $x$ to the appropriate branch we piece this newly constructed branch together with the original entry and the other branch. If $x$ is equal to the entry, we just return the node. If we are asked to adjoin $x$ to an empty tree, we generate a tree that has $x$ as the entry and empty right and left branches. Here is the procedure:
@@ -716,7 +716,7 @@ prompt("scheme-define-binary-element-of-setp", ["scheme-define-entry-branch-make
                     (adjoin-set x (right-branch set))))))
 </div>
 <script>
-prompt("scheme-define-binary-adjoin-set", ["scheme-define-binary-entry-branch-make-tree"]);
+C.prompt("scheme-define-binary-adjoin-set", ["scheme-define-binary-entry-branch-make-tree"]);
 </script>
 
 <p> The above claim that searching the tree can be performed in a logarithmic number of steps rests on the assumption that the tree is ``balanced,'' i.e., that the left and the right subtree of every tree have approximately the same number of elements, so that each subtree contains about half the elements of its parent. But how can we be certain that the trees we construct will be balanced?  Even if we start with a balanced tree, adding elements with <tt>adjoin-set</tt> may produce an unbalanced result. Since the position of a newly adjoined element depends on how the element compares with the items already in the set, we can expect that if we add elements ``randomly'' the tree will tend to be balanced on the average. But this is not a guarantee. For example, if we start with an empty set and adjoin the numbers 1 through 7 in sequence we end up with the highly unbalanced tree shown in Figure 2-17. In this tree all the left subtrees are empty, so it has no advantage over a simple ordered list. One way to solve this problem is to define an operation that transforms an arbitrary tree into a balanced tree with the same elements. Then we can perform this transformation after every few <tt>adjoin-set</tt> operations to keep our set in balance. There are also other ways to solve this problem, most of which involve designing new data structures for which searching and insertion both can be done in $\Theta(\log(n))$ steps.<a name="footnote_link_2-40" class="footnote_link" href="#footnote_2-40">40</a>
@@ -748,7 +748,7 @@ prompt("scheme-define-binary-adjoin-set", ["scheme-define-binary-entry-branch-ma
   (copy-to-list tree '()))
 </div>
 <script>
-prompt("scheme-define-list-to-tree-1-2");
+C.prompt("scheme-define-list-to-tree-1-2");
 </script>
 
 <ul>
@@ -788,7 +788,7 @@ prompt("scheme-define-list-to-tree-1-2");
                       remaining-elts))))))))
 </div>
 <script>
-prompt("scheme-define-list-to-tree");
+C.prompt("scheme-define-list-to-tree");
 </script>
 
 <ul>
@@ -805,10 +805,10 @@ prompt("scheme-define-list-to-tree");
 <p>
 
 <div class="exercise">
-<p> <b>Exercise 2.65:</b> Use the results of Exercise 2-63 and Exercise 2-64 to give $\Theta(n)$ implementations of <tt>union-set</tt> and <tt>intersection-set</tt> for sets implemented as (balanced) binary trees.<a name="footnote_link_2-41" class="footnote_link" href="#footnote_2-41">41</a> 
+<p> <b>Exercise 2.65:</b> Use the results of Exercise 2-63 and Exercise 2-64 to give $\Theta(n)$ implementations of <tt>union-set</tt> and <tt>intersection-set</tt> for sets implemented as (balanced) binary trees.<a name="footnote_link_2-41" class="footnote_link" href="#footnote_2-41">41</a>
 </div>
 
-<h4> Sets and information retrieval </h4> 
+<h4> Sets and information retrieval </h4>
 
 <p> We have examined options for using lists to represent sets and have seen how the choice of representation for a data object can have a large impact on the performance of the programs that use the data. Another reason for concentrating on sets is that the techniques discussed here appear again and again in applications involving information retrieval.
 
@@ -824,7 +824,7 @@ prompt("scheme-define-list-to-tree");
         (else (lookup given-key (cdr set-of-records)))))
 </div>
 <script>
-prompt("scheme-define-lookup");
+C.prompt("scheme-define-lookup");
 </script>
 
 <p> Of course, there are better ways to represent large sets than as unordered lists. Information-retrieval systems in which records have to be ``randomly accessed'' are typically implemented by a tree-based method, such as the binary-tree representation discussed previously. In designing such a system the methodology of data abstraction can be a great help. The designer can create an initial implementation using a simple, straightforward representation such as unordered lists. This will be unsuitable for the eventual system, but it can be useful in providing a ``quick and dirty'' data base with which to test the rest of the system. Later on, the data representation can be modified to be more sophisticated. If the data base is accessed in terms of abstract selectors and constructors, this change in representation will not require any changes to the rest of the system.
@@ -835,7 +835,7 @@ procedure for the case where the set of records is structured as a binary tree,
 ordered by the numerical values of the keys.
 </div>
 
-<h3> Example: Huffman Encoding Trees </h3> 
+<h3> Example: Huffman Encoding Trees </h3>
 
 <p> This section provides practice in the use of list structure and data abstraction to manipulate sets and trees. The application is to methods for representing data as sequences of ones and zeros (bits). For example, the ASCII standard code used to represent text in computers encodes each character as a sequence of seven bits. Using seven bits allows us to distinguish 2^(7), or 128, possible different characters. In general, if we want to distinguish n different symbols, we will need to use <tt>log</tt>_2 n bits per symbol. If all our messages are made up of the eight symbols A, B, C, D, E, F, G, and H, we can choose a code with three bits per character, for example
 
@@ -886,7 +886,7 @@ B 100 D 1011  F 1101  H 1111
 
 <p> To decode a bit sequence using a Huffman tree, we begin at the root and use the successive zeros and ones of the bit sequence to determine whether to move down the left or the right branch. Each time we come to a leaf, we have generated a new symbol in the message, at which point we start over from the root of the tree to find the next symbol. For example, suppose we are given the tree above and the sequence 10001010. Starting at the root, we move down the right branch, (since the first bit of the string is 1), then down the left branch (since the second bit is 0), then down the left branch (since the third bit is also 0). This brings us to the leaf for B, so the first symbol of the decoded message is B. Now we start again at the root, and we make a left move because the next bit in the string is 0. This brings us to the leaf for A. Then we start again at the root with the rest of the string 1010, so we move right, left, right, left and reach C. Thus, the entire message is BAC.
 
-<h4> Generating Huffman trees </h4> 
+<h4> Generating Huffman trees </h4>
 
 <p> Given an ``alphabet'' of symbols and their relative frequencies, how do we construct the ``best'' code?  (In other words, which tree will encode messages with the fewest bits?)  Huffman gave an algorithm for doing this and showed that the resulting code is indeed the best variable-length code for messages where the relative frequency of the symbols matches the frequencies with which the code was constructed. We will not prove this optimality of Huffman codes here, but we will show how Huffman trees are constructed.<a name="footnote_link_2-42" class="footnote_link" href="#footnote_2-42">42</a>
 
@@ -905,7 +905,7 @@ Final merge    {({A B C D E F G H} 17)}
 
 <p> The algorithm does not always specify a unique tree, because there may not be unique smallest-weight nodes at each step. Also, the choice of the order in which the two nodes are merged (i.e., which will be the right branch and which will be the left branch) is arbitrary.
 
-<h4> Representing Huffman trees </h4> 
+<h4> Representing Huffman trees </h4>
 
 <p> In the exercises below we will work with a system that uses Huffman trees to encode and decode messages and generates Huffman trees according to the algorithm outlined above. We will begin by discussing how trees are represented.
 
@@ -923,7 +923,7 @@ Final merge    {({A B C D E F G H} 17)}
 (define (weight-leaf x) (caddr x))
 </div>
 <script>
-prompt("scheme-define-leaf-selectors");
+C.prompt("scheme-define-leaf-selectors");
 </script>
 
 <p> A general tree will be a list of a left branch, a right branch, a set of symbols, and a weight. The set of symbols will be simply a list of the symbols, rather than some more sophisticated set representation. When we make a tree by merging two nodes, we obtain the weight of the tree as the sum of the weights of the nodes, and the set of symbols as the union of the sets of symbols for the nodes. Since our symbol sets are represented as lists, we can form the union by using the <tt>append</tt> procedure we defined in section 2-2-1:
@@ -936,7 +936,7 @@ prompt("scheme-define-leaf-selectors");
         (+ (weight left) (weight right))))
 </div>
 <script>
-prompt("scheme-define-make-code-tree");
+C.prompt("scheme-define-make-code-tree");
 </script>
 
 <p> If we make a tree in this way, we have the following selectors:
@@ -957,12 +957,12 @@ prompt("scheme-define-make-code-tree");
       (cadddr tree)))
 </div>
 <script>
-prompt("scheme-define-huffman-selectors");
+C.prompt("scheme-define-huffman-selectors");
 </script>
 
 <p> The procedures <tt>symbols</tt> and <tt>weight</tt> must do something slightly different depending on whether they are called with a leaf or a general tree. These are simple examples of <tt>generic procedures</tt> (procedures that can handle more than one kind of data), which we will have much more to say about in sections 2-4 and 2-5.
 
-<h4> The decoding procedure </h4> 
+<h4> The decoding procedure </h4>
 
 <p> The following procedure implements the decoding algorithm. It takes as arguments a list of zeros and ones, together with a Huffman tree.
 
@@ -985,12 +985,12 @@ prompt("scheme-define-huffman-selectors");
         (else (error "bad bit -- CHOOSE-BRANCH" bit))))
 </div>
 <script>
-prompt("scheme-define-decode");
+C.prompt("scheme-define-decode");
 </script>
 
 <p> The procedure <tt>decode-1</tt> takes two arguments: the list of remaining bits and the current position in the tree. It keeps moving ``down'' the tree, choosing a left or a right branch according to whether the next bit in the list is a zero or a one. (This is done with the procedure <tt>choose-branch</tt>.) When it reaches a leaf, it returns the symbol at that leaf as the next symbol in the message by <tt>cons</tt>ing it onto the result of decoding the rest of the message, starting at the root of the tree. Note the error check in the final clause of <tt>choose-branch</tt>, which complains if the procedure finds something other than a zero or a one in the input data.
 
-<h4> Sets of weighted elements </h4> 
+<h4> Sets of weighted elements </h4>
 
 <p> In our representation of trees, each non-leaf node contains a set of symbols, which we have represented as a simple list. However, the tree-generating algorithm discussed above requires that we also work with sets of leaves and trees, successively merging the two smallest items. Since we will be required to repeatedly find the smallest item in a set, it is convenient to use an ordered representation for this kind of set.
 
@@ -1004,7 +1004,7 @@ prompt("scheme-define-decode");
                     (adjoin-set x (cdr set))))))
 </div>
 <script>
-prompt("scheme-define-weighted-adjoin");
+C.prompt("scheme-define-weighted-adjoin");
 </script>
 
 <p> The following procedure takes a list of symbol-frequency pairs such as <tt>((A 4) (B 2) (C 1) (D 1))</tt> and constructs an initial ordered set of leaves, ready to be merged according to the Huffman algorithm:
@@ -1019,7 +1019,7 @@ prompt("scheme-define-weighted-adjoin");
                     (make-leaf-set (cdr pairs))))))
 </div>
 <script>
-prompt("scheme-define-make-leaf-set");
+C.prompt("scheme-define-make-leaf-set");
 </script>
 
 <p>
@@ -1038,7 +1038,7 @@ prompt("scheme-define-make-leaf-set");
 (define sample-message '(0 1 1 0 0 1 0 1 0 1 1 1 0))
 </div>
 <script>
-prompt("scheme-define-sample-tree");
+C.prompt("scheme-define-sample-tree");
 </script>
 
 <p> Use the <tt>decode</tt> procedure to decode the message, and give the result.
@@ -1057,7 +1057,7 @@ prompt("scheme-define-sample-tree");
               (encode (cdr message) tree))))
 </div>
 <script>
-prompt("scheme-define-encode");
+C.prompt("scheme-define-encode");
 </script>
 
 <p> <tt>encode-symbol</tt> is a procedure, which you must write, that returns the list of bits that encodes a given symbol according to a given tree. You should design <tt>encode-symbol</tt> so that it signals an error if the symbol is not in the tree at all. Test your procedure by encoding the result you obtained in Exercise 2-67 with the sample tree and seeing whether it is the same as the original sample message.
@@ -1073,10 +1073,10 @@ prompt("scheme-define-encode");
   (successive-merge (make-leaf-set pairs)))
 </div>
 <script>
-prompt("scheme-define-generate-huffman-tree");
+C.prompt("scheme-define-generate-huffman-tree");
 </script>
 
-<p> <tt>make-leaf-set</tt> is the procedure given above that transforms the list of pairs into an ordered set of leaves. <tt>Successive-merge</tt> is the procedure you must write, using <tt>make-code-tree</tt> to successively merge the smallest-weight elements of the set until there is only one element left, which is the desired Huffman tree. (This procedure is slightly tricky, but not really complicated. If you find yourself designing a complex procedure, then you are almost certainly doing something wrong. You can take significant advantage of the fact that we are using an ordered set representation.) 
+<p> <tt>make-leaf-set</tt> is the procedure given above that transforms the list of pairs into an ordered set of leaves. <tt>Successive-merge</tt> is the procedure you must write, using <tt>make-code-tree</tt> to successively merge the smallest-weight elements of the set until there is only one element left, which is the desired Huffman tree. (This procedure is slightly tricky, but not really complicated. If you find yourself designing a complex procedure, then you are almost certainly doing something wrong. You can take significant advantage of the fact that we are using an ordered set representation.)
 </div>
 
 <p>
@@ -1125,27 +1125,27 @@ Sha boom
 
 {{footnotes}}
 
-<div id="footnote_2-32" class="footnote"> 
+<div id="footnote_2-32" class="footnote">
 <p> <a href="#footnote_link_2-32" class="footnote_backlink">32</a> Allowing quotation in a language wreaks havoc with the ability to reason about the language in simple terms, because it destroys the notion that equals can be substituted for equals. For example, three is one plus two, but the word "three" is not the phrase "one plus two." Quotation is powerful because it gives us a way to build expressions that manipulate other expressions (as we will see when we write an interpreter in chapter 4). But allowing statements in a language that talk about other statements in that language makes it very difficult to maintain any coherent principle of what "equals can be substituted for equals" should mean. For example, if we know that the evening star is the morning star, then from the statement "the evening star is Venus" we can deduce "the morning star is Venus." However, given that "John knows that the evening star is Venus" we cannot infer that "John knows that the morning star is Venus."
 </div>
 
-<div id="footnote_2-33" class="footnote"> 
+<div id="footnote_2-33" class="footnote">
 <p> <a href="#footnote_link_2-33" class="footnote_backlink">33</a> The single quote is different from the double quote we have been using to enclose character strings to be printed. Whereas the single quote can be used to denote lists or symbols, the double quote is used only with character strings. In this book, the only use for character strings is as items to be printed.
 </div>
 
-<div id="footnote_2-34" class="footnote"> 
+<div id="footnote_2-34" class="footnote">
 <p> <a href="#footnote_link_2-34" class="footnote_backlink">34</a> Strictly, our use of the quotation mark violates the general rule that all compound expressions in our language should be delimited by parentheses and look like lists. We can recover this consistency by introducing a special form <tt>quote</tt>, which serves the same purpose as the quotation mark. Thus, we would type <tt>(quote a)</tt> instead of <tt>'a</tt>, and we would type <tt>(quote (a b c))</tt> instead of <tt>'(a b c)</tt>. This is precisely how the interpreter works. The quotation mark is just a single-character abbreviation for wrapping the next complete expression with quote to form <tt>(quote &lt;expression&gt;)</tt>. This is important because it maintains the principle that any expression seen by the interpreter can be manipulated as a data object. For instance, we could construct the expression <tt>(car '(a b c))</tt>, which is the same as <tt>(car (quote (a b c)))</tt>, by evaluating <tt>(list 'car (list 'quote '(a b c)))</tt>.
 </div>
 
-<div id="footnote_2-35" class="footnote"> 
+<div id="footnote_2-35" class="footnote">
 <p> <a href="#footnote_link_2-35" class="footnote_backlink">35</a> We can consider two symbols to be "the same" if they consist of the same characters in the same order. Such a definition skirts a deep issue that we are not yet ready to address: the meaning of "sameness" in a programming language. We will return to this in chapter 3 (section 3.1.3).
 </div>
 
-<div id="footnote_2-36" class="footnote"> 
+<div id="footnote_2-36" class="footnote">
 <p> <a href="#footnote_link_2-36" class="footnote_backlink">36</a> In practice, programmers use <tt>equal?</tt> to compare lists that contain numbers as well as symbols. Numbers are not considered to be symbols. The question of whether two numerically equal numbers (as tested by =) are also eq? is highly implementation-dependent. A better definition of <tt>equal?</tt> (such as the one that comes as a primitive in Scheme) would also stipulate that if $a$ and $b$ are both numbers, then $a$ and $b$ are <tt>equal?</tt> if they are numerically equal.
 </div>
 
-<div id="footnote_2-37" class="footnote"> 
+<div id="footnote_2-37" class="footnote">
 <p> <a href="#footnote_link_2-37" class="footnote_backlink">37</a> If we want to be more formal, we can specify "consistent with the interpretations given above" to mean that the operations satisfy a collection of rules such as these:
 
 <ul>
@@ -1163,23 +1163,23 @@ Sha boom
 </ul>
 </div>
 
-<div id="footnote_2-38" class="footnote"> 
+<div id="footnote_2-38" class="footnote">
 <p> <a href="#footnote_link_2-38" class="footnote_backlink">38</a> Halving the size of the problem at each step is the distinguishing characteristic of logarithmic growth, as we saw with the fast-exponentiation algorithm of section 1.2.4 and the half-interval search method of section 1.3.3.
 </div>
 
-<div id="footnote_2-39" class="footnote"> 
+<div id="footnote_2-39" class="footnote">
 <p> <a href="#footnote_link_2-39" class="footnote_backlink">39</a> We are representing sets in terms of trees, and trees in terms of lists &ndash; in effect, a data abstraction built upon a data abstraction. We can regard the procedures <tt>entry</tt>, <tt>left-branch</tt>, <tt>right-branch</tt>, and <tt>make-tree</tt> as a way of isolating the abstraction of a "binary tree" from the particular way we might wish to represent such a tree in terms of list structure.
 </div>
 
-<div id="footnote_2-40" class="footnote"> 
+<div id="footnote_2-40" class="footnote">
 <p> <a href="#footnote_link_2-40" class="footnote_backlink">40</a> Examples of such structures include B-trees and red-black trees. There is a large literature on data structures devoted to this problem. See Cormen, Leiserson, and Rivest 1990.
 </div>
 
-<div id="footnote_2-41" class="footnote"> 
+<div id="footnote_2-41" class="footnote">
 <p> <a href="#footnote_link_2-41" class="footnote_backlink">41</a> Exercises 2.63-2.65 are due to Paul Hilfinger.
 </div>
 
-<div id="footnote_2-42" class="footnote"> 
+<div id="footnote_2-42" class="footnote">
 <p> <a href="#footnote_link_2-42" class="footnote_backlink">42</a> See Hamming 1980 for a discussion of the mathematical properties of Huffman codes.
 </div>
 @@

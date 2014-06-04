@@ -3,19 +3,18 @@
 <head>
 <meta charset="UTF-8">
 
-<link rel="stylesheet" type="text/css" href="web-worker-interpreter/deps/codemirror/lib/codemirror.css" />
+<link rel="stylesheet" type="text/css" href="coding-js/deps/codemirror/lib/codemirror.css" />
 <link rel="stylesheet" type="text/css" href="css/isicp.css" />
 <link rel="stylesheet" type="text/css" href="css/footnotes.css" />
 <link rel="stylesheet" type="text/css" href="css/theme.css" />
 
-<script src="js/helper.js"></script>
+<script src="js/TOC.js"></script>
 <script src="js/jquery.min.js"></script>
-<script src="web-worker-interpreter/deps/codemirror/lib/codemirror.js"></script>
-<script src="web-worker-interpreter/deps/codemirror/mode/scheme/scheme.js"></script>
-<script src="web-worker-interpreter/coding.js"> </script>
+<script src="coding-js/deps/codemirror/lib/codemirror.js"></script>
+<script src="coding-js/deps/codemirror/mode/scheme/scheme.js"></script>
+<script src="coding-js/coding.js"> </script>
 <script>
-  set_interpreter_path("web-worker-interpreter/");
-  set_language("scheme");
+  C = new CodingJS("coding-js/");
 </script>
 <script src="js/footnotes.js"></script>
 
@@ -46,13 +45,13 @@ MathJax.Hub.Config({
 <div id="sidebox">
   <div class="tab"></div>
   <div class="content">
-    
-    <p> 
-    
+
+    <p>
+
     <a href="index.html" class="navlink"> <img src='images/home.svg' width=32 height=32> </a>
     <span id="toc-link" class="navlink"> <img src='images/list.svg' width=32 height=32> </span>
     <span id="currently-editing-link" class="navlink"> <img src='images/file-edit.svg' width=32 height=32> </span>
-    
+
     <script src="http://cdn.jotfor.ms/static/feedback2.js?3.2.310" type="text/javascript">
     new JotformFeedback({
     formId:'40222623177447',
@@ -68,50 +67,50 @@ MathJax.Hub.Config({
     <a class="lightbox-40222623177447" style="cursor:pointer;color:blue;text-decoration:underline;"><img src='images/envelope.svg' width=32 height=32></a>
 
     <p>
-    
+
     <div id="currently-editing"> </div>
 
 
-    
+
     <script>
-    
+
     function hideAll() {
       $("#currently-editing").hide();
       $("#toc").hide();
     }
-    
+
     $("#currently-editing-link").click(function() {
       hideAll();
       $("#currently-editing").show();
     });
-    
+
     $("#toc-link").click(function() {
       hideAll();
       $("#toc").show();
     });
-    
+
     </script>
-    
+
     <div id="toc"> </div>
-    
+
     <p style='font-size:12px'> (Click on the left edge of this green box to hide it!)
-    
+
     <script>
     hideAll();
     $("#toc").show();
     </script>
-  
+
   </div>
 </div>
 
-<script> 
+<script>
 $('#sidebox .tab').toggle(function(){
     $('#sidebox').animate({'right':'0%'});
 }, function(){
     $('#sidebox').animate({'right':'-30%'});
 });
 
-$(document).ready(createTOC);
+$(document).ready(create_TOC);
 
 </script>
 
@@ -124,7 +123,7 @@ $(document).ready(createTOC);
 </span>
 
 <br> <br>
-<h2> Multiple Representations for Abstract Data </h2> 
+<h2> Multiple Representations for Abstract Data </h2>
 
 <p> We have introduced data abstraction, a methodology for structuring systems in such a way that much of a program ca2 be specified independent of the choices involved in implementing the data objects that the program manipulates. For example, we saw in section 2-1-1 how to separate the task of designing a program that uses rational numbers from the task of implementing rational numbers in terms of the computer language's primitive mechanisms for constructing compound data. The key idea was to erect an abstraction barrier -- in this case, the selectors and constructors for rational numbers (<tt>make-rat</tt>, <tt>numer</tt>, <tt>denom</tt>)---that isolates the way rational numbers are used from their underlying representation in terms of list structure. A similar ab2traction barrier isolates the details of the procedures that perform rational arithmetic (<tt>add-rat</tt>, <tt>sub-rat</tt>, <tt>mul-rat</tt>, and <tt>div-rat</tt>) from the ``higher-level'' procedures that use rational numbers. The resulting program has the structure shown in Figure 2-1.
 
@@ -147,13 +146,13 @@ $(document).ready(createTOC);
 
 <p> In section 2-5 we will show how to use type tags and data-directed style to develop a generic arithmetic package. This provides procedures (<tt>add</tt>, <tt>mul</tt>, and so on) that can be used to manipulate all sorts of ``numbers''and can be easily extended when a new kind of number is needed. In section 2-5-3, we'll show how to use generic arithmetic in a system that performs symbolic algebra.
 
-<h3> Representations for Complex Numbers </h3> 
+<h3> Representations for Complex Numbers </h3>
 
 <p> We will develop a system that performs arithmetic operations on complex numbers as a simple but unrealistic example of a program that uses generic operations. We begin by discussing two plausible representations for complex numbers as ordered pairs: rectangular form (real part and imaginary part) and polar form (magnitude and angle).<a name="footnote_link_2-43" class="footnote_link" href="#footnote_2-43">43</a> Section 2-4-2 will show how both representations can be made to coexist in a single system through the use of type tags and generic operations.
 
 <p> Like rational numbers, complex numbers are naturally represented as ordered pairs. The set of complex numbers can be thought of as a two-dimensional space with two orthogonal axes, the "real" axis and the "imaginary" axis. (See Figure 2-20.)  From this point of view, the complex number $z = x + iy$ (where $i^2 = - 1$) can be thought of as the point in the plane whose real coordinate is $x$ and whose imaginary coordinate is $y$. Addition of complex numbers reduces in this representation to addition of coordinates:
 
-\begin{align} 
+\begin{align}
 \def\rp{\text{Real-part}}
 \def\ip{\text{Imaginary-part}}
 \rp(z_1 + z_2) &amp;= \rp(z_1) + \rp(z_2) \\
@@ -162,7 +161,7 @@ $(document).ready(createTOC);
 
 <p> When multiplying complex numbers, it is more natural to think in terms of representing a complex number in polar form, as a magnitude and an angle ($r$ and $A$ in Figure 2-20). The product of two complex numbers is the vector obtained by stretching one complex number by the length of the other and then rotating it through the angle of the other:
 
-\begin{align} 
+\begin{align}
 \def\mg{\text{Magnitude}}
 \def\ag{\text{Angle}}
 \mg(z_1 * z_2) &amp;= \mg(z_1) * \mg(z_2) \\
@@ -182,7 +181,7 @@ $(document).ready(createTOC);
 (make-from-real-imag (real-part z) (imag-part z))
 </div>
 <script>
-no_output_prompt("scheme-reconstruct-real-imag");
+C.no_output_prompt("scheme-reconstruct-real-imag");
 </script>
 
 <p> and
@@ -191,7 +190,7 @@ no_output_prompt("scheme-reconstruct-real-imag");
 (make-from-mag-ang (magnitude z) (angle z))
 </div>
 <script>
-no_output_prompt("scheme-reconstruct-magnitude-angle");
+C.no_output_prompt("scheme-reconstruct-magnitude-angle");
 </script>
 
 <p> produce complex numbers that are equal to <tt>z</tt>.
@@ -216,14 +215,14 @@ no_output_prompt("scheme-reconstruct-magnitude-angle");
                      (- (angle z1) (angle z2))))
 </div>
 <script>
-prompt("scheme-define-complex-arith");
+C.prompt("scheme-define-complex-arith");
 </script>
 
 <p> To complete the complex-number package, we must choose a representation and we must implement the constructors and selectors in terms of primitive numbers and primitive list structure. There are two obvious ways to do this: We can represent a complex number in ``rectangular form'' as a pair (real part, imaginary part) or in ``polar form'' as a pair (magnitude, angle). Which shall we choose?
 
 <p> In order to make the different choices concrete, imagine that there are two programmers, Ben Bitdiddle and Alyssa P. Hacker, who are independently designing representations for the complex-number system. Ben chooses to represent complex numbers in rectangular form. With this choice, selecting the real and imaginary parts of a complex number is straightforward, as is constructing a complex number with given real and imaginary parts. To find the magnitude and the angle, or to construct a complex number with a given magnitude and angle, he uses the trigonometric relations
 
-\begin{align} 
+\begin{align}
 x &amp;= r \cos A  \qquad \qquad r=\sqrt{x^2+y^2} \\
 y &amp;= r \sin A  \qquad \qquad A=\arctan{y,x}
 \end{align}
@@ -247,7 +246,7 @@ y &amp;= r \sin A  \qquad \qquad A=\arctan{y,x}
   (cons (* r (cos a)) (* r (sin a))))
 </div>
 <script>
-prompt("scheme-define-rectangular-selectors");
+C.prompt("scheme-define-rectangular-selectors");
 </script>
 
 <p> Alyssa, in contrast, chooses to represent complex numbers in polar form. For her, selecting the magnitude and angle is straightforward, but she has to use the trigonometric relations to obtain the real and imaginary parts. Alyssa's representation is:
@@ -270,12 +269,12 @@ prompt("scheme-define-rectangular-selectors");
 (define (make-from-mag-ang r a) (cons r a))
 </div>
 <script>
-prompt("scheme-define-polar-selectors");
+C.prompt("scheme-define-polar-selectors");
 </script>
 
 <p> The discipline of data abstraction ensures that the same implementation of <tt>add-complex</tt>, <tt>sub-complex</tt>, <tt>mul-complex</tt>, and <tt>div-complex</tt> will work with either Ben's representation or Alyssa's representation.
 
-<h3> Tagged data </h3> 
+<h3> Tagged data </h3>
 
 <p> One way to view data abstraction is as an application of the "principle of least commitment."  In implementing the complex-number system in section 2-4-1, we can use either Ben's rectangular representation or Alyssa's polar representation. The abstraction barrier formed by the selectors and constructors permits us to defer to the last possible moment the choice of a concrete representation for our data objects and thus retain maximum flexibility in our system design.
 
@@ -298,7 +297,7 @@ prompt("scheme-define-polar-selectors");
       (error "Bad tagged datum -- CONTENTS" datum)))
 </div>
 <script>
-prompt("scheme-define-type-tag");
+C.prompt("scheme-define-type-tag");
 </script>
 
 <p> Using these procedures, we can define predicates <tt>rectangular?</tt>  and <tt>polar?</tt>, which recognize polar and rectangular numbers, respectively:
@@ -311,7 +310,7 @@ prompt("scheme-define-type-tag");
   (eq? (type-tag z) 'polar))
 </div>
 <script>
-prompt("scheme-define-recognise-rectangular-polar-tags", ["scheme-define-type-tag"]);
+C.prompt("scheme-define-recognise-rectangular-polar-tags", ["scheme-define-type-tag"]);
 </script>
 
 <p> With type tags, Ben and Alyssa can now modify their code so that their two different representations can coexist in the same system. Whenever Ben constructs a complex number, he tags it as rectangular. Whenever Alyssa constructs a complex number, she tags it as polar. In addition, Ben and Alyssa must make sure that the names of their procedures do not conflict. One way to do this is for Ben to append the suffix <tt>rectangular</tt> to the name of each of his representation procedures and for Alyssa to append <tt>polar</tt> to the names of hers. Here is Ben's revised rectangular representation from section 2-4-1:
@@ -337,7 +336,7 @@ prompt("scheme-define-recognise-rectangular-polar-tags", ["scheme-define-type-ta
               (cons (* r (cos a)) (* r (sin a)))))
 </div>
 <script>
-prompt("scheme-define-rectangular-tagged-selectors", ["scheme-define-type-tag"]);
+C.prompt("scheme-define-rectangular-tagged-selectors", ["scheme-define-type-tag"]);
 </script>
 
 <p> and here is Alyssa's revised polar representation:
@@ -362,7 +361,7 @@ prompt("scheme-define-rectangular-tagged-selectors", ["scheme-define-type-tag"])
   (attach-tag 'polar (cons r a)))
 </div>
 <script>
-prompt("scheme-define-polar-tagged-selectors", ["scheme-define-type-tag"]);
+C.prompt("scheme-define-polar-tagged-selectors", ["scheme-define-type-tag"]);
 </script>
 
 <p> Each generic selector is implemented as a procedure that checks the tag of its argument and calls the appropriate procedure for handling data of that type. For example, to obtain the real part of a complex number, <tt>real-part</tt> examines the tag to determine whether to use Ben's <tt>real-part-rectangular</tt> or Alyssa's <tt>real-part-polar</tt>. In either case, we use <tt>contents</tt> to extract the bare, untagged datum and send this to the rectangular or polar procedure as required:
@@ -397,7 +396,7 @@ prompt("scheme-define-polar-tagged-selectors", ["scheme-define-type-tag"]);
         (else (error "Unknown type -- ANGLE" z))))
 </div>
 <script>
-prompt("scheme-define-tagged-complex-selectors", ["scheme-define-recognise-rectangular-polar-tags", "scheme-define-rectangular-tagged-selectors", "scheme-define-polar-tagged-selectors"]);
+C.prompt("scheme-define-tagged-complex-selectors", ["scheme-define-recognise-rectangular-polar-tags", "scheme-define-rectangular-tagged-selectors", "scheme-define-polar-tagged-selectors"]);
 </script>
 
 <p> To implement the complex-number arithmetic operations, we can use the same procedures <tt>add-complex</tt>, <tt>sub-complex</tt>, <tt>mul-complex</tt>, and <tt>div-complex</tt> from section 2-4-1, because the selectors they call are generic, and so will work with either representation. For example, the procedure <tt>add-complex</tt> is still
@@ -408,7 +407,7 @@ prompt("scheme-define-tagged-complex-selectors", ["scheme-define-recognise-recta
                        (+ (imag-part z1) (imag-part z2))))
 </div>
 <script>
-prompt("scheme-define-tagged-add-complex", ["scheme-define-tagged-complex-selectors"]);
+C.prompt("scheme-define-tagged-add-complex", ["scheme-define-tagged-complex-selectors"]);
 </script>
 
 <p> Finally, we must choose whether to construct complex numbers using Ben's
@@ -424,7 +423,7 @@ construct polar numbers whenever we have magnitudes and angles:
   (make-from-mag-ang-polar r a))
 </div>
 <script>
-prompt("scheme-define-tagged-constructors");
+C.prompt("scheme-define-tagged-constructors");
 </script>
 
 <p>
@@ -438,7 +437,7 @@ prompt("scheme-define-tagged-constructors");
 
 <p> Since each data object is tagged with its type, the selectors operate on the data in a generic manner. That is, each selector is defined to have a behavior that depends upon the particular type of data it is applied to. Notice the general mechanism for interfacing the separate representations: Within a given representation implementation (say, Alyssa's polar package) a complex number is an untyped pair (magnitude, angle). When a generic selector operates on a number of <tt>polar</tt> type, it strips off the tag and passes the contents on to Alyssa's code. Conversely, when Alyssa constructs a number for general use, she tags it with a type so that it can be appropriately recognized by the higher-level procedures. This discipline of stripping off and attaching tags as data objects are passed from level to level can be an important organizational strategy, as we shall see in section 2-5.
 
-<h3> Data-Directed Programming and Additivity </h3> 
+<h3> Data-Directed Programming and Additivity </h3>
 
 <p> The general strategy of checking the type of a datum and calling an appropriate procedure is called <em>dispatching on type</em> . This is a powerful strategy for obtaining modularity in system design. Oh the other hand, implementing the dispatch as in section 2-4-2 has two significant weaknesses. One weakness is that the generic interface procedures (<tt>real-part</tt>, <tt>imag-part</tt>, <tt>magnitude</tt>, and <tt>angle</tt>) must know about all the different representations. For instance, suppose we wanted to incorporate a new representation for complex numbers into our complex-number system. We would need to identify this new representation with a type, and then add a clause to each of the generic interface procedures to check for the new type and apply the appropriate selector for that representation.
 
@@ -499,7 +498,7 @@ prompt("scheme-define-tagged-constructors");
   'done)
 </div>
 <script>
-prompt("scheme-define-install-rectangular-package");
+C.prompt("scheme-define-install-rectangular-package");
 </script>
 
 <p> Notice that the internal procedures here are the same procedures from section 2-4-1 that Ben wrote when he was working in isolation. No changes are necessary in order to interface them to the rest of the system. Moreover, since these procedure definitions are internal to the installation procedure, Ben needn't worry about name conflicts with other procedures outside the rectangular package. To interface these to the rest of the system, Ben installs his <tt>real-part</tt> procedure under the operation name <tt>real-part</tt> and the type <tt>(rectangular)</tt>, and similarly for the other selectors.<a name="footnote_link_2-45" class="footnote_link" href="#footnote_2-45">45</a> The interface also defines the constructors to be used by the external system.<a name="footnote_link_2-46" class="footnote_link" href="#footnote_2-46">46</a> These are identical to Ben's internally defined constructors, except that they attach the tag.
@@ -533,7 +532,7 @@ prompt("scheme-define-install-rectangular-package");
   'done)
 </div>
 <script>
-prompt("scheme-define-install-polar-package");
+C.prompt("scheme-define-install-polar-package");
 </script>
 
 <p> Even though Ben and Alyssa both still use their original procedures defined with the same names as each other's (e.g., <tt>real-part</tt>), these definitions are now internal to different procedures (see section 1-1-8), so there is no name conflict.
@@ -551,7 +550,7 @@ prompt("scheme-define-install-polar-package");
             (list op type-tags))))))
 </div>
 <script>
-prompt("scheme-defne-apply-generic");
+C.prompt("scheme-defne-apply-generic");
 </script>
 
 <p> Using <tt>apply-generic</tt>, we can define our generic selectors as follows:
@@ -563,7 +562,7 @@ prompt("scheme-defne-apply-generic");
 (define (angle z) (apply-generic 'angle z))
 </div>
 <script>
-prompt("scheme-define-generic-selectors");
+C.prompt("scheme-define-generic-selectors");
 </script>
 
 <p> Observe that these do not change at all if a new representation is added to the system.
@@ -578,7 +577,7 @@ prompt("scheme-define-generic-selectors");
   ((get 'make-from-mag-ang 'polar) r a))
 </div>
 <script>
-prompt("scheme-define-generic-constructors");
+C.prompt("scheme-define-generic-constructors");
 </script>
 
 <p>
@@ -603,7 +602,7 @@ prompt("scheme-define-generic-constructors");
         (else (error "unknown expression type -- DERIV" exp))))
 </div>
 <script>
-prompt("scheme-define-deriv");
+C.prompt("scheme-define-deriv");
 </script>
 
 <p> We can regard this program as performing a dispatch on the type of the expression to be differentiated. In this situation the "type tag" of the datum is the algebraic operator symbol (such as <tt>+</tt>) and the operation being performed is <tt>deriv</tt>. We can transform this program into data-directed style by rewriting the basic derivative procedure as
@@ -620,7 +619,7 @@ prompt("scheme-define-deriv");
 (define (operands exp) (cdr exp))
 </div>
 <script>
-prompt("scheme-define-generic-deriv");
+C.prompt("scheme-define-generic-deriv");
 </script>
 
 <ul>
@@ -644,7 +643,7 @@ prompt("scheme-define-generic-deriv");
 ((get (operator exp) 'deriv) (operands exp) var)
 </div>
 <script>
-no_output_frozen_prompt("scheme-different-dispatch-deriv")
+C.no_output_frozen_prompt("scheme-different-dispatch-deriv")
 </script>
 
 What corresponding changes to the derivative system are required?
@@ -661,24 +660,24 @@ What corresponding changes to the derivative system are required?
 
 <ul>
 <li>
-<p> Implement for headquarters a <tt>get-record</tt> procedure that retrieves a specified employee's record from a specified personnel file. The procedure should be applicable to any division's file. Explain how the individual divisions' files should be structured. In particular, what type information must be supplied? 
+<p> Implement for headquarters a <tt>get-record</tt> procedure that retrieves a specified employee's record from a specified personnel file. The procedure should be applicable to any division's file. Explain how the individual divisions' files should be structured. In particular, what type information must be supplied?
 </li>
 
 <li>
-<p> Implement for headquarters a <tt>get-salary</tt> procedure that returns the salary information from a given employee's record from any division's personnel file. How should the record be structured in order to make this operation work? 
+<p> Implement for headquarters a <tt>get-salary</tt> procedure that returns the salary information from a given employee's record from any division's personnel file. How should the record be structured in order to make this operation work?
 </li>
 
 <li>
-<p> Implement for headquarters a <tt>find-employee-record</tt> procedure. This should search all the divisions' files for the record of a given employee and return the record. Assume that this procedure takes as arguments an employee's name and a list of all the divisions' files. 
+<p> Implement for headquarters a <tt>find-employee-record</tt> procedure. This should search all the divisions' files for the record of a given employee and return the record. Assume that this procedure takes as arguments an employee's name and a list of all the divisions' files.
 </li>
 
 <li>
-<p> When Insatiable takes over a new company, what changes must be made in order to incorporate the new personnel information into the central system? 
+<p> When Insatiable takes over a new company, what changes must be made in order to incorporate the new personnel information into the central system?
 </li>
 </ul>
 </div>
 
-<h4> Message passing </h4> 
+<h4> Message passing </h4>
 
 <p> The key idea of data-directed programming is to handle generic operations in programs by dealing explicitly with operation-and-type tables, such as the table in Figure 2-22. The style of programming we used in section 2-4-2 organized the required dispatching on type by having each operation take care of its own dispatching. In effect, this decomposes the operation-and-type table into rows, with each generic operation procedure representing a row of the table.
 
@@ -697,7 +696,7 @@ What corresponding changes to the derivative system are required?
   dispatch)
 </div>
 <script>
-prompt("scheme-define-make-intelligent-complex-from-real-imag");
+C.prompt("scheme-define-make-intelligent-complex-from-real-imag");
 </script>
 
 <p> The corresponding <tt>apply-generic</tt> procedure, which applies a generic operation to an argument, now simply feeds the operation's name to the data object and lets the object do the work:<a name="footnote_link_2-48" class="footnote_link" href="#footnote_2-48">48</a>
@@ -706,7 +705,7 @@ prompt("scheme-define-make-intelligent-complex-from-real-imag");
 (define (apply-generic op arg) (arg op))
 </div>
 <script>
-prompt("scheme-define-message-passing-apply-generic");
+C.prompt("scheme-define-message-passing-apply-generic");
 </script>
 
 <p> Note that the value returned by <tt>make-from-real-imag</tt> is a procedure---the internal <tt>dispatch</tt> procedure. This is the procedure that is invoked when <tt>apply-generic</tt> requests an operation to be performed.
@@ -731,23 +730,23 @@ prompt("scheme-define-message-passing-apply-generic");
 <div id="footnotes">
 <h3 id='Notes'> Notes </h3>
 
-<div id="footnote_2-43" class="footnote"> 
+<div id="footnote_2-43" class="footnote">
 <p> <a href="#footnote_link_2-43" class="footnote_backlink">43</a> In actual computational systems, rectangular form is preferable to polar form most of the time because of roundoff errors in conversion between rectangular and polar form. This is why the complex-number example is unrealistic. Nevertheless, it provides a clear illustration of the design of a system using generic operations and a good introduction to the more substantial systems to be developed later in this chapter.
 </div>
 
-<div id="footnote_2-44" class="footnote"> 
+<div id="footnote_2-44" class="footnote">
 <p> <a href="#footnote_link_2-44" class="footnote_backlink">44</a> The arctangent function referred to here, computed by Scheme's atan procedure, is defined so as to take two arguments y and x and to return the angle whose tangent is y/x. The signs of the arguments determine the quadrant of the angle.
 </div>
 
-<div id="footnote_2-45" class="footnote"> 
+<div id="footnote_2-45" class="footnote">
 <p> <a href="#footnote_link_2-45" class="footnote_backlink">45</a> We use the list (rectangular) rather than the symbol rectangular to allow for the possibility of operations with multiple arguments, not all of the same type.
 </div>
 
-<div id="footnote_2-46" class="footnote"> 
+<div id="footnote_2-46" class="footnote">
 <p> <a href="#footnote_link_2-46" class="footnote_backlink">46</a> The type the constructors are installed under needn't be a list because a constructor is always used to make an object of one particular type.
 </div>
 
-<div id="footnote_2-47" class="footnote"> 
+<div id="footnote_2-47" class="footnote">
 <p> <a href="#footnote_link_2-47" class="footnote_backlink">47</a> <tt>Apply-generic</tt> uses the dotted-tail notation described in Exercise 2-20, because different generic operations may take different numbers of arguments. In <tt>apply-generic</tt>, <tt>op</tt> has as its value the first argument to <tt>apply-generic</tt> and <tt>args</tt> has as its value a list of the remaining arguments.
 
 <p> <tt>Apply-generic</tt> also uses the primitive procedure <tt>apply</tt>, which takes two arguments, a procedure and a list. <tt>Apply</tt> applies the procedure, using the elements in the list as arguments. For example,
@@ -756,13 +755,13 @@ prompt("scheme-define-message-passing-apply-generic");
 (apply + (list 1 2 3 4))
 </div>
 <script>
-prompt("scheme-define-plus-1234");
+C.prompt("scheme-define-plus-1234");
 </script>
 
 <p> returns 10.
 </div>
 
-<div id="footnote_2-48" class="footnote"> 
+<div id="footnote_2-48" class="footnote">
 <p> <a href="#footnote_link_2-48" class="footnote_backlink">48</a> One limitation of this organization is it permits only generic procedures of one argument.
 </div> </div>
 

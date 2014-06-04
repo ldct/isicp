@@ -3,19 +3,18 @@
 <head>
 <meta charset="UTF-8">
 
-<link rel="stylesheet" type="text/css" href="web-worker-interpreter/deps/codemirror/lib/codemirror.css" />
+<link rel="stylesheet" type="text/css" href="coding-js/deps/codemirror/lib/codemirror.css" />
 <link rel="stylesheet" type="text/css" href="css/isicp.css" />
 <link rel="stylesheet" type="text/css" href="css/footnotes.css" />
 <link rel="stylesheet" type="text/css" href="css/theme.css" />
 
-<script src="js/helper.js"></script>
+<script src="js/TOC.js"></script>
 <script src="js/jquery.min.js"></script>
-<script src="web-worker-interpreter/deps/codemirror/lib/codemirror.js"></script>
-<script src="web-worker-interpreter/deps/codemirror/mode/scheme/scheme.js"></script>
-<script src="web-worker-interpreter/coding.js"> </script>
+<script src="coding-js/deps/codemirror/lib/codemirror.js"></script>
+<script src="coding-js/deps/codemirror/mode/scheme/scheme.js"></script>
+<script src="coding-js/coding.js"> </script>
 <script>
-  set_interpreter_path("web-worker-interpreter/");
-  set_language("scheme");
+  C = new CodingJS("coding-js/");
 </script>
 <script src="js/footnotes.js"></script>
 
@@ -46,13 +45,13 @@ MathJax.Hub.Config({
 <div id="sidebox">
   <div class="tab"></div>
   <div class="content">
-    
-    <p> 
-    
+
+    <p>
+
     <a href="index.html" class="navlink"> <img src='images/home.svg' width=32 height=32> </a>
     <span id="toc-link" class="navlink"> <img src='images/list.svg' width=32 height=32> </span>
     <span id="currently-editing-link" class="navlink"> <img src='images/file-edit.svg' width=32 height=32> </span>
-    
+
     <script src="http://cdn.jotfor.ms/static/feedback2.js?3.2.310" type="text/javascript">
     new JotformFeedback({
     formId:'40222623177447',
@@ -68,50 +67,50 @@ MathJax.Hub.Config({
     <a class="lightbox-40222623177447" style="cursor:pointer;color:blue;text-decoration:underline;"><img src='images/envelope.svg' width=32 height=32></a>
 
     <p>
-    
+
     <div id="currently-editing"> </div>
 
 
-    
+
     <script>
-    
+
     function hideAll() {
       $("#currently-editing").hide();
       $("#toc").hide();
     }
-    
+
     $("#currently-editing-link").click(function() {
       hideAll();
       $("#currently-editing").show();
     });
-    
+
     $("#toc-link").click(function() {
       hideAll();
       $("#toc").show();
     });
-    
+
     </script>
-    
+
     <div id="toc"> </div>
-    
+
     <p style='font-size:12px'> (Click on the left edge of this green box to hide it!)
-    
+
     <script>
     hideAll();
     $("#toc").show();
     </script>
-  
+
   </div>
 </div>
 
-<script> 
+<script>
 $('#sidebox .tab').toggle(function(){
     $('#sidebox').animate({'right':'0%'});
 }, function(){
     $('#sidebox').animate({'right':'-30%'});
 });
 
-$(document).ready(createTOC);
+$(document).ready(create_TOC);
 
 </script>
 
@@ -124,7 +123,7 @@ $(document).ready(createTOC);
 
 </span>
 <br> <br>
-<h2> A Register-Machine Simulator </h2> 
+<h2> A Register-Machine Simulator </h2>
 
 <p> In order to gain a good understanding of the design of register machines, we must test the machines we design to see if they perform as expected. One way to test a design is to hand-simulate the operation of the controller, as in Exercise 5-5. But this is extremely tedious for all but the simplest machines. In this section we construct a simulator for machines described in the register-machine language. The simulator is a Scheme program with four interface procedures. The first uses a description of a register machine to construct a model of the machine (a data structure whose parts correspond to the parts of the machine to be simulated), and the other three allow us to simulate the machine by manipulating the model:
 
@@ -134,7 +133,7 @@ $(document).ready(createTOC);
 (make-machine <register-names> <operations> <controller>)
 </div>
 <script>
-prompt();
+C.prompt();
 </script>
 
 <p> constructs and returns a model of the machine with the given registers, operations, and controller.
@@ -143,7 +142,7 @@ prompt();
 (set-register-contents! <machine-model> <register-name> <value>)
 </div>
 <script>
-prompt();
+C.prompt();
 </script>
 
 <p> stores a value in a simulated register in the given machine.
@@ -152,7 +151,7 @@ prompt();
 (get-register-contents <machine-model> <register-name>)
 </div>
 <script>
-prompt();
+C.prompt();
 </script>
 
 <p> returns the contents of a simulated register in the given machine.
@@ -161,7 +160,7 @@ prompt();
 (start <machine-model>)
 </div>
 <script>
-prompt();
+C.prompt();
 </script>
 
 <p> simulates the execution of the given machine, starting from the beginning of the controller sequence and stopping when it reaches the end of the sequence.
@@ -184,7 +183,7 @@ prompt();
      gcd-done)))
 </div>
 <script>
-prompt();
+C.prompt();
 </script>
 
 <p> The first argument to <tt>make-machine</tt> is a list of register names. The next argument is a table (a list of two-element lists) that pairs each operation name with a Scheme procedure that implements the operation (that is, produces the same output value given the same input values). The last argument specifies the controller as a list of labels and machine instructions, as in section 5-1.
@@ -205,7 +204,7 @@ done
 2
 </div>
 <script>
-prompt();
+C.prompt();
 </script>
 
 <p> This computation will run much more slowly than a <tt>gcd</tt> procedure written in Scheme, because we will simulate low-level machine instructions, such as <tt>assign</tt>, by much more complex operations.
@@ -214,7 +213,7 @@ prompt();
 <p> <b>Exercise 5.7:</b> Use the simulator to test the machines you designed in Exercise 5-4.
 </div>
 
-<h3> The Machine Model </h3> 
+<h3> The Machine Model </h3>
 
 <p> The machine model generated by <tt>make-machine</tt> is represented as a procedure with local state using the message-passing techniques developed in Chapter 3. To build this model, <tt>make-machine</tt> begins by calling the procedure <tt>make-new-machine</tt> to construct the parts of the machine model that are common to all register machines. This basic machine model constructed by <tt>make-new-machine</tt> is essentially a container for some registers and a stack, together with an execution mechanism that processes the controller instructions one by one.
 
@@ -232,10 +231,10 @@ prompt();
     machine))
 </div>
 <script>
-prompt();
+C.prompt();
 </script>
 
-<h4> Registers </h4> 
+<h4> Registers </h4>
 
 <p> We will represent a register as a procedure with local state, as in Chapter 3. The procedure <tt>make-register</tt> creates a register that holds a value that can be accessed or changed:
 
@@ -251,7 +250,7 @@ prompt();
     dispatch))
 </div>
 <script>
-prompt();
+C.prompt();
 </script>
 
 <p> The following procedures are used to access registers:
@@ -264,10 +263,10 @@ prompt();
   ((register 'set) value))
 </div>
 <script>
-prompt();
+C.prompt();
 </script>
 
-<h4> The stack </h4> 
+<h4> The stack </h4>
 
 <p> We can also represent a stack as a procedure with local state. The procedure <tt>make-stack</tt> creates a stack whose local state consists of a list of the items on the stack. A stack accepts requests to <tt>push</tt> an item onto the stack, to <tt>pop</tt> the top item off the stack and return it, and to <tt>initialize</tt> the stack to empty.
 
@@ -294,7 +293,7 @@ prompt();
     dispatch))
 </div>
 <script>
-prompt();
+C.prompt();
 </script>
 
 <p> The following procedures are used to access stacks:
@@ -307,10 +306,10 @@ prompt();
   ((stack 'push) value))
 </div>
 <script>
-prompt();
+C.prompt();
 </script>
 
-<h4> The basic machine </h4> 
+<h4> The basic machine </h4>
 
 <p> The <tt>make-new-machine</tt> procedure, shown in Figure 5-13, constructs an object whose local state consists of a stack, an initially empty instruction sequence, a list of operations that initially contains an operation to initialize the stack, and a <tt>register table</tt> that initially contains two registers, named <tt>flag</tt> and <tt>pc</tt> (for ``program counter''). The internal procedure <tt>allocate-register</tt> adds new entries to the register table, and the internal procedure <tt>lookup-register</tt> looks up registers in the table.
 
@@ -386,7 +385,7 @@ prompt();
   'done)
 </div>
 <script>
-prompt();
+C.prompt();
 </script>
 
 <p> These procedures (and many procedures in sections 5-2-2 and 5-2-3) use the following to look up the register with a given name in a given machine:
@@ -396,10 +395,10 @@ prompt();
   ((machine 'get-register) reg-name))
 </div>
 <script>
-prompt();
+C.prompt();
 </script>
 
-<h3> The Assembler </h3> 
+<h3> The Assembler </h3>
 
 <p> The assembler transforms the sequence of controller expressions for a machine into a corresponding list of machine instructions, each with its execution procedure. Overall, the assembler is much like the evaluators we studied in Chapter 4---there is an input language (in this case, the register-machine language) and we must perform an appropriate action for each type of expression in the language.
 
@@ -417,7 +416,7 @@ prompt();
       insts)))
 </div>
 <script>
-prompt();
+C.prompt();
 </script>
 
 <p> <tt>Extract-labels</tt> takes as arguments a list <tt>text</tt> (the sequence of controller instruction expressions) and a <tt>receive</tt> procedure. <tt>Receive</tt> will be called with two values: (1) a list <tt>insts</tt> of instruction data structures, each containing an instruction from <tt>text</tt>; and (2) a table called <tt>labels</tt>, which associates each label from <tt>text</tt> with the position in the list <tt>insts</tt> that the label designates.
@@ -439,7 +438,7 @@ prompt();
                         labels)))))))
 </div>
 <script>
-prompt();
+C.prompt();
 </script>
 
 <p> <tt>Extract-labels</tt> works by sequentially scanning the elements of the <tt>text</tt> and accumulating the <tt>insts</tt> and the <tt>labels</tt>. If an element is a symbol (and thus a label) an appropriate entry is added to the <tt>labels</tt> table. Otherwise the element is accumulated onto the <tt>insts</tt> list.@footnote{Using the <tt>receive</tt> procedure here is a way to get <tt>extract-labels</tt> to effectively return two values---<tt>labels</tt> and <tt>insts</tt>---without explicitly making a compound data structure to hold them. An alternative implementation, which returns an explicit pair of values, is
@@ -458,7 +457,7 @@ prompt();
                       labels)))))))
 </div>
 <script>
-prompt();
+C.prompt();
 </script>
 
 <p> which would be called by <tt>assemble</tt> as follows:
@@ -471,7 +470,7 @@ prompt();
       insts)))
 </div>
 <script>
-prompt();
+C.prompt();
 </script>
 
 <p> You can consider our use of <tt>receive</tt> as demonstrating an elegant way to return multiple values, or simply an excuse to show off a programming trick. An argument like <tt>receive</tt> that is the next procedure to be invoked is called a ``continuation.''  Recall that we also used continuations to implement the backtracking control structure in the <tt>amb</tt> evaluator in section 4-3-3.}
@@ -494,7 +493,7 @@ prompt();
      insts)))
 </div>
 <script>
-prompt();
+C.prompt();
 </script>
 
 <p> The machine instruction data structure simply pairs the instruction text with the corresponding execution procedure. The execution procedure is not yet available when <tt>extract-labels</tt> constructs the instruction, and is inserted later by <tt>update-insts!</tt>.
@@ -513,7 +512,7 @@ prompt();
   (set-cdr! inst proc))
 </div>
 <script>
-prompt();
+C.prompt();
 </script>
 
 <p> The instruction text is not used by our simulator, but it is handy to keep around for debugging (see Exercise 5-16).
@@ -525,7 +524,7 @@ prompt();
   (cons label-name insts))
 </div>
 <script>
-prompt();
+C.prompt();
 </script>
 
 <p> Entries will be looked up in the table with
@@ -538,7 +537,7 @@ prompt();
         (error "Undefined label -- ASSEMBLE" label-name))))
 </div>
 <script>
-prompt();
+C.prompt();
 </script>
 
 <div class="exercise">
@@ -556,13 +555,13 @@ here
 there
 </div>
 <script>
-prompt();
+C.prompt();
 </script>
 
 <p> With the simulator as written, what will the contents of register <tt>a</tt> be when control reaches <tt>there</tt>?  Modify the <tt>extract-labels</tt> procedure so that the assembler will signal an error if the same label name is used to indicate two different locations.
 </div>
 
-<h3> Generating Execution Procedures for Instructions </h3> 
+<h3> Generating Execution Procedures for Instructions </h3>
 
 <p> The assembler calls <tt>make-execution-procedure</tt> to generate the execution procedure for an instruction. Like the <tt>analyze</tt> procedure in the evaluator of section 4-1-7, this dispatches on the type of instruction to generate the appropriate execution procedure.
 
@@ -587,12 +586,12 @@ prompt();
                      inst))))
 </div>
 <script>
-prompt();
+C.prompt();
 </script>
 
 <p> For each type of instruction in the register-machine language, there is a generator that builds an appropriate execution procedure. The details of these procedures determine both the syntax and meaning of the individual instructions in the register-machine language. We use data abstraction to isolate the detailed syntax of register-machine expressions from the general execution mechanism, as we did for evaluators in section 4-1-2, by using syntax procedures to extract and classify the parts of an instruction.
 
-<h4> <tt>Assign</tt> instructions </h4> 
+<h4> <tt>Assign</tt> instructions </h4>
 
 <p> The <tt>make-assign</tt> procedure handles <tt>assign</tt> instructions:
 
@@ -612,7 +611,7 @@ prompt();
         (advance-pc pc)))))
 </div>
 <script>
-prompt();
+C.prompt();
 </script>
 
 <p> <tt>Make-assign</tt> extracts the target register name (the second element of the instruction) and the value expression (the rest of the list that forms the instruction) from the <tt>assign</tt> instruction using the selectors
@@ -625,7 +624,7 @@ prompt();
   (cddr assign-instruction))
 </div>
 <script>
-prompt();
+C.prompt();
 </script>
 
 <p> The register name is looked up with <tt>get-register</tt> to produce the target register object. The value expression is passed to <tt>make-operation-exp</tt> if the value is the result of an operation, and to <tt>make-primitive-exp</tt> otherwise. These procedures (shown below) parse the value expression and produce an execution procedure for the value. This is a procedure of no arguments, called <tt>value-proc</tt>, which will be evaluated during the simulation to produce the actual value to be assigned to the register. Notice that the work of looking up the register name and parsing the value expression is performed just once, at assembly time, not every time the instruction is simulated. This saving of work is the reason we use execution procedures, and corresponds directly to the saving in work we obtained by separating program analysis from execution in the evaluator of section 4-1-7.
@@ -637,12 +636,12 @@ prompt();
   (set-contents! pc (cdr (get-contents pc))))
 </div>
 <script>
-prompt();
+C.prompt();
 </script>
 
 <p> <tt>Advance-pc</tt> is the normal termination for all instructions except <tt>branch</tt> and <tt>goto</tt>.
 
-<h4> <tt>Test</tt>, <tt>branch</tt>, and <tt>goto</tt> instructions </h4> 
+<h4> <tt>Test</tt>, <tt>branch</tt>, and <tt>goto</tt> instructions </h4>
 
 <p> <tt>Make-test</tt> handles <tt>test</tt> instructions in a similar way. It extracts the expression that specifies the condition to be tested and generates an execution procedure for it. At simulation time, the procedure for the condition is called, the result is assigned to the <tt>flag</tt> register, and the <tt>pc</tt> is advanced:
 
@@ -662,7 +661,7 @@ prompt();
   (cdr test-instruction))
 </div>
 <script>
-prompt();
+C.prompt();
 </script>
 
 <p> The execution procedure for a <tt>branch</tt> instruction checks the contents of the <tt>flag</tt> register and either sets the contents of the <tt>pc</tt> to the branch destination (if the branch is taken) or else just advances the <tt>pc</tt> (if the branch is not taken). Notice that the indicated destination in a <tt>branch</tt> instruction must be a label, and the <tt>make-branch</tt> procedure enforces this. Notice also that the label is looked up at assembly time, not each time the <tt>branch</tt> instruction is simulated.
@@ -683,7 +682,7 @@ prompt();
   (cadr branch-instruction))
 </div>
 <script>
-prompt();
+C.prompt();
 </script>
 
 <p> A <tt>goto</tt> instruction is similar to a branch, except that the destination may be specified either as a label or as a register, and there is no condition to check---the <tt>pc</tt> is always set to the new destination.
@@ -709,10 +708,10 @@ prompt();
   (cadr goto-instruction))
 </div>
 <script>
-prompt();
+C.prompt();
 </script>
 
-<h4> Other instructions </h4> 
+<h4> Other instructions </h4>
 
 <p> The stack instructions <tt>save</tt> and <tt>restore</tt> simply use the stack with the designated register and advance the <tt>pc</tt>:
 
@@ -735,7 +734,7 @@ prompt();
   (cadr stack-instruction))
 </div>
 <script>
-prompt();
+C.prompt();
 </script>
 
 <p> The final instruction type, handled by <tt>make-perform</tt>, generates an execution procedure for the action to be performed. At simulation time, the action procedure is executed and the <tt>pc</tt> advanced.
@@ -755,10 +754,10 @@ prompt();
 (define (perform-action inst) (cdr inst))
 </div>
 <script>
-prompt();
+C.prompt();
 </script>
 
-<h4> Execution procedures for subexpressions </h4> 
+<h4> Execution procedures for subexpressions </h4>
 
 <p> The value of a <tt>reg</tt>, <tt>label</tt>, or <tt>const</tt> expression may be needed for assignment to a register (<tt>make-assign</tt>) or for input to an operation (<tt>make-operation-exp</tt>, below). The following procedure generates execution procedures to produce values for these expressions during the simulation:
 
@@ -780,7 +779,7 @@ prompt();
          (error "Unknown expression type -- ASSEMBLE" exp))))
 </div>
 <script>
-prompt();
+C.prompt();
 </script>
 
 <p> The syntax of <tt>reg</tt>, <tt>label</tt>, and <tt>const</tt> expressions is determined by
@@ -799,7 +798,7 @@ prompt();
 (define (label-exp-label exp) (cadr exp))
 </div>
 <script>
-prompt();
+C.prompt();
 </script>
 
 <p> <tt>Assign</tt>, <tt>perform</tt>, and <tt>test</tt> instructions may include the application of a machine operation (specified by an <tt>op</tt> expression) to some operands (specified by <tt>reg</tt> and <tt>const</tt> expressions). The following procedure produces an execution procedure for an ``operation expression''---a list containing the operation and operand expressions from the instruction:
@@ -815,7 +814,7 @@ prompt();
       (apply op (map (lambda (p) (p)) aprocs)))))
 </div>
 <script>
-prompt();
+C.prompt();
 </script>
 
 <p> The syntax of operation expressions is determined by
@@ -831,7 +830,7 @@ prompt();
   (cdr operation-exp))
 </div>
 <script>
-prompt();
+C.prompt();
 </script>
 
 <p> Observe that the treatment of operation expressions is very much like the treatment of procedure applications by the <tt>analyze-application</tt> procedure in the evaluator of section 4-1-7 in that we generate an execution procedure for each operand. At simulation time, we call the operand procedures and apply the Scheme procedure that simulates the operation to the resulting values. The simulation procedure is found by looking up the operation name in the operation table for the machine:
@@ -844,7 +843,7 @@ prompt();
         (error "Unknown operation -- ASSEMBLE" symbol))))
 </div>
 <script>
-prompt();
+C.prompt();
 </script>
 
 <div class="exercise">
@@ -864,7 +863,7 @@ prompt();
 (restore y)
 </div>
 <script>
-prompt();
+C.prompt();
 </script>
 
 <p> There are several reasonable possibilities for the meaning of <tt>restore</tt>:
@@ -912,7 +911,7 @@ for each register, a list (without duplicates) of the sources from which it is a
 <p> <b>Exercise 5.13:</b> Modify the simulator so that it uses the controller sequence to determine what registers the machine has rather than requiring a list of registers as an argument to <tt>make-machine</tt>. Instead of pre-allocating the registers in <tt>make-machine</tt>, you can allocate them one at a time when they are first seen during assembly of the instructions.
 </div>
 
-<h3> Monitoring Machine Performance </h3> 
+<h3> Monitoring Machine Performance </h3>
 
 <p> Simulation is useful not only for verifying the correctness of a proposed machine design but also for measuring the machine's performance. For example, we can install in our simulation program a ``meter'' that measures the number of stack operations used in a computation. To do this, we modify our simulated stack to keep track of the number of times registers are saved on the stack and the maximum depth reached by the stack, and add a message to the stack's interface that prints the statistics, as shown below. We also add an operation to the basic machine model to print the stack statistics, by initializing <tt>the-ops</tt> in <tt>make-new-machine</tt> to
 
@@ -923,7 +922,7 @@ for each register, a list (without duplicates) of the sources from which it is a
             (lambda () (stack 'print-statistics))))
 </div>
 <script>
-prompt();
+C.prompt();
 </script>
 
 <p> Here is the new version of <tt>make-stack</tt>:
@@ -967,7 +966,7 @@ prompt();
     dispatch))
 </div>
 <script>
-prompt();
+C.prompt();
 </script>
 
 <p> Exercise 5-15 through Exercise 5-19 describe other useful monitoring and debugging features that can be added to the register-machine simulator.
@@ -999,7 +998,7 @@ prompt();
 (set-breakpoint <machine> <label> <n>)
 </div>
 <script>
-prompt();
+C.prompt();
 </script>
 
 <p> that sets a breakpoint just before the nth instruction after the given label. For example,
@@ -1008,7 +1007,7 @@ prompt();
 (set-breakpoint gcd-machine 'test-b 4)
 </div>
 <script>
-prompt();
+C.prompt();
 </script>
 
 <p> installs a breakpoint in <tt>gcd-machine</tt> just before the assignment to register <tt>a</tt>. When the simulator reaches the breakpoint it should print the label and the offset of the breakpoint and stop executing instructions. Alyssa can then use <tt>get-register-contents</tt> and <tt>set-register-contents!</tt> to manipulate the state of the simulated machine. She should then be able to continue execution by saying
@@ -1017,7 +1016,7 @@ prompt();
 (proceed-machine <machine>)
 </div>
 <script>
-prompt();
+C.prompt();
 </script>
 
 <p> She should also be able to remove a specific breakpoint by means of
@@ -1026,7 +1025,7 @@ prompt();
 (cancel-breakpoint <machine> <label> <n>)
 </div>
 <script>
-prompt();
+C.prompt();
 </script>
 
 <p> or to remove all breakpoints by means of
@@ -1035,7 +1034,7 @@ prompt();
 (cancel-all-breakpoints <machine>)
 </div>
 <script>
-prompt();
+C.prompt();
 </script>
 </div>
 

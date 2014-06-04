@@ -17,7 +17,7 @@
 
 <p> The basic idea of data abstraction is to structure the programs that are to use compound data objects so that they operate on "abstract data." That is, our programs should use data in such a way as to make no assumptions about the data that are not strictly necessary for performing the task at hand. At the same time, a "concrete" data representation is defined independent of the programs that use the data. The interface between these two parts of our system will be a set of procedures, called <em>selectors</em> and <em>constructors</em>, that implement the abstract data in terms of the concrete representation. To illustrate this technique, we will consider how to design a set of procedures for manipulating rational numbers.
 
-<h3> Example: Arithmetic Operations for Rational Numbers </h3> 
+<h3> Example: Arithmetic Operations for Rational Numbers </h3>
 
 <p> Suppose we want to do arithmetic with rational numbers. We want to be able to add, subtract, multiply, and divide them and to test whether two rational numbers are equal.
 
@@ -25,7 +25,7 @@
 
 <ul>
 
-<li> 
+<li>
 <tt>(make-rat n d)</tt> returns therational number whose
 numerator is the integer <tt>n</tt> and whose denominator is the integer <tt>d</tt>.
 </li>
@@ -71,12 +71,12 @@ $$
      (* (numer y) (denom x))))
 </div>
 <script>
-prompt("scheme-define-arith-rat", ["scheme-define-rat"]);
+C.prompt("scheme-define-arith-rat", ["scheme-define-rat"]);
 </script>
 
 <p> Now we have the operations on rational numbers defined in terms of the selector and constructor procedures <tt>numer, denom,</tt> and <tt>make-rat</tt>. But we haven't yet defined these. What we need is some way to glue together a numerator and a denominator to form a rational number.
 
-<h4> Pairs </h4> 
+<h4> Pairs </h4>
 
 <p> To enable us to implement the concrete level of our data abstraction, our language provides a compound structure called a <em>pair</em>, which can be constructed with the primitive procedure <tt>cons</tt>. This procedure takes two arguments and returns a compound data object that contains the two arguments as parts. Given a pair, we can extract the parts using the primitive procedures <tt>car</tt> and <tt>cdr</tt>. <a name="footnote_link_2-2" class="footnote_link" href="#footnote_2-2">2</a> Thus, we can use <tt>cons</tt>, <tt>car</tt>, and <tt>cdr</tt> as follows:
 
@@ -84,21 +84,21 @@ prompt("scheme-define-arith-rat", ["scheme-define-rat"]);
 (define x (cons 1 2))
 </div>
 <script>
-prompt("scheme-define-x-cons-1-2");
+C.prompt("scheme-define-x-cons-1-2");
 </script>
 
 <div id="scheme-car-x">
 (car x)
 </div>
 <script>
-prompt("scheme-car-x", ["scheme-define-x-cons-1-2"]);
+C.prompt("scheme-car-x", ["scheme-define-x-cons-1-2"]);
 </script>
 
 <div id="scheme-cdr-x">
 (cdr x)
 </div>
 <script>
-prompt("scheme-cdr-x", ["scheme-define-x-cons-1-2"]);
+C.prompt("scheme-cdr-x", ["scheme-define-x-cons-1-2"]);
 </script>
 
 <p> Notice that a pair is a data object that can be given a name and manipulated, just like a primitive data object. Moreover, <tt>cons</tt> can be used to form pairs whose elements are pairs, and so on:
@@ -109,7 +109,7 @@ prompt("scheme-cdr-x", ["scheme-define-x-cons-1-2"]);
 (define z (cons x y))
 </div>
 <script>
-prompt("scheme-define-xyz");
+C.prompt("scheme-define-xyz");
 </script>
 
 <p>
@@ -118,7 +118,7 @@ prompt("scheme-define-xyz");
 (car (car z))
 </div>
 <script>
-prompt("scheme-car-car-z", ["scheme-define-xyz"]);
+C.prompt("scheme-car-car-z", ["scheme-define-xyz"]);
 </script>
 
 <p>
@@ -127,12 +127,12 @@ prompt("scheme-car-car-z", ["scheme-define-xyz"]);
 (car (cdr z))
 </div>
 <script>
-prompt("scheme-car-cdr-z", ["scheme-define-xyz"]);
+C.prompt("scheme-car-cdr-z", ["scheme-define-xyz"]);
 </script>
 
 <p> In section 2-2 we will see how this ability to combine pairs means that pairs can be used as general-purpose building blocks to create all sorts of complex data structures. The single compound-data primitive <em>pair</em>, implemented by the procedures <tt>cons</tt>, <tt>car</tt>, and <tt>cdr</tt>, is the only glue we need. Data objects constructed from pairs are called <em>list-structured</em> data.
 
-<h4> Representing rational numbers </h4> 
+<h4> Representing rational numbers </h4>
 
 <p> Pairs offer a natural way to complete the rational-number system. Simply represent a rational number as a pair of two integers: a numerator and a denominator. Then <tt>make-rat, numer,</tt> and <tt>denom</tt> are readily implemented as follows:<a name="footnote_link_2-3" class="footnote_link" href="#footnote_2-3">3</a>
 
@@ -142,7 +142,7 @@ prompt("scheme-car-cdr-z", ["scheme-define-xyz"]);
 (define (denom x) (cdr x))
 </div>
 <script>
-prompt("scheme-define-rat");
+C.prompt("scheme-define-rat");
 </script>
 
 <p> Also, in order to display the results of our computations, we can print rational numbers by printing the numerator, a slash, and the denominator:<a name="footnote_link_2-4" class="footnote_link" href="#footnote_2-4">4</a>
@@ -155,7 +155,7 @@ prompt("scheme-define-rat");
   (newline))
 </div>
 <script>
-prompt("scheme-define-print-rat", ["scheme-define-rat"]);
+C.prompt("scheme-define-print-rat", ["scheme-define-rat"]);
 </script>
 
 <p> Now we can try our rational-number procedures:
@@ -164,14 +164,14 @@ prompt("scheme-define-print-rat", ["scheme-define-rat"]);
 (define one-half (make-rat 1 2))
 </div>
 <script>
-prompt("scheme-define-one-half", ["scheme-define-rat"]);
+C.prompt("scheme-define-one-half", ["scheme-define-rat"]);
 </script>
 
 <div id="scheme-print-one-half">
 (print-rat one-half)
 </div>
 <script>
-prompt("scheme-print-one-half", ["scheme-define-print-rat", "scheme-define-one-half"]);
+C.prompt("scheme-print-one-half", ["scheme-define-print-rat", "scheme-define-one-half"]);
 </script>
 
 <p>
@@ -180,7 +180,7 @@ prompt("scheme-print-one-half", ["scheme-define-print-rat", "scheme-define-one-h
 (define one-third (make-rat 1 3))
 </div>
 <script>
-prompt("scheme-define-one-third", ["scheme-define-rat"]);
+C.prompt("scheme-define-one-third", ["scheme-define-rat"]);
 </script>
 
 <p>
@@ -189,7 +189,7 @@ prompt("scheme-define-one-third", ["scheme-define-rat"]);
 (print-rat (add-rat one-half one-third))
 </div>
 <script>
-prompt("scheme-print-half-plus-third", ["scheme-define-one-half", "scheme-define-one-third", "scheme-define-arith-rat", "scheme-define-print-rat"]);
+C.prompt("scheme-print-half-plus-third", ["scheme-define-one-half", "scheme-define-one-third", "scheme-define-arith-rat", "scheme-define-print-rat"]);
 </script>
 
 <p>
@@ -198,7 +198,7 @@ prompt("scheme-print-half-plus-third", ["scheme-define-one-half", "scheme-define
 (print-rat (mul-rat one-half one-third))
 </div>
 <script>
-prompt("scheme-print-half-times-third", ["scheme-define-one-half", "scheme-define-one-third", "scheme-define-arith-rat", "scheme-define-print-rat"]);
+C.prompt("scheme-print-half-times-third", ["scheme-define-one-half", "scheme-define-one-third", "scheme-define-arith-rat", "scheme-define-print-rat"]);
 </script>
 
 <p>
@@ -207,7 +207,7 @@ prompt("scheme-print-half-times-third", ["scheme-define-one-half", "scheme-defin
 (print-rat (add-rat one-third one-third))
 </div>
 <script>
-prompt("scheme-print-third-plus-third", ["scheme-define-one-half", "scheme-define-one-third", "scheme-define-arith-rat", "scheme-define-print-rat"]);
+C.prompt("scheme-print-third-plus-third", ["scheme-define-one-half", "scheme-define-one-third", "scheme-define-arith-rat", "scheme-define-print-rat"]);
 </script>
 
 <p> As the final example shows, our rational-number implementation does not reduce rational numbers to lowest terms. We can remedy this by changing <tt>make-rat.</tt> If we have a <tt>gcd</tt> procedure like the one in section 1-2-5 that produces the greatest common divisor of two integers, we can use <tt>gcd</tt> to reduce the numerator and the denominator to lowest terms before constructing the pair:
@@ -219,7 +219,7 @@ prompt("scheme-print-third-plus-third", ["scheme-define-one-half", "scheme-defin
       (gcd b (remainder a b))))
 </div>
 <script>
-hidden_prompt("scheme-define-gcd");
+C.hidden_prompt("scheme-define-gcd");
 </script>
 
 <div id="scheme-define-make-rat-reduce">
@@ -228,7 +228,7 @@ hidden_prompt("scheme-define-gcd");
     (cons (/ n g) (/ d g))))
 </div>
 <script>
-prompt("scheme-define-make-rat-reduce", ["scheme-define-gcd"]);
+C.prompt("scheme-define-make-rat-reduce", ["scheme-define-gcd"]);
 </script>
 
 <p> Now we have
@@ -237,7 +237,7 @@ prompt("scheme-define-make-rat-reduce", ["scheme-define-gcd"]);
 (print-rat (add-rat one-third one-third))
 </div>
 <script>
-prompt("scheme-test-rat-reduce", ["scheme-define-arith-rat", "scheme-define-one-half", "scheme-define-one-third", "scheme-define-print-rat", "scheme-define-make-rat-reduce"]);
+C.prompt("scheme-test-rat-reduce", ["scheme-define-arith-rat", "scheme-define-one-half", "scheme-define-one-third", "scheme-define-print-rat", "scheme-define-make-rat-reduce"]);
 </script>
 
 <p> as desired. This modification was accomplished by changing the constructor <tt>make-rat</tt> without changing any of the procedures (such as <tt>add-rat</tt> and <tt>mul-rat</tt>) that implement the actual operations.
@@ -246,7 +246,7 @@ prompt("scheme-test-rat-reduce", ["scheme-define-arith-rat", "scheme-define-one-
 <p> <b> Exercise 2.1. </b> Define a better version of <tt>make-rat</tt> that handles both positive and negative arguments. <tt>Make-rat</tt> should normalize the sign so that if the rational number is positive, both the numerator and denominator are positive, and if the rational number is negative, only the numerator is negative.
 </div>
 
-<h3> Abstraction Barriers </h3> 
+<h3> Abstraction Barriers </h3>
 
 <p> Before continuing with more examples of compound data and data abstraction, let us consider some of the issues raised by the rational-number example. We defined the rational-number operations in terms of a constructor <tt>make-rat</tt> and selectors <tt>numer</tt> and <tt>denom</tt>. In general, the underlying idea of data abstraction is to identify for each type of data object a basic set of operations in terms of which all manipulations of data objects of that type will be expressed, and then to use only those operations in manipulating the data.
 
@@ -273,7 +273,7 @@ prompt("scheme-test-rat-reduce", ["scheme-define-arith-rat", "scheme-define-one-
     (/ (cdr x) g)))
 </div>
 <script>
-prompt("scheme-define-rat-reduce-in-constructor", ["scheme-define-gcd"]);
+C.prompt("scheme-define-rat-reduce-in-constructor", ["scheme-define-gcd"]);
 </script>
 
 <p> The difference between this implementation and the previous one lies in when we compute the <tt>gcd</tt>. If in our typical use of rational numbers we access the numerators and denominators of the same rational numbers many times, it would be preferable to compute the <tt>gcd</tt> when the rational numbers are constructed. If not, we may be better off waiting until access time to compute the <tt>gcd</tt>. In any case, when we change from one representation to the other, the procedures <tt>add-rat</tt>, <tt>sub-rat</tt>, and so on do not have to be modified at all.
@@ -293,7 +293,7 @@ prompt("scheme-define-rat-reduce-in-constructor", ["scheme-define-gcd"]);
   (newline))
 </div>
 <script>
-prompt("scheme-define-print-point");
+C.prompt("scheme-define-print-point");
 </script>
 </div>
 
@@ -303,9 +303,9 @@ prompt("scheme-define-print-point");
 <p> <b> Exercise 2.3. </b> Implement a representation for rectangles in a plane. (Hint: You may want to make use of Exercise 2-2.) In terms of your constructors and selectors, create procedures that compute the perimeter and the area of a given rectangle. Now implement a different representation for rectangles. Can you design your system with suitable abstraction barriers, so that the same perimeter and area procedures will work using either representation?
 </div>
 
-<h3> What Is Meant by Data? </h3> 
+<h3> What Is Meant by Data? </h3>
 
-<p> We began the rational-number implementation in section 2-1-1 by implementing the rational-number operations <tt>add-rat</tt>, <tt>sub-rat</tt>, and so on in terms of three unspecified procedures: <tt>make-rat</tt>, <tt>numer</tt>, and <tt>denom</tt>. At that point, we could think of the operations as being defined in terms of data objects---numerators, denominators, and rational numbers---whose behavior was specified by the latter three procedures. 
+<p> We began the rational-number implementation in section 2-1-1 by implementing the rational-number operations <tt>add-rat</tt>, <tt>sub-rat</tt>, and so on in terms of three unspecified procedures: <tt>make-rat</tt>, <tt>numer</tt>, and <tt>denom</tt>. At that point, we could think of the operations as being defined in terms of data objects---numerators, denominators, and rational numbers---whose behavior was specified by the latter three procedures.
 
 <p> But exactly what is meant by <em>data</em>  ?  It is not enough to say "whatever is implemented by the given selectors and constructors."  Clearly, not every arbitrary set of three procedures can serve as an appropriate basis for the rational-number implementation. We need to guarantee that, if we construct a rational number <tt>x</tt> from a pair of integers <tt>n</tt> and <tt>d</tt>, then extracting the <tt>numer</tt> and the <tt>denom</tt> of <tt>x</tt> and dividing them should yield the same result as dividing <tt>n</tt> by <tt>d</tt>. In other words, <tt>make-rat</tt>, <tt>numer</tt>, and <tt>denom</tt> must satisfy the condition that, for any integer <tt>n</tt> and any non-zero integer <tt>d</tt>, if <tt>x</tt> is (<tt>make-rat n d</tt>), then
 
@@ -330,17 +330,17 @@ $$
 (define (cdr z) (z 1))
 </div>
 <script>
-prompt("scheme-define-cons");
+C.prompt("scheme-define-cons");
 </script>
 
-<p> This use of procedures corresponds to nothing like our intuitive notion of what data should be. Nevertheless, all we need to do to show that this is a valid way to represent pairs is to verify that these procedures satisfy the condition given above. 
+<p> This use of procedures corresponds to nothing like our intuitive notion of what data should be. Nevertheless, all we need to do to show that this is a valid way to represent pairs is to verify that these procedures satisfy the condition given above.
 
 <p> The subtle point to notice is that the value returned by <tt>(cons x y)</tt> is a procedure---namely the internally defined procedure <tt>dispatch</tt>, which takes one argument and returns either <tt>x</tt> or <tt>y</tt> depending on whether the argument is 0 or 1. Correspondingly, <tt>(car z)</tt> is defined to apply <tt>z</tt> to 0. Hence, if <tt>z</tt> is the procedure formed by <tt>(cons x y)</tt>, then <tt>z</tt> applied to 0 will yield <tt>x</tt>. Thus, we have shown that <tt>(car (cons x y))</tt> yields <tt>x</tt>, as desired. Similarly, <tt>(cdr (cons x y))</tt> applies the procedure returned by <tt>(cons x y)</tt> to 1, which returns <tt>y</tt>. Therefore, this procedural implementation of pairs is a valid implementation, and if we access pairs using only <tt>cons</tt>, <tt>car</tt>, and <tt>cdr</tt> we cannot distinguish this implementation from one that uses "real" data structures.
 
 <p> The point of exhibiting the procedural representation of pairs is not that our language works this way (Scheme, and Lisp systems in general, implement pairs directly, for efficiency reasons) but that it could work this way. The procedural representation, although obscure, is a perfectly adequate way to represent pairs, since it fulfills the only conditions that pairs need to fulfill. This example also demonstrates that the ability to manipulate procedures as objects automatically provides the ability to represent compound data. This may seem a curiosity now, but procedural representations of data will play a central role in our programming repertoire. This style of programming is often called <em>message passing</em>  , and we will be using it as a basic tool in Chapter 3 when we address the issues of modeling and simulation.
 
 <div class="exercise">
-<p> <b> Exercise 2.4. </b> Here is an alternative procedural representation of pairs. For this representation, verify that <tt>(car (cons x y))</tt> yields <tt>x</tt> for any objects <tt>x</tt> and <tt>y</tt>. 
+<p> <b> Exercise 2.4. </b> Here is an alternative procedural representation of pairs. For this representation, verify that <tt>(car (cons x y))</tt> yields <tt>x</tt> for any objects <tt>x</tt> and <tt>y</tt>.
 
 <div id="scheme-define-cons-lambda">
 (define (cons x y)
@@ -350,29 +350,29 @@ prompt("scheme-define-cons");
   (z (lambda (p q) p)))
 </div>
 <script>
-prompt("scheme-define-cons-lambda");
+C.prompt("scheme-define-cons-lambda");
 </script>
 
-<p> What is the corresponding definition of <tt>cdr</tt>? 
+<p> What is the corresponding definition of <tt>cdr</tt>?
 
 <div id="scheme-ex-define-cdr">
 (define (cdr z)
   'your-answer-here)
 </div>
 <script>
-makeEditable("scheme-ex-define-cdr");
-addOutput("scheme-ex-define-cdr");
-editorOf["scheme-ex-define-cdr"].setOption("onBlur", function(){
+C.make_editable("scheme-ex-define-cdr");
+C.add_output("scheme-ex-define-cdr");
+C.editor_of["scheme-ex-define-cdr"].setOption("onBlur", function(){
 
-  var code = "{0} \n {1} \n (= (cdr (cons 1 2)) 2)".format(editorOf["scheme-define-cons-lambda"].getValue(), editorOf["scheme-ex-define-cdr"].getValue());
+  var code = "{0} \n {1} \n (= (cdr (cons 1 2)) 2)".format(C.editor_of["scheme-define-cons-lambda"].getValue(), C.editor_of["scheme-ex-define-cdr"].getValue());
 
-  eval_scheme(code).then(function(res){
+  C.eval_scheme(code).then(function(res){
     if (res[res.length - 1] === "true\n") {
-      $_("scheme-ex-define-cdr-output").empty().append($("<div class='right-answer'> \u2713 </div>"));
+      C.$_("scheme-ex-define-cdr-output").empty().append($("<div class='right-answer'> \u2713 </div>"));
     } else {
-      $_("scheme-ex-define-cdr-output").empty().append($("<div class='wrong-answer'> \u2717 </div>"));
+      C.$_("scheme-ex-define-cdr-output").empty().append($("<div class='wrong-answer'> \u2717 </div>"));
     }
-    $_("scheme-ex-define-cdr-output").append(res.slice(0,-1));
+    C.$_("scheme-ex-define-cdr-output").append(res.slice(0,-1));
   });
 });
 
@@ -395,19 +395,19 @@ editorOf["scheme-ex-define-cdr"].setOption("onBlur", function(){
   'your-answer-here)
 </div>
 <script>
-makeEditable("scheme-ex-define-cons-using-2-3");
-addOutput("scheme-ex-define-cons-using-2-3");
-editorOf["scheme-ex-define-cons-using-2-3"].setOption("onBlur", function(){
+C.make_editable("scheme-ex-define-cons-using-2-3");
+C.add_output("scheme-ex-define-cons-using-2-3");
+C.editor_of["scheme-ex-define-cons-using-2-3"].setOption("onBlur", function(){
 
-  var code = "{0} \n (= (cons 1 2) 18)".format(editorOf["scheme-ex-define-cons-using-2-3"].getValue());
+  var code = "{0} \n (= (cons 1 2) 18)".format(C.editor_of["scheme-ex-define-cons-using-2-3"].getValue());
 
-  eval_scheme(code).then(function(res){
+  C.eval_scheme(code).then(function(res){
     if (res[res.length - 1] === "true\n") {
-      $_("scheme-ex-define-cons-using-2-3-output").empty().append($("<div class='right-answer'> \u2713 </div>"));
+      C.$_("scheme-ex-define-cons-using-2-3-output").empty().append($("<div class='right-answer'> \u2713 </div>"));
     } else {
-      $_("scheme-ex-define-cons-using-2-3-output").empty().append($("<div class='wrong-answer'> \u2717 </div>"));
+      C.$_("scheme-ex-define-cons-using-2-3-output").empty().append($("<div class='wrong-answer'> \u2717 </div>"));
     }
-    $_("scheme-ex-define-cons-using-2-3-output").append(res.slice(0,-1));
+    C.$_("scheme-ex-define-cons-using-2-3-output").append(res.slice(0,-1));
   });
 });
 
@@ -432,7 +432,7 @@ editorOf["scheme-ex-define-cons-using-2-3"].setOption("onBlur", function(){
   (lambda (f) (lambda (x) (f ((n f) x)))))
 </div>
 <script>
-prompt("scheme-define-church-numeral");
+C.prompt("scheme-define-church-numeral");
 /*
 (define one (lambda (f)
               (lambda (x)
@@ -444,12 +444,12 @@ prompt("scheme-define-church-numeral");
 */
 </script>
 
-<p> This representation is known as <em>Church numerals</em>  , after its inventor, Alonzo Church, the logician who invented the lambda calculus. 
+<p> This representation is known as <em>Church numerals</em>  , after its inventor, Alonzo Church, the logician who invented the lambda calculus.
 
 <p> Define <tt>one</tt> and <tt>two</tt> directly (not in terms of <tt>zero</tt> and <tt>add-1</tt>). (Hint: Use substitution to evaluate <tt>(add-1 zero)</tt>). Give a direct definition of the addition procedure <tt>+</tt> (not in terms of repeated application of <tt>add-1</tt>).
 </div>
 
-<h3> Extended Exercise: Interval Arithmetic </h3> 
+<h3> Extended Exercise: Interval Arithmetic </h3>
 
 <p> Alyssa P. Hacker is designing a system to help people solve engineering problems. One feature she wants to provide in her system is the ability to manipulate inexact quantities (such as measured parameters of physical devices) with known precision, so that when computations are done with such approximate quantities the results will be numbers of known precision.
 
@@ -471,7 +471,7 @@ $$
                  (+ (upper-bound x) (upper-bound y))))
 </div>
 <script>
-prompt("scheme-define-add-interval");
+C.prompt("scheme-define-add-interval");
 </script>
 
 <p> Alyssa also works out the product of two intervals by finding the minimum and the maximum of the products of the bounds and using them as the bounds of the resulting interval. (<tt>Min</tt> and <tt>max</tt> are primitives that find the minimum or maximum of any number of arguments.)
@@ -486,7 +486,7 @@ prompt("scheme-define-add-interval");
                    (max p1 p2 p3 p4))))
 </div>
 <script>
-prompt("scheme-define-mul-interval");
+C.prompt("scheme-define-mul-interval");
 </script>
 
 <p> To divide two intervals, Alyssa multiplies the first by the reciprocal of the second. Note that the bounds of the reciprocal interval are the reciprocal of the upper bound and the reciprocal of the lower bound, in that order.
@@ -498,7 +498,7 @@ prompt("scheme-define-mul-interval");
                                (/ 1.0 (lower-bound y)))))
 </div>
 <script>
-prompt("scheme-define-div-interval");
+C.prompt("scheme-define-div-interval");
 </script>
 
 <p>
@@ -510,7 +510,7 @@ prompt("scheme-define-div-interval");
 (define (make-interval a b) (cons a b))
 </div>
 <script>
-prompt("scheme-define-make-interval");
+C.prompt("scheme-define-make-interval");
 </script>
 
 <p> Define selectors <tt>upper-bound</tt> and <tt>lower-bound</tt> to complete the implementation.
@@ -523,19 +523,19 @@ prompt("scheme-define-make-interval");
   'your-answer-here)
 </div>
 <script>
-makeEditable("scheme-ex-define-upper-lower-bound");
-addOutput("scheme-ex-define-upper-lower-bound");
-editorOf["scheme-ex-define-upper-lower-bound"].setOption("onBlur", function(){
+C.make_editable("scheme-ex-define-upper-lower-bound");
+C.add_output("scheme-ex-define-upper-lower-bound");
+C.editor_of["scheme-ex-define-upper-lower-bound"].setOption("onBlur", function(){
 
-  var code = "{0} \n (= (upper-bound (cons 1 2)) 2)".format(editorOf["scheme-ex-define-upper-lower-bound"].getValue());
+  var code = "{0} \n (= (upper-bound (cons 1 2)) 2)".format(C.editor_of["scheme-ex-define-upper-lower-bound"].getValue());
 
-  eval_scheme(code).then(function(res){
+  C.eval_scheme(code).then(function(res){
     if (res[res.length - 1] === "true\n") {
-      $_("scheme-ex-define-upper-lower-bound-output").empty().append($("<div class='right-answer'> \u2713 </div>"));
+      C.$_("scheme-ex-define-upper-lower-bound-output").empty().append($("<div class='right-answer'> \u2713 </div>"));
     } else {
-      $_("scheme-ex-define-upper-lower-bound-output").empty().append($("<div class='wrong-answer'> \u2717 </div>"));
+      C.$_("scheme-ex-define-upper-lower-bound-output").empty().append($("<div class='wrong-answer'> \u2717 </div>"));
     }
-    $_("scheme-ex-define-upper-lower-bound-output").append(res.slice(0,-1));
+    C.$_("scheme-ex-define-upper-lower-bound-output").append(res.slice(0,-1));
   });
 });
 
@@ -557,19 +557,19 @@ editorOf["scheme-ex-define-upper-lower-bound"].setOption("onBlur", function(){
   'your-answer-here)
 </div>
 <script>
-makeEditable("scheme-ex-define-sub-interval");
-addOutput("scheme-ex-define-sub-interval");
-editorOf["scheme-ex-define-sub-interval"].setOption("onBlur", function(){
+C.make_editable("scheme-ex-define-sub-interval");
+C.add_output("scheme-ex-define-sub-interval");
+C.editor_of["scheme-ex-define-sub-interval"].setOption("onBlur", function(){
 
-  var code = "{0} \n {1} \n {2} \n (equal? (sub-interval (cons 3 4) (cons 1 2)) (cons 1 3))".format(editorOf["scheme-define-make-interval"].getValue(), editorOf["scheme-ex-define-upper-lower-bound"].getValue() ,editorOf["scheme-ex-define-sub-interval"].getValue());
+  var code = "{0} \n {1} \n {2} \n (equal? (sub-interval (cons 3 4) (cons 1 2)) (cons 1 3))".format(C.editor_of["scheme-define-make-interval"].getValue(), C.editor_of["scheme-ex-define-upper-lower-bound"].getValue() ,C.editor_of["scheme-ex-define-sub-interval"].getValue());
 
-  eval_scheme(code).then(function(res){
+  C.eval_scheme(code).then(function(res){
     if (res[res.length - 1] === "true\n") {
-      $_("scheme-ex-define-sub-interval-output").empty().append($("<div class='right-answer'> \u2713 </div>"));
+      C.$_("scheme-ex-define-sub-interval-output").empty().append($("<div class='right-answer'> \u2713 </div>"));
     } else {
-      $_("scheme-ex-define-sub-interval-output").empty().append($("<div class='wrong-answer'> \u2717 </div>"));
+      C.$_("scheme-ex-define-sub-interval-output").empty().append($("<div class='wrong-answer'> \u2717 </div>"));
     }
-    $_("scheme-ex-define-sub-interval-output").append(res.slice(0,-1));
+    C.$_("scheme-ex-define-sub-interval-output").append(res.slice(0,-1));
   });
 });
 
@@ -599,7 +599,7 @@ editorOf["scheme-ex-define-sub-interval"].setOption("onBlur", function(){
 <div class="exercise">
 <p> <b>Exercise 2.11:</b> In passing, Ben also cryptically comments: "By testing the signs of the endpoints of the intervals, it is possible to break <tt>mul-interval</tt> into nine cases, only one of which requires more than two multiplications."  Rewrite this procedure using Ben's suggestion.
 
-<p> After debugging her program, Alyssa shows it to a potential user, who complains that her program solves the wrong problem. He wants a program that can deal with numbers represented as a center value and an additive tolerance; for example, he wants to work with intervals such as 3.5 +/- 0.15 rather than [3.35, 3.65]. Alyssa returns to her desk and fixes this problem by supplying an alternate constructor and alternate selectors: 
+<p> After debugging her program, Alyssa shows it to a potential user, who complains that her program solves the wrong problem. He wants a program that can deal with numbers represented as a center value and an additive tolerance; for example, he wants to work with intervals such as 3.5 +/- 0.15 rather than [3.35, 3.65]. Alyssa returns to her desk and fixes this problem by supplying an alternate constructor and alternate selectors:
 
 <div id="scheme-define-make-center-width">
 (define (make-center-width c w)
@@ -612,7 +612,7 @@ editorOf["scheme-ex-define-sub-interval"].setOption("onBlur", function(){
   (/ (- (upper-bound i) (lower-bound i)) 2))
 </div>
 <script>
-prompt("scheme-define-make-center-width");
+C.prompt("scheme-define-make-center-width");
 </script>
 
 <p> Unfortunately, most of Alyssa's users are engineers. Real engineering situations usually involve measurements with only a small uncertainty, measured as the ratio of the width of the interval to the midpoint of the interval. Engineers usually specify percentage tolerances on the parameters of devices, as in the resistor specifications given earlier.
@@ -632,23 +632,23 @@ prompt("scheme-define-make-center-width");
   'your-answer-here)
 </div>
 <script>
-makeEditable("scheme-ex-define-make-center-percent");
-addOutput("scheme-ex-define-make-center-percent");
-editorOf["scheme-ex-define-make-center-percent"].setOption("onBlur", function(){
+C.make_editable("scheme-ex-define-make-center-percent");
+C.add_output("scheme-ex-define-make-center-percent");
+C.editor_of["scheme-ex-define-make-center-percent"].setOption("onBlur", function(){
 
   var code = "{0} \n {1} \n {2} \n {3} \n (define i (make-center-percent 2 100)) \n (and (equal? i (cons 0 4)) (equal? (percent i) 100))".format(
-    editorOf["scheme-define-make-interval"].getValue(), 
-    editorOf["scheme-ex-define-upper-lower-bound"].getValue(), 
-    editorOf["scheme-define-make-center-width"].getValue(), 
-    editorOf["scheme-ex-define-make-center-percent"].getValue());
+    C.editor_of["scheme-define-make-interval"].getValue(),
+    C.editor_of["scheme-ex-define-upper-lower-bound"].getValue(),
+    C.editor_of["scheme-define-make-center-width"].getValue(),
+    C.editor_of["scheme-ex-define-make-center-percent"].getValue());
 
-  eval_scheme(code).then(function(res){
+  C.eval_scheme(code).then(function(res){
     if (res[res.length - 1] === "true\n") {
-      $_("scheme-ex-define-make-center-percent-output").empty().append($("<div class='right-answer'> \u2713 </div>"));
+      C.$_("scheme-ex-define-make-center-percent-output").empty().append($("<div class='right-answer'> \u2713 </div>"));
     } else {
-      $_("scheme-ex-define-make-center-percent-output").empty().append($("<div class='wrong-answer'> \u2717 </div>"));
+      C.$_("scheme-ex-define-make-center-percent-output").empty().append($("<div class='wrong-answer'> \u2717 </div>"));
     }
-    $_("scheme-ex-define-make-center-percent-output").append(res.slice(0,-1));
+    C.$_("scheme-ex-define-make-center-percent-output").append(res.slice(0,-1));
   });
 });
 
@@ -658,7 +658,7 @@ editorOf["scheme-ex-define-make-center-percent"].setOption("onBlur", function(){
 
 (define (percent interval)
   (* 100 (/ (width interval)
-            (center interval)))) 
+            (center interval))))
 */
 </script>
 
@@ -695,7 +695,7 @@ $$
                                 (div-interval one r2)))))
 </div>
 <script>
-prompt("scheme-define-par");
+C.prompt("scheme-define-par");
 </script>
 
 <p> Lem complains that Alyssa's program gives different answers for the two ways of computing. This is a serious complaint.
@@ -724,11 +724,11 @@ prompt("scheme-define-par");
 
 {{footnotes}}
 
-<div id="footnote_2-2" class="footnote"> 
-<p> <a href="#footnote_link_2-2" class="footnote_backlink">2</a> The name <tt>cons</tt> stands for "construct."  The names <tt>car</tt> and <tt>cdr</tt> derive from the original implementation of Lisp on the IBM 704. That machine had an addressing scheme that allowed one to reference the "address" and "decrement" parts of a memory location. <tt>Car</tt> stands for "Contents of Address part of Register" and <tt>cdr</tt> (pronounced "could-er") stands for "Contents of Decrement part of Register." 
+<div id="footnote_2-2" class="footnote">
+<p> <a href="#footnote_link_2-2" class="footnote_backlink">2</a> The name <tt>cons</tt> stands for "construct."  The names <tt>car</tt> and <tt>cdr</tt> derive from the original implementation of Lisp on the IBM 704. That machine had an addressing scheme that allowed one to reference the "address" and "decrement" parts of a memory location. <tt>Car</tt> stands for "Contents of Address part of Register" and <tt>cdr</tt> (pronounced "could-er") stands for "Contents of Decrement part of Register."
 </div>
 
-<div id="footnote_2-3" class="footnote"> 
+<div id="footnote_2-3" class="footnote">
 <p> <a href="#footnote_link_2-3" class="footnote_backlink">3</a> Another way to define the selectors and constructor is
 
 <div id="scheme-define-rat-pointless">
@@ -737,7 +737,7 @@ prompt("scheme-define-par");
 (define denom cdr)
 </div>
 <script>
-prompt("scheme-define-rat-pointless");
+C.prompt("scheme-define-rat-pointless");
 </script>
 
 <p> The first definition associates the name <tt>make-rat</tt> with the value of the expression <tt>cons</tt>, which is the primitive procedure that constructs pairs. Thus <tt>make-rat</tt> and <tt>cons</tt> are names for the same primitive constructor.
@@ -747,7 +747,7 @@ prompt("scheme-define-rat-pointless");
 We have chosen not to use this style of definition in this book.
 </div>
 
-<div id="footnote_2-4" class="footnote"> 
+<div id="footnote_2-4" class="footnote">
 <p> <a href="#footnote_link_2-4" class="footnote_backlink">4</a> <tt>display</tt> is the Scheme primitive for printing data. The Scheme primitive <tt>newline</tt> starts a new line for printing. Neither of these procedures returns a useful value, so in the uses of <tt>print-rat</tt> below, we show only what <tt>print-rat</tt> prints, not what the interpreter prints as the value returned by <tt>print-rat</tt>. </div>
 
 <div id="footnote_2-5" class="footnote">

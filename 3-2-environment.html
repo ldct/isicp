@@ -3,19 +3,18 @@
 <head>
 <meta charset="UTF-8">
 
-<link rel="stylesheet" type="text/css" href="web-worker-interpreter/deps/codemirror/lib/codemirror.css" />
+<link rel="stylesheet" type="text/css" href="coding-js/deps/codemirror/lib/codemirror.css" />
 <link rel="stylesheet" type="text/css" href="css/isicp.css" />
 <link rel="stylesheet" type="text/css" href="css/footnotes.css" />
 <link rel="stylesheet" type="text/css" href="css/theme.css" />
 
-<script src="js/helper.js"></script>
+<script src="js/TOC.js"></script>
 <script src="js/jquery.min.js"></script>
-<script src="web-worker-interpreter/deps/codemirror/lib/codemirror.js"></script>
-<script src="web-worker-interpreter/deps/codemirror/mode/scheme/scheme.js"></script>
-<script src="web-worker-interpreter/coding.js"> </script>
+<script src="coding-js/deps/codemirror/lib/codemirror.js"></script>
+<script src="coding-js/deps/codemirror/mode/scheme/scheme.js"></script>
+<script src="coding-js/coding.js"> </script>
 <script>
-  set_interpreter_path("web-worker-interpreter/");
-  set_language("scheme");
+  C = new CodingJS("coding-js/");
 </script>
 <script src="js/footnotes.js"></script>
 
@@ -46,13 +45,13 @@ MathJax.Hub.Config({
 <div id="sidebox">
   <div class="tab"></div>
   <div class="content">
-    
-    <p> 
-    
+
+    <p>
+
     <a href="index.html" class="navlink"> <img src='images/home.svg' width=32 height=32> </a>
     <span id="toc-link" class="navlink"> <img src='images/list.svg' width=32 height=32> </span>
     <span id="currently-editing-link" class="navlink"> <img src='images/file-edit.svg' width=32 height=32> </span>
-    
+
     <script src="http://cdn.jotfor.ms/static/feedback2.js?3.2.310" type="text/javascript">
     new JotformFeedback({
     formId:'40222623177447',
@@ -68,50 +67,50 @@ MathJax.Hub.Config({
     <a class="lightbox-40222623177447" style="cursor:pointer;color:blue;text-decoration:underline;"><img src='images/envelope.svg' width=32 height=32></a>
 
     <p>
-    
+
     <div id="currently-editing"> </div>
 
 
-    
+
     <script>
-    
+
     function hideAll() {
       $("#currently-editing").hide();
       $("#toc").hide();
     }
-    
+
     $("#currently-editing-link").click(function() {
       hideAll();
       $("#currently-editing").show();
     });
-    
+
     $("#toc-link").click(function() {
       hideAll();
       $("#toc").show();
     });
-    
+
     </script>
-    
+
     <div id="toc"> </div>
-    
+
     <p style='font-size:12px'> (Click on the left edge of this green box to hide it!)
-    
+
     <script>
     hideAll();
     $("#toc").show();
     </script>
-  
+
   </div>
 </div>
 
-<script> 
+<script>
 $('#sidebox .tab').toggle(function(){
     $('#sidebox').animate({'right':'0%'});
 }, function(){
     $('#sidebox').animate({'right':'-30%'});
 });
 
-$(document).ready(createTOC);
+$(document).ready(create_TOC);
 
 </script>
 
@@ -123,7 +122,7 @@ $(document).ready(createTOC);
 <a href='3-3-modeling.html'> <img src='images/chevron-right.svg' height=64 width=64> </a>
 </span>
 <br> <br>
-<h2> The Environment Model of Evaluation </h2> 
+<h2> The Environment Model of Evaluation </h2>
 
 <p> When we introduced compound procedures in Chapter 1, we used the substitution model of evaluation (section 1-1-5) to define what is meant by applying a procedure to arguments:
 
@@ -147,7 +146,7 @@ with each formal parameter replaced by the corresponding argument.
 
 <p> The environment is crucial to the evaluation process, because it determines the context in which an expression should be evaluated. Indeed, one could say that expressions in a programming language do not, in themselves, have any meaning. Rather, an expression acquires a meaning only with respect to some environment in which it is evaluated. Even the interpretation of an expression as straightforward as <tt>(+ 1 1)</tt> depends on an understanding that one is operating in a context in which <tt>+</tt> is the symbol for addition. Thus, in our model of evaluation we will always speak of evaluating an expression with respect to some environment. To describe interactions with the interpreter, we will suppose that there is a global environment, consisting of a single frame (with no enclosing environment) that includes values for the symbols associated with the primitive procedures. For example, the idea that <tt>+</tt> is the symbol for addition is captured by saying that the symbol <tt>+</tt> is bound in the global environment to the primitive addition procedure.
 
-<h3> The Rules for Evaluation </h3> 
+<h3> The Rules for Evaluation </h3>
 
 <p> The overall specification of how the interpreter evaluates a combination remains the same as when we first introduced it in section 1-1-3:
 
@@ -173,7 +172,7 @@ with each formal parameter replaced by the corresponding argument.
   (* x x))
 </div>
 <script>
-prompt("scheme-define-square");
+C.prompt("scheme-define-square");
 </script>
 
 <p> evaluated in the global environment. The procedure definition syntax is just syntactic sugar for an underlying implicit <tt>lambda</tt> expression. It would have been equivalent to have used
@@ -183,7 +182,7 @@ prompt("scheme-define-square");
   (lambda (x) (* x x)))
 </div>
 <script>
-prompt("scheme-define-square-lambda");
+C.prompt("scheme-define-square-lambda");
 </script>
 
 <p> which evaluates <tt>(lambda (x) (* x x))</tt> and binds <tt>square</tt> to the resulting value, all in the global environment.
@@ -221,7 +220,7 @@ prompt("scheme-define-square-lambda");
 
 <p> These evaluation rules, though considerably more complex than the substitution model, are still reasonably straightforward. Moreover, the evaluation model, though abstract, provides a correct description of how the interpreter evaluates expressions. In Chapter 4 we shall see how this model can serve as a blueprint for implementing a working interpreter. The following sections elaborate the details of the model by analyzing some illustrative programs.
 
-<h3> Applying Simple Procedures </h3> 
+<h3> Applying Simple Procedures </h3>
 
 <p> When we introduced the substitution model in section 1-1-5 we showed how the combination <tt>(f 5)</tt> evaluates to 136, given the following procedure definitions:
 
@@ -236,7 +235,7 @@ prompt("scheme-define-square-lambda");
   (sum-of-squares (+ a 1) (* a 2)))
 </div>
 <script>
-prompt("scheme-define-sum-of-squares");
+C.prompt("scheme-define-sum-of-squares");
 </script>
 
 <p> We can analyze the same example using the environment model. Figure 3-4 shows the three procedure objects created by evaluating the definitions of <tt>f</tt>, <tt>square</tt>, and <tt>sum-of-squares</tt> in the global environment. Each procedure object consists of some code, together with a pointer to the global environment.
@@ -252,7 +251,7 @@ prompt("scheme-define-sum-of-squares");
 (sum-of-squares (+ a 1) (* a 2))
 </div>
 <script>
-no_output_frozen_prompt("scheme-f-internal");
+C.no_output_frozen_prompt("scheme-f-internal");
 </script>
 
 <div class="figure">
@@ -278,7 +277,7 @@ no_output_frozen_prompt("scheme-f-internal");
       (* n (factorial (- n 1)))))
 </div>
 <script>
-prompt("scheme-define-factorial");
+C.prompt("scheme-define-factorial");
 </script>
 
 <p> and an iterative version
@@ -295,13 +294,13 @@ prompt("scheme-define-factorial");
                  max-count)))
 </div>
 <script>
-prompt("scheme-define-factorial-iterative");
+C.prompt("scheme-define-factorial-iterative");
 </script>
 
 <p> Show the environment structures created by evaluating <tt>(factorial 6)</tt> using each version of the <tt>factorial</tt> procedure.<a name="footnote_link_3-14" class="footnote_link" href="#footnote_3-14">14</a>
 </div>
 
-<h3> Frames as the Repository of Local State </h3> 
+<h3> Frames as the Repository of Local State </h3>
 
 <p> We can turn to the environment model to see how procedures and assignment can be used to represent objects with local state. As an example, consider the "withdrawal processor" from section 3-1-1 created by calling the procedure
 
@@ -314,7 +313,7 @@ prompt("scheme-define-factorial-iterative");
         "Insufficient funds")))
 </div>
 <script>
-prompt("scheme-define-make-withdraw");
+C.prompt("scheme-define-make-withdraw");
 </script>
 
 <p> Let us describe the evaluation of
@@ -323,7 +322,7 @@ prompt("scheme-define-make-withdraw");
 (define W1 (make-withdraw 100))
 </div>
 <script>
-prompt("scheme-define-w1", ["scheme-define-make-withdraw"]);
+C.prompt("scheme-define-w1", ["scheme-define-make-withdraw"]);
 </script>
 
 <p> followed by
@@ -332,7 +331,7 @@ prompt("scheme-define-w1", ["scheme-define-make-withdraw"]);
 (W1 50)
 </div>
 <script>
-prompt("scheme-w1-50", ["scheme-define-w1"]);
+C.prompt("scheme-w1-50", ["scheme-define-w1"]);
 </script>
 
 <p> Figure 3-6 shows the result of defining the <tt>make-withdraw</tt> procedure in the global environment. This produces a procedure object that contains a pointer to the global environment. So far, this is no different from the examples we have already seen, except that the body of the procedure is itself a <tt>lambda</tt> expression.
@@ -348,7 +347,7 @@ prompt("scheme-w1-50", ["scheme-define-w1"]);
 (define W1 (make-withdraw 100))
 </div>
 <script>
-prompt("scheme-define-w1-again", ["scheme-define-make-withdraw"]);
+C.prompt("scheme-define-w1-again", ["scheme-define-make-withdraw"]);
 </script>
 
 <p> We begin, as usual, by setting up an environment E1 in which the formal parameter <tt>balance</tt> is bound to the argument 100. Within this environment, we evaluate the body of <tt>make-withdraw</tt>, namely the <tt>lambda</tt> expression. This constructs a new procedure object, whose code is as specified by the <tt>lambda</tt> and whose environment is E1, the environment in which the <tt>lambda</tt> was evaluated to produce the procedure. The resulting procedure object is the value returned by the call to <tt>make-withdraw</tt>. This is bound to <tt>W1</tt> in the global environment, since the <tt>define</tt> itself is being evaluated in the global environment. Figure 3-7 shows the resulting environment structure.
@@ -364,7 +363,7 @@ prompt("scheme-define-w1-again", ["scheme-define-make-withdraw"]);
 (W1 50)
 </div>
 <script>
-prompt("scheme-w1-50-again", ["scheme-define-w1"]);
+C.prompt("scheme-w1-50-again", ["scheme-define-w1"]);
 </script>
 
 <p> We begin by constructing a frame in which <tt>amount</tt>, the formal parameter of <tt>W1</tt>, is bound to the argument 50. The crucial point to observe is that this frame has as its enclosing environment not the global environment, but rather the environment E1, because this is the environment that is specified by the <tt>W1</tt> procedure object. Within this new environment, we evaluate the body of the procedure:
@@ -376,7 +375,7 @@ prompt("scheme-w1-50-again", ["scheme-define-w1"]);
     "Insufficient funds")
 </div>
 <script>
-no_output_frozen_prompt("scheme-w1-internal");
+C.no_output_frozen_prompt("scheme-w1-internal");
 </script>
 
 <p> The resulting environment structure is shown in Figure 3-8. The expression being evaluated references both <tt>amount</tt> and <tt>balance</tt>. <tt>Amount</tt> will be found in the first frame in the environment, while <tt>balance</tt> will be found by following the enclosing-environment pointer to E1.
@@ -400,7 +399,7 @@ another call to <tt>make-withdraw</tt>:
 (define W2 (make-withdraw 100))
 </div>
 <script>
-prompt("scheme-define-w2", ["scheme-define-make-withdraw"]);
+C.prompt("scheme-define-w2", ["scheme-define-make-withdraw"]);
 </script>
 
 <p> <p> This produces the environment structure of Figure 3-10, which shows that <tt>W2</tt> is a procedure object, that is, a pair with some code and an environment. The environment E2 for <tt>W2</tt> was created by the call to <tt>make-withdraw</tt>. It contains a frame with its own local binding for <tt>balance</tt>. On the other hand, <tt>W1</tt> and <tt>W2</tt> have the same code: the code specified by the <tt>lambda</tt> expression in the body of <tt>make-withdraw</tt>.<a name="footnote_link_3-15" class="footnote_link" href="#footnote_3-15">15</a> We see here why <tt>W1</tt> and <tt>W2</tt> behave as independent objects. Calls to <tt>W1</tt> reference the state variable <tt>balance</tt> stored in E1, whereas calls to <tt>W2</tt> reference the <tt>balance</tt> stored in E2. Thus, changes to the local state of one object do not affect the other object.
@@ -423,7 +422,7 @@ prompt("scheme-define-w2", ["scheme-define-make-withdraw"]);
           "Insufficient funds"))))
 </div>
 <script>
-prompt("scheme-define-make-withdraw-with-let");
+C.prompt("scheme-define-make-withdraw-with-let");
 </script>
 
 <p> Recall from section 1-3-2 that <tt>let</tt> is simply syntactic sugar for a procedure call:
@@ -432,7 +431,7 @@ prompt("scheme-define-make-withdraw-with-let");
 (let ((&lt;var&gt; &lt;exp&gt;)) &lt;body&gt;)
 </div>
 <script>
-no_output_frozen_prompt("scheme-let-syntax");
+C.no_output_frozen_prompt("scheme-let-syntax");
 </script>
 
 <p> is interpreted as an alternate syntax for
@@ -441,7 +440,7 @@ no_output_frozen_prompt("scheme-let-syntax");
 ((lambda (&lt;var&gt;) &lt;body&gt;) &lt;exp&gt;)
 </div>
 <script>
-no_output_frozen_prompt("scheme-let-syntax-lambda");
+C.no_output_frozen_prompt("scheme-let-syntax-lambda");
 </script>
 
 <p> Use the environment model to analyze this alternate version of <tt>make-withdraw</tt>, drawing figures like the ones above to illustrate the interactions
@@ -452,13 +451,13 @@ no_output_frozen_prompt("scheme-let-syntax-lambda");
 (define W2 (make-withdraw 100))
 </div>
 <script>
-no_output_frozen_prompt("scheme-prompts-for-make-withdraw-let-diagram");
+C.no_output_frozen_prompt("scheme-prompts-for-make-withdraw-let-diagram");
 </script>
 
 <p> Show that the two versions of <tt>make-withdraw</tt> create objects with the same behavior. How do the environment structures differ for the two versions?
 </div>
 
-<h3> Internal Definitions </h3> 
+<h3> Internal Definitions </h3>
 
 <p> Section 1-1-8 introduced the idea that procedures can have internal
 definitions, thus leading to a block structure as in the following procedure to
@@ -469,7 +468,7 @@ compute square roots:
   (/ (+ x y) 2))
 </div>
 <script>
-hidden_prompt("scheme-define-average")
+C.hidden_prompt("scheme-define-average")
 </script>
 
 <div id="scheme-define-sqrt">
@@ -485,7 +484,7 @@ hidden_prompt("scheme-define-average")
   (sqrt-iter 1.0))
 </div>
 <script>
-prompt("scheme-define-sqrt", ["scheme-define-square", "scheme-define-average"]);
+C.prompt("scheme-define-sqrt", ["scheme-define-square", "scheme-define-average"]);
 </script>
 
 <p> Now we can use the environment model to see why these internal definitions behave as desired. Figure 3-11 shows the point in the evaluation of the expression <tt>(sqrt 2)</tt> where the internal procedure <tt>good-enough?</tt> has been called for the first time with <tt>guess</tt> equal to 1.
@@ -502,7 +501,7 @@ prompt("scheme-define-sqrt", ["scheme-define-square", "scheme-define-average"]);
   (&lt; (abs (- (square guess) x)) 0.001))
 </div>
 <script>
-no_output_frozen_prompt("scheme-define-good-enough?");
+C.no_output_frozen_prompt("scheme-define-good-enough?");
 </script>
 
 <p> evaluating this expression defined the procedure <tt>good-enough?</tt> in the environment E1. To be more precise, the symbol <tt>good-enough?</tt> was added to the first frame of E1, bound to a procedure object whose associated environment is E1. Similarly, <tt>improve</tt> and <tt>sqrt-iter</tt> were defined as procedures in E1. For conciseness, Figure 3-11 shows only the procedure object for <tt>good-enough?</tt>.
@@ -543,7 +542,7 @@ no_output_frozen_prompt("scheme-define-good-enough?");
   dispatch)
 </div>
 <script>
-prompt("scheme-define-make-withdraw-message-passing");
+C.prompt("scheme-define-make-withdraw-message-passing");
 </script>
 
 <p> Show the environment structure generated by the sequence of interactions
@@ -554,7 +553,7 @@ prompt("scheme-define-make-withdraw-message-passing");
 ((acc 'withdraw) 60)
 </div>
 <script>
-prompt("scheme-define-acc", ["scheme-define-make-withdraw-message-passing"]);
+C.prompt("scheme-define-acc", ["scheme-define-make-withdraw-message-passing"]);
 </script>
 
 <p> Where is the local state for <tt>acc</tt> kept?  Suppose we define another account
@@ -563,7 +562,7 @@ prompt("scheme-define-acc", ["scheme-define-make-withdraw-message-passing"]);
 (define acc2 (make-account 100))
 </div>
 <script>
-prompt("scheme-define-acc2", ["scheme-define-make-withdraw-message-passing"]);
+C.prompt("scheme-define-acc2", ["scheme-define-make-withdraw-message-passing"]);
 </script>
 
 <p> How are the local states for the two accounts kept distinct?  Which parts of

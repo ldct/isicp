@@ -3,19 +3,18 @@
 <head>
 <meta charset="UTF-8">
 
-<link rel="stylesheet" type="text/css" href="web-worker-interpreter/deps/codemirror/lib/codemirror.css" />
+<link rel="stylesheet" type="text/css" href="coding-js/deps/codemirror/lib/codemirror.css" />
 <link rel="stylesheet" type="text/css" href="css/isicp.css" />
 <link rel="stylesheet" type="text/css" href="css/footnotes.css" />
 <link rel="stylesheet" type="text/css" href="css/theme.css" />
 
-<script src="js/helper.js"></script>
+<script src="js/TOC.js"></script>
 <script src="js/jquery.min.js"></script>
-<script src="web-worker-interpreter/deps/codemirror/lib/codemirror.js"></script>
-<script src="web-worker-interpreter/deps/codemirror/mode/scheme/scheme.js"></script>
-<script src="web-worker-interpreter/coding.js"> </script>
+<script src="coding-js/deps/codemirror/lib/codemirror.js"></script>
+<script src="coding-js/deps/codemirror/mode/scheme/scheme.js"></script>
+<script src="coding-js/coding.js"> </script>
 <script>
-  set_interpreter_path("web-worker-interpreter/");
-  set_language("scheme");
+  C = new CodingJS("coding-js/");
 </script>
 <script src="js/footnotes.js"></script>
 
@@ -46,13 +45,13 @@ MathJax.Hub.Config({
 <div id="sidebox">
   <div class="tab"></div>
   <div class="content">
-    
-    <p> 
-    
+
+    <p>
+
     <a href="index.html" class="navlink"> <img src='images/home.svg' width=32 height=32> </a>
     <span id="toc-link" class="navlink"> <img src='images/list.svg' width=32 height=32> </span>
     <span id="currently-editing-link" class="navlink"> <img src='images/file-edit.svg' width=32 height=32> </span>
-    
+
     <script src="http://cdn.jotfor.ms/static/feedback2.js?3.2.310" type="text/javascript">
     new JotformFeedback({
     formId:'40222623177447',
@@ -68,50 +67,50 @@ MathJax.Hub.Config({
     <a class="lightbox-40222623177447" style="cursor:pointer;color:blue;text-decoration:underline;"><img src='images/envelope.svg' width=32 height=32></a>
 
     <p>
-    
+
     <div id="currently-editing"> </div>
 
 
-    
+
     <script>
-    
+
     function hideAll() {
       $("#currently-editing").hide();
       $("#toc").hide();
     }
-    
+
     $("#currently-editing-link").click(function() {
       hideAll();
       $("#currently-editing").show();
     });
-    
+
     $("#toc-link").click(function() {
       hideAll();
       $("#toc").show();
     });
-    
+
     </script>
-    
+
     <div id="toc"> </div>
-    
+
     <p style='font-size:12px'> (Click on the left edge of this green box to hide it!)
-    
+
     <script>
     hideAll();
     $("#toc").show();
     </script>
-  
+
   </div>
 </div>
 
-<script> 
+<script>
 $('#sidebox .tab').toggle(function(){
     $('#sidebox').animate({'right':'0%'});
 }, function(){
     $('#sidebox').animate({'right':'-30%'});
 });
 
-$(document).ready(createTOC);
+$(document).ready(create_TOC);
 
 </script>
 
@@ -124,7 +123,7 @@ $(document).ready(createTOC);
 
 </span>
 <br> <br>
-<h2> Variations on a Scheme &ndash; Lazy Evaluation </h2> 
+<h2> Variations on a Scheme &ndash; Lazy Evaluation </h2>
 
 <p> Now that we have an evaluator expressed as a Lisp program, we can experiment with alternative choices in language design simply by modifying the evaluator. Indeed, new languages are often invented by first writing an evaluator that embeds the new language within an existing high-level language. For example, if we wish to discuss some aspect of a proposed modification to Lisp with another member of the Lisp community, we can supply an evaluator that embodies the change. The recipient can then experiment with the new evaluator and send back comments as further modifications. Not only does the high-level implementation base make it easier to test and debug the evaluator; in addition, the embedding enables the designer to snarf@footnote{Snarf: ``To grab, especially a large document or file for the purpose of using it either with or without the owner's permission.''  Snarf down: ``To snarf, sometimes with the connotation of absorbing, processing, or understanding.''  (These definitions were snarfed from Steele et al. 1983. See also Raymond 1993.)} features from the underlying language, just as our embedded Lisp evaluator uses primitives and control structure from the underlying Lisp. Only later (if ever) need the designer go to the trouble of building a complete implementation in a low-level language or in hardware. In this section and the next we explore some variations on Scheme that provide significant additional expressive power.
 
@@ -134,7 +133,7 @@ $(document).ready(createTOC);
 * 4-2-3::            Streams as Lazy Lists
 @end menu
 
-<h3> Normal Order and Applicative Order </h3> 
+<h3> Normal Order and Applicative Order </h3>
 
 <p> In section 1-1, where we began our discussion of models of evaluation, we noted that Scheme is an <tt>applicative-order</tt> language, namely, that all the arguments to Scheme procedures are evaluated when the procedure is applied. In contrast, <tt>normal-order</tt> languages delay evaluation of procedure arguments until the actual argument values are needed. Delaying evaluation of procedure arguments until the last possible moment (e.g., until they are required by a primitive operation) is called <tt>lazy evaluation</tt> .@footnote{The difference between the ``lazy'' terminology and the ``normal-order'' terminology is somewhat fuzzy. Generally, ``lazy'' refers to the mechanisms of particular evaluators, while ``normal-order'' refers to the semantics of languages, independent of any particular evaluation strategy. But this is not a hard-and-fast distinction, and the two terminologies are often used interchangeably.}  Consider the procedure
 
@@ -143,7 +142,7 @@ $(document).ready(createTOC);
   (if (= a 0) 1 b))
 </div>
 <script>
-prompt();
+C.prompt();
 </script>
 
 <p> Evaluating <tt>(try 0 (/ 1 0))</tt> generates an error in Scheme. With lazy evaluation, there would be no error. Evaluating the expression would return 1, because the argument <tt>(/ 1 0)</tt> would never be evaluated.
@@ -155,7 +154,7 @@ prompt();
   (if condition exceptional-value usual-value))
 </div>
 <script>
-prompt();
+C.prompt();
 </script>
 
 
@@ -168,7 +167,7 @@ prompt();
                0))
 </div>
 <script>
-prompt();
+C.prompt();
 </script>
 
 <p> This won't work in an applicative-order language because both the usual value and the exceptional value will be evaluated before <tt>unless</tt> is called (compare Exercise 1-6). An advantage of lazy evaluation is that some procedures, such as <tt>unless</tt>, can do useful computation even if evaluation of some of their arguments would produce errors or would not terminate.
@@ -187,7 +186,7 @@ prompt();
           1))
 </div>
 <script>
-prompt();
+C.prompt();
 </script>
 
 <p> What happens if we attempt to evaluate <tt>(factorial 5)</tt>?  Will our definitions work in a normal-order language?
@@ -197,7 +196,7 @@ prompt();
 <p> <b>Exercise 4.26:</b> Ben Bitdiddle and Alyssa P. Hacker disagree over the importance of lazy evaluation for implementing things such as <tt>unless</tt>. Ben points out that it's possible to implement <tt>unless</tt> in applicative order as a special form. Alyssa counters that, if one did that, <tt>unless</tt> would be merely syntax, not a procedure that could be used in conjunction with higher-order procedures. Fill in the details on both sides of the argument. Show how to implement <tt>unless</tt> as a derived expression (like <tt>cond</tt> or <tt>let</tt>), and give an example of a situation where it might be useful to have <tt>unless</tt> available as a procedure, rather than as a special form.
  </div>
 
-<h3> An Interpreter with Lazy Evaluation </h3> 
+<h3> An Interpreter with Lazy Evaluation </h3>
 
 <p> In this section we will implement a normal-order language that is the same as Scheme except that compound procedures are non-strict in each argument. Primitive procedures will still be strict. It is not difficult to modify the evaluator of section 4-1-1 so that the language it interprets behaves this way. Almost all the required changes center around procedure application.
 
@@ -207,7 +206,7 @@ prompt();
 
 <p> argument passing, in contrast to <tt>call-by-name</tt> argument passing. (Call-by-name, introduced in Algol 60, is similar to non-memoized lazy evaluation.)  As language designers, we can build our evaluator to memoize, not to memoize, or leave this an option for programmers (Exercise 4-31). As you might expect from Chapter 3, these choices raise issues that become both subtle and confusing in the presence of assignments. (See Exercise 4-27 and Exercise 4-29.)  An excellent article by Clinger (1982) attempts to clarify the multiple dimensions of confusion that arise here.}
 
-<h4> Modifying the evaluator </h4> 
+<h4> Modifying the evaluator </h4>
 
 <p> The main difference between the lazy evaluator and the one in section 4-1 is in the handling of procedure applications in <tt>eval</tt> and <tt>apply</tt>.
 
@@ -220,7 +219,7 @@ prompt();
         env))
 </div>
 <script>
-prompt();
+C.prompt();
 </script>
 
 <p> This is almost the same as the <tt>application?</tt> clause of <tt>eval</tt> in section 4-1-1. For lazy evaluation, however, we call <tt>apply</tt> with the operand expressions, rather than the arguments produced by evaluating them. Since we will need the environment to construct thunks if the arguments are to be delayed, we must pass this as well. We still evaluate the operator, because <tt>apply</tt> needs the actual procedure to be applied in order to dispatch on its type (primitive versus compound) and apply it.
@@ -232,7 +231,7 @@ prompt();
   (force-it (eval exp env)))
 </div>
 <script>
-prompt();
+C.prompt();
 </script>
 
 <p> instead of just <tt>eval</tt>, so that if the expression's value is a thunk, it will be forced.
@@ -257,7 +256,7 @@ prompt();
           "Unknown procedure type -- APPLY" procedure))))
 </div>
 <script>
-prompt();
+C.prompt();
 </script>
 
 <p> The procedures that process the arguments are just like <tt>list-of-values</tt> from section 4-1-1, except that <tt>list-of-delayed-args</tt> delays the arguments instead of evaluating them, and <tt>list-of-arg-values</tt> uses <tt>actual-value</tt> instead of <tt>eval</tt>:
@@ -278,7 +277,7 @@ prompt();
                                   env))))
 </div>
 <script>
-prompt();
+C.prompt();
 </script>
 
 <p> The other place we must change the evaluator is in the handling of <tt>if</tt>, where we must use <tt>actual-value</tt> instead of <tt>eval</tt> to get the value of the predicate expression before testing whether it is true or false:
@@ -290,7 +289,7 @@ prompt();
       (eval (if-alternative exp) env)))
 </div>
 <script>
-prompt();
+C.prompt();
 </script>
 
 <p> Finally, we must change the <tt>driver-loop</tt> procedure (section 4-1-4) to use <tt>actual-value</tt> instead of <tt>eval</tt>, so that if a delayed value is propagated back to the read-eval-print loop, it will be forced before being printed. We also change the prompts to indicate that this is the lazy evaluator:
@@ -309,7 +308,7 @@ prompt();
   (driver-loop))
 </div>
 <script>
-prompt();
+C.prompt();
 </script>
 
 <p> With these changes made, we can start the evaluator and test it. The successful evaluation of the <tt>try</tt> expression discussed in section 4-2-1 indicates that the interpreter is performing lazy evaluation:
@@ -331,10 +330,10 @@ ok
 1
 </div>
 <script>
-prompt();
+C.prompt();
 </script>
 
-<h4> Representing thunks </h4> 
+<h4> Representing thunks </h4>
 
 <p> Our evaluator must arrange to create thunks when procedures are applied to arguments and to force these thunks later. A thunk must package an expression together with the environment, so that the argument can be produced later. To force the thunk, we simply extract the expression and environment from the thunk and evaluate the expression in the environment. We use <tt>actual-value</tt> rather than <tt>eval</tt> so that in case the value of the expression is itself a thunk, we will force that, and so on, until we reach something that is not a thunk:
 
@@ -345,7 +344,7 @@ prompt();
       obj))
 </div>
 <script>
-prompt();
+C.prompt();
 </script>
 
 <p> One easy way to package an expression with an environment is to make a list containing the expression and the environment. Thus, we create a thunk as follows:
@@ -362,7 +361,7 @@ prompt();
 (define (thunk-env thunk) (caddr thunk))
 </div>
 <script>
-prompt();
+C.prompt();
 </script>
 
 <p> Actually, what we want for our interpreter is not quite this, but rather thunks that have been memoized. When a thunk is forced, we will turn it into an evaluated thunk by replacing the stored expression with its value and changing the <tt>thunk</tt> tag so that it can be recognized as already evaluated.@footnote{Notice that we also erase the <tt>env</tt> from the thunk once the expression's value has been computed. This makes no difference in the values returned by the interpreter. It does help save space, however, because removing the reference from the thunk to the <tt>env</tt> once it is no longer needed allows this structure to be <tt>garbage-collected</tt> and its space recycled, as we will discuss in section 5-3.
@@ -389,7 +388,7 @@ prompt();
         (else obj)))
 </div>
 <script>
-prompt();
+C.prompt();
 </script>
 
 <p> Notice that the same <tt>delay-it</tt> procedure works both with and without memoization.
@@ -406,7 +405,7 @@ definitions to the lazy evaluator:
   x)
 </div>
 <script>
-prompt();
+C.prompt();
 </script>
 
 <p> Give the missing values in the following sequence of interactions, and explain your answers.@footnote{This exercise demonstrates that the interaction between lazy evaluation and side effects can be very confusing. This is just what you might expect from the discussion in Chapter 3.}
@@ -430,7 +429,7 @@ count
 <response>
 </div>
 <script>
-prompt();
+C.prompt();
 </script>
 </div>
 
@@ -455,7 +454,7 @@ count
 <response>
 </div>
 <script>
-prompt();
+C.prompt();
 </script>
 
 <p> Give the responses both when the evaluator memoizes and when it does not.
@@ -471,7 +470,7 @@ prompt();
               (eval-sequence (rest-exps exps) env))))
 </div>
 <script>
-prompt();
+C.prompt();
 </script>
 
 <ul>
@@ -488,7 +487,7 @@ sequence with side effects:
              (for-each proc (cdr items)))))
 </div>
 <script>
-prompt();
+C.prompt();
 </script>
 
 He claims that the evaluator in the text (with the original
@@ -505,7 +504,7 @@ He claims that the evaluator in the text (with the original
 done
 </div>
 <script>
-prompt();
+C.prompt();
 </script>
 
 Explain why Ben is right about the behavior of <tt>for-each</tt>.
@@ -528,7 +527,7 @@ lazy evaluator:
   (p (set! x (cons x '(2)))))
 </div>
 <script>
-prompt();
+C.prompt();
 </script>
 
 What are the values of <tt>(p1 1)</tt> and <tt>(p2 1)</tt> with the original
@@ -554,13 +553,13 @@ like Cy's approach, the approach in the text, or some other approach?
   ...)
 </div>
 <script>
-prompt();
+C.prompt();
 </script>
 
 <p> would define <tt>f</tt> to be a procedure of four arguments, where the first and third arguments are evaluated when the procedure is called, the second argument is delayed, and the fourth argument is both delayed and memoized. Thus, ordinary procedure definitions will produce the same behavior as ordinary Scheme, while adding the <tt>lazy-memo</tt> declaration to each parameter of every compound procedure will produce the behavior of the lazy evaluator defined in this section. Design and implement the changes required to produce such an extension to Scheme. You will have to implement new syntax procedures to handle the new syntax for <tt>define</tt>. You must also arrange for <tt>eval</tt> or <tt>apply</tt> to determine when arguments are to be delayed, and to force or delay arguments accordingly, and you must arrange for forcing to memoize or not, as appropriate.
  </div>
 
-<h3> Streams as Lazy Lists </h3> 
+<h3> Streams as Lazy Lists </h3>
 
 <p> In section 3-5-1, we showed how to implement streams as delayed lists. We introduced special forms <tt>delay</tt> and <tt>cons-stream</tt>, which allowed us to construct a ``promise'' to compute the <tt>cdr</tt> of a stream, without actually fulfilling that promise until later. We could use this general technique of introducing special forms whenever we need more control over the evaluation process, but this is awkward. For one thing, a special form is not a first-class object like a procedure, so we cannot use it together with higher-order procedures.@footnote{This is precisely the issue with the <tt>unless</tt> procedure, as in Exercise 4-26.}  Additionally, we were forced to create streams as a new kind of data object similar but not identical to lists, and this required us to reimplement many ordinary list operations (<tt>map</tt>, <tt>append</tt>, and so on) for use with streams.
 
@@ -577,7 +576,7 @@ prompt();
   (z (lambda (p q) q)))
 </div>
 <script>
-prompt();
+C.prompt();
 </script>
 
 <p> In terms of these basic operations, the standard definitions of the list operations will work with infinite lists (streams) as well as finite ones, and the stream operations can be implemented as list operations. Here are some examples:
@@ -614,7 +613,7 @@ prompt();
 18
 </div>
 <script>
-prompt();
+C.prompt();
 </script>
 
 <p> Note that these lazy lists are even lazier than the streams of Chapter 3: The <tt>car</tt> of the list, as well as the <tt>cdr</tt>, is delayed.@footnote{This permits us to create delayed versions of more general kinds of list structures, not just sequences. Hughes 1990 discusses some applications of ``lazy trees.''}  In fact, even accessing the <tt>car</tt> or <tt>cdr</tt> of a lazy pair need not force the value of a list element. The value will be forced only when it is really needed -- e.g., for use as the argument of a primitive, or to be printed as an answer.
@@ -640,7 +639,7 @@ prompt();
 2.716924
 </div>
 <script>
-prompt();
+C.prompt();
 </script>
 
 <div class="exercise">
@@ -654,7 +653,7 @@ prompt();
 (car '(a b c))
 </div>
 <script>
-prompt();
+C.prompt();
 </script>
 
 <p> To his surprise, this produces an error. After some thought, he realizes that the ``lists'' obtained by reading in quoted expressions are different from the lists manipulated by the new definitions of <tt>cons</tt>, <tt>car</tt>, and <tt>cdr</tt>. Modify the evaluator's treatment of quoted expressions so that quoted lists typed at the driver loop will produce true lazy lists.

@@ -3,19 +3,18 @@
 <head>
 <meta charset="UTF-8">
 
-<link rel="stylesheet" type="text/css" href="web-worker-interpreter/deps/codemirror/lib/codemirror.css" />
+<link rel="stylesheet" type="text/css" href="coding-js/deps/codemirror/lib/codemirror.css" />
 <link rel="stylesheet" type="text/css" href="css/isicp.css" />
 <link rel="stylesheet" type="text/css" href="css/footnotes.css" />
 <link rel="stylesheet" type="text/css" href="css/theme.css" />
 
-<script src="js/helper.js"></script>
+<script src="js/TOC.js"></script>
 <script src="js/jquery.min.js"></script>
-<script src="web-worker-interpreter/deps/codemirror/lib/codemirror.js"></script>
-<script src="web-worker-interpreter/deps/codemirror/mode/scheme/scheme.js"></script>
-<script src="web-worker-interpreter/coding.js"> </script>
+<script src="coding-js/deps/codemirror/lib/codemirror.js"></script>
+<script src="coding-js/deps/codemirror/mode/scheme/scheme.js"></script>
+<script src="coding-js/coding.js"> </script>
 <script>
-  set_interpreter_path("web-worker-interpreter/");
-  set_language("scheme");
+  C = new CodingJS("coding-js/");
 </script>
 <script src="js/footnotes.js"></script>
 
@@ -46,13 +45,13 @@ MathJax.Hub.Config({
 <div id="sidebox">
   <div class="tab"></div>
   <div class="content">
-    
-    <p> 
-    
+
+    <p>
+
     <a href="index.html" class="navlink"> <img src='images/home.svg' width=32 height=32> </a>
     <span id="toc-link" class="navlink"> <img src='images/list.svg' width=32 height=32> </span>
     <span id="currently-editing-link" class="navlink"> <img src='images/file-edit.svg' width=32 height=32> </span>
-    
+
     <script src="http://cdn.jotfor.ms/static/feedback2.js?3.2.310" type="text/javascript">
     new JotformFeedback({
     formId:'40222623177447',
@@ -68,50 +67,50 @@ MathJax.Hub.Config({
     <a class="lightbox-40222623177447" style="cursor:pointer;color:blue;text-decoration:underline;"><img src='images/envelope.svg' width=32 height=32></a>
 
     <p>
-    
+
     <div id="currently-editing"> </div>
 
 
-    
+
     <script>
-    
+
     function hideAll() {
       $("#currently-editing").hide();
       $("#toc").hide();
     }
-    
+
     $("#currently-editing-link").click(function() {
       hideAll();
       $("#currently-editing").show();
     });
-    
+
     $("#toc-link").click(function() {
       hideAll();
       $("#toc").show();
     });
-    
+
     </script>
-    
+
     <div id="toc"> </div>
-    
+
     <p style='font-size:12px'> (Click on the left edge of this green box to hide it!)
-    
+
     <script>
     hideAll();
     $("#toc").show();
     </script>
-  
+
   </div>
 </div>
 
-<script> 
+<script>
 $('#sidebox .tab').toggle(function(){
     $('#sidebox').animate({'right':'0%'});
 }, function(){
     $('#sidebox').animate({'right':'-30%'});
 });
 
-$(document).ready(createTOC);
+$(document).ready(create_TOC);
 
 </script>
 
@@ -130,10 +129,10 @@ $(document).ready(createTOC);
   (* x x))
 </div>
 <script>
-hidden_prompt("scheme-define-square");
+C.hidden_prompt("scheme-define-square");
 </script>
 
-<h2> Hierarchical Data and the Closure Property </h2> 
+<h2> Hierarchical Data and the Closure Property </h2>
 
 <p> As we have seen, pairs provide a primitive ``glue'' that we can use to construct compound data objects. Figure 2-2 shows a standard way to visualize a pair---in this case, the pair formed by <tt>(cons 1 2)</tt>. In this representation, which is called <tt>box-and-pointer notation</tt>  , each object is shown as a <tt>pointer</tt>  to a box. The box for a primitive object contains a representation of the object. For example, the box for a number contains a numeral. The box for a pair is actually a double box, the left part containing (a pointer to) the <tt>car</tt> of the pair and the right part containing the <tt>cdr</tt>.
 
@@ -151,13 +150,13 @@ hidden_prompt("scheme-define-square");
 
 <p> From the outset of Chapter 1, we've made essential use of closure in dealing with procedures, because all but the very simplest programs rely on the fact that the elements of a combination can themselves be combinations. In this section, we take up the consequences of closure for compound data. We describe some conventional techniques for using pairs to represent sequences and trees, and we exhibit a graphics language that illustrates closure in a vivid way.<a name="footnote_link_2-7" class="footnote_link" href="#footnote_2-7">7</a>
 
-<h3> Representing Sequences </h3> 
+<h3> Representing Sequences </h3>
 
 <p> <img class='center' src='http://mitpress.mit.edu/sicp/full-text/book/ch2-Z-G-13.gif'>
 
 <p style="text-align:center"> <b>Figure 2.4:</b> The sequence 1, 2, 3, 4 represented as a chain of pairs.
 
-<p> One of the useful structures we can build with pairs is a <tt>sequence</tt>  ---an ordered collection of data objects. There are, of course, many ways to represent sequences in terms of pairs. One particularly straightforward representation is illustrated in Figure 2-4, where the sequence 1, 2, 3, 4 is represented as a chain of pairs. The <tt>car</tt> of each pair is the corresponding item in the chain, and the <tt>cdr</tt> of the pair is the next pair in the chain. The <tt>cdr</tt> of the final pair signals the end of the sequence by pointing to a distinguished value that is not a pair, represented in box-and-pointer diagrams as a diagonal line and in programs as the value of the variable <tt>nil</tt>. The entire sequence is constructed by nested <tt>cons</tt> operations: 
+<p> One of the useful structures we can build with pairs is a <tt>sequence</tt>  ---an ordered collection of data objects. There are, of course, many ways to represent sequences in terms of pairs. One particularly straightforward representation is illustrated in Figure 2-4, where the sequence 1, 2, 3, 4 is represented as a chain of pairs. The <tt>car</tt> of each pair is the corresponding item in the chain, and the <tt>cdr</tt> of the pair is the next pair in the chain. The <tt>cdr</tt> of the final pair signals the end of the sequence by pointing to a distinguished value that is not a pair, represented in box-and-pointer diagrams as a diagonal line and in programs as the value of the variable <tt>nil</tt>. The entire sequence is constructed by nested <tt>cons</tt> operations:
 
 <div id="scheme-cons-1-2-3-4">
 (cons 1
@@ -166,7 +165,7 @@ hidden_prompt("scheme-define-square");
                   (cons 4 nil))))
 </div>
 <script>
-prompt("scheme-cons-1-2-3-4");
+C.prompt("scheme-cons-1-2-3-4");
 </script>
 
 <p> Such a sequence of pairs, formed by nested <tt>cons</tt>es, is called a <em> list </em>  , and Scheme provides a primitive called <tt>list</tt> to help in constructing lists.<a name="footnote_link_2-8" class="footnote_link" href="#footnote_2-8">8</a> The above sequence could be produced by <tt>(list 1 2 3 4)</tt>. In general,
@@ -175,7 +174,7 @@ prompt("scheme-cons-1-2-3-4");
 (list &lt;a_1&gt; &lt;a_2&gt; ... &lt;a_n&gt;)
 </div>
 <script>
-makeStatic("scheme-list-syntax");
+C.make_static("scheme-list-syntax");
 </script>
 
 <p> is equivalent to
@@ -189,7 +188,7 @@ makeStatic("scheme-list-syntax");
 ...)))
 </div>
 <script>
-makeStatic("scheme-list-syntax-expand");
+C.make_static("scheme-list-syntax-expand");
 </script>
 
 <p> Lisp systems conventionally print lists by printing the sequence of elements, enclosed in parentheses. Thus, the data object in Figure 2-4 is printed as <tt>(1 2 3 4)</tt>:
@@ -198,7 +197,7 @@ makeStatic("scheme-list-syntax-expand");
 (define one-through-four (list 1 2 3 4))
 </div>
 <script>
-prompt("scheme-define-one-through-four");
+C.prompt("scheme-define-one-through-four");
 </script>
 
 <p>
@@ -207,7 +206,7 @@ prompt("scheme-define-one-through-four");
 one-through-four
 </div>
 <script>
-prompt("scheme-test-one-through-four", ["scheme-define-one-through-four"]);
+C.prompt("scheme-test-one-through-four", ["scheme-define-one-through-four"]);
 </script>
 
 <p> Be careful not to confuse the expression <tt>(list 1 2 3 4)</tt> with the list <tt>(1 2 3 4)</tt>, which is the result obtained when the expression is evaluated. Attempting to evaluate the expression <tt>(1 2 3 4)</tt> will signal an error when the interpreter tries to apply the procedure <tt>1</tt> to arguments <tt>2</tt>, <tt>3</tt>, and <tt>4</tt>.
@@ -218,7 +217,7 @@ prompt("scheme-test-one-through-four", ["scheme-define-one-through-four"]);
 (car one-through-four)
 </div>
 <script>
-prompt("scheme-car-one-through-four", ["scheme-define-one-through-four"]);
+C.prompt("scheme-car-one-through-four", ["scheme-define-one-through-four"]);
 </script>
 
 <p>
@@ -227,7 +226,7 @@ prompt("scheme-car-one-through-four", ["scheme-define-one-through-four"]);
 (cdr one-through-four)
 </div>
 <script>
-prompt("scheme-cdr-one-through-four", ["scheme-define-one-through-four"]);
+C.prompt("scheme-cdr-one-through-four", ["scheme-define-one-through-four"]);
 </script>
 
 <p>
@@ -236,7 +235,7 @@ prompt("scheme-cdr-one-through-four", ["scheme-define-one-through-four"]);
 (car (cdr one-through-four))
 </div>
 <script>
-prompt("scheme-car-cdr-one-through-four", ["scheme-define-one-through-four"]);
+C.prompt("scheme-car-cdr-one-through-four", ["scheme-define-one-through-four"]);
 </script>
 
 <p>
@@ -245,7 +244,7 @@ prompt("scheme-car-cdr-one-through-four", ["scheme-define-one-through-four"]);
 (cons 10 one-through-four)
 </div>
 <script>
-prompt("scheme-cons-10-one-through-four", ["scheme-define-one-through-four"]);
+C.prompt("scheme-cons-10-one-through-four", ["scheme-define-one-through-four"]);
 </script>
 
 <p>
@@ -254,12 +253,12 @@ prompt("scheme-cons-10-one-through-four", ["scheme-define-one-through-four"]);
 (cons 5 one-through-four)
 </div>
 <script>
-prompt("scheme-cons-5-one-through-four", ["scheme-define-one-through-four"]);
+C.prompt("scheme-cons-5-one-through-four", ["scheme-define-one-through-four"]);
 </script>
 
 <p> The value of <tt>nil</tt>, used to terminate the chain of pairs, can be thought of as a sequence of no elements, the <tt>empty list</tt>  . The word <tt>nil</tt>  is a contraction of the Latin word <em>nihil</em>, which means ``nothing.''<a name="footnote_link_2-10" class="footnote_link" href="#footnote_2-10">10</a>
 
-<h4> List operations </h4> 
+<h4> List operations </h4>
 
 <p> The use of pairs to represent sequences of elements as lists is accompanied by conventional programming techniques for manipulating lists by successively ``<tt>cdr</tt>ing down'' the lists. For example, the procedure <tt>list-ref</tt> takes as arguments a list and a number n and returns the nth item of the list. It is customary to number the elements of the list beginning with 0. The method for computing <tt>list-ref</tt> is the following:
 
@@ -281,21 +280,21 @@ prompt("scheme-cons-5-one-through-four", ["scheme-define-one-through-four"]);
       (list-ref (cdr items) (- n 1))))
 </div>
 <script>
-prompt("scheme-define-list-ref");
+C.prompt("scheme-define-list-ref");
 </script>
 
 <div id="scheme-define-squares">
 (define squares (list 1 4 9 16 25))
 </div>
 <script>
-prompt("scheme-define-squares");
+C.prompt("scheme-define-squares");
 </script>
 
 <div id="scheme-list-ref-squares-3">
 (list-ref squares 3)
 </div>
 <script>
-prompt("scheme-list-ref-squares-3", ["scheme-define-list-ref", "scheme-define-squares"]);
+C.prompt("scheme-list-ref-squares-3", ["scheme-define-list-ref", "scheme-define-squares"]);
 </script>
 
 <p> Often we <tt>cdr</tt> down the whole list. To aid in this, Scheme includes a primitive predicate <tt>null?</tt>, which tests whether its argument is the empty list. The procedure <tt>length</tt>, which returns the number of items in a list, illustrates this typical pattern of use:
@@ -307,7 +306,7 @@ prompt("scheme-list-ref-squares-3", ["scheme-define-list-ref", "scheme-define-sq
       (+ 1 (length (cdr items)))))
 </div>
 <script>
-prompt("scheme-define-length");
+C.prompt("scheme-define-length");
 </script>
 
 
@@ -316,7 +315,7 @@ prompt("scheme-define-length");
 (define odds (list 1 3 5 7))
 </div>
 <script>
-prompt("scheme-define-odds");
+C.prompt("scheme-define-odds");
 </script>
 
 
@@ -325,7 +324,7 @@ prompt("scheme-define-odds");
 (length odds)
 </div>
 <script>
-prompt("scheme-length-odds", ["scheme-define-length", "scheme-define-odds"]);
+C.prompt("scheme-length-odds", ["scheme-define-length", "scheme-define-odds"]);
 </script>
 <p> The <tt>length</tt> procedure implements a simple recursive plan. The reduction step is:
 
@@ -358,7 +357,7 @@ prompt("scheme-length-odds", ["scheme-define-length", "scheme-define-odds"]);
   (length-iter items 0))
 </div>
 <script>
-prompt("scheme-define-length-iterative");
+C.prompt("scheme-define-length-iterative");
 </script>
 
 <p> Another conventional programming technique is to ``<tt>cons</tt> up'' an answer list while <tt>cdr</tt>ing down a list, as in the procedure <tt>append</tt>, which takes two lists as arguments and combines their elements to make a new list:
@@ -367,7 +366,7 @@ prompt("scheme-define-length-iterative");
 (append squares odds)
 </div>
 <script>
-prompt("scheme-append-squares-odds", ["scheme-define-squares", "scheme-define-odds"]);
+C.prompt("scheme-append-squares-odds", ["scheme-define-squares", "scheme-define-odds"]);
 </script>
 
 <p>
@@ -376,7 +375,7 @@ prompt("scheme-append-squares-odds", ["scheme-define-squares", "scheme-define-od
 (append odds squares)
 </div>
 <script>
-prompt("scheme-append-odds-squares", ["scheme-define-squares", "scheme-define-odds"]);
+C.prompt("scheme-append-odds-squares", ["scheme-define-squares", "scheme-define-odds"]);
 </script>
 
 <p> <tt>append</tt> is also implemented using a recursive plan. To <tt>append</tt> lists <tt>list1</tt> and <tt>list2</tt>, do the following:
@@ -400,7 +399,7 @@ prompt("scheme-append-odds-squares", ["scheme-define-squares", "scheme-define-od
       (cons (car list1) (append (cdr list1) list2))))
 </div>
 <script>
-prompt("scheme-define-append");
+C.prompt("scheme-define-append");
 </script>
 
 <p>
@@ -414,20 +413,20 @@ prompt("scheme-define-append");
 (last-pair (list 23 72 149 34))
 </div>
 <script>
-makeEditable("scheme-ex-define-last-pair");
-addOutput("scheme-ex-define-last-pair");
-editorOf["scheme-ex-define-last-pair"].setOption("onBlur", function(){
+C.make_editable("scheme-ex-define-last-pair");
+C.add_output("scheme-ex-define-last-pair");
+C.editor_of["scheme-ex-define-last-pair"].setOption("onBlur", function(){
 
   var code = "{0} \n (equal? (last-pair '(1 2 3 4)) '(4))".format(
-    editorOf["scheme-ex-define-last-pair"].getValue());
+    C.editor_of["scheme-ex-define-last-pair"].getValue());
 
-  eval_scheme(code).then(function(res){
+  C.eval_scheme(code).then(function(res){
     if (res[res.length - 1] === "true\n") {
-      $_("scheme-ex-define-last-pair-output").empty().append($("<div class='right-answer'> \u2713 </div>"));
+      C.$_("scheme-ex-define-last-pair-output").empty().append($("<div class='right-answer'> \u2713 </div>"));
     } else {
-      $_("scheme-ex-define-last-pair-output").empty().append($("<div class='wrong-answer'> \u2717 </div>"));
+      C.$_("scheme-ex-define-last-pair-output").empty().append($("<div class='wrong-answer'> \u2717 </div>"));
     }
-    $_("scheme-ex-define-last-pair-output").append(res.slice(0,-1));
+    C.$_("scheme-ex-define-last-pair-output").append(res.slice(0,-1));
   });
 });
 /*
@@ -450,20 +449,20 @@ editorOf["scheme-ex-define-last-pair"].setOption("onBlur", function(){
 (reverse (list 1 4 9 16 25))
 </div>
 <script>
-makeEditable("scheme-ex-define-reverse");
-addOutput("scheme-ex-define-reverse");
-editorOf["scheme-ex-define-reverse"].setOption("onBlur", function(){
+C.make_editable("scheme-ex-define-reverse");
+C.add_output("scheme-ex-define-reverse");
+C.editor_of["scheme-ex-define-reverse"].setOption("onBlur", function(){
 
   var code = "{0} \n (equal? (reverse '(1 2 3 4)) '(4 3 2 1))".format(
-    editorOf["scheme-ex-define-reverse"].getValue());
+    C.editor_of["scheme-ex-define-reverse"].getValue());
 
-  eval_scheme(code).then(function(res){
+  C.eval_scheme(code).then(function(res){
     if (res[res.length - 1] === "true\n") {
-      $_("scheme-ex-define-reverse-output").empty().append($("<div class='right-answer'> \u2713 </div>"));
+      C.$_("scheme-ex-define-reverse-output").empty().append($("<div class='right-answer'> \u2713 </div>"));
     } else {
-      $_("scheme-ex-define-reverse-output").empty().append($("<div class='wrong-answer'> \u2717 </div>"));
+      C.$_("scheme-ex-define-reverse-output").empty().append($("<div class='wrong-answer'> \u2717 </div>"));
     }
-    $_("scheme-ex-define-reverse-output").append(res.slice(0,-1));
+    C.$_("scheme-ex-define-reverse-output").append(res.slice(0,-1));
   });
 });
 /*
@@ -495,7 +494,7 @@ editorOf["scheme-ex-define-reverse"].setOption("onBlur", function(){
 (define uk-coins (list 100 50 20 10 5 2 1 0.5))
 </div>
 <script>
-prompt("scheme-define-coins");
+C.prompt("scheme-define-coins");
 </script>
 
 <p> We could then call <tt>cc</tt> as follows:
@@ -504,7 +503,7 @@ prompt("scheme-define-coins");
 (cc 100 us-coins) ;292
 </div>
 <script>
-prompt("scheme-cc-us-coins", ["scheme-define-coins", "scheme-ex-define-cc"]);
+C.prompt("scheme-cc-us-coins", ["scheme-define-coins", "scheme-ex-define-cc"]);
 </script>
 
 <p> To do this will require changing the program <tt>cc</tt> somewhat. It will still have the same form, but it will access its second argument differently, as follows:
@@ -521,21 +520,21 @@ prompt("scheme-cc-us-coins", ["scheme-define-coins", "scheme-ex-define-cc"]);
                 coin-values)))))
 </div>
 <script>
-makeEditable("scheme-ex-define-cc");
-addOutput("scheme-ex-define-cc");
-editorOf["scheme-ex-define-cc"].setOption("onBlur", function(){
+C.make_editable("scheme-ex-define-cc");
+C.add_output("scheme-ex-define-cc");
+C.editor_of["scheme-ex-define-cc"].setOption("onBlur", function(){
 
   var code = "{0} \n (equal? (cc 100 '(50 25 10 5 1)) 292)".format(
-    editorOf["scheme-ex-define-cc"].getValue());
+    C.editor_of["scheme-ex-define-cc"].getValue());
 
-  eval_scheme(code).then(function(res){
+  C.eval_scheme(code).then(function(res){
     if (res[res.length - 1] === "true\n") {
-      $_("scheme-ex-define-cc-output").empty().append($("<div class='right-answer'> \u2713 </div>"));
+      C.$_("scheme-ex-define-cc-output").empty().append($("<div class='right-answer'> \u2713 </div>"));
     } else {
-      $_("scheme-ex-define-cc-output").empty().append($("<div class='wrong-answer'> \u2717 </div>"));
+      C.$_("scheme-ex-define-cc-output").empty().append($("<div class='wrong-answer'> \u2717 </div>"));
     }
-    $_("scheme-ex-define-cc-output").append(res.slice(0,-1));
-    compute("scheme-cc-us-coins")
+    C.$_("scheme-ex-define-cc-output").append(res.slice(0,-1));
+    C.compute("scheme-cc-us-coins")
   });
 });
 
@@ -558,7 +557,7 @@ editorOf["scheme-ex-define-cc"].setOption("onBlur", function(){
 (define (f x y . z) &lt;body&gt;)
 </div>
 <script>
-no_output_frozen_prompt("scheme-dotted-tail-syntax");
+C.no_output_frozen_prompt("scheme-dotted-tail-syntax");
 </script>
 
 <p> the procedure <tt>f</tt> can be called with two or more arguments. If we evaluate
@@ -567,7 +566,7 @@ no_output_frozen_prompt("scheme-dotted-tail-syntax");
 (f 1 2 3 4 5 6)
 </div>
 <script>
-makeStatic("scheme-dotted-tail-application");
+C.make_static("scheme-dotted-tail-application");
 </script>
 
 <p> then in the body of <tt>f</tt>, <tt>x</tt> will be 1, <tt>y</tt> will be 2, and <tt>z</tt> will be the list <tt>(3 4 5 6)</tt>. Given the definition
@@ -576,7 +575,7 @@ makeStatic("scheme-dotted-tail-application");
 (define (g . w) &lt;body&gt;)
 </div>
 <script>
-makeStatic("scheme-define-dotted-tail-syntax-one");
+C.make_static("scheme-define-dotted-tail-syntax-one");
 </script>
 
 <p> the procedure <tt>g</tt> can be called with zero or more arguments. If we evaluate
@@ -585,7 +584,7 @@ makeStatic("scheme-define-dotted-tail-syntax-one");
 (g 1 2 3 4 5 6)
 </div>
 <script>
-no_output_frozen_prompt("scheme-g");
+C.no_output_frozen_prompt("scheme-g");
 </script>
 
 <p> then in the body of <tt>g</tt>, <tt>w</tt> will be the list <tt>(1 2 3 4 5 6)</tt>.<a name="footnote_link_2-11" class="footnote_link" href="#footnote_2-11">11</a>
@@ -600,20 +599,20 @@ no_output_frozen_prompt("scheme-g");
 (same-parity 2 3 4 5 6 7)
 </div>
 <script>
-makeEditable("scheme-ex-define-same-parity");
-addOutput("scheme-ex-define-same-parity");
-editorOf["scheme-ex-define-same-parity"].setOption("onBlur", function(){
+C.make_editable("scheme-ex-define-same-parity");
+C.add_output("scheme-ex-define-same-parity");
+C.editor_of["scheme-ex-define-same-parity"].setOption("onBlur", function(){
 
   var code = "{0} \n (equal? (same-parity '1 2 3 4 5 6 7) '(1 3 5 7))".format(
-    editorOf["scheme-ex-define-same-parity"].getValue());
+    C.editor_of["scheme-ex-define-same-parity"].getValue());
 
-  eval_scheme(code).then(function(res){
+  C.eval_scheme(code).then(function(res){
     if (res[res.length - 1] === "true\n") {
-      $_("scheme-ex-define-same-parity-output").empty().append($("<div class='right-answer'> \u2713 </div>"));
+      C.$_("scheme-ex-define-same-parity-output").empty().append($("<div class='right-answer'> \u2713 </div>"));
     } else {
-      $_("scheme-ex-define-same-parity-output").empty().append($("<div class='wrong-answer'> \u2717 </div>"));
+      C.$_("scheme-ex-define-same-parity-output").empty().append($("<div class='wrong-answer'> \u2717 </div>"));
     }
-    $_("scheme-ex-define-same-parity-output").append(res.slice(0,-1));
+    C.$_("scheme-ex-define-same-parity-output").append(res.slice(0,-1));
   });
 });
 /*
@@ -630,7 +629,7 @@ editorOf["scheme-ex-define-same-parity"].setOption("onBlur", function(){
 </script>
 </div>
 
-<h4> Mapping over lists </h4> 
+<h4> Mapping over lists </h4>
 
 <p> One extremely useful operation is to apply some transformation to each element in a list and generate the list of results. For instance, the following procedure scales each number in a list by a given factor:
 
@@ -644,7 +643,7 @@ editorOf["scheme-ex-define-same-parity"].setOption("onBlur", function(){
 (scale-list (list 1 2 3 4 5) 10)
 </div>
 <script>
-prompt("scheme-define-scale-list");
+C.prompt("scheme-define-scale-list");
 </script>
 
 <p> We can abstract this general idea and capture it as a common pattern expressed as a higher-order procedure, just as in section 1-3. The higher-order procedure here is called <tt>map</tt>. <tt>map</tt> takes as arguments a procedure of one argument and a list, and returns a list of the results produced by applying the procedure to each element in the list:<a name="footnote_link_2-12" class="footnote_link" href="#footnote_2-12">12</a>
@@ -657,7 +656,7 @@ prompt("scheme-define-scale-list");
             (map proc (cdr items)))))
 </div>
 <script>
-prompt("scheme-define-map");
+C.prompt("scheme-define-map");
 </script>
 
 <p>
@@ -669,7 +668,7 @@ prompt("scheme-define-map");
      (list 1 2 3 4))
 </div>
 <script>
-prompt("scheme-test-map", ["scheme-define-map"]);
+C.prompt("scheme-test-map", ["scheme-define-map"]);
 </script>
 
 <p> Now we can give a new definition of <tt>scale-list</tt> in terms of <tt>map</tt>:
@@ -680,7 +679,7 @@ prompt("scheme-test-map", ["scheme-define-map"]);
        items))
 </div>
 <script>
-prompt("scheme-define-scale-list-with-map");
+C.prompt("scheme-define-scale-list-with-map");
 </script>
 
 <p> <tt>map</tt> is an important construct, not only because it captures a common pattern, but because it establishes a higher level of abstraction in dealing with lists. In the original definition of <tt>scale-list</tt>, the recursive structure of the program draws attention to the element-by-element processing of the list. Defining <tt>scale-list</tt> in terms of <tt>map</tt> suppresses that level of detail and emphasizes that scaling transforms a list of elements to a list of results. The difference between the two definitions is not that the computer is performing a different process (it isn't) but that we think about the process differently. In effect, <tt>map</tt> helps establish an abstraction barrier that isolates the implementation of procedures that transform lists from the details of how the elements of the list are extracted and combined. Like the barriers shown in Figure 2-1, this abstraction gives us the flexibility to change the low-level details of how sequences are implemented, while preserving the conceptual framework of operations that transform sequences to sequences. Section 2-2-3 expands on this use of sequences as a framework for organizing programs.
@@ -694,14 +693,14 @@ prompt("scheme-define-scale-list-with-map");
        items))
 </div>
 <script>
-hidden_prompt("scheme-hidden-define-square-list", ["scheme-define-map"]);
+C.hidden_prompt("scheme-hidden-define-square-list", ["scheme-define-map"]);
 </script>
 
 <div id="scheme-test-square-list">
 (square-list (list 1 2 3 4))
 </div>
 <script>
-prompt("scheme-test-square-list", ["scheme-hidden-define-square-list"]);
+C.prompt("scheme-test-square-list", ["scheme-hidden-define-square-list"]);
 </script>
 
 <p> Here are two different definitions of <tt>square-list</tt>. Complete both of them by filling in the missing expressions:
@@ -716,21 +715,21 @@ prompt("scheme-test-square-list", ["scheme-hidden-define-square-list"]);
   (map &lt;??&gt; &lt;??&gt;))
 </div>
 <script>
-makeEditable("scheme-ex-define-square-list");
-addOutput("scheme-ex-define-square-list");
-editorOf["scheme-ex-define-square-list"].setOption("onBlur", function(){
+C.make_editable("scheme-ex-define-square-list");
+C.add_output("scheme-ex-define-square-list");
+C.editor_of["scheme-ex-define-square-list"].setOption("onBlur", function(){
 
   var code = "{0} \n {1} \n (and (equal? (square-list '(1 2 3 4)) '(1 4 9 16)) (equal? (square-list-map '(1 2 3 4)) '(1 4 9 16)))".format(
-    editorOf["scheme-define-map"].getValue(),
-    editorOf["scheme-ex-define-square-list"].getValue());
+    C.editor_of["scheme-define-map"].getValue(),
+    C.editor_of["scheme-ex-define-square-list"].getValue());
 
-  eval_scheme(code).then(function(res){
+  C.eval_scheme(code).then(function(res){
     if (res[res.length - 1] === "true\n") {
-      $_("scheme-ex-define-square-list-output").empty().append($("<div class='right-answer'> \u2713 </div>"));
+      C.$_("scheme-ex-define-square-list-output").empty().append($("<div class='right-answer'> \u2713 </div>"));
     } else {
-      $_("scheme-ex-define-square-list-output").empty().append($("<div class='wrong-answer'> \u2717 </div>"));
+      C.$_("scheme-ex-define-square-list-output").empty().append($("<div class='wrong-answer'> \u2717 </div>"));
     }
-    $_("scheme-ex-define-square-list-output").append(res.slice(0,-1));
+    C.$_("scheme-ex-define-square-list-output").append(res.slice(0,-1));
   });
 });
 /*
@@ -763,7 +762,7 @@ editorOf["scheme-ex-define-square-list"].setOption("onBlur", function(){
   (iter items nil))
 </div>
 <script>
-prompt("scheme-define-louise-square-list", ["scheme-define-square"]);
+C.prompt("scheme-define-louise-square-list", ["scheme-define-square"]);
 </script>
 
 <p> Unfortunately, defining <tt>square-list</tt> this way produces the answer list in the reverse order of the one desired. Why?
@@ -781,7 +780,7 @@ prompt("scheme-define-louise-square-list", ["scheme-define-square"]);
   (iter items nil))
 </div>
 <script>
-prompt("scheme-define-louise-square-list-2", ["scheme-define-square"]);
+C.prompt("scheme-define-louise-square-list-2", ["scheme-define-square"]);
 </script>
 
 <p> This doesn't work either. Explain.
@@ -797,7 +796,7 @@ prompt("scheme-define-louise-square-list-2", ["scheme-define-square"]);
           (list 57 321 88))
 </div>
 <script>
-prompt("scheme-test-for-each", ["scheme-ex-define-for-each"]);
+C.prompt("scheme-test-for-each", ["scheme-ex-define-for-each"]);
 </script>
 
 <p> should print <tt>57</tt>, <tt>321</tt> and <tt>88</tt>. The value returned by the call to <tt>for-each</tt> should be <tt>true</tt>. Give an implementation of <tt>for-each</tt>.
@@ -807,25 +806,25 @@ prompt("scheme-test-for-each", ["scheme-ex-define-for-each"]);
   'your-code-here)
 </div>
 <script>
-makeEditable("scheme-ex-define-for-each");
-addOutput("scheme-ex-define-for-each");
-editorOf["scheme-ex-define-for-each"].setOption("onBlur", function(){
+C.make_editable("scheme-ex-define-for-each");
+C.add_output("scheme-ex-define-for-each");
+C.editor_of["scheme-ex-define-for-each"].setOption("onBlur", function(){
 
-  var code = "{0} \n (for-each (lambda (x) (newline) (display x)) '(57 321 88))".format( 
-    editorOf["scheme-ex-define-for-each"].getValue());
+  var code = "{0} \n (for-each (lambda (x) (newline) (display x)) '(57 321 88))".format(
+    C.editor_of["scheme-ex-define-for-each"].getValue());
 
-  eval_scheme(code).then(function(res){
+  C.eval_scheme(code).then(function(res){
     console.log(res);
 
-    var $output = $_("scheme-ex-define-for-each-output")
-    
+    var $output = C.$_("scheme-ex-define-for-each-output")
+
     if (res.length >= 7 && res[res.length - 1] === "true\n" && res[res.length - 2].value === "88") {
       $output.empty().append($("<div class='right-answer'> \u2713 </div>"));
     } else {
       $output.empty().append($("<div class='wrong-answer'> \u2717 </div>"));
     }
     $output.append(res.slice(0,-1));
-    compute("scheme-test-for-each");
+    C.compute("scheme-test-for-each");
   });
 });
 
@@ -843,7 +842,7 @@ TODO: why does a map-style definition throw exceptions?
 
 </div>
 
-<h3> Hierarchical Structures </h3> 
+<h3> Hierarchical Structures </h3>
 
 <p> The representation of sequences in terms of lists generalizes naturally to represent sequences whose elements may themselves be sequences. For example, we can regard the object <tt>((1 2) 3 4)</tt> constructed by
 
@@ -851,7 +850,7 @@ TODO: why does a map-style definition throw exceptions?
 (cons (list 1 2) (list 3 4))
 </div>
 <script>
-prompt("scheme-show-1-2-pair-3-4");
+C.prompt("scheme-show-1-2-pair-3-4");
 </script>
 
 <p> as a list of three items, the first of which is itself a list, <tt>(1 2)</tt>. Indeed, this is suggested by the form in which the result is printed by the interpreter. Figure 2-5 shows the representation of this structure in terms of pairs.
@@ -872,7 +871,7 @@ prompt("scheme-show-1-2-pair-3-4");
 (define x (cons (list 1 2) (list 3 4)))
 </div>
 <script>
-prompt("scheme-define-x");
+C.prompt("scheme-define-x");
 </script>
 
 <p>
@@ -881,7 +880,7 @@ prompt("scheme-define-x");
 (length x)
 </div>
 <script>
-prompt("scheme-length-x", ["scheme-define-x"]);
+C.prompt("scheme-length-x", ["scheme-define-x"]);
 </script>
 
 <p>
@@ -890,7 +889,7 @@ prompt("scheme-length-x", ["scheme-define-x"]);
 (count-leaves x)
 </div>
 <script>
-prompt("scheme-count-leaves-x", ["scheme-define-x", "scheme-define-count-leaves"]);
+C.prompt("scheme-count-leaves-x", ["scheme-define-x", "scheme-define-count-leaves"]);
 </script>
 
 <p>
@@ -899,7 +898,7 @@ prompt("scheme-count-leaves-x", ["scheme-define-x", "scheme-define-count-leaves"
 (list x x)
 </div>
 <script>
-prompt("scheme-list-x-x", ["scheme-define-x"]);
+C.prompt("scheme-list-x-x", ["scheme-define-x"]);
 </script>
 
 <p>
@@ -908,7 +907,7 @@ prompt("scheme-list-x-x", ["scheme-define-x"]);
 (length (list x x))
 </div>
 <script>
-prompt("scheme-length-list-x-x", ["scheme-define-x"]);
+C.prompt("scheme-length-list-x-x", ["scheme-define-x"]);
 </script>
 
 <p>
@@ -917,7 +916,7 @@ prompt("scheme-length-list-x-x", ["scheme-define-x"]);
 (count-leaves (list x x))
 </div>
 <script>
-prompt("scheme-count-leaves-list-x-x", ["scheme-define-count-leaves", "scheme-define-x"]);
+C.prompt("scheme-count-leaves-list-x-x", ["scheme-define-count-leaves", "scheme-define-x"]);
 </script>
 
 <p> To implement <tt>count-leaves</tt>, recall the recursive plan for computing <tt>length</tt>:
@@ -969,7 +968,7 @@ prompt("scheme-count-leaves-list-x-x", ["scheme-define-count-leaves", "scheme-de
                  (count-leaves (cdr x))))))
 </div>
 <script>
-prompt("scheme-define-count-leaves");
+C.prompt("scheme-define-count-leaves");
 </script>
 
 <p>
@@ -987,21 +986,21 @@ prompt("scheme-define-count-leaves");
 (1 3 (5 7) 9)
 </div>
 <script>
-equalp_answer("scheme-ex-pick-7-medium", "(car (cdr (car (cdr (cdr l)))))");
+C.equalp_answer("scheme-ex-pick-7-medium", "(car (cdr (car (cdr (cdr l)))))");
 </script>
 
 <div id="scheme-ex-pick-7-easy">
 ((7))
 </div>
 <script>
-equalp_answer("scheme-ex-pick-7-easy", "(car (car l))");
+C.equalp_answer("scheme-ex-pick-7-easy", "(car (car l))");
 </script>
 
 <div id="scheme-ex-pick-7-hard">
 (1 (2 (3 (4 (5 (6 7))))))
 </div>
 <script>
-equalp_answer("scheme-ex-pick-7-hard", "(car (cdr (car (cdr (car (cdr (car (cdr (car (cdr (car (cdr l))))))))))))");
+C.equalp_answer("scheme-ex-pick-7-hard", "(car (cdr (car (cdr (car (cdr (car (cdr (car (cdr (car (cdr l))))))))))))");
 </script>
 
 </div>
@@ -1017,7 +1016,7 @@ equalp_answer("scheme-ex-pick-7-hard", "(car (cdr (car (cdr (car (cdr (car (cdr 
 (define y (list 4 5 6))
 </div>
 <script>
-prompt("scheme-ex-append-cons-list");
+C.prompt("scheme-ex-append-cons-list");
 </script>
 
 <p> What result is printed by the interpreter in response to evaluating each of the following expressions?
@@ -1026,21 +1025,21 @@ prompt("scheme-ex-append-cons-list");
 (append x y)
 </div>
 <script>
-answer("scheme-ex-append", "(1 2 3 4 5 6)");
+C.answer("scheme-ex-append", "(1 2 3 4 5 6)");
 </script>
 
 <div id="scheme-ex-cons">
 (cons x y)
 </div>
 <script>
-answer("scheme-ex-cons", "((1 2 3) 4 5 6)");
+C.answer("scheme-ex-cons", "((1 2 3) 4 5 6)");
 </script>
 
 <div id="scheme-ex-list">
 (list x y)
 </div>
 <script>
-answer("scheme-ex-list", "((1 2 3) (4 5 6))");
+C.answer("scheme-ex-list", "((1 2 3) (4 5 6))");
 </script>
 </div>
 
@@ -1072,21 +1071,21 @@ answer("scheme-ex-list", "((1 2 3) (4 5 6))");
                          (car l)))))
 </div>
 <script>
-hidden_prompt("scheme-hidden-answer-define-deep-reverse");
+C.hidden_prompt("scheme-hidden-answer-define-deep-reverse");
 </script>
 
 <div id="scheme-demonstrate-deep-reverse-define-x">
 (define x (list (list 1 2) (list 3 4)))
 </div>
 <script>
-prompt("scheme-demonstrate-deep-reverse-define-x", ["scheme-hidden-answer-define-deep-reverse"]);
+C.prompt("scheme-demonstrate-deep-reverse-define-x", ["scheme-hidden-answer-define-deep-reverse"]);
 </script>
 
 <div id="scheme-demonstrate-deep-reverse-x">
 x
 </div>
 <script>
-prompt("scheme-demonstrate-deep-reverse-x", ["scheme-demonstrate-deep-reverse-define-x"]);
+C.prompt("scheme-demonstrate-deep-reverse-x", ["scheme-demonstrate-deep-reverse-define-x"]);
 </script>
 
 <p>
@@ -1095,7 +1094,7 @@ prompt("scheme-demonstrate-deep-reverse-x", ["scheme-demonstrate-deep-reverse-de
 (reverse x)
 </div>
 <script>
-prompt("scheme-demonstrate-deep-reverse-reverse-x", ["scheme-demonstrate-deep-reverse-define-x"]);
+C.prompt("scheme-demonstrate-deep-reverse-reverse-x", ["scheme-demonstrate-deep-reverse-define-x"]);
 </script>
 
 <p>
@@ -1104,7 +1103,7 @@ prompt("scheme-demonstrate-deep-reverse-reverse-x", ["scheme-demonstrate-deep-re
 (deep-reverse x)
 </div>
 <script>
-prompt("scheme-demonstrate-deep-reverse-deep-reverse-x", ["scheme-demonstrate-deep-reverse-define-x"]);
+C.prompt("scheme-demonstrate-deep-reverse-deep-reverse-x", ["scheme-demonstrate-deep-reverse-define-x"]);
 </script>
 
 <p>
@@ -1115,20 +1114,20 @@ prompt("scheme-demonstrate-deep-reverse-deep-reverse-x", ["scheme-demonstrate-de
 </div>
 
 <script>
-makeEditable("scheme-ex-define-deep-reverse");
-addOutput("scheme-ex-define-deep-reverse");
-editorOf["scheme-ex-define-deep-reverse"].setOption("onBlur", function(){
+C.make_editable("scheme-ex-define-deep-reverse");
+C.add_output("scheme-ex-define-deep-reverse");
+C.editor_of["scheme-ex-define-deep-reverse"].setOption("onBlur", function(){
 
   var code = "{0} \n (equal? '((4 3) (2 1)) (deep-reverse '((1 2) (3 4))))".format(
-    editorOf["scheme-ex-define-deep-reverse"].getValue());
+    C.editor_of["scheme-ex-define-deep-reverse"].getValue());
 
-  eval_scheme(code).then(function(res){
+  C.eval_scheme(code).then(function(res){
     if (res[res.length - 1] === "true\n") {
-      $_("scheme-ex-define-deep-reverse-output").empty().append($("<div class='right-answer'> \u2713 </div>"));
+      C.$_("scheme-ex-define-deep-reverse-output").empty().append($("<div class='right-answer'> \u2713 </div>"));
     } else {
-      $_("scheme-ex-define-deep-reverse-output").empty().append($("<div class='wrong-answer'> \u2717 </div>"));
+      C.$_("scheme-ex-define-deep-reverse-output").empty().append($("<div class='wrong-answer'> \u2717 </div>"));
     }
-    $_("scheme-ex-define-deep-reverse-output").append(res.slice(0,-1));
+    C.$_("scheme-ex-define-deep-reverse-output").append(res.slice(0,-1));
   });
 });
 </script>
@@ -1148,14 +1147,14 @@ editorOf["scheme-ex-define-deep-reverse"].setOption("onBlur", function(){
         (else (list l))))
 </div>
 <script>
-hidden_prompt("scheme-hidden-answer-define-fringe");
+C.hidden_prompt("scheme-hidden-answer-define-fringe");
 </script>
 
 <div id="scheme-demonstrate-fringe-define-x">
 (define x (list (list 1 2) (list 3 4)))
 </div>
 <script>
-prompt("scheme-demonstrate-fringe-define-x", ["scheme-hidden-answer-define-fringe"]);
+C.prompt("scheme-demonstrate-fringe-define-x", ["scheme-hidden-answer-define-fringe"]);
 </script>
 
 <p>
@@ -1164,7 +1163,7 @@ prompt("scheme-demonstrate-fringe-define-x", ["scheme-hidden-answer-define-fring
 (fringe x)
 </div>
 <script>
-prompt("scheme-demonstrate-fringe-fringe-x", ["scheme-demonstrate-fringe-define-x"]);
+C.prompt("scheme-demonstrate-fringe-fringe-x", ["scheme-demonstrate-fringe-define-x"]);
 </script>
 
 <p>
@@ -1173,7 +1172,7 @@ prompt("scheme-demonstrate-fringe-fringe-x", ["scheme-demonstrate-fringe-define-
 (fringe (list x x))
 </div>
 <script>
-prompt("scheme-demonstrate-fringe-fringe-x-x", ["scheme-demonstrate-fringe-define-x"]);
+C.prompt("scheme-demonstrate-fringe-fringe-x-x", ["scheme-demonstrate-fringe-define-x"]);
 </script>
 
 <p>
@@ -1185,20 +1184,20 @@ prompt("scheme-demonstrate-fringe-fringe-x-x", ["scheme-demonstrate-fringe-defin
 </div>
 
 <script>
-makeEditable("scheme-ex-define-fringe");
-addOutput("scheme-ex-define-fringe");
-editorOf["scheme-ex-define-fringe"].setOption("onBlur", function(){
+C.make_editable("scheme-ex-define-fringe");
+C.add_output("scheme-ex-define-fringe");
+C.editor_of["scheme-ex-define-fringe"].setOption("onBlur", function(){
 
   var code = "{0} \n (equal? '(1 2 3 4) (fringe '((1 2) (3 4))))".format(
-    editorOf["scheme-ex-define-fringe"].getValue());
+    C.editor_of["scheme-ex-define-fringe"].getValue());
 
-  eval_scheme(code).then(function(res){
+  C.eval_scheme(code).then(function(res){
     if (res[res.length - 1] === "true\n") {
-      $_("scheme-ex-define-fringe-output").empty().append($("<div class='right-answer'> \u2713 </div>"));
+      C.$_("scheme-ex-define-fringe-output").empty().append($("<div class='right-answer'> \u2713 </div>"));
     } else {
-      $_("scheme-ex-define-fringe-output").empty().append($("<div class='wrong-answer'> \u2717 </div>"));
+      C.$_("scheme-ex-define-fringe-output").empty().append($("<div class='wrong-answer'> \u2717 </div>"));
     }
-    $_("scheme-ex-define-fringe-output").append(res.slice(0,-1));
+    C.$_("scheme-ex-define-fringe-output").append(res.slice(0,-1));
   });
 });
 /*
@@ -1221,7 +1220,7 @@ editorOf["scheme-ex-define-fringe"].setOption("onBlur", function(){
   (list left right))
 </div>
 <script>
-prompt("scheme-define-make-mobile");
+C.prompt("scheme-define-make-mobile");
 </script>
 
 <p> A branch is constructed from a <tt>length</tt> (which must be a number) together with a <tt>structure</tt>, which may be either a number (representing a simple weight) or another mobile:
@@ -1231,7 +1230,7 @@ prompt("scheme-define-make-mobile");
   (list length structure))
 </div>
 <script>
-prompt("scheme-define-make-branch");
+C.prompt("scheme-define-make-branch");
 </script>
 
 <ul>
@@ -1253,24 +1252,24 @@ prompt("scheme-define-make-branch");
 </div>
 
 <script>
-makeEditable("scheme-ex-define-left-right-branch-length-structure");
-addOutput("scheme-ex-define-left-right-branch-length-structure");
-editorOf["scheme-ex-define-left-right-branch-length-structure"].setOption("onBlur", function(){
+C.make_editable("scheme-ex-define-left-right-branch-length-structure");
+C.add_output("scheme-ex-define-left-right-branch-length-structure");
+C.editor_of["scheme-ex-define-left-right-branch-length-structure"].setOption("onBlur", function(){
 
   var code = "{0} \n (and {1} {2} {3} {4})".format(
-    editorOf["scheme-ex-define-left-right-branch-length-structure"].getValue(),
+    C.editor_of["scheme-ex-define-left-right-branch-length-structure"].getValue(),
     "(equal? 1 (left-branch '(1 2)))",
     "(equal? 2 (right-branch '(1 2)))",
     "(equal? 1 (branch-length '(1 2)))",
     "(equal? 2 (branch-structure '(1 2)))");
 
-  eval_scheme(code).then(function(res){
+  C.eval_scheme(code).then(function(res){
     if (res[res.length - 1] === "true\n") {
-      $_("scheme-ex-define-left-right-branch-length-structure-output").empty().append($("<div class='right-answer'> \u2713 </div>"));
+      C.$_("scheme-ex-define-left-right-branch-length-structure-output").empty().append($("<div class='right-answer'> \u2713 </div>"));
     } else {
-      $_("scheme-ex-define-left-right-branch-length-structure-output").empty().append($("<div class='wrong-answer'> \u2717 </div>"));
+      C.$_("scheme-ex-define-left-right-branch-length-structure-output").empty().append($("<div class='wrong-answer'> \u2717 </div>"));
     }
-    $_("scheme-ex-define-left-right-branch-length-structure-output").append(res.slice(0,-1));
+    C.$_("scheme-ex-define-left-right-branch-length-structure-output").append(res.slice(0,-1));
   });
 });
 /*
@@ -1292,25 +1291,25 @@ editorOf["scheme-ex-define-left-right-branch-length-structure"].setOption("onBlu
 </div>
 
 <script>
-makeEditable("scheme-ex-define-total-weight");
-addDep("scheme-ex-define-total-weight", ["scheme-define-make-mobile", "scheme-define-make-branch", "scheme-ex-define-left-right-branch-length-structure"]);
+C.make_editable("scheme-ex-define-total-weight");
+C.add_dep("scheme-ex-define-total-weight", ["scheme-define-make-mobile", "scheme-define-make-branch", "scheme-ex-define-left-right-branch-length-structure"]);
 
-addOutput("scheme-ex-define-total-weight");
-editorOf["scheme-ex-define-total-weight"].setOption("onBlur", function(){
+C.add_output("scheme-ex-define-total-weight");
+C.editor_of["scheme-ex-define-total-weight"].setOption("onBlur", function(){
 
   var code = "{0} \n (and {1} {2})".format(
-    getDependedOnCode("scheme-ex-define-total-weight"),
+    C.get_depended_on_code("scheme-ex-define-total-weight"),
     "#t",
     "(= (total-weight '((1 2) (1 2))) 4)"
   );
 
-  eval_scheme(code).then(function(res){
+  C.eval_scheme(code).then(function(res){
     if (res[res.length - 1] === "true\n") {
-      $_("scheme-ex-define-total-weight-output").empty().append($("<div class='right-answer'> \u2713 </div>"));
+      C.$_("scheme-ex-define-total-weight-output").empty().append($("<div class='right-answer'> \u2713 </div>"));
     } else {
-      $_("scheme-ex-define-total-weight-output").empty().append($("<div class='wrong-answer'> \u2717 </div>"));
+      C.$_("scheme-ex-define-total-weight-output").empty().append($("<div class='wrong-answer'> \u2717 </div>"));
     }
-    $_("scheme-ex-define-total-weight-output").append(res.slice(0,-1));
+    C.$_("scheme-ex-define-total-weight-output").append(res.slice(0,-1));
   });
 });
 /*
@@ -1336,25 +1335,25 @@ editorOf["scheme-ex-define-total-weight"].setOption("onBlur", function(){
 </div>
 
 <script>
-makeEditable("scheme-ex-define-balancedp");
-addDep("scheme-ex-define-balancedp", ["scheme-define-make-mobile", "scheme-define-make-branch", "scheme-ex-define-left-right-branch-length-structure", "scheme-ex-define-total-weight"]);
+C.make_editable("scheme-ex-define-balancedp");
+C.add_dep("scheme-ex-define-balancedp", ["scheme-define-make-mobile", "scheme-define-make-branch", "scheme-ex-define-left-right-branch-length-structure", "scheme-ex-define-total-weight"]);
 
-addOutput("scheme-ex-define-balancedp");
-editorOf["scheme-ex-define-balancedp"].setOption("onBlur", function(){
+C.add_output("scheme-ex-define-balancedp");
+C.editor_of["scheme-ex-define-balancedp"].setOption("onBlur", function(){
 
   var code = "{0} \n (and {1} {2})".format(
-    getDependedOnCode("scheme-ex-define-balancedp"),
+    C.get_depended_on_code("scheme-ex-define-balancedp"),
     "#t",
     "(equal? (balanced? '((1 2) (1 2))) #t)"
   );
 
-  eval_scheme(code).then(function(res){
+  C.eval_scheme(code).then(function(res){
     if (res[res.length - 1] === "true\n") {
-      $_("scheme-ex-define-balancedp-output").empty().append($("<div class='right-answer'> \u2713 </div>"));
+      C.$_("scheme-ex-define-balancedp-output").empty().append($("<div class='right-answer'> \u2713 </div>"));
     } else {
-      $_("scheme-ex-define-balancedp-output").empty().append($("<div class='wrong-answer'> \u2717 </div>"));
+      C.$_("scheme-ex-define-balancedp-output").empty().append($("<div class='wrong-answer'> \u2717 </div>"));
     }
-    $_("scheme-ex-define-balancedp-output").append(res.slice(0,-1));
+    C.$_("scheme-ex-define-balancedp-output").append(res.slice(0,-1));
   });
 });
 /*
@@ -1389,7 +1388,7 @@ editorOf["scheme-ex-define-balancedp"].setOption("onBlur", function(){
   (cons length structure))
 </div>
 <script>
-prompt("scheme-define-make-mobile-branch-cons");
+C.prompt("scheme-define-make-mobile-branch-cons");
 </script>
 
 <p> How much do you need to change your programs to convert to the new representation?
@@ -1397,7 +1396,7 @@ prompt("scheme-define-make-mobile-branch-cons");
 </ul>
 </div>
 
-<h4> Mapping over trees </h4> 
+<h4> Mapping over trees </h4>
 
 <p> Just as <tt>map</tt> is a powerful abstraction for dealing with sequences, <tt>map</tt> together with recursion is a powerful abstraction for dealing with trees. For instance, the <tt>scale-tree</tt> procedure, analogous to <tt>scale-list</tt> of section 2-2-1, takes as arguments a numeric factor and a tree whose leaves are numbers. It returns a tree of the same shape, where each number is multiplied by the factor. The recursive plan for <tt>scale-tree</tt> is similar to the one for <tt>count-leaves</tt>:
 
@@ -1409,7 +1408,7 @@ prompt("scheme-define-make-mobile-branch-cons");
                     (scale-tree (cdr tree) factor)))))
 </div>
 <script>
-prompt("scheme-define-scale-tree");
+C.prompt("scheme-define-scale-tree");
 </script>
 
 <p>
@@ -1419,7 +1418,7 @@ prompt("scheme-define-scale-tree");
             10)
 </div>
 <script>
-prompt("scheme-test-scale-tree", ["scheme-define-scale-tree"]);
+C.prompt("scheme-test-scale-tree", ["scheme-define-scale-tree"]);
 </script>
 
 <p> Another way to implement <tt>scale-tree</tt> is to regard the tree as a sequence of sub-trees and use <tt>map</tt>. We map over the sequence, scaling each sub-tree in turn, and return the list of results. In the base case, where the tree is a leaf, we simply multiply by the factor:
@@ -1433,7 +1432,7 @@ prompt("scheme-test-scale-tree", ["scheme-define-scale-tree"]);
        tree))
 </div>
 <script>
-prompt("scheme-define-scale-tree-map", ["scheme-define-map"]);
+C.prompt("scheme-define-scale-tree-map", ["scheme-define-map"]);
 </script>
 
 <p> Many tree operations can be implemented by similar combinations of sequence operations and recursion.
@@ -1449,10 +1448,10 @@ prompt("scheme-define-scale-tree-map", ["scheme-define-map"]);
 ;(1 (4 (9 16) 25) (36 49))
 </div>
 <script>
-prompt("scheme-test-square-tree");
+C.prompt("scheme-test-square-tree");
 </script>
 
-<p> Define <tt>square-tree</tt> both directly (i.e., without using any higher-order procedures) and also by using <tt>map</tt> and recursion. 
+<p> Define <tt>square-tree</tt> both directly (i.e., without using any higher-order procedures) and also by using <tt>map</tt> and recursion.
 
 <div id="scheme-ex-define-square-tree">
 (define (square-tree tree)
@@ -1460,25 +1459,25 @@ prompt("scheme-test-square-tree");
 </div>
 
 <script>
-makeEditable("scheme-ex-define-square-tree");
-addDep("scheme-ex-define-square-tree", ["scheme-define-map"]);
+C.make_editable("scheme-ex-define-square-tree");
+C.add_dep("scheme-ex-define-square-tree", ["scheme-define-map"]);
 
-addOutput("scheme-ex-define-square-tree");
-editorOf["scheme-ex-define-square-tree"].setOption("onBlur", function(){
+C.add_output("scheme-ex-define-square-tree");
+C.editor_of["scheme-ex-define-square-tree"].setOption("onBlur", function(){
 
   var code = "{0} \n (and {1} {2})".format(
-    getDependedOnCode("scheme-ex-define-square-tree"),
+    C.get_depended_on_code("scheme-ex-define-square-tree"),
     "#t",
     "(equal? (square-tree '(1 (2 (3 4) 5) (6 7))) '(1 (4 (9 16) 25) (36 49)))"
   );
 
-  eval_scheme(code).then(function(res){
+  C.eval_scheme(code).then(function(res){
     if (res[res.length - 1] === "true\n") {
-      $_("scheme-ex-define-square-tree-output").empty().append($("<div class='right-answer'> \u2713 </div>"));
+      C.$_("scheme-ex-define-square-tree-output").empty().append($("<div class='right-answer'> \u2713 </div>"));
     } else {
-      $_("scheme-ex-define-square-tree-output").empty().append($("<div class='wrong-answer'> \u2717 </div>"));
+      C.$_("scheme-ex-define-square-tree-output").empty().append($("<div class='wrong-answer'> \u2717 </div>"));
     }
-    $_("scheme-ex-define-square-tree-output").append(res.slice(0,-1));
+    C.$_("scheme-ex-define-square-tree-output").append(res.slice(0,-1));
   });
 });
 /*
@@ -1501,7 +1500,7 @@ editorOf["scheme-ex-define-square-tree"].setOption("onBlur", function(){
 (define (square-tree tree) (tree-map square tree))
 </div>
 <script>
-no_output_frozen_prompt("scheme-demonstrate-tree-map-square-tree", ["scheme-define-square"]);
+C.no_output_frozen_prompt("scheme-demonstrate-tree-map-square-tree", ["scheme-define-square"]);
 </script>
 
 <div id="scheme-ex-define-tree-map">
@@ -1510,26 +1509,26 @@ no_output_frozen_prompt("scheme-demonstrate-tree-map-square-tree", ["scheme-defi
 </div>
 
 <script>
-makeEditable("scheme-ex-define-tree-map");
-addDep("scheme-ex-define-tree-map", ["scheme-define-map"]);
+C.make_editable("scheme-ex-define-tree-map");
+C.add_dep("scheme-ex-define-tree-map", ["scheme-define-map"]);
 
-addOutput("scheme-ex-define-tree-map");
-editorOf["scheme-ex-define-tree-map"].setOption("onBlur", function(){
+C.add_output("scheme-ex-define-tree-map");
+C.editor_of["scheme-ex-define-tree-map"].setOption("onBlur", function(){
 
   var code = "{0} \n {1} \n (and {2} {3})".format(
-    getDependedOnCode("scheme-ex-define-tree-map"),
-    getDependedOnCode("scheme-demonstrate-tree-map-square-tree"),
+    C.get_depended_on_code("scheme-ex-define-tree-map"),
+    C.get_depended_on_code("scheme-demonstrate-tree-map-square-tree"),
     "#t",
     "(equal? (square-tree '(1 (2 (3 4) 5) (6 7))) '(1 (4 (9 16) 25) (36 49)))"
   );
 
-  eval_scheme(code).then(function(res){
+  C.eval_scheme(code).then(function(res){
     if (res[res.length - 1] === "true\n") {
-      $_("scheme-ex-define-tree-map-output").empty().append($("<div class='right-answer'> \u2713 </div>"));
+      C.$_("scheme-ex-define-tree-map-output").empty().append($("<div class='right-answer'> \u2713 </div>"));
     } else {
-      $_("scheme-ex-define-tree-map-output").empty().append($("<div class='wrong-answer'> \u2717 </div>"));
+      C.$_("scheme-ex-define-tree-map-output").empty().append($("<div class='wrong-answer'> \u2717 </div>"));
     }
-    $_("scheme-ex-define-tree-map-output").append(res.slice(0,-1));
+    C.$_("scheme-ex-define-tree-map-output").append(res.slice(0,-1));
   });
 });
 /*
@@ -1556,25 +1555,25 @@ editorOf["scheme-ex-define-tree-map"].setOption("onBlur", function(){
         (append rest (map 'your-answer-here rest)))))
 </div>
 <script>
-makeEditable("scheme-ex-define-subset");
-addDep("scheme-ex-define-subset", ["scheme-define-map"]);
+C.make_editable("scheme-ex-define-subset");
+C.add_dep("scheme-ex-define-subset", ["scheme-define-map"]);
 
-addOutput("scheme-ex-define-subset");
-editorOf["scheme-ex-define-subset"].setOption("onBlur", function(){
+C.add_output("scheme-ex-define-subset");
+C.editor_of["scheme-ex-define-subset"].setOption("onBlur", function(){
 
   var code = "{0} \n(and {1} {2})".format(
-    getDependedOnCode("scheme-ex-define-subset"),
+    C.get_depended_on_code("scheme-ex-define-subset"),
     "#t",
     "(equal? (subsets '(1 2 3)) '(() (3) (2) (2 3) (1) (1 3) (1 2) (1 2 3)))"
   );
 
-  eval_scheme(code).then(function(res){
+  C.eval_scheme(code).then(function(res){
     if (res[res.length - 1] === "true\n") {
-      $_("scheme-ex-define-subset-output").empty().append($("<div class='right-answer'> \u2713 </div>"));
+      C.$_("scheme-ex-define-subset-output").empty().append($("<div class='right-answer'> \u2713 </div>"));
     } else {
-      $_("scheme-ex-define-subset-output").empty().append($("<div class='wrong-answer'> \u2717 </div>"));
+      C.$_("scheme-ex-define-subset-output").empty().append($("<div class='wrong-answer'> \u2717 </div>"));
     }
-    $_("scheme-ex-define-subset-output").append(res.slice(0,-1));
+    C.$_("scheme-ex-define-subset-output").append(res.slice(0,-1));
   });
 });
 /*
@@ -1590,7 +1589,7 @@ editorOf["scheme-ex-define-subset"].setOption("onBlur", function(){
 </script>
 </div>
 
-<h3> Sequences as Conventional Interfaces </h3> 
+<h3> Sequences as Conventional Interfaces </h3>
 
 <p> In working with compound data, we've stressed how data abstraction permits us to design programs without becoming enmeshed in the details of data representations, and how abstraction preserves for us the flexibility to experiment with alternative representations. In this section, we introduce another powerful design principle for working with data structures &ndash; the use of <tt>conventional interfaces</tt> .
 
@@ -1605,7 +1604,7 @@ editorOf["scheme-ex-define-subset"].setOption("onBlur", function(){
                  (sum-odd-squares (cdr tree))))))
 </div>
 <script>
-prompt("scheme-define-sum-odd-squares");
+C.prompt("scheme-define-sum-odd-squares");
 </script>
 
 <p> On the surface, this procedure is very different from the following one, which constructs a list of all the even Fibonacci numbers $\text{Fib}(k)$, where $k$ is less than or equal to a given integer $n$:
@@ -1622,7 +1621,7 @@ prompt("scheme-define-sum-odd-squares");
   (next 0))
 </div>
 <script>
-prompt("scheme-define-even-fibs");
+C.prompt("scheme-define-even-fibs");
 </script>
 
 <p> Despite the fact that these two procedures are structurally very different, a more abstract description of the two computations reveals a great deal of similarity. The first program
@@ -1674,7 +1673,7 @@ empty list.
 
 <p> Unfortunately, the two procedure definitions above fail to exhibit this signal-flow structure. For instance, if we examine the <tt>sum-odd-squares</tt>procedure, we find that the enumeration is implemented partly by the<tt>null?</tt> and <tt>pair?</tt> tests and partly by the tree-recursive structureof the procedure. Similarly, the accumulation is found partly in the tests and partly in the addition used in the recursion. In general, there are no distinct parts of either procedure that correspond to the elements in the signal-flow description. Our two procedures decompose the computations in a different way, spreading the enumeration over the program and mingling it with the <tt>map</tt>, the <tt>filter</tt>, and the <tt>accumulation</tt>. If we could organize our programs to make the signal-flow structure manifest in the procedures we write, this would increase the conceptual clarity of the resulting code.
 
-<h4> Sequence Operations </h4> 
+<h4> Sequence Operations </h4>
 
 <p> The key to organizing programs so as to more clearly reflect the signal-flow structure is to concentrate on the ``signals'' that flow from one stage in the process to the next. If we represent these signals as lists, then we can use list operations to implement the processing at each of the stages. For instance, we can implement the mapping stages of the signal-flow diagrams using the <tt>map</tt> procedure from section 2-2-1:
 
@@ -1682,7 +1681,7 @@ empty list.
 (map square (list 1 2 3 4 5))
 </div>
 <script>
-prompt("scheme-map-square-1-to-5", ["scheme-define-map", "scheme-define-square"]);
+C.prompt("scheme-map-square-1-to-5", ["scheme-define-map", "scheme-define-square"]);
 </script>
 
 <p> Filtering a sequence to select only those elements that satisfy a given
@@ -1697,7 +1696,7 @@ predicate is accomplished by
         (else (filter predicate (cdr sequence)))))
 </div>
 <script>
-prompt("scheme-define-filter");
+C.prompt("scheme-define-filter");
 </script>
 
 For example,
@@ -1706,7 +1705,7 @@ For example,
 (filter odd? (list 1 2 3 4 5))
 </div>
 <script>
-prompt("scheme-filter-odd-1-to-5", ["scheme-define-filter"]);
+C.prompt("scheme-filter-odd-1-to-5", ["scheme-define-filter"]);
 </script>
 
 <p> Accumulations can be implemented by
@@ -1719,7 +1718,7 @@ prompt("scheme-filter-odd-1-to-5", ["scheme-define-filter"]);
           (accumulate op initial (cdr sequence)))))
 </div>
 <script>
-prompt("scheme-define-accumulate");
+C.prompt("scheme-define-accumulate");
 </script>
 
 <p>
@@ -1728,7 +1727,7 @@ prompt("scheme-define-accumulate");
 (accumulate + 0 (list 1 2 3 4 5))
 </div>
 <script>
-prompt("scheme-accumulate-sum-1-to-5", ["scheme-define-accumulate"]);
+C.prompt("scheme-accumulate-sum-1-to-5", ["scheme-define-accumulate"]);
 </script>
 
 <p>
@@ -1737,7 +1736,7 @@ prompt("scheme-accumulate-sum-1-to-5", ["scheme-define-accumulate"]);
 (accumulate * 1 (list 1 2 3 4 5))
 </div>
 <script>
-prompt("scheme-accumulate-product-1-to-5", ["scheme-define-accumulate"]);
+C.prompt("scheme-accumulate-product-1-to-5", ["scheme-define-accumulate"]);
 </script>
 
 <p>
@@ -1746,11 +1745,11 @@ prompt("scheme-accumulate-product-1-to-5", ["scheme-define-accumulate"]);
 (accumulate cons nil (list 1 2 3 4 5))
 </div>
 <script>
-prompt("scheme-accumulate-cons-1-to-5", ["scheme-define-accumulate"]);
+C.prompt("scheme-accumulate-cons-1-to-5", ["scheme-define-accumulate"]);
 </script>
 
 <p> All that remains to implement signal-flow diagrams is to enumerate the sequence of elements to be processed. For <tt>even-fibs</tt>, we need to generate the sequence of integers in a given range, which we can do as follows:
-  
+
 <div id="scheme-define-enumerate-interval">
 (define (enumerate-interval low high)
   (if (> low high)
@@ -1758,7 +1757,7 @@ prompt("scheme-accumulate-cons-1-to-5", ["scheme-define-accumulate"]);
       (cons low (enumerate-interval (+ low 1) high))))
 </div>
 <script>
-prompt("scheme-define-enumerate-interval");
+C.prompt("scheme-define-enumerate-interval");
 </script>
 
 <p>
@@ -1767,7 +1766,7 @@ prompt("scheme-define-enumerate-interval");
 (enumerate-interval 2 7)
 </div>
 <script>
-prompt("scheme-enumerate-interval-2-7", ["scheme-define-enumerate-interval"]);
+C.prompt("scheme-enumerate-interval-2-7", ["scheme-define-enumerate-interval"]);
 </script>
 
 <p> To enumerate the leaves of a tree, we can use<a name="footnote_link_2-14" class="footnote_link" href="#footnote_2-14">14</a>
@@ -1781,7 +1780,7 @@ prompt("scheme-enumerate-interval-2-7", ["scheme-define-enumerate-interval"]);
 
 </div>
 <script>
-prompt("scheme-define-enumerate-tree");
+C.prompt("scheme-define-enumerate-tree");
 </script>
 
 <p>
@@ -1790,7 +1789,7 @@ prompt("scheme-define-enumerate-tree");
 (enumerate-tree (list 1 (list 2 (list 3 4)) 5))
 </div>
 <script>
-prompt("scheme-enumerate-tree-nested-1-5", ["scheme-define-enumerate-tree"]);
+C.prompt("scheme-enumerate-tree-nested-1-5", ["scheme-define-enumerate-tree"]);
 </script>
 
 <p> Now we can reformulate <tt>sum-odd-squares</tt> and <tt>even-fibs</tt> as in the signal-flow diagrams. For <tt>sum-odd-squares</tt>, we enumerate the sequence of leaves of the tree, filter this to keep only the odd numbers in the sequence, square each element, and sum the results:
@@ -1804,7 +1803,7 @@ prompt("scheme-enumerate-tree-nested-1-5", ["scheme-define-enumerate-tree"]);
                            (enumerate-tree tree)))))
 </div>
 <script>
-prompt("scheme-define-sum-odd-squares-with-accumulate", ["scheme-define-accumulate", "scheme-define-map", "scheme-define-enumerate-tree"]);
+C.prompt("scheme-define-sum-odd-squares-with-accumulate", ["scheme-define-accumulate", "scheme-define-map", "scheme-define-enumerate-tree"]);
 </script>
 
 <div id="scheme-hidden-define-fib">
@@ -1817,7 +1816,7 @@ prompt("scheme-define-sum-odd-squares-with-accumulate", ["scheme-define-accumula
       (fib-iter (+ a b) a (- count 1))))
 </div>
 <script>
-hidden_prompt("scheme-hidden-define-fib");
+C.hidden_prompt("scheme-hidden-define-fib");
 </script>
 
 <p> For <tt>even-fibs</tt>, we enumerate the integers from 0 to n, generate the Fibonacci number for each of these integers, filter the resulting sequence to keep only the even elements, and accumulate the results into a list:
@@ -1831,7 +1830,7 @@ hidden_prompt("scheme-hidden-define-fib");
                            (enumerate-interval 0 n)))))
 </div>
 <script>
-prompt("scheme-define-even-fibs-with-accumulate", ["scheme-define-accumulate", "scheme-define-map", "scheme-define-enumerate-tree", "scheme-hidden-define-fib"]);
+C.prompt("scheme-define-even-fibs-with-accumulate", ["scheme-define-accumulate", "scheme-define-map", "scheme-define-enumerate-tree", "scheme-hidden-define-fib"]);
 </script>
 
 <p> The value of expressing programs as sequence operations is that this helps us make program designs that are modular, that is, designs that are constructed by combining relatively independent pieces. We can encourage modular design by providing a library of standard components together with a conventional interface for connecting the components in flexible ways.
@@ -1847,7 +1846,7 @@ prompt("scheme-define-even-fibs-with-accumulate", ["scheme-define-accumulate", "
                         (enumerate-interval 0 n)))))
 </div>
 <script>
-prompt("scheme-define-list-fib-squares", ["scheme-define-accumulate", "scheme-define-map", "scheme-define-enumerate-interval", "scheme-define-square", "scheme-hidden-define-fib"]);
+C.prompt("scheme-define-list-fib-squares", ["scheme-define-accumulate", "scheme-define-map", "scheme-define-enumerate-interval", "scheme-define-square", "scheme-hidden-define-fib"]);
 </script>
 
 <p>
@@ -1856,7 +1855,7 @@ prompt("scheme-define-list-fib-squares", ["scheme-define-accumulate", "scheme-de
 (list-fib-squares 10)
 </div>
 <script>
-prompt("scheme-list-fib-squares-10", ["scheme-define-list-fib-squares"]);
+C.prompt("scheme-list-fib-squares-10", ["scheme-define-list-fib-squares"]);
 </script>
 
 <p> We can rearrange the pieces and use them in computing the product of the odd integers in a sequence:
@@ -1869,7 +1868,7 @@ prompt("scheme-list-fib-squares-10", ["scheme-define-list-fib-squares"]);
                    (filter odd? sequence))))
 </div>
 <script>
-prompt("scheme-define-product-of-squares-of-odd-elements", ["scheme-define-accumulate", "scheme-define-map", "scheme-define-square", "scheme-define-filter"]);
+C.prompt("scheme-define-product-of-squares-of-odd-elements", ["scheme-define-accumulate", "scheme-define-map", "scheme-define-square", "scheme-define-filter"]);
 </script>
 
 <p>
@@ -1878,7 +1877,7 @@ prompt("scheme-define-product-of-squares-of-odd-elements", ["scheme-define-accum
 (product-of-squares-of-odd-elements (list 1 2 3 4 5))
 </div>
 <script>
-prompt("scheme-product-of-squares-of-odd-elements-1-to-5", ["scheme-define-product-of-squares-of-odd-elements"]);
+C.prompt("scheme-product-of-squares-of-odd-elements-1-to-5", ["scheme-define-product-of-squares-of-odd-elements"]);
 </script>
 
 <p> We can also formulate conventional data-processing applications in terms of sequence operations. Suppose we have a sequence of personnel records and we want to find the salary of the highest-paid programmer. Assume that we have a selector <tt>salary</tt> that returns the salary of a record, and a predicate <tt>programmer?</tt> that tests if a record is for a programmer. Then we can write
@@ -1891,11 +1890,11 @@ prompt("scheme-product-of-squares-of-odd-elements-1-to-5", ["scheme-define-produ
                    (filter programmer? records))))
 </div>
 <script>
-prompt("scheme-define-salary-of-highest-paid-programmer");
+C.prompt("scheme-define-salary-of-highest-paid-programmer");
 </script>
 
 <p> These examples give just a hint of the vast range of operations that can be expressed as sequence operations.<a name="footnote_link_2-15" class="footnote_link" href="#footnote_2-15">15</a>
-  
+
 <p> Sequences, implemented here as lists, serve as a conventional interface that permits us to combine processing modules. Additionally, when we uniformly represent structures as sequences, we have localized the data-structure dependencies in our programs to a small number of sequence operations. By changing these, we can experiment with alternative representations of sequences, while leaving the overall design of our programs intact. We will exploit this capability in section 3-5, when we generalize the sequence-processing paradigm to admit infinite sequences.
 
 <div class="exercise">
@@ -1906,25 +1905,25 @@ prompt("scheme-define-salary-of-highest-paid-programmer");
   (accumulate (lambda (x y) 'you-answer-here) nil sequence))
 </div>
 <script>
-makeEditable("scheme-ex-define-map-as-accumulate");
-addDep("scheme-ex-define-map-as-accumulate", ["scheme-define-accumulate"]);
+C.make_editable("scheme-ex-define-map-as-accumulate");
+C.add_dep("scheme-ex-define-map-as-accumulate", ["scheme-define-accumulate"]);
 
-addOutput("scheme-ex-define-map-as-accumulate");
-editorOf["scheme-ex-define-map-as-accumulate"].setOption("onBlur", function(){
+C.add_output("scheme-ex-define-map-as-accumulate");
+C.editor_of["scheme-ex-define-map-as-accumulate"].setOption("onBlur", function(){
 
   var code = "{0} \n (and {1} {2})".format(
-    getDependedOnCode("scheme-ex-define-map-as-accumulate"),
+    C.get_depended_on_code("scheme-ex-define-map-as-accumulate"),
     "#t",
     "(equal? '(1 2 3) (map (lambda (x) x) '(1 2 3)))"
   );
 
-  eval_scheme(code).then(function(res){
+  C.eval_scheme(code).then(function(res){
     if (res[res.length - 1] === "true\n") {
-      $_("scheme-ex-define-map-as-accumulate-output").empty().append($("<div class='right-answer'> \u2713 </div>"));
+      C.$_("scheme-ex-define-map-as-accumulate-output").empty().append($("<div class='right-answer'> \u2713 </div>"));
     } else {
-      $_("scheme-ex-define-map-as-accumulate-output").empty().append($("<div class='wrong-answer'> \u2717 </div>"));
+      C.$_("scheme-ex-define-map-as-accumulate-output").empty().append($("<div class='wrong-answer'> \u2717 </div>"));
     }
-    $_("scheme-ex-define-map-as-accumulate-output").append(res.slice(0,-1));
+    C.$_("scheme-ex-define-map-as-accumulate-output").append(res.slice(0,-1));
   });
 });
 /*
@@ -1940,25 +1939,25 @@ editorOf["scheme-ex-define-map-as-accumulate"].setOption("onBlur", function(){
   (accumulate cons 'your-answer-here 'your-answer-here))
 </div>
 <script>
-makeEditable("scheme-ex-define-append-as-accumulate");
-addDep("scheme-ex-define-append-as-accumulate", ["scheme-define-accumulate"]);
+C.make_editable("scheme-ex-define-append-as-accumulate");
+C.add_dep("scheme-ex-define-append-as-accumulate", ["scheme-define-accumulate"]);
 
-addOutput("scheme-ex-define-append-as-accumulate");
-editorOf["scheme-ex-define-append-as-accumulate"].setOption("onBlur", function(){
+C.add_output("scheme-ex-define-append-as-accumulate");
+C.editor_of["scheme-ex-define-append-as-accumulate"].setOption("onBlur", function(){
 
   var code = "{0} \n (and {1} {2})".format(
-    getDependedOnCode("scheme-ex-define-append-as-accumulate"),
+    C.get_depended_on_code("scheme-ex-define-append-as-accumulate"),
     "#t",
     "(equal? '(1 2 3 4 5) (append '(1 2 3) '(4 5)))"
   );
 
-  eval_scheme(code).then(function(res){
+  C.eval_scheme(code).then(function(res){
     if (res[res.length - 1] === "true\n") {
-      $_("scheme-ex-define-append-as-accumulate-output").empty().append($("<div class='right-answer'> \u2713 </div>"));
+      C.$_("scheme-ex-define-append-as-accumulate-output").empty().append($("<div class='right-answer'> \u2713 </div>"));
     } else {
-      $_("scheme-ex-define-append-as-accumulate-output").empty().append($("<div class='wrong-answer'> \u2717 </div>"));
+      C.$_("scheme-ex-define-append-as-accumulate-output").empty().append($("<div class='wrong-answer'> \u2717 </div>"));
     }
-    $_("scheme-ex-define-append-as-accumulate-output").append(res.slice(0,-1));
+    C.$_("scheme-ex-define-append-as-accumulate-output").append(res.slice(0,-1));
   });
 });
 /*
@@ -1974,25 +1973,25 @@ editorOf["scheme-ex-define-append-as-accumulate"].setOption("onBlur", function()
   (accumulate 'your-answer-here 0 sequence))
 </div>
 <script>
-makeEditable("scheme-ex-define-length-as-accumulate");
-addDep("scheme-ex-define-length-as-accumulate", ["scheme-define-accumulate"]);
+C.make_editable("scheme-ex-define-length-as-accumulate");
+C.add_dep("scheme-ex-define-length-as-accumulate", ["scheme-define-accumulate"]);
 
-addOutput("scheme-ex-define-length-as-accumulate");
-editorOf["scheme-ex-define-length-as-accumulate"].setOption("onBlur", function(){
+C.add_output("scheme-ex-define-length-as-accumulate");
+C.editor_of["scheme-ex-define-length-as-accumulate"].setOption("onBlur", function(){
 
   var code = "{0} \n (and {1} {2})".format(
-    getDependedOnCode("scheme-ex-define-length-as-accumulate"),
+    C.get_depended_on_code("scheme-ex-define-length-as-accumulate"),
     "#t",
     "(equal? 3 (length '(1 2 3)))"
   );
 
-  eval_scheme(code).then(function(res){
+  C.eval_scheme(code).then(function(res){
     if (res[res.length - 1] === "true\n") {
-      $_("scheme-ex-define-length-as-accumulate-output").empty().append($("<div class='right-answer'> \u2713 </div>"));
+      C.$_("scheme-ex-define-length-as-accumulate-output").empty().append($("<div class='right-answer'> \u2713 </div>"));
     } else {
-      $_("scheme-ex-define-length-as-accumulate-output").empty().append($("<div class='wrong-answer'> \u2717 </div>"));
+      C.$_("scheme-ex-define-length-as-accumulate-output").empty().append($("<div class='wrong-answer'> \u2717 </div>"));
     }
-    $_("scheme-ex-define-length-as-accumulate-output").append(res.slice(0,-1));
+    C.$_("scheme-ex-define-length-as-accumulate-output").append(res.slice(0,-1));
   });
 });
 /*
@@ -2030,30 +2029,30 @@ $$
               coefficient-sequence))
 </div>
 <script>
-makeEditable("scheme-ex-define-horner-eval");
-addDep("scheme-ex-define-horner-eval", ["scheme-define-accumulate"]);
+C.make_editable("scheme-ex-define-horner-eval");
+C.add_dep("scheme-ex-define-horner-eval", ["scheme-define-accumulate"]);
 
-addOutput("scheme-ex-define-horner-eval");
-editorOf["scheme-ex-define-horner-eval"].setOption("onBlur", function(){
+C.add_output("scheme-ex-define-horner-eval");
+C.editor_of["scheme-ex-define-horner-eval"].setOption("onBlur", function(){
 
   var code = "{0} \n (and {1} {2})".format(
-    getDependedOnCode("scheme-ex-define-horner-eval"),
+    C.get_depended_on_code("scheme-ex-define-horner-eval"),
     "#t",
     "(equal? 79 (horner-eval 2 '(1 3 0 5 0 1)))"
   );
 
-  eval_scheme(code).then(function(res){
+  C.eval_scheme(code).then(function(res){
     if (res[res.length - 1] === "true\n") {
-      $_("scheme-ex-define-horner-eval-output").empty().append($("<div class='right-answer'> \u2713 </div>"));
+      C.$_("scheme-ex-define-horner-eval-output").empty().append($("<div class='right-answer'> \u2713 </div>"));
     } else {
-      $_("scheme-ex-define-horner-eval-output").empty().append($("<div class='wrong-answer'> \u2717 </div>"));
+      C.$_("scheme-ex-define-horner-eval-output").empty().append($("<div class='wrong-answer'> \u2717 </div>"));
     }
-    $_("scheme-ex-define-horner-eval-output").append(res.slice(0,-1));
+    C.$_("scheme-ex-define-horner-eval-output").append(res.slice(0,-1));
   });
 });
 /*
 (define (horner-eval x coefficient-sequence)
-  (accumulate (lambda (this-coeff higher-terms) 
+  (accumulate (lambda (this-coeff higher-terms)
                 (+ this-coeff (* x higher-terms)))
               0
               coefficient-sequence))
@@ -2066,7 +2065,7 @@ editorOf["scheme-ex-define-horner-eval"].setOption("onBlur", function(){
 (horner-eval 2 (list 1 3 0 5 0 1))
 </div>
 <script>
-no_output_frozen_prompt("scheme-horner-eval-poly-at-2");
+C.no_output_frozen_prompt("scheme-horner-eval-poly-at-2");
 </script>
 </div>
 
@@ -2081,25 +2080,25 @@ section 2-2-2 as an accumulation:
   (accumulate 'your 'answer (map 'your 'answer)))
 </div>
 <script>
-makeEditable("scheme-ex-define-count-leaves-with-accumulate");
-addDep("scheme-ex-define-count-leaves-with-accumulate", ["scheme-define-accumulate", "scheme-define-map"]);
+C.make_editable("scheme-ex-define-count-leaves-with-accumulate");
+C.add_dep("scheme-ex-define-count-leaves-with-accumulate", ["scheme-define-accumulate", "scheme-define-map"]);
 
-addOutput("scheme-ex-define-count-leaves-with-accumulate");
-editorOf["scheme-ex-define-count-leaves-with-accumulate"].setOption("onBlur", function(){
+C.add_output("scheme-ex-define-count-leaves-with-accumulate");
+C.editor_of["scheme-ex-define-count-leaves-with-accumulate"].setOption("onBlur", function(){
 
   var code = "{0} \n (and {1} {2})".format(
-    getDependedOnCode("scheme-ex-define-count-leaves-with-accumulate"),
+    C.get_depended_on_code("scheme-ex-define-count-leaves-with-accumulate"),
     "#t",
     "(equal? 4 (count-leaves '((1 2) (1 2))))"
   );
 
-  eval_scheme(code).then(function(res){
+  C.eval_scheme(code).then(function(res){
     if (res[res.length - 1] === "true\n") {
-      $_("scheme-ex-define-count-leaves-with-accumulate-output").empty().append($("<div class='right-answer'> \u2713 </div>"));
+      C.$_("scheme-ex-define-count-leaves-with-accumulate-output").empty().append($("<div class='right-answer'> \u2713 </div>"));
     } else {
-      $_("scheme-ex-define-count-leaves-with-accumulate-output").empty().append($("<div class='wrong-answer'> \u2717 </div>"));
+      C.$_("scheme-ex-define-count-leaves-with-accumulate-output").empty().append($("<div class='wrong-answer'> \u2717 </div>"));
     }
-    $_("scheme-ex-define-count-leaves-with-accumulate-output").append(res.slice(0,-1));
+    C.$_("scheme-ex-define-count-leaves-with-accumulate-output").append(res.slice(0,-1));
   });
 });
 /*
@@ -2126,25 +2125,25 @@ editorOf["scheme-ex-define-count-leaves-with-accumulate"].setOption("onBlur", fu
             (accumulate-n op init 'your-answer))))
 </div>
 <script>
-makeEditable("scheme-ex-define-accumulate-n");
-addDep("scheme-ex-define-accumulate-n", ["scheme-define-accumulate", "scheme-define-map"]);
+C.make_editable("scheme-ex-define-accumulate-n");
+C.add_dep("scheme-ex-define-accumulate-n", ["scheme-define-accumulate", "scheme-define-map"]);
 
-addOutput("scheme-ex-define-accumulate-n");
-editorOf["scheme-ex-define-accumulate-n"].setOption("onBlur", function(){
+C.add_output("scheme-ex-define-accumulate-n");
+C.editor_of["scheme-ex-define-accumulate-n"].setOption("onBlur", function(){
 
   var code = "{0} \n (and {1} {2})".format(
-    getDependedOnCode("scheme-ex-define-accumulate-n"),
+    C.get_depended_on_code("scheme-ex-define-accumulate-n"),
     "#t",
     "(equal? '(22 26 30) (accumulate-n + 0 '((1 2 3) (4 5 6) (7 8 9) (10 11 12))))"
   );
 
-  eval_scheme(code).then(function(res){
+  C.eval_scheme(code).then(function(res){
     if (res[res.length - 1] === "true\n") {
-      $_("scheme-ex-define-accumulate-n-output").empty().append($("<div class='right-answer'> \u2713 </div>"));
+      C.$_("scheme-ex-define-accumulate-n-output").empty().append($("<div class='right-answer'> \u2713 </div>"));
     } else {
-      $_("scheme-ex-define-accumulate-n-output").empty().append($("<div class='wrong-answer'> \u2717 </div>"));
+      C.$_("scheme-ex-define-accumulate-n-output").empty().append($("<div class='wrong-answer'> \u2717 </div>"));
     }
-    $_("scheme-ex-define-accumulate-n-output").append(res.slice(0,-1));
+    C.$_("scheme-ex-define-accumulate-n-output").append(res.slice(0,-1));
   });
 });
 /*
@@ -2165,7 +2164,7 @@ editorOf["scheme-ex-define-accumulate-n"].setOption("onBlur", function(){
 <p> Suppose we represent vectors v = (v_i) as sequences of numbers, and matrices m = (m_(ij)) as sequences of vectors (the rows of the matrix). For example, the matrix
 
 
-$$ 
+$$
 \left[ \begin{array}{cccc}
 1 &amp; 2 &amp; 3 &amp; 4 \\
 4 &amp; 5 &amp; 6 &amp; 6 \\
@@ -2198,7 +2197,7 @@ $$
   (accumulate + 0 (map * v w)))
 </div>
 <script>
-prompt("scheme-define-dot-product");
+C.prompt("scheme-define-dot-product");
 </script>
 
 <p> Fill in the missing expressions in the following procedures for computing the other matrix operations. (The procedure <tt>accumulate-n</tt> is defined in Exercise 2-36.)
@@ -2215,7 +2214,7 @@ prompt("scheme-define-dot-product");
     (map 'your-answer-here m)))
 </div>
 <script>
-prompt("scheme-ex-define-matrix-operations");
+C.prompt("scheme-ex-define-matrix-operations");
 </script>
 </div>
 
@@ -2232,7 +2231,7 @@ prompt("scheme-ex-define-matrix-operations");
   (iter initial sequence))
 </div>
 <script>
-prompt("scheme-define-fold-left");
+C.prompt("scheme-define-fold-left");
 </script>
 
 <p> What are the values of
@@ -2240,29 +2239,29 @@ prompt("scheme-define-fold-left");
 <div id="scheme-ex-foldr-div" class='static'>
 (fold-right / 1 (list 1 2 3))
 </div>
-<script> 
-answer("scheme-ex-foldr-div", 1.5);
+<script>
+C.answer("scheme-ex-foldr-div", 1.5);
 </script>
 
 <div id="scheme-ex-foldl-div" class='static'>
 (fold-left / 1 (list 1 2 3)) ;please give the inverse, we haven't implemented rational numbers yet!
 </div>
-<script> 
-answer("scheme-ex-foldl-div", 6);
+<script>
+C.answer("scheme-ex-foldl-div", 6);
 </script>
 
 <div id="scheme-ex-foldr-list" class='static'>
 (fold-right list nil (list 1 2 3))
 </div>
-<script> 
-answer("scheme-ex-foldr-list", "(1 (2 (3 ())))");
+<script>
+C.answer("scheme-ex-foldr-list", "(1 (2 (3 ())))");
 </script>
 
 <div id="scheme-ex-foldl-list" class='static'>
 (fold-left list nil (list 1 2 3))
 </div>
-<script> 
-answer("scheme-ex-foldl-list", "(((() 1) 2) 3)");
+<script>
+C.answer("scheme-ex-foldl-list", "(((() 1) 2) 3)");
 </script>
 
 <p> Give a property that <tt>op</tt> should satisfy to guarantee that <tt>fold-right</tt> and <tt>fold-left</tt> will produce the same values for any sequence.
@@ -2281,11 +2280,11 @@ answer("scheme-ex-foldl-list", "(((() 1) 2) 3)");
   (fold-left (lambda (x y) <??>) nil sequence))
 </div>
 <script>
-prompt("scheme-ex-define-reverse-with-foldr");
+C.prompt("scheme-ex-define-reverse-with-foldr");
 </script>
 </div>
 
-<h4> Nested Mappings </h4> 
+<h4> Nested Mappings </h4>
 
 <p> We can extend the sequence paradigm to include many computations that are commonly expressed using nested loops.<a name="footnote_link_2-18" class="footnote_link" href="#footnote_2-18">18</a> Consider this problem: Given a positive integer n, find all ordered pairs of distinct positive integers i and j, where 1 &lt;= j&lt; i&lt;= n, such that i + j is prime. For example, if n is 6, then the pairs are the following:
 
@@ -2293,7 +2292,7 @@ prompt("scheme-ex-define-reverse-with-foldr");
 i &amp; 2 &amp; 3 &amp; 4 &amp; 4 &amp; 5 &amp; 6 &amp; 6 \\
 j &amp; 1 &amp; 2 &amp; 1 &amp; 3 &amp; 2 &amp; 1 &amp; 5 \\
 \hline \\
-i+j &amp; 3 &amp; 5 &amp; 5 &amp; 7 &amp; 7 &amp; 7 &amp; 11 
+i+j &amp; 3 &amp; 5 &amp; 5 &amp; 7 &amp; 7 &amp; 7 &amp; 11
 \end{array}
 
 
@@ -2312,7 +2311,7 @@ i+j &amp; 3 &amp; 5 &amp; 5 &amp; 7 &amp; 7 &amp; 7 &amp; 11
                  (enumerate-interval 1 n)))
 </div>
 <script>
-prompt("scheme-define-pairs-sum-to-prime", ["scheme-define-accumulate", "scheme-define-map", "scheme-define-enumerate-interval"]);
+C.prompt("scheme-define-pairs-sum-to-prime", ["scheme-define-accumulate", "scheme-define-map", "scheme-define-enumerate-interval"]);
 </script>
 
 <p> The combination of mapping and accumulating with <tt>append</tt> is so common in this sort of program that we will isolate it as a separate procedure:
@@ -2322,7 +2321,7 @@ prompt("scheme-define-pairs-sum-to-prime", ["scheme-define-accumulate", "scheme-
   (accumulate append nil (map proc seq)))
 </div>
 <script>
-prompt("scheme-define-flatmap", ["scheme-define-accumulate", "scheme-define-map"]);
+C.prompt("scheme-define-flatmap", ["scheme-define-accumulate", "scheme-define-map"]);
 </script>
 
 <p> Now filter this sequence of pairs to find those whose sum is prime. The filter predicate is called for each element of the sequence; its argument is a pair and it must extract the integers from the pair. Thus, the predicate to apply to each element in the sequence is
@@ -2343,7 +2342,7 @@ prompt("scheme-define-flatmap", ["scheme-define-accumulate", "scheme-define-map"
   (= n (smallest-divisor n)))
 </div>
 <script>
-hidden_prompt("scheme-define-prime?");
+C.hidden_prompt("scheme-define-prime?");
 </script>
 
 <div id="scheme-define-prime-sum?">
@@ -2351,7 +2350,7 @@ hidden_prompt("scheme-define-prime?");
   (prime? (+ (car pair) (cadr pair))))
 </div>
 <script>
-prompt("scheme-define-prime-sum?", ["scheme-define-prime?"]);
+C.prompt("scheme-define-prime-sum?", ["scheme-define-prime?"]);
 </script>
 
 <p> Finally, generate the sequence of results by mapping over the filtered pairs using the following procedure, which constructs a triple consisting of the two elements of the pair along with their sum:
@@ -2361,7 +2360,7 @@ prompt("scheme-define-prime-sum?", ["scheme-define-prime?"]);
   (list (car pair) (cadr pair) (+ (car pair) (cadr pair))))
 </div>
 <script>
-prompt("scheme-define-make-pair-sum");
+C.prompt("scheme-define-make-pair-sum");
 </script>
 
 <p> Combining all these steps yields the complete procedure:
@@ -2377,7 +2376,7 @@ prompt("scheme-define-make-pair-sum");
                 (enumerate-interval 1 n)))))
 </div>
 <script>
-prompt("scheme-define-prime-sum-pairs", ["scheme-define-map", "scheme-define-filter", "scheme-define-flatmap", "scheme-define-enumerate-interval"]);
+C.prompt("scheme-define-prime-sum-pairs", ["scheme-define-map", "scheme-define-filter", "scheme-define-flatmap", "scheme-define-enumerate-interval"]);
 </script>
 
 <p> Nested mappings are also useful for sequences other than those that enumerate intervals. Suppose we wish to generate all the permutations of a set $S$; that is, all the ways of ordering the items in the set. For instance, the permutations of $\{1,2,3\}$ are $\{1,2,3\}$, $\{1,3,2\}$, $\{2,1,3\}$, $\{2,3,1\}$, $\{3,1,2\}$, and $\{3,2,1\}$. Here is a plan for generating the permutations of $S$: For each item $x$ in $S$, recursively generate the sequence of permutations of $S - x$,<a name="footnote_link_2-20" class="footnote_link" href="#footnote_2-20">20</a> and adjoin $x$ to the front of each one. This yields, for each x in S, the sequence of permutations of S that begin with $x$. Combining these sequences for all $x$ gives all the permutations of $S$:<a name="footnote_link_2-21" class="footnote_link" href="#footnote_2-21">21</a>
@@ -2392,7 +2391,7 @@ prompt("scheme-define-prime-sum-pairs", ["scheme-define-map", "scheme-define-fil
                s)))
 </div>
 <script>
-prompt("scheme-define-permutations", ["scheme-define-map", "scheme-define-flatmap", "scheme-define-remove"]);
+C.prompt("scheme-define-permutations", ["scheme-define-map", "scheme-define-flatmap", "scheme-define-remove"]);
 </script>
 
 <p> Notice how this strategy reduces the problem of generating permutations of S to the problem of generating the permutations of sets with fewer elements than S. In the terminal case, we work our way down to the empty list, which represents a set of no elements. For this, we generate <tt>(list nil)</tt>, which is a sequence with one item, namely the set with no elements. The <tt>remove</tt> procedure used in <tt>permutations</tt> returns all the items in a given sequence except for a given item. This can be expressed as a simple filter:
@@ -2403,13 +2402,13 @@ prompt("scheme-define-permutations", ["scheme-define-map", "scheme-define-flatma
           sequence))
 </div>
 <script>
-prompt("scheme-define-remove", ["scheme-define-filter"]);
+C.prompt("scheme-define-remove", ["scheme-define-filter"]);
 </script>
 
 <p>
 
 <div class="exercise">
-<p> <b>Exercise 2.40:</b> Define a procedure <tt>unique-pairs</tt> that, given an integer $n$, generates the sequence of pairs $(i,j)$ with $1 &le; j&lt; i &le; n$. Use <tt>unique-pairs</tt> to simplify the definition of <tt>prime-sum-pairs</tt> given above. 
+<p> <b>Exercise 2.40:</b> Define a procedure <tt>unique-pairs</tt> that, given an integer $n$, generates the sequence of pairs $(i,j)$ with $1 &le; j&lt; i &le; n$. Use <tt>unique-pairs</tt> to simplify the definition of <tt>prime-sum-pairs</tt> given above.
 </div>
 
 <p>
@@ -2422,7 +2421,7 @@ prompt("scheme-define-remove", ["scheme-define-filter"]);
 
 <div class="exercise">
 
-<p> <b>Exercise 2.42:</b> The ``eight-queens puzzle'' asks how to place eight queens on a chessboard so that no queen is in check from any other (i.e., no two queens are in the same row, column, or diagonal). 
+<p> <b>Exercise 2.42:</b> The ``eight-queens puzzle'' asks how to place eight queens on a chessboard so that no queen is in check from any other (i.e., no two queens are in the same row, column, or diagonal).
 
 <p> <img class='center' src='http://mitpress.mit.edu/sicp/full-text/book/ch2-Z-G-23.gif'>
 
@@ -2448,7 +2447,7 @@ prompt("scheme-define-remove", ["scheme-define-filter"]);
   (queen-cols board-size))
 </div>
 <script>
-prompt("scheme-define-queens", ["scheme-define-filter", "scheme-define-map", "scheme-define-flatmap"]);
+C.prompt("scheme-define-queens", ["scheme-define-filter", "scheme-define-map", "scheme-define-flatmap"]);
 </script>
 
 <p> In this procedure <tt>rest-of-queens</tt> is a way to place $k - 1$ queens in the first $k - 1$ columns, and <tt>new-row</tt> is a proposed row in which to place the queen for the $k^{th}$ column. Complete the program by implementing the representation for sets of board positions, including the procedure <tt>adjoin-position</tt>, which adjoins a new row-column position to a set of positions, and <tt>empty-board</tt>, which represents an empty set of positions. You must also write the procedure <tt>safe?</tt>, which determines for a set of positions, whether the queen in the kth column is safe with respect to the others. (Note that we need only check whether the new queen is safe---the other queens are already guaranteed safe with respect to each other.)
@@ -2468,14 +2467,14 @@ prompt("scheme-define-queens", ["scheme-define-filter", "scheme-define-map", "sc
  (enumerate-interval 1 board-size))
 </div>
 <script>
-no_output_frozen_prompt("scheme-louise-queens-flatmap");
+C.no_output_frozen_prompt("scheme-louise-queens-flatmap");
 </script>
 
 <p> Explain why this interchange makes the program run slowly. Estimate how long it will take Louis's program to solve the eight-queens puzzle, assuming that the program in Exercise 2-42 solves the puzzle in time T.
 </div>
 
 
-<h3> Example: A Picture Language </h3> 
+<h3> Example: A Picture Language </h3>
 
 <p> This section presents a simple language for drawing pictures that illustrates the power of data abstraction and closure, and also exploits higher-order procedures in an essential way. The language is designed to make it easy to experiment with patterns such as the ones in Figure 2-9, which are composed of repeated elements that are shifted and scaled.<a name="footnote_link_2-22" class="footnote_link" href="#footnote_2-22">22</a> In this language, the data objects being combined are represented as procedures rather than as list structure. Just as <tt>cons</tt>, which satisfies the closure property, allowed us to easily build arbitrarily complicated list structure, the operations in this language, which also satisfy the closure property, allow us to easily build arbitrarily complicated patterns.
 
@@ -2488,7 +2487,7 @@ no_output_frozen_prompt("scheme-louise-queens-flatmap");
 <p> <b>Figure 2.9:</b> Designs generated with the picture language.
 </div>
 
-<h4> The picture language </h4> 
+<h4> The picture language </h4>
 
 <p> When we began our study of programming in section 1-1, we emphasized the importance of describing a language by focusing on the language's primitives, its means of combination, and its means of abstraction. We'll follow that framework here.
 
@@ -2502,7 +2501,7 @@ no_output_frozen_prompt("scheme-louise-queens-flatmap");
 <img src='http://mitpress.mit.edu/sicp/full-text/book/ch2-Z-G-28.gif'>
 <img src='http://mitpress.mit.edu/sicp/full-text/book/ch2-Z-G-29.gif'>
 
-<p> <b>Figure 2.10:</b> Images produced by the <tt>wave</tt> painter, with respect to four different frames. The frames, shown with dotted lines, are not part of the images. 
+<p> <b>Figure 2.10:</b> Images produced by the <tt>wave</tt> painter, with respect to four different frames. The frames, shown with dotted lines, are not part of the images.
 </div>
 
 <p>
@@ -2513,7 +2512,7 @@ no_output_frozen_prompt("scheme-louise-queens-flatmap");
 <img src='http://mitpress.mit.edu/sicp/full-text/book/ch2-Z-G-32.gif'>
 <img src='http://mitpress.mit.edu/sicp/full-text/book/ch2-Z-G-33.gif'>
 
-<p> <b>Figure 2.11:</b> Images of William Barton Rogers, founder and first president of MIT, painted with respect to the same four frames as in Figure 2-10 (original image reprinted with the permission of the MIT Museum). 
+<p> <b>Figure 2.11:</b> Images of William Barton Rogers, founder and first president of MIT, painted with respect to the same four frames as in Figure 2-10 (original image reprinted with the permission of the MIT Museum).
 </div>
 
 <p> Figure 2-12 shows the drawing of a painter called <tt>wave4</tt> that is built up in two stages starting from <tt>wave</tt>:
@@ -2523,7 +2522,7 @@ no_output_frozen_prompt("scheme-louise-queens-flatmap");
 (define wave4 (below wave2 wave2))
 </div>
 <script>
-prompt("scheme-define-wave-2-4");
+C.prompt("scheme-define-wave-2-4");
 </script>
 
 <div class='figure'>
@@ -2543,7 +2542,7 @@ prompt("scheme-define-wave-2-4");
     (below painter2 painter2)))
 </div>
 <script>
-prompt("scheme-define-flipped-pairs");
+C.prompt("scheme-define-flipped-pairs");
 </script>
 
 <p> and define <tt>wave4</tt> as an instance of this pattern:
@@ -2552,7 +2551,7 @@ prompt("scheme-define-flipped-pairs");
 (define wave4 (flipped-pairs wave))
 </div>
 <script>
-prompt("scheme-define-wave4");
+C.prompt("scheme-define-wave4");
 </script>
 
 <p> We can also define recursive operations. Here's one that makes painters split and branch towards the right as shown in figures Figure 2-13 and Figure 2-14:
@@ -2565,7 +2564,7 @@ prompt("scheme-define-wave4");
         (beside painter (below smaller smaller)))))
 </div>
 <script>
-prompt("scheme-define-right-split");
+C.prompt("scheme-define-right-split");
 </script>
 
 <p>
@@ -2592,27 +2591,27 @@ prompt("scheme-define-right-split");
                   (below bottom-right corner))))))
 </div>
 <script>
-prompt("scheme-ex-define-corner-split");
+C.prompt("scheme-ex-define-corner-split");
 </script>
 
 <p>
 
 <div id="scheme-right-split-wave-rogers-4">
-(right-split wave 4)         
+(right-split wave 4)
 (right-split rogers 4)
 </div>
 <script>
-prompt("scheme-right-split-wave-rogers-4");
+C.prompt("scheme-right-split-wave-rogers-4");
 </script>
 <img src="http://mitpress.mit.edu/sicp/full-text/book/ch2-Z-G-38.gif">
 <img src="http://mitpress.mit.edu/sicp/full-text/book/ch2-Z-G-39.gif">
 
 <div id="scheme-corner-split-wave-rogers-4">
-(corner-split wave 4)        
+(corner-split wave 4)
 (corner-split rogers 4)
 </div>
 <script>
-prompt("scheme-corner-split-wave-rogers-4");
+C.prompt("scheme-corner-split-wave-rogers-4");
 </script>
 <img src="http://mitpress.mit.edu/sicp/full-text/book/ch2-Z-G-40.gif">
 <img src="http://mitpress.mit.edu/sicp/full-text/book/ch2-Z-G-41.gif">
@@ -2627,7 +2626,7 @@ prompt("scheme-corner-split-wave-rogers-4");
       (below (flip-vert half) half))))
 </div>
 <script>
-prompt("scheme-define-square-limit");
+C.prompt("scheme-define-square-limit");
 </script>
 
 <p>
@@ -2636,7 +2635,7 @@ prompt("scheme-define-square-limit");
 <p> <b>Exercise 2.44:</b> Define the procedure <tt>up-split</tt> used by <tt>corner-split</tt>. It is similar to <tt>right-split</tt>, except that it switches the roles of <tt>below</tt> and <tt>beside</tt>.
  </div>
 
-<h4> Higher-order operations </h4> 
+<h4> Higher-order operations </h4>
 
 <p> In addition to abstracting patterns of combining painters, we can work at a higher level, abstracting patterns of combining painter operations. That is, we can view the painter operations as elements to manipulate and can write means of combination for these elements---procedures that take painter operations as arguments and create new painter operations.
 
@@ -2650,7 +2649,7 @@ prompt("scheme-define-square-limit");
       (below bottom top))))
 </div>
 <script>
-prompt("scheme-define-square-of-four");
+C.prompt("scheme-define-square-of-four");
 </script>
 
 <p> Then <tt>flipped-pairs</tt> can be defined in terms of <tt>square-of-four</tt> as follows:<a name="footnote_link_2-24" class="footnote_link" href="#footnote_2-24">24</a>
@@ -2662,7 +2661,7 @@ prompt("scheme-define-square-of-four");
     (combine4 painter)))
 </div>
 <script>
-prompt("scheme-define-flipped-pairs-with-square-of-four");
+C.prompt("scheme-define-flipped-pairs-with-square-of-four");
 </script>
 
 
@@ -2675,7 +2674,7 @@ prompt("scheme-define-flipped-pairs-with-square-of-four");
     (combine4 (corner-split painter n))))
 </div>
 <script>
-prompt("scheme-define-square-limit-with-square-of-four");
+C.prompt("scheme-define-square-limit-with-square-of-four");
 </script>
 
 <div class="exercise">
@@ -2686,13 +2685,13 @@ prompt("scheme-define-square-limit-with-square-of-four");
 (define up-split (split below beside))
 </div>
 <script>
-prompt("scheme-define-right-up-split-with-split");
+C.prompt("scheme-define-right-up-split-with-split");
 </script>
 
 <p> produces procedures <tt>right-split</tt> and <tt>up-split</tt> with the same behaviors as the ones already defined.
  </div>
 
-<h4> Frames </h4> 
+<h4> Frames </h4>
 
 <p> Before we can show how to implement painters and their means of combination, we must first consider frames. A frame can be described by three vectors---an origin vector and two edge vectors. The origin vector specifies the offset of the frame's origin from some absolute origin in the plane, and the edge vectors specify the offsets of the frame's corners from its origin. If the edges are perpendicular, the frame will be rectangular. Otherwise the frame will be a more general parallelogram.
 
@@ -2723,7 +2722,7 @@ $$
                            (edge2-frame frame))))))
 </div>
 <script>
-prompt("scheme-define-frame-coord-map");
+C.prompt("scheme-define-frame-coord-map");
 </script>
 
 <p> Observe that applying <tt>frame-coord-map</tt> to a frame returns a procedure that, given a vector, returns a vector. If the argument vector is in the unit square, the result vector will be in the frame. For example,
@@ -2732,7 +2731,7 @@ prompt("scheme-define-frame-coord-map");
 ((frame-coord-map a-frame) (make-vect 0 0))
 </div>
 <script>
-no_output_frozen_prompt("scheme-frame-coord-map-a-frame-0-0");
+C.no_output_frozen_prompt("scheme-frame-coord-map-a-frame-0-0");
 </script>
 
 <p> returns the same vector as
@@ -2741,13 +2740,13 @@ no_output_frozen_prompt("scheme-frame-coord-map-a-frame-0-0");
 (origin-frame a-frame)
 </div>
 <script>
-prompt("scheme-origin-frame-a-frame");
+C.prompt("scheme-origin-frame-a-frame");
 </script>
 
 <div class="exercise">
 <p> <b>Exercise 2.46:</b> A two-dimensional vector v running from the origin to a point can be represented as a pair consisting of an x-coordinate and a y-coordinate. Implement a data abstraction for vectors by giving a constructor <tt>make-vect</tt> and corresponding selectors <tt>xcor-vect</tt> and <tt>ycor-vect</tt>. In terms of your selectors and constructor, implement procedures <tt>add-vect</tt>, <tt>sub-vect</tt>, and <tt>scale-vect</tt> that perform the operations vector addition, vector subtraction, and multiplying a vector by a scalar:
 
-\begin{align} 
+\begin{align}
 (x_1, y_1) + (x_2, y_2) &amp;= (x_1 + x_2, y_1 + y_2) \\
 (x_1, y_1) - (x_2, y_2) &amp;= (x_1 - x_2, y_1 - y_2) \\
              s \cdot (x, y) &amp;= (sx, sy)
@@ -2767,13 +2766,13 @@ prompt("scheme-origin-frame-a-frame");
   (cons origin (cons edge1 edge2)))
 </div>
 <script>
-prompt("scheme-ex-define-make-frame");
+C.prompt("scheme-ex-define-make-frame");
 </script>
 
 <p> For each constructor supply the appropriate selectors to produce an implementation for frames.
 </div>
 
-<h4> Painters </h4> 
+<h4> Painters </h4>
 
 <p> A painter is represented as a procedure that, given a frame as argument, draws a particular image shifted and scaled to fit the frame. That is to say, if <tt>p</tt> is a painter and <tt>f</tt> is a frame, then we produce <tt>p</tt>'s image in <tt>f</tt> by calling <tt>p</tt> with <tt>f</tt> as argument.
 
@@ -2790,7 +2789,7 @@ prompt("scheme-ex-define-make-frame");
      segment-list)))
 </div>
 <script>
-prompt("scheme-ex-define-segments-to-painter");
+C.prompt("scheme-ex-define-segments-to-painter");
 </script>
 
 <p> The segments are given using coordinates with respect to the unit square. For each segment in the list, the painter transforms the segment endpoints with the frame coordinate map and draws a line between the transformed points.
@@ -2826,7 +2825,7 @@ The <tt>wave</tt> painter.
 </ul>
 </div>
 
-<h4> Transforming and combining painters </h4> 
+<h4> Transforming and combining painters </h4>
 
 <p> An operation on painters (such as <tt>flip-vert</tt> or <tt>beside</tt>) works by creating a painter that invokes the original painters with respect to frames derived from the argument frame. Thus, for example, <tt>flip-vert</tt> doesn't have to know how a painter works in order to flip it---it just has to know how to turn a frame upside down: The flipped painter just uses the original painter, but in the inverted frame.
 
@@ -2843,7 +2842,7 @@ The <tt>wave</tt> painter.
                      (sub-vect (m corner2) new-origin)))))))
 </div>
 <script>
-prompt("scheme-define-transform-painter");
+C.prompt("scheme-define-transform-painter");
 </script>
 
 <p> Here's how to flip painter images vertically:
@@ -2856,7 +2855,7 @@ prompt("scheme-define-transform-painter");
                      (make-vect 0.0 0.0))) ; new end of <tt>edge2</tt>
 </div>
 <script>
-prompt("scheme-define-flip-vert");
+C.prompt("scheme-define-flip-vert");
 </script>
 
 <p> Using <tt>transform-painter</tt>, we can easily define new transformations. For example, we can define a painter that shrinks its image to the upper-right quarter of the frame it is given:
@@ -2869,7 +2868,7 @@ prompt("scheme-define-flip-vert");
                      (make-vect 0.5 1.0)))
 </div>
 <script>
-prompt("scheme-define-shrink-to-upper-right");
+C.prompt("scheme-define-shrink-to-upper-right");
 </script>
 
 <p> Other transformations rotate images counterclockwise by 90 degrees<a name="footnote_link_2-29" class="footnote_link" href="#footnote_2-29">29</a>
@@ -2882,7 +2881,7 @@ prompt("scheme-define-shrink-to-upper-right");
                      (make-vect 0.0 0.0)))
 </div>
 <script>
-prompt("scheme-define-rotate90");
+C.prompt("scheme-define-rotate90");
 </script>
 
 <p> or squash images towards the center of the frame:<a name="footnote_link_2-30" class="footnote_link" href="#footnote_2-30">30</a>
@@ -2895,7 +2894,7 @@ prompt("scheme-define-rotate90");
                      (make-vect 0.35 0.65)))
 </div>
 <script>
-prompt("scheme-define-squash-inwards");
+C.prompt("scheme-define-squash-inwards");
 </script>
 
 <p> Frame transformation is also the key to defining means of combining two or more painters. The <tt>beside</tt> procedure, for example, takes two painters, transforms them to paint in the left and right halves of an argument frame respectively, and produces a new, compound painter. When the compound painter is given a frame, it calls the first transformed painter to paint in the left half of the frame and calls the second transformed painter to paint in the right half of the frame:
@@ -2918,7 +2917,7 @@ prompt("scheme-define-squash-inwards");
         (paint-right frame)))))
 </div>
 <script>
-prompt("scheme-define-beside");
+C.prompt("scheme-define-beside");
 </script>
 
 <p> Observe how the painter data abstraction, and in particular the representation of painters as procedures, makes <tt>beside</tt> easy to implement. The <tt>beside</tt> procedure need not know anything about the details of the component painters other than that each painter will draw something in its designated frame.
@@ -2933,7 +2932,7 @@ prompt("scheme-define-beside");
 <p> <b>Exercise 2.51:</b> Define the <tt>below</tt> operation for painters. <tt>Below</tt> takes two painters as arguments. The resulting painter, given a frame, draws with the first painter in the bottom of the frame and with the second painter in the top. Define <tt>below</tt> in two different ways---first by writing a procedure that is analogous to the <tt>beside</tt> procedure given above, and again in terms of <tt>beside</tt> and suitable rotation operations (from Exercise 2-50).
 </div>
 
-<h4> Levels of language for robust design </h4> 
+<h4> Levels of language for robust design </h4>
 
 <p> The picture language exercises some of the critical ideas we've introduced about abstraction with procedures and data. The fundamental data abstractions, painters, are implemented using procedural representations, which enables the language to handle different basic drawing capabilities in a uniform way. The means of combination satisfy the closure property, which permits us to easily build up complex designs. Finally, all the tools for abstracting procedures are available to us for abstracting means of combination for painters.
 
@@ -2971,19 +2970,19 @@ Modify the version of <tt>square-limit</tt> that uses <tt>square-of-four</tt> so
 <div id="footnotes">
 <h3 id='Notes'> Notes </h3>
 
-<div id="footnote_2-6" class="footnote">  
+<div id="footnote_2-6" class="footnote">
 <p> <a href="#footnote_link_2-6" class="footnote_backlink">6</a> The use of the word ``closure'' here comes from abstract algebra, where a set of elements is said to be closed under an operation if applying the operation to elements in the set produces an element that is again an element of the set. The Lisp community also (unfortunately) uses the word ``closure'' to describe a totally unrelated concept: A closure is an implementation technique for representing procedures with free variables. We do not use the word ``closure'' in this second sense in this book.
 </div>
 
-<div id="footnote_2-7" class="footnote">  
+<div id="footnote_2-7" class="footnote">
 <p> <a href="#footnote_link_2-7" class="footnote_backlink">7</a> The notion that a means of combination should satisfy closure is a straightforward idea. Unfortunately, the data combiners provided in many popular programming languages do not satisfy closure, or make closure cumbersome to exploit. In Fortran or Basic, one typically combines data elements by assembling them into arrays---but one cannot form arrays whose elements are themselves arrays. Pascal and C admit structures whose elements are structures. However, this requires that the programmer manipulate pointers explicitly, and adhere to the restriction that each field of a structure can contain only elements of a prespecified form. Unlike Lisp with its pairs, these languages have no built-in general-purpose glue that makes it easy to manipulate compound data in a uniform way. This limitation lies behind Alan Perlis's comment in his foreword to this book: ``In Pascal the plethora of declarable data structures induces a specialization within functions that inhibits and penalizes casual cooperation. It is better to have 100 functions operate on one data structure than to have 10 functions operate on 10 data structures.''
 </div>
 
-<div id="footnote_2-8" class="footnote">  
+<div id="footnote_2-8" class="footnote">
 <p> <a href="#footnote_link_2-8" class="footnote_backlink">8</a> In this book, we use list to mean a chain of pairs terminated by the end-of-list marker. In contrast, the term list structure refers to any data structure made out of pairs, not just to lists.
 </div>
 
-<div id="footnote_2-9" class="footnote">  
+<div id="footnote_2-9" class="footnote">
 <p> <a href="#footnote_link_2-9" class="footnote_backlink">9</a> Since nested applications of car and cdr are cumbersome to write, Lisp dialects provide abbreviations for them -- for instance,
 
 <pre>
@@ -2993,11 +2992,11 @@ Modify the version of <tt>square-limit</tt> that uses <tt>square-of-four</tt> so
 <p> The names of all such procedures start with c and end with r. Each a between them stands for a car operation and each d for a cdr operation, to be applied in the same order in which they appear in the name. The names car and cdr persist because simple combinations like cadr are pronounceable.
 </div>
 
-<div id="footnote_2-10" class="footnote">  
+<div id="footnote_2-10" class="footnote">
 <p> <a href="#footnote_link_2-10" class="footnote_backlink">10</a> It's remarkable how much energy in the standardization of Lisp dialects has been dissipated in arguments that are literally over nothing: Should nil be an ordinary name? Should the value of nil be a symbol? Should it be a list? Should it be a pair? In Scheme, nil is an ordinary name, which we use in this section as a variable whose value is the end-of-list marker (just as true is an ordinary variable that has a true value). Other dialects of Lisp, including Common Lisp, treat nil as a special symbol. The authors of this book, who have endured too many language standardization brawls, would like to avoid the entire issue. Once we have introduced quotation in section 2.3, we will denote the empty list as '() and dispense with the variable nil entirely.
 </div>
 
-<div id="footnote_2-11" class="footnote">  
+<div id="footnote_2-11" class="footnote">
 <p> <a href="#footnote_link_2-11" class="footnote_backlink">11</a> To define <tt>f</tt> and <tt>g</tt> using <tt>lambda</tt> we would write
 
 <div id="scheme-lambda-dotted-tail-syntax">
@@ -3005,11 +3004,11 @@ Modify the version of <tt>square-limit</tt> that uses <tt>square-of-four</tt> so
 (define g (lambda w &lt;body&gt;))
 </div>
 <script>
-prompt("scheme-lambda-dotted-tail-syntax");
+C.prompt("scheme-lambda-dotted-tail-syntax");
 </script>
 </div>
 
-<div id="footnote_2-12" class='footnote'> 
+<div id="footnote_2-12" class='footnote'>
 <p> <a href="#footnote_link_2-12" class="footnote_backlink">12</a> Scheme standardly provides a <tt>map</tt> procedure that is more general than the one described here. This more general <tt>map</tt> takes a procedure of n arguments, together with n lists, and applies the procedure to all the first elements of the lists, all the second elements of the lists, and so on, returning a list of the results. For example:
 
 <div id="scheme-demonstrate-map">
@@ -3022,51 +3021,51 @@ prompt("scheme-lambda-dotted-tail-syntax");
 '(9 12 15)
 </div>
 <script>
-prompt("scheme-demonstrate-map");
+C.prompt("scheme-demonstrate-map");
 </script>
 </div>
 
-<div id="footnote_2-13" class='footnote'> 
+<div id="footnote_2-13" class='footnote'>
 <p> <a href="#footnote_link_2-13" class="footnote_backlink">13</a> The order of the first two clauses in the <tt>cond</tt> matters, since the empty list satisfies <tt>null?</tt> and also is not a pair.</div>
 
-<div id="footnote_2-14" class='footnote'> 
+<div id="footnote_2-14" class='footnote'>
 <p> <a href="#footnote_link_2-14" class="footnote_backlink">14</a> This is, in fact, precisely the fringe procedure from exercise 2.28. Here we've renamed it to emphasize that it is part of a family of general sequence-manipulation procedures.
 </div>
 
-<div id="footnote_2-15" class='footnote'> 
+<div id="footnote_2-15" class='footnote'>
 <p> <a href="#footnote_link_2-15" class="footnote_backlink">15</a> Richard Waters (1979) developed a program that automatically analyzes traditional Fortran programs, viewing them in terms of maps, filters, and accumulations. He found that fully 90 percent of the code in the Fortran Scientific Subroutine Package fits neatly into this paradigm. One of the reasons for the success of Lisp as a programming language is that lists provide a standard medium for expressing ordered collections so that they can be manipulated using higher-order operations. The programming language APL owes much of its power and appeal to a similar choice. In APL all data are represented as arrays, and there is a universal and convenient set of generic operators for all sorts of array operations.
 </div>
 
-<div id="footnote_2-16" class='footnote'> 
+<div id="footnote_2-16" class='footnote'>
 <p> <a href="#footnote_link_2-16" class="footnote_backlink">16</a> According to Knuth (1981), this rule was formulated by W. G. Horner early in the nineteenth century, but the method was actually used by Newton over a hundred years earlier. Horner's rule evaluates the polynomial using fewer additions and multiplications than does the straightforward method of first computing an xn, then adding an-1xn-1, and so on. In fact, it is possible to prove that any algorithm for evaluating arbitrary polynomials must use at least as many additions and multiplications as does Horner's rule, and thus Horner's rule is an optimal algorithm for polynomial evaluation. This was proved (for the number of additions) by A. M. Ostrowski in a 1954 paper that essentially founded the modern study of optimal algorithms. The analogous statement for multiplications was proved by V. Y. Pan in 1966. The book by Borodin and Munro (1975) provides an overview of these and other results about optimal algorithms.
 </div>
 
-<div id="footnote_2-17" class='footnote'> 
+<div id="footnote_2-17" class='footnote'>
 <p> <a href="#footnote_link_2-17" class="footnote_backlink">17</a> This definition uses the extended version of map described in footnote 12.
 </div>
 
-<div id="footnote_2-18" class='footnote'> 
+<div id="footnote_2-18" class='footnote'>
 <p> <a href="#footnote_link_2-18" class="footnote_backlink">18</a> This approach to nested mappings was shown to us by David Turner, whose languages KRC and Miranda provide elegant formalisms for dealing with these constructs. The examples in this section (see also exercise 2.42) are adapted from Turner 1981. In section 3.5.3, we'll see how this approach generalizes to infinite sequences.
 </div>
 
-<div id="footnote_2-19" class='footnote'> 
+<div id="footnote_2-19" class='footnote'>
 <p> <a href="#footnote_link_2-19" class="footnote_backlink">19</a> We're representing a pair here as a list of two elements rather than as a Lisp pair. Thus, the ``pair'' (i,j) is represented as (list i j), not (cons i j).
 </div>
 
-<div id="footnote_2-20" class='footnote'> 
+<div id="footnote_2-20" class='footnote'>
 <p> <a href="#footnote_link_2-20" class="footnote_backlink">20</a> The set S - x is the set of all elements of S, excluding x.
 </div>
 
-<div id="footnote_2-21" class='footnote'> 
+<div id="footnote_2-21" class='footnote'>
 <p> <a href="#footnote_link_2-21" class="footnote_backlink">21</a> Semicolons in Scheme code are used to introduce comments. Everything from the semicolon to the end of the line is ignored by the interpreter. In this book we don't use many comments; we try to make our programs self-documenting by using descriptive names.
 </div>
 
-<div id="footnote_2-22" class='footnote'> 
+<div id="footnote_2-22" class='footnote'>
 <p> <a href="#footnote_link_2-22" class="footnote_backlink">22</a> The picture language is based on the language Peter Henderson created to construct images like M.C. Escher's ``Square Limit'' woodcut (see Henderson 1982). The woodcut incorporates a repeated scaled pattern, similar to the arrangements drawn using the square-limit procedure in this section.
 </div>
 
 
-<div id="footnote_2-23" class='footnote'> 
+<div id="footnote_2-23" class='footnote'>
 <p> <a href="#footnote_link_2-23" class="footnote_backlink">23</a> William Barton Rogers (1804-1882) was the founder and first president of MIT. A geologist and talented teacher, he taught at William and Mary College and at the University of Virginia. In 1859 he moved to Boston, where he had more time for research, worked on a plan for establishing a ``polytechnic institute,'' and served as Massachusetts's first State Inspector of Gas Meters.
 
 <p> When MIT was established in 1861, Rogers was elected its first president. Rogers espoused an ideal of ``useful learning'' that was different from the university education of the time, with its overemphasis on the classics, which, as he wrote, ``stand in the way of the broader, higher and more practical instruction and discipline of the natural and social sciences.'' This education was likewise to be different from narrow trade-school education. In Rogers's words:
@@ -3088,7 +3087,7 @@ prompt("scheme-demonstrate-map");
 
 </div>
 
-<div id="footnote_2-24" class='footnote'> 
+<div id="footnote_2-24" class='footnote'>
 <p> <a href="#footnote_link_2-24" class="footnote_backlink">24</a> Equivalently, we could write
 
 <pre>
@@ -3097,31 +3096,31 @@ prompt("scheme-demonstrate-map");
 </pre>
 </div>
 
-<div id="footnote_2-25" class='footnote'> 
+<div id="footnote_2-25" class='footnote'>
 <p> <a href="#footnote_link_2-25" class="footnote_backlink">25</a> Rotate180 rotates a painter by 180 degrees (see exercise 2.50). Instead of rotate180 we could say (compose flip-vert flip-horiz), using the compose procedure from exercise 1.42.
 </div>
 
-<div id="footnote_2-26" class='footnote'> 
+<div id="footnote_2-26" class='footnote'>
 <p> <a href="#footnote_link_2-26" class="footnote_backlink">26</a> Frame-coord-map uses the vector operations described in exercise 2.46 below, which we assume have been implemented using some representation for vectors. Because of data abstraction, it doesn't matter what this vector representation is, so long as the vector operations behave correctly.
 </div>
 
-<div id="footnote_2-27" class='footnote'> 
+<div id="footnote_2-27" class='footnote'>
 <p> <a href="#footnote_link_2-27" class="footnote_backlink">27</a> Segments->painter uses the representation for line segments described in exercise 2.48 below. It also uses the for-each procedure described in exercise 2.23.
 </div>
 
-<div id="footnote_2-28" class='footnote'> 
+<div id="footnote_2-28" class='footnote'>
 <p> <a href="#footnote_link_2-28" class="footnote_backlink">28</a> For example, the rogers painter of figure 2.11 was constructed from a gray-level image. For each point in a given frame, the rogers painter determines the point in the image that is mapped to it under the frame coordinate map, and shades it accordingly. By allowing different types of painters, we are capitalizing on the abstract data idea discussed in section 2.1.3, where we argued that a rational-number representation could be anything at all that satisfies an appropriate condition. Here we're using the fact that a painter can be implemented in any way at all, so long as it draws something in the designated frame. Section 2.1.3 also showed how pairs could be implemented as procedures. Painters are our second example of a procedural representation for data.
 </div>
 
-<div id="footnote_2-29" class='footnote'> 
+<div id="footnote_2-29" class='footnote'>
 <p> <a href="#footnote_link_2-29" class="footnote_backlink">29</a> Rotate90 is a pure rotation only for square frames, because it also stretches and shrinks the image to fit into the rotated frame.
 </div>
 
-<div id="footnote_2-30" class='footnote'> 
+<div id="footnote_2-30" class='footnote'>
 <p> <a href="#footnote_link_2-30" class="footnote_backlink">30</a> The diamond-shaped images in figures 2.10 and 2.11 were created with squash-inwards applied to wave and rogers.
 </div>
 
-<div id="footnote_2-31" class='footnote'> 
+<div id="footnote_2-31" class='footnote'>
 <p> <a href="#footnote_link_2-31" class="footnote_backlink">31</a> Section 3.3.4 describes one such language.
 </div> </div>
 
