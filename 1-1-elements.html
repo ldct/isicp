@@ -1484,7 +1484,7 @@ C.make_static("scheme-define-good-enough-2");
 
 <p> In the definition of good-enough? above, guess and x are bound variables but &lt;, -, abs, and square are free. The meaning of good-enough? should be independent of the names we choose for guess and x so long as they are distinct and different from <, -, abs, and square. (If we renamed guess to abs we would have introduced a bug by capturing the variable abs. It would have changed from free to bound.) The meaning of good-enough? is not independent of the names of its free variables, however. It surely depends upon the fact (external to this definition) that the symbol abs names a procedure for computing the absolute value of a number. Good-enough? will compute a different function if we substitute cos for abs in its definition.
 
-</h4>Internal definitions and block structure</h4>
+<h4>Internal definitions and block structure</h4>
 
 <p> We have one kind of name isolation available to us so far: The formal parameters of a procedure are local to the body of the procedure. The square-root program illustrates another way in which we would like to control the use of names. The existing program consists of separate procedures:
 
