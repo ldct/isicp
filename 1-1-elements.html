@@ -13,6 +13,7 @@
 <script src="coding-js/deps/codemirror/lib/codemirror.js"></script>
 <script src="coding-js/deps/codemirror/mode/scheme/scheme.js"></script>
 <script src="coding-js/coding.js"> </script>
+<script src="http://cdnjs.cloudflare.com/ajax/libs/raphael/2.1.2/raphael-min.js"></script>
 <script>
   C = new CodingJS("coding-js/");
 </script>
@@ -51,6 +52,7 @@ MathJax.Hub.Config({
     <a href="index.html" class="navlink"> <img src='images/home.svg' width=32 height=32> </a>
     <span id="toc-link" class="navlink"> <img src='images/list.svg' width=32 height=32> </span>
     <span id="currently-editing-link" class="navlink"> <img src='images/file-edit.svg' width=32 height=32> </span>
+    <span id="raphael-link">HI!</span>
 
     <script src="http://cdn.jotfor.ms/static/feedback2.js?3.2.310" type="text/javascript">
     new JotformFeedback({
@@ -71,18 +73,29 @@ MathJax.Hub.Config({
     <div id="currently-editing"> </div>
 
 
+    <div id="raphael-target" style="height: 500px">
+    hi
+    </div>
+
+
 
     <script>
 
     function hideAll() {
       $("#currently-editing").hide();
       $("#toc").hide();
+      $("#raphael-target").hide();
     }
 
     $("#currently-editing-link").click(function() {
       hideAll();
       $("#currently-editing").show();
     });
+
+    $("#raphael-link").click(function() {
+      hideAll();
+      $("#raphael-target").show();
+    })
 
     $("#toc-link").click(function() {
       hideAll();
@@ -104,6 +117,9 @@ MathJax.Hub.Config({
 </div>
 
 <script>
+
+paper = Raphael($("#raphael-target")[0]);
+
 $('#sidebox .tab').toggle(function(){
     $('#sidebox').animate({'right':'0%'});
 }, function(){
@@ -1470,7 +1486,7 @@ C.prompt("scheme-define-square-y");
 
 <div id="scheme-define-good-enough-2">
 (define (good-enough? guess x)
-  (< (abs (- (square guess) x)) 0.001))
+  (&lt; (abs (- (square guess) x)) 0.001))
 </div>
 <script>
 C.make_static("scheme-define-good-enough-2");
