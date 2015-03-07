@@ -503,7 +503,7 @@ function tokenize(sexp) {
 function process(array) {
   var counter = 0;
   function iter(e) {
-    if (isarray(e)) {
+    if ($.isArray(e)) {
       var ret = e.map(iter);
       ret.id = counter++;
       return ret;
@@ -515,7 +515,7 @@ function process(array) {
 }
 
 function id(e) {
-  if (isarray(e)) {
+  if ($.isArray(e)) {
     return e.id;
   } else {
     return e.split('id')[1];
@@ -524,9 +524,11 @@ function id(e) {
 
 function evaluate_a(a) {
 
+  console.log(a);
+
   return ""; //TODO
 
-  if (isarray(a)) {
+  if ($.isArray(a)) {
     var op = a[0].split('id')[0];
 
     if (op == '+') {
@@ -539,7 +541,7 @@ function evaluate_a(a) {
 function dot(a) {
   var s = "";
 
-  if (isarray(a)) {
+  if ($.isArray(a)) {
 
     s = s + id(a) + ' [label="' + evaluate_a(a) +'"];\n';
 
