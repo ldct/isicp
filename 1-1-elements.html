@@ -920,7 +920,7 @@ C.no_output_frozen_prompt("scheme-cond-syntax");
 
 <p> Conditional expressions are evaluated as follows. The predicate <tt>&lt;p1&gt;</tt>; is evaluated first. If its value is false, then <tt>&lt;p2&gt;</tt> is evaluated. If <tt>&lt;p2&gt;</tt>'s value is also false, then <tt>&lt;p3&gt;</tt> is evaluated. This process continues until a predicate is found whose value is true, in which case the interpreter returns the value of the corresponding consequent expression <tt>&lt;e&gt;</tt> of the clause as the value of the conditional expression. If none of the <tt>&lt;p&gt;</tt>'s is found to be true, the value of the cond is undefined.
 
-<p> The word predicate is used for procedures that return true or false, as well as for expressions that evaluate to true or false. The absolute-value procedure abs makes use of the primitive predicates <tt>&lt;</tt>, <tt>&gt;</tt>, and <tt>=</tt>.<a name="footnote_link_1-18" class="footnote_link" href="#footnote_1-18">18</a> These take two numbers as arguments and test whether the first number is, respectively, greater than, less than, or equal to the second number, returning true or false accordingly.
+<p> The word predicate is used for procedures that return true or false, as well as for expressions that evaluate to true or false. The absolute-value procedure abs makes use of the primitive predicates <tt>&gt;</tt>, <tt>&lt;</tt>, and <tt>=</tt>.<a name="footnote_link_1-18" class="footnote_link" href="#footnote_1-18">18</a> These take two numbers as arguments and test whether the first number is, respectively, greater than, less than, or equal to the second number, returning true or false accordingly.
 
 <p> Another way to write the absolute-value procedure is
 
