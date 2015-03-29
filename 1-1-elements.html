@@ -643,13 +643,13 @@ C.prompt("scheme-define-square");
 <p> The general form of a procedure definition is
 
 <div id="scheme-define-syntax" class='static'>
-(define (&lt;name&gt; &lt;formal parameters&gt;) &lt;body&gt;)
+(define (&lt;<em>name</em>&gt; &lt;<em>formal parameters</em>&gt;) &lt;<em>body</em>&gt;)
 </div>
 <script>
 C.make_static("scheme-define-syntax");
 </script>
 
-<p> The name is a symbol to be associated with the procedure definition in the environment.<a name="footnote_link_1-13" class="footnote_link" href="#footnote_1-13">13</a> The formal parameters are the names used within the body of the procedure to refer to the corresponding arguments of the procedure. The body is an expression that will yield the value of the procedure application when the formal parameters are replaced by the actual arguments to which the procedure is applied.<a name="footnote_link_1-14" class="footnote_link" href="#footnote_1-14">14</a> The name and the formal parameters are grouped within parentheses, just as they would be in an actual call to the procedure being defined.
+<p> The &lt;<em>name</em>&gt; is a symbol to be associated with the procedure definition in the environment.<a name="footnote_link_1-13" class="footnote_link" href="#footnote_1-13">13</a> The &lt;<em>formal parameters</em>&gt; are the names used within the body of the procedure to refer to the corresponding arguments of the procedure. The &lt;<em>body</em>&gt; is an expression that will yield the value of the procedure application when the formal parameters are replaced by the actual arguments to which the procedure is applied.<a name="footnote_link_1-14" class="footnote_link" href="#footnote_1-14">14</a> The &lt;<em>name</em>&gt; and the &lt;<em>formal parameters</em>&gt; are grouped within parentheses, just as they would be in an actual call to the procedure being defined.
 
 <p> Having defined square, we can now use it:
 
@@ -978,7 +978,7 @@ C.no_output_frozen_prompt("scheme-cond-syntax");
 
 <p> Notice that and and or are special forms, not procedures, because the subexpressions are not necessarily all evaluated. Not is an ordinary procedure.
 
-As an example of how these are used, the condition that a number $x$ be in the range $5 &lt; x &lt; 10$ may be expressed as
+<p> As an example of how these are used, the condition that a number $x$ be in the range $5 &lt; x &lt; 10$ may be expressed as
 
 <div id="scheme-between">
 (and (> x 5) (&lt; x 10))
