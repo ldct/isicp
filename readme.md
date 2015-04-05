@@ -2,7 +2,7 @@
 
 ![screenshot](https://raw.github.com/zodiac/isicp/master/images/screenshot.png)
 
-Structure and Interpretation of Computer Programs now in an interactive textbook form! 
+Structure and Interpretation of Computer Programs now in an interactive textbook form!
 
 Click on (almost) any code fragment to edit. Ctrl-Enter will re-run the script.
 
@@ -13,7 +13,7 @@ NOTE: a lot of the code lives in a separate repository, [web-worker-interpreter]
 This project is a work-in-progress and we need your help!
 
 - Report any bugs, typos etc that you find
-- Mark-up more code fragments and exercises! I'm currently up to chapter 2-2
+- Mark-up more code fragments and exercises! I'm currently in the middle of chapter 2-2
 - Write more exercise autograders!
 - Add new features!
 
@@ -32,7 +32,7 @@ If you just wish to help port more of SICP to this site, here is how to create a
 <div id="scheme-times-size">
 (* 5 size)
 </div>
-<script> 
+<script>
 prompt("scheme-times-size", ["scheme-define-size"]);
 </script>
 ```

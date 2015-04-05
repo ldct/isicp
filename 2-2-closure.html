@@ -535,16 +535,35 @@ C.prompt("scheme-cc-us-coins", ["scheme-define-coins", "scheme-ex-define-cc"]);
                    (first-denomination coin-values))
                 coin-values)))))
 </div>
+
+<p> Define the procedures <tt>first-denomination</tt>, <tt>except-first-denomination</tt>, and <tt>no-more?</tt> in terms of primitive operations on list structures. Does the order of the list <tt>coin-values</tt> affect the answer produced by <tt>cc</tt>?  Why or why not?
+
+<div id="scheme-ex-define-cc-accessors">
+(define no-more? (lambda (x) true))
+(define except-first-denomination (lambda (x) '()))
+(define first-denomination 42)
+</div>
+
+<!--
+(define no-more? null?)
+(define except-first-denomination cdr)
+(define first-denomination car)
+-->
+
 <script>
-C.make_editable("scheme-ex-define-cc");
+C.prompt("scheme-ex-define-cc-accessors");
+C.prompt("scheme-ex-define-cc", ["scheme-ex-define-cc-accessors"]);
 C.add_output("scheme-ex-define-cc");
 C.editor_of["scheme-ex-define-cc"].setOption("onBlur", function(){
 
   var code = "{0} \n (equal? (cc 100 '(50 25 10 5 1)) 292)".format(
-    C.editor_of["scheme-ex-define-cc"].getValue());
+    C.get_depended_on_code("scheme-ex-define-cc"));
 
   C.eval_scheme(code).then(function(res){
-    if (res[res.length - 1] === "true\n") {
+
+    console.log(res);
+
+    if (res[res.length - 1] === "true") {
       C.$_("scheme-ex-define-cc-output").empty().append($("<div class='right-answer'> \u2713 </div>"));
     } else {
       C.$_("scheme-ex-define-cc-output").empty().append($("<div class='wrong-answer'> \u2717 </div>"));
@@ -553,15 +572,8 @@ C.editor_of["scheme-ex-define-cc"].setOption("onBlur", function(){
     C.compute("scheme-cc-us-coins")
   });
 });
-
-/*
-(define no-more? null?)
-(define except-first-denomination cdr)
-(define first-denomination car)
-*/
 </script>
 
-<p> Define the procedures <tt>first-denomination</tt>, <tt>except-first-denomination</tt>, and <tt>no-more?</tt> in terms of primitive operations on list structures. Does the order of the list <tt>coin-values</tt> affect the answer produced by <tt>cc</tt>?  Why or why not?
 </div>
 
 <p>
