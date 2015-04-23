@@ -615,7 +615,7 @@ C.editor_of["scheme-ex-pascal-input"].setOption("onBlur", function(){
 <p>
 
 <div class="exercise">
-<p> <b> Exercise 1.13. </b> Prove that $\Fib(n)$ is the closest integer to $\phi^n / 5$, where
+<p> <b> Exercise 1.13. </b> Prove that $\Fib(n)$ is the closest integer to $\phi^n / \sqrt 5$, where
 
 $$
 \phi = \frac{1 + \sqrt 5}{2} \approx 1.6180339887
@@ -1032,6 +1032,10 @@ C.editor_of["scheme-ex-log-fib-input"].setOption("onBlur", function(){
 
 <p> The idea of the algorithm is based on the observation that, if r is the remainder when a is divided by b, then the common divisors of a and b are precisely the same as the common divisors of b and r. Thus, we can use the equation
 
+$$
+GCD(a,b) = GCD(b,r)
+$$
+
 <p> to successively reduce the problem of computing a GCD to the problem of computing the GCD of smaller and smaller pairs of integers. For example,
 
 <p> reduces GCD(206,40) to GCD(2,0), which is 2. It is possible to show that starting with any two positive integers and performing repeated reductions will always eventually produce a pair where the second number is 0. Then the GCD is the other number in the pair. This method for computing the GCD is known as Euclid's Algorithm.<a name="footnote_link_1-42" class="footnote_link" href="#footnote_1-42">42</a>
@@ -1078,7 +1082,7 @@ C.answer("scheme-ex-120-applicative", 4);
 
 <h3>  Example: Testing for Primality </h3>
 
-<p> This section describes two methods for checking the primality of an integer n, one with order of growth Θ(n), and a "probabilistic" algorithm with order of growth Θ(log n). The exercises at the end of this section suggest programming projects based on these algorithms.
+<p> This section describes two methods for checking the primality of an integer n, one with order of growth $\Theta(\sqrt n)$, and a "probabilistic" algorithm with order of growth Θ(log n). The exercises at the end of this section suggest programming projects based on these algorithms.
 
 <h4> Searching for divisors </h4>
 
@@ -1140,7 +1144,7 @@ C.prompt("scheme-define-prime");
 C.add_dep("scheme-define-prime", ["scheme-define-smallest-divisor"]);
 </script>
 
-<p> The end test for find-divisor is based on the fact that if n is not prime it must have a divisor less than or equal to n.<a name="footnote_link_1-44" class="footnote_link" href="#footnote_1-44">44</a> This means that the algorithm need only test divisors between 1 and n. Consequently, the number of steps required to identify n as prime will have order of growth (n).
+<p> The end test for find-divisor is based on the fact that if $n$ is not prime it must have a divisor less than or equal to $\sqrt n$.<a name="footnote_link_1-44" class="footnote_link" href="#footnote_1-44">44</a> This means that the algorithm need only test divisors between 1 and $\sqrt n$. Consequently, the number of steps required to identify $n$ as prime will have order of growth $\Theta(\sqrt n)$.
 
 <h4> The Fermat test </h4>
 
@@ -1254,7 +1258,7 @@ C.prompt("scheme-define-timed-prime-test", ["scheme-define-prime", "scheme-defin
 
 </script>
 
-<p> Using this procedure, write a procedure <tt>search-for-primes</tt> that checks the primality of consecutive odd integers in a specified range. Use your procedure to find the three smallest primes larger than 1000; larger than 10,000; larger than 100,000; larger than 1,000,000. Note the time needed to test each prime. Since the testing algorithm has order of growth of $\Theta(n)$, you should expect that testing for primes around 10,000 should take about 10 times as long as testing for primes around 1000. Do your timing data bear this out? How well do the data for 100,000 and 1,000,000 support the n prediction? Is your result compatible with the notion that programs on your machine run in time proportional to the number of steps required for the computation?
+<p> Using this procedure, write a procedure <tt>search-for-primes</tt> that checks the primality of consecutive odd integers in a specified range. Use your procedure to find the three smallest primes larger than 1000; larger than 10,000; larger than 100,000; larger than 1,000,000. Note the time needed to test each prime. Since the testing algorithm has order of growth of $\Theta(\sqrt n)$, you should expect that testing for primes around 10,000 should take about $\sqrt 10$ times as long as testing for primes around 1000. Do your timing data bear this out? How well do the data for 100,000 and 1,000,000 support the $\sqrt n$ prediction? Is your result compatible with the notion that programs on your machine run in time proportional to the number of steps required for the computation?
 
 </div>
 
@@ -1391,7 +1395,7 @@ C.make_MCQ("scheme-ex-expmod-no-square-expmod-mcq",
 
 <div id="footnote_1-37" class="footnote">
 <p><a href="#footnote_link_1-37" class="footnote_backlink">37</a>
- More precisely, the number of multiplications required is equal to 1 less than the log base 2 of <em>n</em> plus the number of ones in the binary representation of <em>n</em>. This total is always less than twice the log base 2 of <em>n</em>. The arbitrary constants <em>k</em><sub>1</sub> and <em>k</em><sub>2</sub> in the definition of order notation imply that, for a logarithmic process, the base to which logarithms are taken does not matter, so all such processes are described as <img src="book-Z-G-D-3.gif" border="0">(<tt>log</tt> <em>n</em>).
+ More precisely, the number of multiplications required is equal to 1 less than the log base 2 of $n$ plus the number of ones in the binary representation of $n$. This total is always less than twice the log base 2 of $n$. The arbitrary constants $k_1$ and $k_2$ in the definition of order notation imply that, for a logarithmic process, the base to which logarithms are taken does not matter, so all such processes are described as $\Theta(\log n)$.
 </p></div>
 
 <div id="footnote_1-38" class="footnote">
@@ -1421,12 +1425,12 @@ C.make_MCQ("scheme-ex-expmod-no-square-expmod-mcq",
 
 <div id="footnote_1-43" class="footnote">
 <p><a href="#footnote_link_1-43" class="footnote_backlink">43</a>
- This theorem was proved in 1845 by Gabriel Lam&eacute;, a French mathematician and engineer known chiefly for his contributions to mathematical physics. To prove the theorem, we consider pairs (<em>a</em><sub><em>k</em></sub> ,<em>b</em><sub><em>k</em></sub>), where <em>a</em><sub><em>k</em></sub><u>&gt;</u> <em>b</em><sub><em>k</em></sub>, for which Euclid's Algorithm terminates in <em>k</em> steps. The proof is based on the claim that, if (<em>a</em><sub><em>k</em>+1</sub>, <em>b</em><sub><em>k</em>+1</sub>)  <img src="book-Z-G-D-15.gif" border="0">  (<em>a</em><sub><em>k</em></sub>, <em>b</em><sub><em>k</em></sub>)  <img src="book-Z-G-D-15.gif" border="0">  (<em>a</em><sub><em>k</em>-1</sub>, <em>b</em><sub><em>k</em>-1</sub>) are three successive pairs in the reduction process, then we must have <em>b</em><sub><em>k</em>+1</sub><u>&gt;</u> <em>b</em><sub><em>k</em></sub>  +  <em>b</em><sub><em>k</em>-1</sub>. To verify the claim, consider that a reduction step is defined by applying the transformation <em>a</em><sub><em>k</em>-1</sub>  =  <em>b</em><sub><em>k</em></sub>, <em>b</em><sub><em>k</em>-1</sub>  =   remainder of  <em>a</em><sub><em>k</em></sub> divided by <em>b</em><sub><em>k</em></sub>.  The second equation means that <em>a</em><sub><em>k</em></sub>  =  <em>q</em><em>b</em><sub><em>k</em></sub>  +  <em>b</em><sub><em>k</em>-1</sub> for some positive integer <em>q</em>. And since <em>q</em> must be at least 1 we have <em>a</em><sub><em>k</em></sub>  =  <em>q</em><em>b</em><sub><em>k</em></sub>  +  <em>b</em><sub><em>k</em>-1</sub><u>&gt;</u> <em>b</em><sub><em>k</em></sub>  +  <em>b</em><sub><em>k</em>-1</sub>. But in the previous reduction step we have <em>b</em><sub><em>k</em>+1</sub> =  <em>a</em><sub><em>k</em></sub>. Therefore, <em>b</em><sub><em>k</em>+1</sub>  =  <em>a</em><sub><em>k</em></sub><u>&gt;</u> <em>b</em><sub><em>k</em></sub>  +  <em>b</em><sub><em>k</em>-1</sub>. This verifies the claim. Now we can prove the theorem by induction on <em>k</em>, the number of steps that the algorithm requires to terminate. The result is true for <em>k</em> = 1, since this merely requires that <em>b</em> be at least as large as  <em>F</em><em>i</em><em>b</em>(1) = 1. Now, assume that the result is true for all integers less than or equal to <em>k</em> and establish the result for <em>k</em> + 1. Let (<em>a</em><sub><em>k</em>+1</sub>, <em>b</em><sub><em>k</em>+1</sub>) <img src="book-Z-G-D-15.gif" border="0"> (<em>a</em><sub><em>k</em></sub>, <em>b</em><sub><em>k</em></sub>)  <img src="book-Z-G-D-15.gif" border="0"> (<em>a</em><sub><em>k</em>-1</sub>, <em>b</em><sub><em>k</em>-1</sub>) be successive pairs in the reduction process. By our induction hypotheses, we have <em>b</em><sub><em>k</em>-1</sub><u>&gt;</u>  <em>F</em><em>i</em><em>b</em>(<em>k</em> - 1) and <em>b</em><sub><em>k</em></sub><u>&gt;</u>  <em>F</em><em>i</em><em>b</em>(<em>k</em>). Thus, applying the claim we just proved together with the definition of the Fibonacci numbers gives <em>b</em><sub><em>k</em>+1</sub><u>&gt;</u> <em>b</em><sub><em>k</em></sub>  +  <em>b</em><sub><em>k</em>-1</sub><u>&gt;</u>  <em>F</em><em>i</em><em>b</em>(<em>k</em>)  +   <em>F</em><em>i</em><em>b</em>(<em>k</em> - 1)  =  <em>F</em><em>i</em><em>b</em>(<em>k</em> + 1), which completes the proof of Lam&eacute;'s Theorem.
+This theorem was proved in 1845 by Gabriel Lam&eacute;, a French mathematician and engineer known chiefly for his contributions to mathematical physics. To prove the theorem, we consider pairs $(a_k, b_k)$, where $a_k \ge b_k$, for which Euclid's Algorithm terminates in $k$ steps. The proof is based on the claim that, if $(a_{k + 1}, b_{k + 1}) \to (a_k, b_k) \to (a_{k - 1}, b_{k - 1})$ are three successive pairs in the reduction process, then we must have $b_{k + 1} \ge b_k + b_{k - 1}$. To verify the claim, consider that a reduction step is defined by applying the transformation $a_{k - 1} = b_k$, $b_{k - 1} =$ remainder of $a_k$ divided by $b_k$.  The second equation means that $a_k = qb_k + b_{k - 1}$ for some positive integer $q$. And since $q$ must be at least 1 we have $a_k = qb_k + b_{k - 1} \ge b_k + b_{k - 1}$. But in the previous reduction step we have $b_{k + 1} = a_k$. Therefore, $b_{k + 1} = a_k \ge b_k + b_{k - 1}$. This verifies the claim. Now we can prove the theorem by induction on $k$, the number of steps that the algorithm requires to terminate. The result is true for $k = 1$, since this merely requires that $b$ be at least as large as $Fib(1) = 1$. Now, assume that the result is true for all integers less than or equal to $k$ and establish the result for $k + 1$. Let $(a_{k + 1}, b_{k + 1}) \to (a_k, b_k) \to (a_{k - 1}, b_{k - 1})$ be successive pairs in the reduction process. By our induction hypotheses, we have $b_{k - 1} \ge Fib(k - 1)$ and $b_k \ge Fib(k)$. Thus, applying the claim we just proved together with the definition of the Fibonacci numbers gives $b_{k + 1} \ge b_k + b_{k - 1} \ge Fib(k) + Fib(k - 1) = Fib(k + 1)$, which completes the proof of Lam&eacute;'s Theorem.
 </p></div>
 
 <div id="footnote_1-44" class="footnote">
 <p><a href="#footnote_link_1-44" class="footnote_backlink">44</a>
- If <em>d</em> is a divisor of <em>n</em>, then so is <em>n</em>/<em>d</em>. But <em>d</em> and <em>n</em>/<em>d</em> cannot both be greater than <img src="book-Z-G-D-13.gif" border="0"><em>n</em>.
+ If <em>d</em> is a divisor of <em>n</em>, then so is <em>n</em>/<em>d</em>. But <em>d</em> and <em>n</em>/<em>d</em> cannot both be greater than $\sqrt n$.
 </p></div>
 
 <div id="footnote_1-45" class="footnote">
