@@ -789,7 +789,7 @@ C.no_output_frozen_prompt("scheme-cond-syntax");
 
 <p> consisting of the symbol cond followed by parenthesized pairs of expressions <tt>(&lt;p&gt; &lt;e&gt;)</tt> called clauses. The first expression in each pair is a predicate &mdash; that is, an expression whose value is interpreted as either true or false.<a name="footnote_link_1-17" class="footnote_link" href="#footnote_1-17">17</a>
 
-<p> Conditional expressions are evaluated as follows. The predicate <tt>&lt;p1&gt;</tt>; is evaluated first. If its value is false, then <tt>&lt;p2&gt;</tt> is evaluated. If <tt>&lt;p2&gt;</tt>'s value is also false, then <tt>&lt;p3&gt;</tt> is evaluated. This process continues until a predicate is found whose value is true, in which case the interpreter returns the value of the corresponding consequent expression <tt>&lt;e&gt;</tt> of the clause as the value of the conditional expression. If none of the <tt>&lt;p&gt;</tt>'s is found to be true, the value of the cond is undefined.
+<p> Conditional expressions are evaluated as follows. The predicate <tt>&lt;p1&gt;</tt> is evaluated first. If its value is false, then <tt>&lt;p2&gt;</tt> is evaluated. If <tt>&lt;p2&gt;</tt>'s value is also false, then <tt>&lt;p3&gt;</tt> is evaluated. This process continues until a predicate is found whose value is true, in which case the interpreter returns the value of the corresponding consequent expression <tt>&lt;e&gt;</tt> of the clause as the value of the conditional expression. If none of the <tt>&lt;p&gt;</tt>'s is found to be true, the value of the cond is undefined.
 
 <p> The word predicate is used for procedures that return true or false, as well as for expressions that evaluate to true or false. The absolute-value procedure abs makes use of the primitive predicates <tt>&gt;</tt>, <tt>&lt;</tt>, and <tt>=</tt>.<a name="footnote_link_1-18" class="footnote_link" href="#footnote_1-18">18</a> These take two numbers as arguments and test whether the first number is, respectively, greater than, less than, or equal to the second number, returning true or false accordingly.
 
@@ -823,7 +823,7 @@ C.no_output_frozen_prompt("scheme-cond-syntax");
 
 <p> To evaluate an if expression, the interpreter starts by evaluating the <tt>&lt;predicate&gt;</tt> part of the expression. If the <tt>&lt;predicate&gt;</tt> evaluates to a true value, the interpreter then evaluates the <tt>&lt;consequent&gt;</tt> and returns its value. Otherwise it evaluates the <tt>&lt;alternative&gt;</tt> and returns its value.<a name="footnote_link_1-19" class="footnote_link" href="#footnote_1-19">19</a>
 
-<p> In addition to primitive predicates such as <tt>&lt;</tt>, <tt>=</tt> and <tt>&gt;</tt>, there are logical composition operations, which enable us to construct compound predicates. The three most frequently used are these:
+<p> In addition to primitive predicates such as <tt>&lt;</tt>, <tt>=</tt>, and <tt>&gt;</tt>, there are logical composition operations, which enable us to construct compound predicates. The three most frequently used are these:
 
 <ul>
 
@@ -1150,7 +1150,7 @@ C.prompt("scheme-square-sqrt", ["scheme-define-square", "scheme-define-sqrt"]);
 (new-if (= 1 1) 0 5)
 </div>
 
-<p> Delighted,Alyssa uses new-if to rewrite the square root program:
+<p> Delighted, Alyssa uses new-if to rewrite the square-root program:
 
 <div id="scheme-sqrt-iter-new-if">
 (define (sqrt-iter guess x)
