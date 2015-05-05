@@ -9,9 +9,6 @@ __pycache__
 *.swp
 *.out
 
-/*.html
-!index.html
-!lambda.html
-!template.html
+[0-9]*.html
 
 coding-js
