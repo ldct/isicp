@@ -9,4 +9,9 @@ __pycache__
 *.swp
 *.out
 
+/*.html
+!index.html
+!lambda.html
+!template.html
+
 coding-js
