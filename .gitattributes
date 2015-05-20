@@ -2,7 +2,7 @@
 * text=auto
 
 # render scripts choke on \r
-*.html eol=lf
+*.html text eol=lf
 *.sh text eol=lf
 
 # Standard to msysgit
