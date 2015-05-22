@@ -592,7 +592,7 @@ C.prompt("scheme-f", ["scheme-define-sum-of-squares"]);
 
 <h3> The Substitution Model for Procedure Application</h3>
 
-<p> To evaluate a combination whose operator names a compound procedure, the interpreter follows much the same process as for combinations whose operators name primitive procedures, which we described in section <a href="1-1-elements.content.html#%_sec_1.1.3">1.1.3</a>. That is, the interpreter evaluates the elements of the combination and applies the procedure (which is the value of the operator of the combination) to the arguments (which are the values of the operands of the combination).
+<p> To evaluate a combination whose operator names a compound procedure, the interpreter follows much the same process as for combinations whose operators name primitive procedures, which we described in section <a href="1-1-elements.html#%_sec_1.1.3">1.1.3</a>. That is, the interpreter evaluates the elements of the combination and applies the procedure (which is the value of the operator of the combination) to the arguments (which are the values of the operands of the combination).
 
 <p> We can assume that the mechanism for applying primitive procedures to arguments is built into the interpreter. For compound procedures, the application process is as follows:
 
@@ -607,7 +607,7 @@ C.prompt("scheme-f", ["scheme-define-sum-of-squares"]);
 C.make_static("scheme-f-1");
 </script>
 
-<p> where <tt>f</tt> is the procedure defined in section <a href="1-1-elements.content.html#%_sec_1.1.4">1.1.4</a>. We begin by retrieving the body of <tt>f</tt>:
+<p> where <tt>f</tt> is the procedure defined in section <a href="1-1-elements.html#%_sec_1.1.4">1.1.4</a>. We begin by retrieving the body of <tt>f</tt>:
 
 <div id="scheme-f-2" class='static'>
 (sum-of-squares (+ a 1) (* a 2))
@@ -675,7 +675,7 @@ C.make_static("scheme-f-7");
 
 <h4> Applicative order versus normal order </h4>
 
-<p> According to the description of evaluation given in section <a href="1-1-elements.content.html#%_sec_1.1.3">1.1.3</a>, the interpreter first evaluates the operator and operands and then applies the resulting procedure to the resulting arguments. This is not the only way to perform evaluation. An alternative evaluation model would not evaluate the operands until their values were needed. Instead it would first substitute operand expressions for parameters until it obtained an expression involving only primitive operators, and would then perform the evaluation. If we used this method, the evaluation of
+<p> According to the description of evaluation given in section <a href="1-1-elements.html#%_sec_1.1.3">1.1.3</a>, the interpreter first evaluates the operator and operands and then applies the resulting procedure to the resulting arguments. This is not the only way to perform evaluation. An alternative evaluation model would not evaluate the operands until their values were needed. Instead it would first substitute operand expressions for parameters until it obtained an expression involving only primitive operators, and would then perform the evaluation. If we used this method, the evaluation of
 
 <div id="scheme-f-1-n" class='static'>
 (f 5)
@@ -1253,7 +1253,7 @@ $$
 \frac{x/y^2 + 2y}{3}
 $$
 
-<p> Use this formula to implement a cube-root procedure analogous to the square-root procedure. (In Section <a href="1-3-hop.content.html#%_sec_1.3.4">1.3.4</a> we will see how to implement Newton’s  method in general as an abstraction of these square root and cube-root procedures.)
+<p> Use this formula to implement a cube-root procedure analogous to the square-root procedure. (In Section <a href="1-3-hop.html#%_sec_1.3.4">1.3.4</a> we will see how to implement Newton’s  method in general as an abstraction of these square root and cube-root procedures.)
 
 <div id="scheme-ex-18">
 (define (cube-root x)
@@ -1477,7 +1477,7 @@ Lisp systems typically provide features to aid the user in formatting expression
 
 <div id="footnote_1-12" class="footnote">
 <p><a href="#footnote_link_1-12" class="footnote_backlink">12</a>
- Observe that there are two different operations being combined here: we are creating the procedure, and we are giving it the name <tt>square</tt>. It is possible, indeed important, to be able to separate these two notions &mdash; to create procedures without naming them, and to give names to procedures that have already been created. We will see how to do this in section&nbsp;<a href="1-3-hop.content.html#%_sec_1.3.2">1.3.2</a>.
+ Observe that there are two different operations being combined here: we are creating the procedure, and we are giving it the name <tt>square</tt>. It is possible, indeed important, to be able to separate these two notions &mdash; to create procedures without naming them, and to give names to procedures that have already been created. We will see how to do this in section&nbsp;<a href="1-3-hop.html#%_sec_1.3.2">1.3.2</a>.
 </p></div>
 
 <div id="footnote_1-13" class="footnote">
@@ -1497,7 +1497,7 @@ Lisp systems typically provide features to aid the user in formatting expression
 
 <div id="footnote_1-16" class="footnote">
 <p><a href="#footnote_link_1-16" class="footnote_backlink">16</a>
- In chapter&nbsp;3 we will introduce <em>stream processing</em>, which is a way of handling apparently &ldquo;infinite&rdquo; data structures by incorporating a limited form of normal-order evaluation. In section&nbsp;<a href="4-2-lazy.content.html#%_sec_4.2">4.2</a> we will modify the Scheme interpreter to produce a normal-order variant of Scheme.
+ In chapter&nbsp;3 we will introduce <em>stream processing</em>, which is a way of handling apparently &ldquo;infinite&rdquo; data structures by incorporating a limited form of normal-order evaluation. In section&nbsp;<a href="4-2-lazy.html#%_sec_4.2">4.2</a> we will modify the Scheme interpreter to produce a normal-order variant of Scheme.
 </p></div>
 
 <div id="footnote_1-17" class="footnote">
@@ -1521,7 +1521,7 @@ Lisp systems typically provide features to aid the user in formatting expression
 
 <div id="footnote_1-21" class="footnote">
 <p><a href="#footnote_link_1-21" class="footnote_backlink">21</a>
- This square-root algorithm is actually a special case of Newton's method, which is a general technique for finding roots of equations. The square-root algorithm itself was developed by Heron of Alexandria in the first century <font size="-2">A</font>.<font size="-2">D</font>. We will see how to express the general Newton's method as a Lisp procedure in section&nbsp;<a href="1-3-hop.content.html#%_sec_1.3.4">1.3.4</a>.
+ This square-root algorithm is actually a special case of Newton's method, which is a general technique for finding roots of equations. The square-root algorithm itself was developed by Heron of Alexandria in the first century <font size="-2">A</font>.<font size="-2">D</font>. We will see how to express the general Newton's method as a Lisp procedure in section&nbsp;<a href="1-3-hop.html#%_sec_1.3.4">1.3.4</a>.
 </p></div>
 
 <div id="footnote_1-22" class="footnote">
@@ -1531,12 +1531,12 @@ Lisp systems typically provide features to aid the user in formatting expression
 
 <div id="footnote_1-23" class="footnote">
 <p><a href="#footnote_link_1-23" class="footnote_backlink">23</a>
- Observe that we express our initial guess as $1.0$ rather than $1$. This would not make any difference in many Lisp implementations. MIT Scheme, however, distinguishes between exact integers and decimal values, and dividing two integers produces a rational number rather than a decimal. For example, dividing $10$ by $6$ yields $5/3$, while dividing $10.0$ by $6.0$ yields $1.6666666666666667$. (We will learn how to implement arithmetic on rational numbers in section&nbsp;<a href="2-1-data.content.html#%_sec_2.1.1">2.1.1</a>.)  If we start with an initial guess of $1$ in our square-root program, and $x$ is an exact integer, all subsequent values produced in the square-root computation will be rational numbers rather than decimals. Mixed operations on rational numbers and decimals always yield decimals, so starting with an initial guess of $1.0$ forces all subsequent values to be decimals.
+ Observe that we express our initial guess as $1.0$ rather than $1$. This would not make any difference in many Lisp implementations. MIT Scheme, however, distinguishes between exact integers and decimal values, and dividing two integers produces a rational number rather than a decimal. For example, dividing $10$ by $6$ yields $5/3$, while dividing $10.0$ by $6.0$ yields $1.6666666666666667$. (We will learn how to implement arithmetic on rational numbers in section&nbsp;<a href="2-1-data.html#%_sec_2.1.1">2.1.1</a>.)  If we start with an initial guess of $1$ in our square-root program, and $x$ is an exact integer, all subsequent values produced in the square-root computation will be rational numbers rather than decimals. Mixed operations on rational numbers and decimals always yield decimals, so starting with an initial guess of $1.0$ forces all subsequent values to be decimals.
 </p></div>
 
 <div id="footnote_1-24" class="footnote">
 <p><a href="#footnote_link_1-24" class="footnote_backlink">24</a>
- Readers who are worried about the efficiency issues involved in using procedure calls to implement iteration should note the remarks on &ldquo;tail recursion&rdquo; in section&nbsp;<a href="1-2-procedures.content.html#%_sec_1.2.1">1.2.1</a>.
+ Readers who are worried about the efficiency issues involved in using procedure calls to implement iteration should note the remarks on &ldquo;tail recursion&rdquo; in section&nbsp;<a href="1-2-procedures.html#%_sec_1.2.1">1.2.1</a>.
 </p></div>
 
 <div id="footnote_1-25" class="footnote">
