@@ -1,0 +1,3 @@
+Put the coding.js/ folder here to enable interactive features.
+Clone it from this repository:
+https://github.com/yuanchenyang/coding-js
