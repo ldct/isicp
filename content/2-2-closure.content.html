@@ -37,7 +37,8 @@ C.hidden_prompt("scheme-define-square");
 
 <p> From the outset of Chapter 1, we've made essential use of closure in dealing with procedures, because all but the very simplest programs rely on the fact that the elements of a combination can themselves be combinations. In this section, we take up the consequences of closure for compound data. We describe some conventional techniques for using pairs to represent sequences and trees, and we exhibit a graphics language that illustrates closure in a vivid way.<a name="footnote_link_2-7" class="footnote_link" href="#footnote_2-7">7</a>
 
-<h3> Representing Sequences </h3>
+<a name="%_sec_2.2.1" />
+<h3> 2.2.1 Representing Sequences </h3>
 
 <p> <img class='center' src='http://mitpress.mit.edu/sicp/full-text/book/ch2-Z-G-13.gif'>
 
@@ -741,7 +742,8 @@ TODO: why does a map-style definition throw exceptions?
 
 </div>
 
-<h3> Hierarchical Structures </h3>
+<a name="%_sec_2.2.2" />
+<h3> 2.2.2 Hierarchical Structures </h3>
 
 <p> The representation of sequences in terms of lists generalizes naturally to represent sequences whose elements may themselves be sequences. For example, we can regard the object <tt>((1 2) 3 4)</tt> constructed by
 
@@ -1488,7 +1490,8 @@ C.editor_of["scheme-ex-define-subset"].setOption("onBlur", function(){
 </script>
 </div>
 
-<h3> Sequences as Conventional Interfaces </h3>
+<a name="%_sec_2.2.3" />
+<h3> 2.2.3 Sequences as Conventional Interfaces </h3>
 
 <p> In working with compound data, we've stressed how data abstraction permits us to design programs without becoming enmeshed in the details of data representations, and how abstraction preserves for us the flexibility to experiment with alternative representations. In this section, we introduce another powerful design principle for working with data structures &ndash; the use of <tt>conventional interfaces</tt> .
 
@@ -2373,7 +2376,8 @@ C.no_output_frozen_prompt("scheme-louise-queens-flatmap");
 </div>
 
 
-<h3> Example: A Picture Language </h3>
+<a name="%_sec_2.2.4" />
+<h3> 2.2.4 Example: A Picture Language </h3>
 
 <p> This section presents a simple language for drawing pictures that illustrates the power of data abstraction and closure, and also exploits higher-order procedures in an essential way. The language is designed to make it easy to experiment with patterns such as the ones in Figure 2-9, which are composed of repeated elements that are shifted and scaled.<a name="footnote_link_2-22" class="footnote_link" href="#footnote_2-22">22</a> In this language, the data objects being combined are represented as procedures rather than as list structure. Just as <tt>cons</tt>, which satisfies the closure property, allowed us to easily build arbitrarily complicated list structure, the operations in this language, which also satisfy the closure property, allow us to easily build arbitrarily complicated patterns.
 

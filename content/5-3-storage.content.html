@@ -22,7 +22,8 @@
 * 5-3-2::            Maintaining the Illusion of Infinite Memory
 @end menu
 
-<h3> Memory as Vectors </h3>
+<a name="%_sec_5.3.1" />
+<h3> 5.3.1 Memory as Vectors </h3>
 
 <p> A conventional computer memory can be thought of as an array of cubbyholes, each of which can contain a piece of information. Each cubbyhole has a unique name, called its <tt>address</tt> or <tt>location</tt> . Typical memory systems provide two primitive operations: one that fetches the data stored in a specified location and one that assigns new data to a specified location. Memory addresses can be incremented to support sequential access to some set of the cubbyholes. More generally, many important data operations require that memory addresses be treated as data, which can be stored in memory locations and manipulated in machine registers. The representation of list structure is one application of such <tt>address arithmetic</tt>.
 
@@ -250,7 +251,8 @@ C.prompt();
 <p> <b>Exercise 5.22:</b> Exercise 3-12 of section 3-3-1 presented an <tt>append</tt> procedure that appends two lists to form a new list and an <tt>append!</tt> procedure that splices two lists together. Design a register machine to implement each of these procedures. Assume that the list-structure memory operations are available as primitive operations.
 </div>
 
-<h3> Maintaining the Illusion of Infinite Memory </h3>
+<a name="%_sec_5.3.2" />
+<h3> 5.3.2 Maintaining the Illusion of Infinite Memory </h3>
 
 <p> The representation method outlined in section 5-3-1 solves the problem of implementing list structure, provided that we have an infinite amount of memory. With a real computer we will eventually run out of free space in which to construct new pairs.@footnote{This may not be true eventually, because memories may get large enough so that it would be impossible to run out of free memory in the lifetime of the computer. For example, there are about 3*(10^13), microseconds in a year, so if we were to <tt>cons</tt> once per microsecond we would need about 10^15 cells of memory to build a machine that could operate for 30 years without running out of memory. That much memory seems absurdly large by today's standards, but it is not physically impossible. On the other hand, processors are getting faster and a future computer may have large numbers of processors operating in parallel on a single memory, so it may be possible to use up memory much faster than we have postulated.}  However, most of the pairs generated in a typical computation are used only to hold intermediate results. After these results are accessed, the pairs are no longer needed---they are <tt>garbage</tt> . For instance, the computation
 

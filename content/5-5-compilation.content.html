@@ -47,7 +47,8 @@ C.prompt();
 
 <p> A compiler can also optimize access to the environment. Having analyzed the code, the compiler can in many cases know in which frame a particular variable will be located and access that frame directly, rather than performing the <tt>lookup-variable-value</tt> search. We will discuss how to implement such variable access in section 5-5-6. Until then, however, we will focus on the kind of register and stack optimizations described above. There are many other optimizations that can be performed by a compiler, such as coding primitive operations ``in line'' instead of using a general <tt>apply</tt> mechanism (see Exercise 5-38); but we will not emphasize these here. Our main goal in this section is to illustrate the compilation process in a simplified (but still interesting) context.
 
-<h3> Structure of the Compiler </h3>
+<a name="%_sec_5.5.1" />
+<h3> 5.5.1 Structure of the Compiler </h3>
 
 <p> In section 4-1-7 we modified our original metacircular interpreter to separate analysis from execution. We analyzed each expression to produce an execution procedure that took an environment as argument and performed the required operations. In our compiler, we will do essentially the same analysis. Instead of producing execution procedures, however, we will generate sequences of instructions to be run by our register machine.
 
@@ -247,7 +248,8 @@ Alyssa P. Hacker suggests that by extending the evaluator to recognize more and 
 </ul>
 </div>
 
-<h3> Compiling Expressions </h3>
+<a name="%_sec_5.5.2" />
+<h3> 5.5.2 Compiling Expressions </h3>
 
 <p> In this section and the next we implement the code generators to which the <tt>compile</tt> procedure dispatches.
 
@@ -511,7 +513,8 @@ C.prompt();
 C.prompt();
 </script>
 
-<h3> Compiling Combinations </h3>
+<a name="%_sec_5.5.3" />
+<h3> 5.5.3 Compiling Combinations </h3>
 
 <p> The essence of the compilation process is the compilation of procedure applications. The code for a combination compiled with a given target and linkage has the form
 
@@ -763,7 +766,8 @@ C.prompt();
 C.prompt();
 </script>
 
-<h3> Combining Instruction Sequences </h3>
+<a name="%_sec_5.5.4" />
+<h3> 5.5.4 Combining Instruction Sequences </h3>
 
 <p> This section describes the details on how instruction sequences are represented and combined. Recall from section 5-5-1 that an instruction sequence is represented as a list of the registers needed, the registers modified, and the actual instructions. We will also consider a label (symbol) to be a degenerate case of an instruction sequence, which doesn't need or modify any registers. So to determine the registers needed and modified by instruction sequences we use the selectors
 
@@ -892,7 +896,8 @@ C.prompt();
 C.prompt();
 </script>
 
-<h3> An Example of Compiled Code </h3>
+<a name="%_sec_5.5.5" />
+<h3> 5.5.5 An Example of Compiled Code </h3>
 
 <p> Now that we have seen all the elements of the compiler, let us examine an example of compiled code to see how things fit together. We will compile the definition of a recursive <tt>factorial</tt> procedure by calling <tt>compile</tt>:
 
@@ -1269,7 +1274,8 @@ Extend your code generators for <tt>+</tt> and <tt>*</tt> so that they can handl
 </ul>
 </div>
 
-<h3> Lexical Addressing </h3>
+<a name="%_sec_5.5.6" />
+<h3> 5.5.6 Lexical Addressing </h3>
 
 <p> One of the most common optimizations performed by compilers is the optimization of variable lookup. Our compiler, as we have implemented it so far, generates code that uses the <tt>lookup-variable-value</tt> operation of the evaluator machine. This searches for a variable by comparing it with each variable that is currently bound, working frame by frame outward through the run-time environment. This search can be expensive if the frames are deeply nested or if there are many variables. For example, consider the problem of looking up the value of <tt>x</tt> while evaluating the expression <tt>(* x y z)</tt> in an application of the procedure that is returned by
 
@@ -1371,7 +1377,8 @@ C.prompt();
 <p> which computes a linear combination of <tt>x</tt> and <tt>y</tt>. We might call it with arguments <tt>+matrix</tt>, <tt>*matrix</tt>, and four matrices, but the open-coding compiler would still open-code the <tt>+</tt> and the <tt>*</tt> in <tt>(+ (* a x) (* b y))</tt> as primitive <tt>+</tt> and <tt>*</tt>. Modify the open-coding compiler to consult the compile-time environment in order to compile the correct code for expressions involving the names of primitive procedures. (The code will work correctly as long as the program does not <tt>define</tt> or <tt>set!</tt> these names.)
 </div>
 
-<h3> Interfacing Compiled Code to the Evaluator </h3>
+<a name="%_sec_5.5.7" />
+<h3> 5.5.7 Interfacing Compiled Code to the Evaluator </h3>
 
 <p> We have not yet explained how to load compiled code into the evaluator machine or how to run it. We will assume that the explicit-control-evaluator machine has been defined as in section 5-4-4, with the additional operations specified in footnote Footnote 38. We will implement a procedure <tt>compile-and-go</tt> that compiles a Scheme expression, loads the resulting object code into the evaluator machine, and causes the machine to run the code in the evaluator global environment, print the result, and enter the evaluator's driver loop. We will also modify the evaluator so that interpreted expressions can call compiled procedures as well as interpreted ones. We can then put a compiled procedure into the machine and use the evaluator to call it:
 

@@ -63,7 +63,8 @@ b c d)</tt>.
 
 <p> Earlier in this chapter we explored the technology of implementing interpreters and described the elements that are essential to an interpreter for a Lisp-like language (indeed, to an interpreter for any conventional language). Now we will apply these ideas to discuss an interpreter for a logic programming language. We call this language the <tt>query language</tt> , because it is very useful for retrieving information from data bases by formulating <tt>queries</tt> , or questions, expressed in the language. Even though the query language is very different from Lisp, we will find it convenient to describe the language in terms of the same general framework we have been using all along: as a collection of primitive elements, together with means of combination that enable us to combine simple elements to create more complex elements and means of abstraction that enable us to regard complex elements as single conceptual units. An interpreter for a logic programming language is considerably more complex than an interpreter for a language like Lisp. Nevertheless, we will see that our query-language interpreter contains many of the same elements found in the interpreter of section 4-1. In particular, there will be an ``eval'' part that classifies expressions according to type and an ``apply'' part that implements the language's abstraction mechanism (procedures in the case of Lisp, and <tt>rules</tt> in the case of logic programming). Also, a central role is played in the implementation by a frame data structure, which determines the correspondence between symbols and their associated values. One additional interesting aspect of our query-language implementation is that we make substantial use of streams, which were introduced in Chapter 3.
 
-<h3> Deductive Information Retrieval </h3>
+<a name="%_sec_4.4.1" />
+<h3> 4.4.1 Deductive Information Retrieval </h3>
 
 <p> Logic programming excels in providing interfaces to data bases for information retrieval. The query language we shall implement in this chapter is designed to be used in this way.
 
@@ -819,7 +820,8 @@ C.prompt();
 <p> Formulate rules such as ``If S is the son of f, and f is the son of G, then S is the grandson of G'' and ``If W is the wife of M, and S is the son of W, then S is the son of M'' (which was supposedly more true in biblical times than today) that will enable the query system to find the grandson of Cain; the sons of Lamech; the grandsons of Methushael. (See Exercise 4-69 for some rules to deduce more complicated relationships.)
 </div>
 
-<h3> How the Query System Works </h3>
+<a name="%_sec_4.4.2" />
+<h3> 4.4.2 How the Query System Works </h3>
 
 <p> In section 4-4-4 we will present an implementation of the query interpreter as a collection of procedures. In this section we give an overview that explains the general structure of the system independent of low-level implementation details. After describing the implementation of the interpreter, we will be in a position to understand some of its limitations and some of the subtle ways in which the query language's logical operations differ from the operations of mathematical logic.
 
@@ -1112,7 +1114,8 @@ a stream of extended frames obtained by applying all possible rules (using the u
 C.prompt();
 </script>
 
-<h3> Is Logic Programming Mathematical Logic? </h3>
+<a name="%_sec_4.4.3" />
+<h3> 4.4.3 Is Logic Programming Mathematical Logic? </h3>
 
 <p> The means of combination used in the query language may at first seem identical to the operations <tt>and</tt>, <tt>or</tt>, and <tt>not</tt> of mathematical logic, and the application of query-language rules is in fact accomplished through a legitimate method of inference.@footnote{That a particular method of inference is legitimate is not a trivial assertion. One must prove that if one starts with true premises, only true conclusions can be derived. The method of inference represented by rule applications is <tt>modus ponens</tt> , the familiar method of inference that says that if A is true and <em>A implies B</em> is true, then we may conclude that B is true.} This identification of the query language with mathematical logic is not really valid, though, because the query language provides a <tt>control structure</tt> that interprets the logical statements procedurally. We can often take advantage of this control structure. For example, to find all of the supervisors of programmers we could formulate a query in either of two logically equivalent forms:
 
@@ -1312,7 +1315,8 @@ C.prompt();
 <p> <b>Exercise 4.69:</b> Beginning with the data base and the rules you formulated in Exercise 4-63, devise a rule for adding ``greats'' to a grandson relationship. This should enable the system to deduce that Irad is the great-grandson of Adam, or that Jabal and Jubal are the great-great-great-great-great-grandsons of Adam. (Hint: Represent the fact about Irad, for example, as <tt>((great grandson) Adam Irad)</tt>. Write rules that determine if a list ends in the word <tt>grandson</tt>. Use this to express a rule that allows one to derive the relationship <tt>((great . ?rel) ?x ?y)</tt>, where <tt>?rel</tt> is a list ending in <tt>grandson</tt>.)  Check your rules on queries such as <tt>((great grandson) ?g ?ggs)</tt> and <tt>(?relationship Adam Irad)</tt>.
 </div>
 
-<h3> Implementing the Query System </h3>
+<a name="%_sec_4.4.4" />
+<h3> 4.4.4 Implementing the Query System </h3>
 
 Section 4-4-2 described how the query system works. Now we fill in the
 details by presenting a complete implementation of the system.

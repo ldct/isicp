@@ -58,7 +58,8 @@ C.prompt();
 * 4-3-3::            Implementing the <tt>Amb</tt> Evaluator
 @end menu
 
-<h3> Amb and Search </h3>
+<a name="%_sec_4.3.1" />
+<h3> 4.3.1 Amb and Search </h3>
 
 <p> To extend Scheme to support nondeterminism, we introduce a new special form called <tt>amb</tt>.@footnote{The idea of <tt>amb</tt> for nondeterministic programming was first described in 1961 by John McCarthy (see McCarthy 1967).} The expression
 
@@ -200,7 +201,8 @@ C.prompt();
 </script>
 </div>
 
-<h3> Examples of Nondeterministic Programs </h3>
+<a name="%_sec_4.3.2" />
+<h3> 4.3.2 Examples of Nondeterministic Programs </h3>
 
 <p> Section 4-3-3 describes the implementation of the <tt>amb</tt> evaluator. First, however, we give some examples of how it can be used. The advantage of nondeterministic programming is that we can suppress the details of how search is carried out, thereby expressing our programs at a higher level of abstraction.
 
@@ -583,7 +585,8 @@ C.prompt();
 <p> <b>Exercise 4.49:</b> Alyssa P. Hacker is more interested in generating interesting sentences than in parsing them. She reasons that by simply changing the procedure <tt>parse-word</tt> so that it ignores the ``input sentence'' and instead always succeeds and generates an appropriate word, we can use the programs we had built for parsing to do generation instead. Implement Alyssa's idea, and show the first half-dozen or so sentences generated.@footnote{Although Alyssa's idea works just fine (and is surprisingly simple), the sentences that it generates are a bit boring---they don't sample the possible sentences of this language in a very interesting way. In fact, the grammar is highly recursive in many places, and Alyssa's technique ``falls into'' one of these recursions and gets stuck. See Exercise 4-50 for a way to deal with this.}
 </div>
 
-<h3> Implementing the <tt>Amb</tt> Evaluator </h3>
+<a name="%_sec_4.3.3" />
+<h3> 4.3.3 Implementing the <tt>Amb</tt> Evaluator </h3>
 
 <p> The evaluation of an ordinary Scheme expression may return a value, may never terminate, or may signal an error. In nondeterministic Scheme the evaluation of an expression may in addition result in the discovery of a dead end, in which case evaluation must backtrack to a previous choice point. The interpretation of nondeterministic Scheme is complicated by this extra case.
 

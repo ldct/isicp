@@ -35,7 +35,8 @@ C.prompt();
 
 <p> Unfortunately, the complexities introduced by assignment become even more problematic in the presence of concurrency. The fact of concurrent execution, either because the world operates in parallel or because our computers do, entails additional complexity in our understanding of time.
 
-<h3> The Nature of Time in Concurrent Systems </h3>
+<a name="%_sec_3.4.1" />
+<h3> 3.4.1 The Nature of Time in Concurrent Systems </h3>
 
 <span class="tex2jax_ignore"><p> On the surface, time seems straightforward. It is an ordering imposed on events.@footnote{To quote some graffiti seen on a Cambridge building wall: ``Time is a device that was invented to keep everything from happening at once.''}  For any events A and B, either A occurs before B, A and B are simultaneous, or A occurs after B. For instance, returning to the bank account example, suppose that Peter withdraws $10 and Paul withdraws $25 from a joint account that initially contains $100, leaving $65 in the account. Depending on the order of the two withdrawals, the sequence of balances in the account is either $100 -> $90 -> $65 or $100 -> $75 -> $65. In a computer implementation of the banking system, this changing sequence of balances could be modeled by successive assignments to a variable <tt>balance</tt>.</span>
 
@@ -162,7 +163,8 @@ What are some other values that could be produced if the system allows the proce
 </ul>
 </div>
 
-<h3> Mechanisms for Controlling Concurrency </h3>
+<a name="%_sec_3.4.2" />
+<h3> 3.4.2 Mechanisms for Controlling Concurrency </h3>
 
 <p> We've seen that the difficulty in dealing with concurrent processes is rooted in the need to consider the interleaving of the order of events in the different processes. For example, suppose we have two processes, one with three ordered events (a,b,c) and one with three ordered events (x,y,z). If the two processes run concurrently, with no constraints on how their execution is interleaved, then there are 20 different possible orderings for the events that are consistent with the individual orderings for the two processes:
 

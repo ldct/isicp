@@ -33,7 +33,8 @@
 
 <p> In section 2-5 we will show how to use type tags and data-directed style to develop a generic arithmetic package. This provides procedures (<tt>add</tt>, <tt>mul</tt>, and so on) that can be used to manipulate all sorts of ``numbers''and can be easily extended when a new kind of number is needed. In section 2-5-3, we'll show how to use generic arithmetic in a system that performs symbolic algebra.
 
-<h3> Representations for Complex Numbers </h3>
+<a name="%_sec_2.4.1" />
+<h3> 2.4.1 Representations for Complex Numbers </h3>
 
 <p> We will develop a system that performs arithmetic operations on complex numbers as a simple but unrealistic example of a program that uses generic operations. We begin by discussing two plausible representations for complex numbers as ordered pairs: rectangular form (real part and imaginary part) and polar form (magnitude and angle).<a name="footnote_link_2-43" class="footnote_link" href="#footnote_2-43">43</a> Section 2-4-2 will show how both representations can be made to coexist in a single system through the use of type tags and generic operations.
 
@@ -161,7 +162,8 @@ C.prompt("scheme-define-polar-selectors");
 
 <p> The discipline of data abstraction ensures that the same implementation of <tt>add-complex</tt>, <tt>sub-complex</tt>, <tt>mul-complex</tt>, and <tt>div-complex</tt> will work with either Ben's representation or Alyssa's representation.
 
-<h3> Tagged data </h3>
+<a name="%_sec_2.4.2" />
+<h3> 2.4.2 Tagged data </h3>
 
 <p> One way to view data abstraction is as an application of the "principle of least commitment."  In implementing the complex-number system in section 2-4-1, we can use either Ben's rectangular representation or Alyssa's polar representation. The abstraction barrier formed by the selectors and constructors permits us to defer to the last possible moment the choice of a concrete representation for our data objects and thus retain maximum flexibility in our system design.
 
@@ -324,7 +326,8 @@ C.prompt("scheme-define-tagged-constructors");
 
 <p> Since each data object is tagged with its type, the selectors operate on the data in a generic manner. That is, each selector is defined to have a behavior that depends upon the particular type of data it is applied to. Notice the general mechanism for interfacing the separate representations: Within a given representation implementation (say, Alyssa's polar package) a complex number is an untyped pair (magnitude, angle). When a generic selector operates on a number of <tt>polar</tt> type, it strips off the tag and passes the contents on to Alyssa's code. Conversely, when Alyssa constructs a number for general use, she tags it with a type so that it can be appropriately recognized by the higher-level procedures. This discipline of stripping off and attaching tags as data objects are passed from level to level can be an important organizational strategy, as we shall see in section 2-5.
 
-<h3> Data-Directed Programming and Additivity </h3>
+<a name="%_sec_2.4.3" />
+<h3> 2.4.3 Data-Directed Programming and Additivity </h3>
 
 <p> The general strategy of checking the type of a datum and calling an appropriate procedure is called <em>dispatching on type</em> . This is a powerful strategy for obtaining modularity in system design. Oh the other hand, implementing the dispatch as in section 2-4-2 has two significant weaknesses. One weakness is that the generic interface procedures (<tt>real-part</tt>, <tt>imag-part</tt>, <tt>magnitude</tt>, and <tt>angle</tt>) must know about all the different representations. For instance, suppose we wanted to incorporate a new representation for complex numbers into our complex-number system. We would need to identify this new representation with a type, and then add a clause to each of the generic interface procedures to check for the new type and apply the appropriate selector for that representation.
 

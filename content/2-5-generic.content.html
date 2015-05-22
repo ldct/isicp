@@ -21,7 +21,8 @@
 <p> <b>Figure 2.23:</b> Generic arithmetic system.
 </div>
 
-<h3> Generic Arithmetic Operations </h3>
+<a name="%_sec_2.5.1" />
+<h3> 2.5.1 Generic Arithmetic Operations </h3>
 
 <p> The task of designing generic arithmetic operations is analogous to that of designing the generic complex-number operations. We would like, for instance, to have a generic addition procedure <tt>add</tt> that acts like ordinary primitive addition <tt>+</tt> on ordinary numbers, like <tt>add-rat</tt> on rational numbers, and like <tt>add-complex</tt> on complex numbers. We can implement <tt>add</tt>, and the other generic arithmetic operations, by following the same strategy we used in section 2-4-3 to implement the generic selectors for complex numbers. We will attach a type tag to each kind of number and cause the generic procedure to dispatch to an appropriate package according to the data type of its arguments.
 
@@ -216,7 +217,8 @@ C.no_output_frozen_prompt("scheme-complex-selectors-for-complex");
 <p> <b>Exercise 2.80:</b> Define a generic predicate <tt>=zero?</tt> that tests if its argument is zero, and install it in the generic arithmetic package. This operation should work for ordinary numbers, rational numbers, and complex numbers.
 </div>
 
-<h3> Combining Data of Different Types </h3>
+<a name="%_sec_2.5.2" />
+<h3> 2.5.2 Combining Data of Different Types </h3>
 
 <p> We have seen how to define a unified arithmetic system that encompasses ordinary numbers, complex numbers, rational numbers, and any other type of number we might decide to invent, but we have ignored an important issue. The operations we have defined so far treat the different data types as being completely independent. Thus, there are separate packages for adding, say, two ordinary numbers, or two complex numbers. What we have not yet considered is the fact that it is meaningful to define operations that cross the type boundaries, such as the addition of a complex number to an ordinary number. We have gone to great pains to introduce barriers between parts of our programs so that they can be developed and understood separately. We would like to introduce the cross-type operations in some carefully controlled way, so that we can support them without seriously violating our module boundaries.
 
@@ -396,7 +398,8 @@ C.prompt("scheme-put-exp");
 <p> <b>Exercise 2.86:</b> Suppose we want to handle complex numbers whose real parts, imaginary parts, magnitudes, and angles can be either ordinary numbers, rational numbers, or other numbers we might wish to add to the system. Describe and implement the changes to the system needed to accommodate this. You will have to define operations such as <tt>sine</tt> and <tt>cosine</tt> that are generic over ordinary numbers and rational numbers.
 </div>
 
-<h3> Example: Symbolic Algebra </h3>
+<a name="%_sec_2.5.3" />
+<h3> 2.5.3 Example: Symbolic Algebra </h3>
 
 <p> The manipulation of symbolic algebraic expressions is a complex process that illustrates many of the hardest problems that occur in the design of large-scale systems. An algebraic expression, in general, can be viewed as a hierarchical structure, a tree of operators applied to operands. We can construct algebraic expressions by starting with a set of primitive objects, such as constants and variables, and combining these by means of algebraic operators, such as addition and multiplication. As in other languages, we form abstractions that enable us to refer to compound objects in simple terms. Typical abstractions in symbolic algebra are ideas such as linear combination, polynomial, rational function, or trigonometric function. We can regard these as compound ``types,'' which are often useful for directing the processing of expressions. For example, we could describe the expression
 

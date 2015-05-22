@@ -14,7 +14,8 @@
 
 <p> All the compound data objects we have used so far were constructed ultimately from numbers. In this section we extend the representational capability of our language by introducing the ability to work with arbitrary symbols as data.
 
-<h3> Quotation </h3>
+<a name="%_sec_2.3.1" />
+<h3> 2.3.1 Quotation </h3>
 
 <p> If we can form compound data using symbols, we can have lists such as
 
@@ -194,7 +195,8 @@ C.no_output_frozen_prompt("scheme-car-qqabracadabra");
 <p> To her surprise, the interpreter prints back <tt>quote</tt>. Explain.
 </div>
 
-<h3> Example: Symbolic Differentiation </h3>
+<a name="%_sec_2.3.2" />
+<h3> 2.3.2 Example: Symbolic Differentiation </h3>
 
 <p> As an illustration of symbol manipulation and a further illustration of data abstraction, consider the design of a procedure that performs symbolic differentiation of algebraic expressions. We would like the procedure to take as arguments an algebraic expression and a variable and to return the derivative of the expression with respect to the variable. For example, if the arguments to the procedure are ax^2 + bx + c and x, the procedure should return 2ax + b. Symbolic differentiation is of special historical significance in Lisp. It was one of the motivating examples behind the development of a computer language for symbol manipulation. Furthermore, it marked the beginning of the line of research that led to the development of powerful systems for symbolic mathematical work, which are currently being used by a growing number of applied mathematicians and physicists.
 
@@ -551,7 +553,8 @@ C.prompt("scheme-ex-test-deriv-sum");
 </ul>
 </div>
 
-<h3> Example: Representing Sets </h3>
+<a name="%_sec_2.3.3" />
+<h3> 2.3.3 Example: Representing Sets </h3>
 
 <p> In the previous examples we built representations for two kinds of compound data objects: rational numbers and algebraic expressions. In one of these examples we had the choice of simplifying (reducing) the expressions at either construction time or selection time, but other than that the choice of a representation for these structures in terms of lists was straightforward. When we turn to the representation of sets, the choice of a representation is not so obvious. Indeed, there are a number of possible representations, and they differ significantly from one another in several ways.
 
@@ -837,7 +840,8 @@ procedure for the case where the set of records is structured as a binary tree,
 ordered by the numerical values of the keys.
 </div>
 
-<h3> Example: Huffman Encoding Trees </h3>
+<a name="%_sec_2.3.4" />
+<h3> 2.3.4 Example: Huffman Encoding Trees </h3>
 
 <p> This section provides practice in the use of list structure and data abstraction to manipulate sets and trees. The application is to methods for representing data as sequences of ones and zeros (bits). For example, the ASCII standard code used to represent text in computers encodes each character as a sequence of seven bits. Using seven bits allows us to distinguish 2^(7), or 128, possible different characters. In general, if we want to distinguish n different symbols, we will need to use <tt>log</tt>_2 n bits per symbol. If all our messages are made up of the eight symbols A, B, C, D, E, F, G, and H, we can choose a code with three bits per character, for example
 

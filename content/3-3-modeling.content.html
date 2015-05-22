@@ -24,7 +24,8 @@ C.no_output_frozen_prompt("scheme-set-balance");
 
 <p> Chapter 2 introduced pairs as a general-purpose "glue" for synthesizing compound data. We begin this section by defining basic mutators for pairs, so that pairs can serve as building blocks for constructing mutable data objects. These mutators greatly enhance the representational power of pairs, enabling us to build data structures other than the sequences and trees that we worked with in section 2-2. We also present some examples of simulations in which complex systems are modeled as collections of objects with local state.
 
-<h3> Mutable List Structure </h3>
+<a name="%_sec_3.3.1" />
+<h3> 3.3.1 Mutable List Structure </h3>
 
 <p> The basic operations on pairs &ndash; <tt>cons</tt>, <tt>car</tt>, and <tt>cdr</tt> &ndash; can be used to construct list structure and to select parts from list structure, but they are incapable of modifying list structure. The same is true of the list operations we have used so far, such as <tt>append</tt> and <tt>list</tt>, since these can be defined in terms of <tt>cons</tt>, <tt>car</tt>, and <tt>cdr</tt>. To modify list structures we need new operations.
 
@@ -390,7 +391,8 @@ C.prompt("scheme-test-procedural-set-car-cdr", ["scheme-define-cons-set-car-cdr"
 <p> using the procedural implementation of pairs given above. (Compare Exercise 3-11.)
 </div>
 
-<h3> Representing Queues </h3>
+<a name="%_sec_3.3.2" />
+<h3> 3.3.2 Representing Queues </h3>
 
 <p> The mutators <tt>set-car!</tt> and <tt>set-cdr!</tt> enable us to use pairs to construct data structures that cannot be built with <tt>cons</tt>, <tt>car</tt>, and <tt>cdr</tt> alone. This section shows how to use pairs to represent a data structure called a queue. Section 3-3-3 will show how to represent data structures called tables.
 
@@ -584,7 +586,8 @@ C.prompt("scheme-define-make-queue-dispatch");
 <p> <b>Exercise 3.23:</b> A <em>deque</em> ("double-ended queue") is a sequence in which items can be inserted and deleted at either the front or the rear. Operations on deques are the constructor <tt>make-deque</tt>, the predicate <tt>empty-deque?</tt>, selectors <tt>front-deque</tt> and <tt>rear-deque</tt>, and mutators <tt>front-insert-deque!</tt>, <tt>rear-insert-deque!</tt>, <tt>front-delete-deque!</tt>, and <tt>rear-delete-deque!</tt>. Show how to represent deques using pairs, and give implementations of the operations.<a name="footnote_link_3-23" class="footnote_link" href="#footnote_3-23">23</a>  All operations should be accomplished in $\Theta(1)$ steps.
 </div>
 
-<h3> Representing Tables </h3>
+<a name="%_sec_3.3.3" />
+<h3> 3.3.3 Representing Tables </h3>
 
 <p> When we studied various ways of representing sets in Chapter 2, we mentioned in section 2-3-3 the task of maintaining a table of records indexed by identifying keys. In the implementation of data-directed programming in section 2-4-3, we made extensive use of two-dimensional tables, in which information is stored and retrieved using two keys. Here we see how to build tables as mutable list structures.
 
@@ -824,7 +827,8 @@ C.prompt("scheme-define-memoize", ["scheme-define-table"]);
 
 <p> Draw an environment diagram to analyze the computation of <tt>(memo-fib 3)</tt>. Explain why <tt>memo-fib</tt> computes the nth Fibonacci number in a number of steps proportional to n. Would the scheme still work if we had simply defined <tt>memo-fib</tt> to be <tt>(memoize fib)</tt>? </div>
 
-<h3> A Simulator for Digital Circuits </h3>
+<a name="%_sec_3.3.4" />
+<h3> 3.3.4 A Simulator for Digital Circuits </h3>
 
 <p> Designing complex digital systems, such as computers, is an important engineering activity. Digital systems are constructed by interconnecting simple elements. Although the behavior of these individual elements is simple, networks of them can have very complex behavior. Computer simulation of proposed circuit designs is an important tool used by digital systems engineers. In this section we design a system for performing digital logic simulations. This system typifies a kind of program called an <em>event-driven simulation</em> , in which actions ("events") trigger further events that happen at a later time, which in turn trigger more events, and so so.
 
@@ -1378,7 +1382,8 @@ C.prompt();
 </div>
 
 
-<h3> Propagation of Constraints </h3>
+<a name="%_sec_3.3.5" />
+<h3> 3.3.5 Propagation of Constraints </h3>
 
 <p> Computer programs are traditionally organized as one-directional computations, which perform operations on prespecified arguments to produce desired outputs. On the other hand, we often model systems in terms of relations among quantities. For example, a mathematical model of a mechanical structure might include the information that the deflection d of a metal rod is related to the force f on the rod, the length L of the rod, the cross-sectional area A, and the elastic modulus E via the equation
 

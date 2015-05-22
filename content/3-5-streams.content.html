@@ -22,7 +22,8 @@
 
 <p> Stream processing lets us model systems that have state without ever using assignment or mutable data. This has important implications, both theoretical and practical, because we can build models that avoid the drawbacks inherent in introducing assignment. On the other hand, the stream framework raises difficulties of its own, and the question of which modeling technique leads to more modular and more easily maintained systems remains open.
 
-<h3> Streams Are Delayed Lists </h3>
+<a name="%_sec_3.5.1" />
+<h3> 3.5.1 Streams Are Delayed Lists </h3>
 
 <p> As we saw in section 2-2-3, sequences can serve as standard interfaces for combining program modules. We formulated powerful abstractions for manipulating sequences, such as <tt>map</tt>, <tt>filter</tt>, and <tt>accumulate</tt>, that capture a wide variety of operations in a manner that is both succinct and elegant.
 
@@ -390,7 +391,8 @@ C.prompt();
 <p> What is the value of <tt>sum</tt> after each of the above expressions is evaluated?  What is the printed response to evaluating the <tt>stream-ref</tt> and <tt>display-stream</tt> expressions?  Would these responses differ if we had implemented <tt>(delay <exp</tt>>) simply as <tt>(lambda () <exp</tt>>) without using the optimization provided by <tt>memo-proc</tt>?  Explain
 </div>
 
-<h3> Infinite Streams </h3>
+<a name="%_sec_3.5.2" />
+<h3> 3.5.2 Infinite Streams </h3>
 
 <p> We have seen how to support the illusion of manipulating streams as complete entities even though, in actuality, we compute only as much of the stream as we need to access. We can exploit this technique to represent sequences efficiently as streams, even if the sequences are very long. What is more striking, we can use streams to represent sequences that are infinitely long. For instance, consider the following definition of the stream of positive integers:
 
@@ -790,7 +792,8 @@ In other words, X is the power series whose constant term is 1 and whose higher-
 <b>Exercise 3.62:</b> Use the results of Exercise 3-60 and Exercise 3-61 to define a procedure <tt>div-series</tt> that divides two power series. <tt>Div-series</tt> should work for any two series, provided that the denominator series begins with a nonzero constant term. (If the denominator has a zero constant term, then <tt>div-series</tt> should signal an error.)  Show how to use <tt>div-series</tt> together with the result of Exercise 3-59 to generate the power series for tangent.
 </div>
 
-<h3> Exploiting the Stream Paradigm </h3>
+<a name="%_sec_3.5.3" />
+<h3> 3.5.3 Exploiting the Stream Paradigm </h3>
 
 Streams with delayed evaluation can be a powerful modeling tool, providing many of the benefits of local state and assignment. Moreover, they avoid some of the theoretical tangles that accompany the introduction of assignment into a programming language.
 
@@ -1324,7 +1327,8 @@ This does not correctly implement Alyssa's plan. Find the bug that Louis has ins
 <b>Exercise 3.76:</b> Eva Lu Ator has a criticism of Louis's approach in Exercise 3-75. The program he wrote is not modular, because it intermixes the operation of smoothing with the zero-crossing extraction. For example, the extractor should not have to be changed if Alyssa finds a better way to condition her input signal. Help Louis by writing a procedure <tt>smooth</tt> that takes a stream as input and produces a stream in which each element is the average of two successive input stream elements. Then use <tt>smooth</tt> as a component to implement the zero-crossing detector in a more modular style.
 </div>
 
-<h3> Streams and Delayed Evaluation </h3>
+<a name="%_sec_3.5.4" />
+<h3> 3.5.4 Streams and Delayed Evaluation </h3>
 
 The <tt>integral</tt> procedure at the end of the preceding section shows how we can use streams to model signal-processing systems that contain feedback loops. The feedback loop for the adder shown in Figure 3-32 is modeled by the fact that <tt>integral</tt>'s internal stream <tt>int</tt> is defined in terms of itself:
 
@@ -1566,7 +1570,8 @@ The examples in this section illustrate how the explicit use of <tt>delay</tt> a
 
 One way to avoid the need for two different classes of procedures is to make all procedures take delayed arguments. We could adopt a model of evaluation in which all arguments to procedures are automatically delayed and arguments are forced only when they are actually needed (for example, when they are required by a primitive operation). This would transform our language to use normal-order evaluation, which we first described when we introduced the substitution model for evaluation in section 1-1-5. Converting to normal-order evaluation provides a uniform and elegant way to simplify the use of delayed evaluation, and this would be a natural strategy to adopt if we were concerned only with stream processing. In section 4-2, after we have studied the evaluator, we will see how to transform our language in just this way. Unfortunately, including delays in procedure calls wreaks havoc with our ability to design programs that depend on the order of events, such as programs that use assignment, mutate data, or perform input or output. Even the single <tt>delay</tt> in <tt>cons-stream</tt> can cause great confusion, as illustrated by Exercise 3-51 and Exercise 3-52. As far as anyone knows, mutability and delayed evaluation do not mix well in programming languages, and devising ways to deal with both of these at once is an active area of research.
 
-<h3> Modularity of Functional Programs and Modularity of Objects </h3>
+<a name="%_sec_3.5.5" />
+<h3> 3.5.5 Modularity of Functional Programs and Modularity of Objects </h3>
 
 As we saw in section 3-1-2, one of the major benefits of introducing assignment is that we can increase the modularity of our systems by encapsulating, or ``hiding,'' parts of the state of a large system within local variables. Stream models can provide an equivalent modularity without the use of assignment. As an illustration, we can reimplement the Monte Carlo estimation of [pi], which we examined in section 3-1-2, from a stream-processing point of view.
 

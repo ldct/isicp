@@ -30,7 +30,8 @@ evaluator for Scheme.
 
 <p> We will not provide a data-path diagram to show how the registers and operations of the evaluator are connected, nor will we give the complete list of machine operations. These are implicit in the evaluator's controller, which will be presented in detail.
 
-<h3> The Core of the Explicit-Control Evaluator </h3>
+<a name="%_sec_5.4.1" />
+<h3> 5.4.1 The Core of the Explicit-Control Evaluator </h3>
 
 <p> The central element in the evaluator is the sequence of instructions beginning at <tt>eval-dispatch</tt>. This corresponds to the <tt>eval</tt> procedure of the metacircular evaluator described in section 4-1-1. When the controller starts at <tt>eval-dispatch</tt>, it evaluates the expression specified by <tt>exp</tt> in the environment specified by <tt>env</tt>. When evaluation is complete, the controller will go to the entry point stored in <tt>continue</tt>, and the <tt>val</tt> register will hold the value of the expression. As with the metacircular <tt>eval</tt>, the structure of <tt>eval-dispatch</tt> is a case analysis on the syntactic type of the expression to be evaluated.@footnote{In our controller, the dispatch is written as a sequence of <tt>test</tt> and <tt>branch</tt> instructions. Alternatively, it could have been written in a data-directed style (and in a real system it probably would have been) to avoid the need to perform sequential tests and to facilitate the definition of new expression types. A machine designed to run Lisp would probably include a <tt>dispatch-on-type</tt> instruction that would efficiently execute such data-directed dispatches.}
 
@@ -241,7 +242,8 @@ C.prompt();
 
 <p> <tt>Compound-apply</tt> is the only place in the interpreter where the <tt>env</tt> register is ever assigned a new value. Just as in the metacircular evaluator, the new environment is constructed from the environment carried by the procedure, together with the argument list and the corresponding list of variables to be bound.
 
-<h3> Sequence Evaluation and Tail Recursion </h3>
+<a name="%_sec_5.4.2" />
+<h3> 5.4.2 Sequence Evaluation and Tail Recursion </h3>
 
 <p> The portion of the explicit-control evaluator at <tt>ev-sequence</tt> is analogous to the metacircular evaluator's <tt>eval-sequence</tt> procedure. It handles sequences of expressions in procedure bodies or in explicit <tt>begin</tt> expressions.
 
@@ -351,7 +353,8 @@ C.prompt();
 
 <p> Without tail recursion, such a procedure would eventually run out of stack space, and expressing a true iteration would require some control mechanism other than procedure call.
 
-<h3> Conditionals, Assignments, and Definitions </h3>
+<a name="%_sec_5.4.3" />
+<h3> 5.4.3 Conditionals, Assignments, and Definitions </h3>
 
 <p> As with the metacircular evaluator, special forms are handled by selectively evaluating fragments of the expression. For an <tt>if</tt> expression, we must evaluate the predicate and decide, based on the value of predicate, whether to evaluate the consequent or the alternative.
 
@@ -452,7 +455,8 @@ C.prompt();
 <div class="exercise">
 <p> <b>Exercise 5.25:</b> Modify the evaluator so that it uses normal-order evaluation, based on the lazy evaluator of section 4-2. </div>
 
-<h3> Running the Evaluator </h3>
+<a name="%_sec_5.4.4" />
+<h3> 5.4.4 Running the Evaluator </h3>
 
 <p> With the implementation of the explicit-control evaluator we come to the end of a development, begun in Chapter 1, in which we have explored successively more precise models of the evaluation process. We started with the relatively informal substitution model, then extended this in Chapter 3 to the environment model, which enabled us to deal with state and change. In the metacircular evaluator of Chapter 4, we used Scheme itself as a language for making more explicit the environment structure constructed during evaluation of an expression. Now, with register machines, we have taken a close look at the evaluator's mechanisms for storage management, argument passing, and control. At each new level of description, we have had to raise issues and resolve ambiguities that were not apparent at the previous, less precise treatment of evaluation. To understand the behavior of the explicit-control evaluator, we can simulate it and monitor its performance.
 
