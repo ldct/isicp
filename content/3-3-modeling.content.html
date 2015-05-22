@@ -1879,11 +1879,11 @@ C.prompt();
 </div>
 
 <div id="footnote_3-17" class="footnote">
-<p><a href="#footnote_link_3-17" class="footnote_backlink">17</a> We see from this that mutation operations on lists can create ``garbage'' that is not part of any accessible structure. We will see in section 5.3.2 that Lisp memory-management systems include a garbage collector, which identifies and recycles the memory space used by unneeded pairs.
+<p><a href="#footnote_link_3-17" class="footnote_backlink">17</a> We see from this that mutation operations on lists can create ``garbage'' that is not part of any accessible structure. We will see in section <a href="5-3-storage.content.html#%_sec_5.3.2">5.3.2</a> that Lisp memory-management systems include a garbage collector, which identifies and recycles the memory space used by unneeded pairs.
 </div>
 
 <div id="footnote_3-18" class="footnote">
-<p><a href="#footnote_link_3-18" class="footnote_backlink">18</a> Get-new-pair is one of the operations that must be implemented as part of the memory management required by a Lisp implementation. We will discuss this in section 5.3.1.
+<p><a href="#footnote_link_3-18" class="footnote_backlink">18</a> Get-new-pair is one of the operations that must be implemented as part of the memory management required by a Lisp implementation. We will discuss this in section <a href="5-3-storage.content.html#%_sec_5.3.1">5.3.1</a>.
 </div>
 
 <div id="footnote_3-19" class="footnote">
@@ -1891,7 +1891,7 @@ C.prompt();
 </div>
 
 <div id="footnote_3-20" class="footnote">
-<p><a href="#footnote_link_3-20" class="footnote_backlink">20</a> The subtleties of dealing with sharing of mutable data objects reflect the underlying issues of ``sameness'' and ``change'' that were raised in section 3.1.3. We mentioned there that admitting change to our language requires that a compound object must have an ``identity'' that is something different from the pieces from which it is composed. In Lisp, we consider this ``identity'' to be the quality that is tested by eq?, i.e., by equality of pointers. Since in most Lisp implementations a pointer is essentially a memory address, we are ``solving the problem'' of defining the identity of objects by stipulating that a data object ``itself'' is the information stored in some particular set of memory locations in the computer. This suffices for simple Lisp programs, but is hardly a general way to resolve the issue of ``sameness'' in computational models.
+<p><a href="#footnote_link_3-20" class="footnote_backlink">20</a> The subtleties of dealing with sharing of mutable data objects reflect the underlying issues of ``sameness'' and ``change'' that were raised in section <a href="3-1-assignment.content.html#%_sec_3.1.3">3.1.3</a>. We mentioned there that admitting change to our language requires that a compound object must have an ``identity'' that is something different from the pieces from which it is composed. In Lisp, we consider this ``identity'' to be the quality that is tested by eq?, i.e., by equality of pointers. Since in most Lisp implementations a pointer is essentially a memory address, we are ``solving the problem'' of defining the identity of objects by stipulating that a data object ``itself'' is the information stored in some particular set of memory locations in the computer. This suffices for simple Lisp programs, but is hardly a general way to resolve the issue of ``sameness'' in computational models.
 </div>
 
 <div id="footnote_3-21" class="footnote">
@@ -1923,7 +1923,7 @@ C.prompt();
 </div>
 
 <div id="footnote_3-28" class="footnote">
-<p><a href="#footnote_link_3-28" class="footnote_backlink">28</a> The agenda is a headed list, like the tables in section 3.3.3, but since the list is headed by the time, we do not need an additional dummy header (such as the *table* symbol used with tables).
+<p><a href="#footnote_link_3-28" class="footnote_backlink">28</a> The agenda is a headed list, like the tables in section <a href="3-3-modeling.content.html#%_sec_3.3.3">3.3.3</a>, but since the list is headed by the time, we do not need an additional dummy header (such as the *table* symbol used with tables).
 </div>
 
 <div id="footnote_3-29" class="footnote">
