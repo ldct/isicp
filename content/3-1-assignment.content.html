@@ -17,6 +17,8 @@
 
 <p> This view of a system can be a powerful framework for organizing computational models of the system. For such a model to be modular, it should be decomposed into computational objects that model the actual objects in the system. Each computational object must have its own <tt>local state variables</tt> describing the actual object's state. Since the states of objects in the system being modeled change over time, the state variables of the corresponding computational objects must also change. If we choose to model the flow of time in the system by the elapsed time in the computer, then we must have a way to construct computational objects whose behaviors change as our programs run. In particular, if we wish to model state variables by ordinary symbolic names in the programming language, then the language must provide an <tt>assignment operator</tt> to enable us to change the value associated with a name.
 
+<a name="%_sec_1.1.1" />
+<h3> 1.1.1 Local State Variables </h3>
 
 <p> To illustrate what we mean by having a computational object with time-varying state, let us model the situation of withdrawing money from a bank account. We will do this using a procedure <tt>withdraw</tt>, which takes as argument an <tt>amount</tt> to be withdrawn. If there is enough money in the account to accommodate the withdrawal, then <tt>withdraw</tt> should return the balance remaining after the withdrawal. Otherwise, <tt>withdraw</tt> should return the message <em>Insufficient funds</em>. For example, if we begin with $100 in the account, we should obtain the following sequence of responses using <tt>withdraw</tt>:
 
@@ -247,6 +249,8 @@ C.prompt("scheme-test-passworded-acc");
 <div class="exercise">
 <p> <b>Exercise 3.4:</b> Modify the <tt>make-account</tt> procedure of Exercise 3-3 by adding another local state variable so that, if an account is accessed more than seven consecutive times with an incorrect password, it invokes the procedure <tt>call-the-cops</tt>. </div>
 
+<a name="%_sec_1.1.2" />
+<h3> 1.1.2 The Benefits of Introducing Assignment </h3>
 
 <p> As we shall see, introducing assignment into our programming language leads us into a thicket of difficult conceptual issues. Nevertheless, viewing systems as collections of objects with local state is a powerful technique for maintaining a modular design. As a simple example, consider the design of a procedure <tt>rand</tt> that, whenever it is called, returns an integer chosen at random.
 
@@ -378,6 +382,8 @@ C.prompt("scheme-define-random-in-range");
 <div class="exercise">
 <p> <b>Exercise 3.6:</b> It is useful to be able to reset a random-number generator to produce a sequence starting from a given value. Design a new <tt>rand</tt> procedure that is called with an argument that is either the symbol <tt>generate</tt> or the symbol <tt>reset</tt> and behaves as follows: <tt>(rand 'generate)</tt> produces a new random number; <tt>((rand 'reset) &lt;new-value&gt;)</tt> resets the internal state variable to the designated <tt>&lt;new-value&gt;</tt>. Thus, by resetting the state, one can generate repeatable sequences. These are very handy to have when testing and debugging programs that use random numbers. </div>
 
+<a name="%_sec_1.1.3" />
+<h3> 1.1.3 The Costs of Introducing Assignment </h3>
 
 <p> As we have seen, the <tt>set!</tt> operation enables us to model objects that have local state. However, this advantage comes at a price. Our programming language can no longer be interpreted in terms of the substitution model of procedure application that we introduced in section 1-1-5. Moreover, no simple model with ``nice'' mathematical properties can be an adequate framework for dealing with objects and assignment in programming languages.
 
