@@ -54,7 +54,8 @@ described in section 4-1-1 (see Figure 4-1).
 
 <p> The implementation of the evaluator will depend upon procedures that define the <em>syntax</em> of the expressions to be evaluated. We will use data abstraction to make the evaluator independent of the representation of the language. For example, rather than committing to a choice that an assignment is to be represented by a list beginning with the symbol <tt>set!</tt> we use an abstract predicate <tt>assignment?</tt> to test for an assignment, and we use abstract selectors <tt>assignment-variable</tt> and <tt>assignment-value</tt> to access the parts of an assignment. Implementation of expressions will be described in detail in section 4-1-2. There are also operations, described in section 4-1-3, that specify the representation of procedures and environments. For example, <tt>make-procedure</tt> constructs compound procedures, <tt>lookup-variable-value</tt> accesses the values of variables, and <tt>apply-primitive-procedure</tt> applies a primitive procedure to a given list of arguments.
 
-<h3> The Core of the Evaluator </h3>
+<a name="%_sec_4.1.1" />
+<h3> 4.1.1 The Core of the Evaluator </h3>
 
 <p> <img class='center' src='http://mitpress.mit.edu/sicp/full-text/book/ch4-Z-G-1.gif'>
 
@@ -272,7 +273,8 @@ right regardless of the order of evaluation in the underlying Lisp. Also write
 a version of <tt>list-of-values</tt> that evaluates operands from right to left.
 </div>
 
-<h3> Representing Expressions </h3>
+<a name="%_sec_4.1.2" />
+<h3> 4.1.2 Representing Expressions </h3>
 
 The evaluator is reminiscent of the symbolic differentiation program discussed
 in section 2-3-2. Both programs operate on symbolic expressions. In
@@ -835,7 +837,8 @@ and implement a new syntax for Scheme by modifying the procedures in this
 section, without changing <tt>eval</tt> or <tt>apply</tt>.
 </div>
 
-<h3> Evaluator Data Structures </h3>
+<a name="%_sec_4.1.3" />
+<h3> 4.1.3 Evaluator Data Structures </h3>
 
 In addition to defining the external syntax of expressions, the evaluator
 implementation must also define the data structures that the evaluator
@@ -1112,7 +1115,8 @@ binding in the first frame of the environment?  Complete the specification and
 justify any choices you make.
 </div>
 
-<h3> Running the Evaluator as a Program </h3>
+<a name="%_sec_4.1.4" />
+<h3> 4.1.4 Running the Evaluator as a Program </h3>
 
 Given the evaluator, we have in our hands a description (expressed in Lisp) of
 the process by which Lisp expressions are evaluated. One advantage of
@@ -1319,7 +1323,8 @@ primitive for the metacircular evaluator. When he tries it, things go terribly
 wrong. Explain why Louis's <tt>map</tt> fails even though Eva's works.
 </div>
 
-<h3> Data as Programs </h3>
+<a name="%_sec_4.1.5" />
+<h3> 4.1.5 Data as Programs </h3>
 
 In thinking about a Lisp program that evaluates Lisp expressions, an analogy
 might be helpful. One operational view of the meaning of a program is that a
@@ -1514,7 +1519,8 @@ clear example of a <tt>non-computable</tt>
 that cannot be carried out as a computational procedure.}
 </div>
 
-<h3> Internal Definitions </h3>
+<a name="%_sec_4.1.6" />
+<h3> 4.1.6 Internal Definitions </h3>
 
 Our environment model of evaluation and our metacircular evaluator execute
 definitions in sequence, extending the environment frame one definition at a
@@ -1885,7 +1891,8 @@ C.prompt();
 </ul>
 </div>
 
-<h3> Separating Syntactic Analysis from Execution </h3>
+<a name="%_sec_4.1.7" />
+<h3> 4.1.7 Separating Syntactic Analysis from Execution </h3>
 
 The evaluator implemented above is simple, but it is very inefficient, because
 the syntactic analysis of expressions is interleaved with their execution.
