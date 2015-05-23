@@ -14,7 +14,8 @@
 
 <p> All the compound data objects we have used so far were constructed ultimately from numbers. In this section we extend the representational capability of our language by introducing the ability to work with arbitrary symbols as data.
 
-<h3> Quotation </h3>
+<a name="%_sec_2.3.1" />
+<h3> 2.3.1 Quotation </h3>
 
 <p> If we can form compound data using symbols, we can have lists such as
 
@@ -194,11 +195,12 @@ C.no_output_frozen_prompt("scheme-car-qqabracadabra");
 <p> To her surprise, the interpreter prints back <tt>quote</tt>. Explain.
 </div>
 
-<h3> Example: Symbolic Differentiation </h3>
+<a name="%_sec_2.3.2" />
+<h3> 2.3.2 Example: Symbolic Differentiation </h3>
 
 <p> As an illustration of symbol manipulation and a further illustration of data abstraction, consider the design of a procedure that performs symbolic differentiation of algebraic expressions. We would like the procedure to take as arguments an algebraic expression and a variable and to return the derivative of the expression with respect to the variable. For example, if the arguments to the procedure are ax^2 + bx + c and x, the procedure should return 2ax + b. Symbolic differentiation is of special historical significance in Lisp. It was one of the motivating examples behind the development of a computer language for symbol manipulation. Furthermore, it marked the beginning of the line of research that led to the development of powerful systems for symbolic mathematical work, which are currently being used by a growing number of applied mathematicians and physicists.
 
-<p> In developing the symbolic-differentiation program, we will follow the same strategy of data abstraction that we followed in developing the rational-number system of section 2-1-1. That is, we will first define a differentiation algorithm that operates on abstract objects such as ``sums,'' ``products,'' and ``variables'' without worrying about how these are to be represented. Only afterward will we address the representation problem.
+<p> In developing the symbolic-differentiation program, we will follow the same strategy of data abstraction that we followed in developing the rational-number system of section <a href="2-1-data.content.html">2.1.1</a>. That is, we will first define a differentiation algorithm that operates on abstract objects such as ``sums,'' ``products,'' and ``variables'' without worrying about how these are to be represented. Only afterward will we address the representation problem.
 
 <h4> The differentiation program with abstract data </h4>
 
@@ -551,7 +553,8 @@ C.prompt("scheme-ex-test-deriv-sum");
 </ul>
 </div>
 
-<h3> Example: Representing Sets </h3>
+<a name="%_sec_2.3.3" />
+<h3> 2.3.3 Example: Representing Sets </h3>
 
 <p> In the previous examples we built representations for two kinds of compound data objects: rational numbers and algebraic expressions. In one of these examples we had the choice of simplifying (reducing) the expressions at either construction time or selection time, but other than that the choice of a representation for these structures in terms of lists was straightforward. When we turn to the representation of sets, the choice of a representation is not so obvious. Indeed, there are a number of possible representations, and they differ significantly from one another in several ways.
 
@@ -559,7 +562,7 @@ C.prompt("scheme-ex-test-deriv-sum");
 
 <h4> Sets as unordered lists </h4>
 
-<p> One way to represent a set is as a list of its elements in which no element appears more than once. The empty set is represented by the empty list. In this representation, <tt>element-of-set?</tt> is similar to the procedure <tt>memq</tt> of section 2-3-1. It uses <tt>equal?</tt>  instead of <tt>eq?</tt> so that the set elements need not be symbols:
+<p> One way to represent a set is as a list of its elements in which no element appears more than once. The empty set is represented by the empty list. In this representation, <tt>element-of-set?</tt> is similar to the procedure <tt>memq</tt> of section <a href="2-3-symbolic.content.html">2.3.1</a>. It uses <tt>equal?</tt>  instead of <tt>eq?</tt> so that the set elements need not be symbols:
 
 <div id="scheme-define-element-of-setp">
 (define (element-of-set? x set)
@@ -837,7 +840,8 @@ procedure for the case where the set of records is structured as a binary tree,
 ordered by the numerical values of the keys.
 </div>
 
-<h3> Example: Huffman Encoding Trees </h3>
+<a name="%_sec_2.3.4" />
+<h3> 2.3.4 Example: Huffman Encoding Trees </h3>
 
 <p> This section provides practice in the use of list structure and data abstraction to manipulate sets and trees. The application is to methods for representing data as sequences of ones and zeros (bits). For example, the ASCII standard code used to represent text in computers encodes each character as a sequence of seven bits. Using seven bits allows us to distinguish 2^(7), or 128, possible different characters. In general, if we want to distinguish n different symbols, we will need to use <tt>log</tt>_2 n bits per symbol. If all our messages are made up of the eight symbols A, B, C, D, E, F, G, and H, we can choose a code with three bits per character, for example
 
@@ -928,7 +932,7 @@ Final merge    {({A B C D E F G H} 17)}
 C.prompt("scheme-define-leaf-selectors");
 </script>
 
-<p> A general tree will be a list of a left branch, a right branch, a set of symbols, and a weight. The set of symbols will be simply a list of the symbols, rather than some more sophisticated set representation. When we make a tree by merging two nodes, we obtain the weight of the tree as the sum of the weights of the nodes, and the set of symbols as the union of the sets of symbols for the nodes. Since our symbol sets are represented as lists, we can form the union by using the <tt>append</tt> procedure we defined in section 2-2-1:
+<p> A general tree will be a list of a left branch, a right branch, a set of symbols, and a weight. The set of symbols will be simply a list of the symbols, rather than some more sophisticated set representation. When we make a tree by merging two nodes, we obtain the weight of the tree as the sum of the weights of the nodes, and the set of symbols as the union of the sets of symbols for the nodes. Since our symbol sets are represented as lists, we can form the union by using the <tt>append</tt> procedure we defined in section <a href="2-2-closure.content.html">2.2.1</a>:
 
 <div id="scheme-define-make-code-tree">
 (define (make-code-tree left right)
@@ -1140,7 +1144,7 @@ Sha boom
 </div>
 
 <div id="footnote_2-35" class="footnote">
-<p> <a href="#footnote_link_2-35" class="footnote_backlink">35</a> We can consider two symbols to be "the same" if they consist of the same characters in the same order. Such a definition skirts a deep issue that we are not yet ready to address: the meaning of "sameness" in a programming language. We will return to this in chapter 3 (section 3.1.3).
+<p> <a href="#footnote_link_2-35" class="footnote_backlink">35</a> We can consider two symbols to be "the same" if they consist of the same characters in the same order. Such a definition skirts a deep issue that we are not yet ready to address: the meaning of "sameness" in a programming language. We will return to this in chapter 3 (section <a href="3-1-assignment.html#%_sec_3.1.3">3.1.3</a>).
 </div>
 
 <div id="footnote_2-36" class="footnote">
@@ -1166,7 +1170,7 @@ Sha boom
 </div>
 
 <div id="footnote_2-38" class="footnote">
-<p> <a href="#footnote_link_2-38" class="footnote_backlink">38</a> Halving the size of the problem at each step is the distinguishing characteristic of logarithmic growth, as we saw with the fast-exponentiation algorithm of section 1.2.4 and the half-interval search method of section 1.3.3.
+<p> <a href="#footnote_link_2-38" class="footnote_backlink">38</a> Halving the size of the problem at each step is the distinguishing characteristic of logarithmic growth, as we saw with the fast-exponentiation algorithm of section <a href="1-2-procedures.html#%_sec_1.2.4">1.2.4</a> and the half-interval search method of section <a href="1-3-hop.content.html#%_sec_1.3.3">1.3.3</a>.
 </div>
 
 <div id="footnote_2-39" class="footnote">

@@ -17,7 +17,8 @@
 
 <p> This view of a system can be a powerful framework for organizing computational models of the system. For such a model to be modular, it should be decomposed into computational objects that model the actual objects in the system. Each computational object must have its own <tt>local state variables</tt> describing the actual object's state. Since the states of objects in the system being modeled change over time, the state variables of the corresponding computational objects must also change. If we choose to model the flow of time in the system by the elapsed time in the computer, then we must have a way to construct computational objects whose behaviors change as our programs run. In particular, if we wish to model state variables by ordinary symbolic names in the programming language, then the language must provide an <tt>assignment operator</tt> to enable us to change the value associated with a name.
 
-<h3> Local State Variables </h3>
+<a name="%_sec_3.1.1" />
+<h3> 3.1.1 Local State Variables </h3>
 
 <p> To illustrate what we mean by having a computational object with time-varying state, let us model the situation of withdrawing money from a bank account. We will do this using a procedure <tt>withdraw</tt>, which takes as argument an <tt>amount</tt> to be withdrawn. If there is enough money in the account to accommodate the withdrawal, then <tt>withdraw</tt> should return the balance remaining after the withdrawal. Otherwise, <tt>withdraw</tt> should return the message <em>Insufficient funds</em>. For example, if we begin with $100 in the account, we should obtain the following sequence of responses using <tt>withdraw</tt>:
 
@@ -98,7 +99,7 @@ C.prompt("scheme-define-new-withdraw");
 
 <p> What we have done here is use <tt>let</tt> to establish an environment with a local variable <tt>balance</tt>, bound to the initial value 100. Within this local environment, we use <tt>lambda</tt> to create a procedure that takes <tt>amount</tt> as an argument and behaves like our previous <tt>withdraw</tt> procedure. This procedure &ndash; returned as the result of evaluating the <tt>let</tt> expression &ndash; is <tt>new-withdraw</tt>, which behaves in precisely the same way as <tt>withdraw</tt> but whose variable <tt>balance</tt> is not accessible by any other procedure.<a name="footnote_link_3-4" class="footnote_link" href="#footnote_3-4">4</a>
 
-<p> Combining <tt>set!</tt> with local variables is the general programming technique we will use for constructing computational objects with local state. Unfortunately, using this technique raises a serious problem: When we first introduced procedures, we also introduced the substitution model of evaluation (section 1-1-5) to provide an interpretation of what procedure application means. We said that applying a procedure should be interpreted as evaluating the body of the procedure with the formal parameters replaced by their values. The trouble is that, as soon as we introduce assignment into our language, substitution is no longer an adequate model of procedure application. (We will see why this is so in section 3-1-3.)  As a consequence, we technically have at this point no way to understand why the <tt>new-withdraw</tt> procedure behaves as claimed above. In order to really understand a procedure such as <tt>new-withdraw</tt>, we will need to develop a new model of procedure application. In section 3-2 we will introduce such a model, together with an explanation of <tt>set!</tt> and local variables. First, however, we examine some variations on the theme established by <tt>new-withdraw</tt>.
+<p> Combining <tt>set!</tt> with local variables is the general programming technique we will use for constructing computational objects with local state. Unfortunately, using this technique raises a serious problem: When we first introduced procedures, we also introduced the substitution model of evaluation (section <a href="1-1-elements.content.html">1.1.5</a>) to provide an interpretation of what procedure application means. We said that applying a procedure should be interpreted as evaluating the body of the procedure with the formal parameters replaced by their values. The trouble is that, as soon as we introduce assignment into our language, substitution is no longer an adequate model of procedure application. (We will see why this is so in section <a href="3-1-assignment.content.html">3.1.3</a>.)  As a consequence, we technically have at this point no way to understand why the <tt>new-withdraw</tt> procedure behaves as claimed above. In order to really understand a procedure such as <tt>new-withdraw</tt>, we will need to develop a new model of procedure application. In section <a href="3-2-environment.html">3.2</a> we will introduce such a model, together with an explanation of <tt>set!</tt> and local variables. First, however, we examine some variations on the theme established by <tt>new-withdraw</tt>.
 
 <p> The following procedure, <tt>make-withdraw</tt>, creates ``withdrawal processors.''  The formal parameter <tt>balance</tt> in <tt>make-withdraw</tt> specifies the initial amount of money in the account.<a name="footnote_link_3-5" class="footnote_link" href="#footnote_3-5">5</a>
 
@@ -154,7 +155,7 @@ C.prompt("scheme-define-W1-W2", ["scheme-define-make-withdraw"]);
 C.prompt("scheme-define-make-account");
 </script>
 
-<p> Each call to <tt>make-account</tt> sets up an environment with a local state variable <tt>balance</tt>. Within this environment, <tt>make-account</tt> defines procedures <tt>deposit</tt> and <tt>withdraw</tt> that access <tt>balance</tt> and an additional procedure <tt>dispatch</tt> that takes a ``message'' as input and returns one of the two local procedures. The <tt>dispatch</tt> procedure itself is returned as the value that represents the bank-account object. This is precisely the <tt>message-passing</tt> style of programming that we saw in section 2-4-3, although here we are using it in conjunction with the ability to modify local variables.
+<p> Each call to <tt>make-account</tt> sets up an environment with a local state variable <tt>balance</tt>. Within this environment, <tt>make-account</tt> defines procedures <tt>deposit</tt> and <tt>withdraw</tt> that access <tt>balance</tt> and an additional procedure <tt>dispatch</tt> that takes a ``message'' as input and returns one of the two local procedures. The <tt>dispatch</tt> procedure itself is returned as the value that represents the bank-account object. This is precisely the <tt>message-passing</tt> style of programming that we saw in section <a href="2-4-representation.content.html">2.4.3</a>, although here we are using it in conjunction with the ability to modify local variables.
 
 <p> <tt>make-account</tt> can be used as follows:
 
@@ -248,7 +249,8 @@ C.prompt("scheme-test-passworded-acc");
 <div class="exercise">
 <p> <b>Exercise 3.4:</b> Modify the <tt>make-account</tt> procedure of Exercise 3-3 by adding another local state variable so that, if an account is accessed more than seven consecutive times with an incorrect password, it invokes the procedure <tt>call-the-cops</tt>. </div>
 
-<h3> The Benefits of Introducing Assignment </h3>
+<a name="%_sec_3.1.2" />
+<h3> 3.1.2 The Benefits of Introducing Assignment </h3>
 
 <p> As we shall see, introducing assignment into our programming language leads us into a thicket of difficult conceptual issues. Nevertheless, viewing systems as collections of objects with local state is a powerful technique for maintaining a modular design. As a simple example, consider the design of a procedure <tt>rand</tt> that, whenever it is called, returns an integer chosen at random.
 
@@ -363,7 +365,7 @@ C.prompt("scheme-define-monte-carlo-with-rand", ["scheme-hidden-define-rand-upda
 
 <p> Implement Monte Carlo integration as a procedure <tt>estimate-integral</tt> that takes as arguments a predicate <tt>P</tt>, upper and lower bounds <tt>x1</tt>, <tt>x2</tt>, <tt>y1</tt>, and <tt>y2</tt> for the rectangle, and the number of trials to perform in order to produce the estimate. Your procedure should use the same <tt>monte-carlo</tt> procedure that was used above to estimate [pi]. Use your <tt>estimate-integral</tt> to produce an estimate of [pi] by measuring the area of a unit circle.
 
-<p> You will find it useful to have a procedure that returns a number chosen at random from a given range. The following <tt>random-in-range</tt> procedure implements this in terms of the <tt>random</tt> procedure used in section 1-2-6, which returns a nonnegative number less than its input.<a name="footnote_link_3-8" class="footnote_link" href="#footnote_3-8">8</a>
+<p> You will find it useful to have a procedure that returns a number chosen at random from a given range. The following <tt>random-in-range</tt> procedure implements this in terms of the <tt>random</tt> procedure used in section <a href="1-2-procedures.content.html">1.2.6</a>, which returns a nonnegative number less than its input.<a name="footnote_link_3-8" class="footnote_link" href="#footnote_3-8">8</a>
 
 <div id="scheme-define-random-in-range">
 (define (random-in-range low high)
@@ -380,13 +382,14 @@ C.prompt("scheme-define-random-in-range");
 <div class="exercise">
 <p> <b>Exercise 3.6:</b> It is useful to be able to reset a random-number generator to produce a sequence starting from a given value. Design a new <tt>rand</tt> procedure that is called with an argument that is either the symbol <tt>generate</tt> or the symbol <tt>reset</tt> and behaves as follows: <tt>(rand 'generate)</tt> produces a new random number; <tt>((rand 'reset) &lt;new-value&gt;)</tt> resets the internal state variable to the designated <tt>&lt;new-value&gt;</tt>. Thus, by resetting the state, one can generate repeatable sequences. These are very handy to have when testing and debugging programs that use random numbers. </div>
 
-<h3> The Costs of Introducing Assignment </h3>
+<a name="%_sec_3.1.3" />
+<h3> 3.1.3 The Costs of Introducing Assignment </h3>
 
-<p> As we have seen, the <tt>set!</tt> operation enables us to model objects that have local state. However, this advantage comes at a price. Our programming language can no longer be interpreted in terms of the substitution model of procedure application that we introduced in section 1-1-5. Moreover, no simple model with ``nice'' mathematical properties can be an adequate framework for dealing with objects and assignment in programming languages.
+<p> As we have seen, the <tt>set!</tt> operation enables us to model objects that have local state. However, this advantage comes at a price. Our programming language can no longer be interpreted in terms of the substitution model of procedure application that we introduced in section <a href="1-1-elements.content.html">1.1.5</a>. Moreover, no simple model with ``nice'' mathematical properties can be an adequate framework for dealing with objects and assignment in programming languages.
 
 <p> So long as we do not use assignments, two evaluations of the same procedure with the same arguments will produce the same result, so that procedures can be viewed as computing mathematical functions. Programming without any use of assignments, as we did throughout the first two chapters of this book, is accordingly known as <tt>functional programming</tt> .
 
-<p> To understand how assignment complicates matters, consider a simplified version of the <tt>make-withdraw</tt> procedure of section 3-1-1 that does not bother to check for an insufficient amount:
+<p> To understand how assignment complicates matters, consider a simplified version of the <tt>make-withdraw</tt> procedure of section <a href="3-1-assignment.content.html">3.1.1</a> that does not bother to check for an insufficient amount:
 
 <div id="scheme-define-make-simplified-withdraw">
 (define (make-simplified-withdraw balance)
@@ -489,7 +492,7 @@ C.no_output_frozen_prompt("scheme-set-balance-substituted");
 
 <p> If we adhered to the substitution model, we would have to say that the meaning of the procedure application is to first set <tt>balance</tt> to 5 and then return 25 as the value of the expression. This gets the wrong answer. In order to get the correct answer, we would have to somehow distinguish the first occurrence of <tt>balance</tt> (before the effect of the <tt>set!</tt>)  from the second occurrence of <tt>balance</tt> (after the effect of the <tt>set!</tt>), and the substitution model cannot do this.
 
-<p> The trouble here is that substitution is based ultimately on the notion that the symbols in our language are essentially names for values. But as soon as we introduce <tt>set!</tt> and the idea that the value of a variable can change, a variable can no longer be simply a name. Now a variable somehow refers to a place where a value can be stored, and the value stored at this place can change. In section 3-2 we will see how environments play this role of "place" in our computational model.
+<p> The trouble here is that substitution is based ultimately on the notion that the symbols in our language are essentially names for values. But as soon as we introduce <tt>set!</tt> and the idea that the value of a variable can change, a variable can no longer be simply a name. Now a variable somehow refers to a place where a value can be stored, and the value stored at this place can change. In section <a href="3-2-environment.html">3.2</a> we will see how environments play this role of "place" in our computational model.
 
 <h4> Sameness and change </h4>
 
@@ -562,7 +565,7 @@ C.prompt("scheme-define-peter-as-paul-acc", ["scheme-define-make-account"]);
 
 <h4> Pitfalls of imperative programming </h4>
 
-<p> In contrast to functional programming, programming that makes extensive use of assignment is known as <tt>imperative programming</tt> . In addition to raising complications about computational models, programs written in imperative style are susceptible to bugs that cannot occur in functional programs. For example, recall the iterative factorial program from section 1-2-1:
+<p> In contrast to functional programming, programming that makes extensive use of assignment is known as <tt>imperative programming</tt> . In addition to raising complications about computational models, programs written in imperative style are susceptible to bugs that cannot occur in functional programs. For example, recall the iterative factorial program from section <a href="1-2-procedures.content.html">1.2.1</a>:
 
 <div id="scheme-define-factorial">
 (define (factorial n)
@@ -607,7 +610,7 @@ C.no_output_frozen_prompt("scheme-wrong-order-assign-factorial");
 
 <p> would have produced a different, incorrect result. In general, programming with assignment forces us to carefully consider the relative orders of the assignments to make sure that each statement is using the correct version of the variables that have been changed. This issue simply does not arise in functional programs.<a name="footnote_link_3-11" class="footnote_link" href="#footnote_3-11">11</a>
 
-<p> The complexity of imperative programs becomes even worse if we consider applications in which several processes execute concurrently. We will return to this in section 3-4. First, however, we will address the issue of providing a computational model for expressions that involve assignment, and explore the uses of objects with local state in designing simulations.
+<p> The complexity of imperative programs becomes even worse if we consider applications in which several processes execute concurrently. We will return to this in section <a href="3-4-concurrency.html">3.4</a>. First, however, we will address the issue of providing a computational model for expressions that involve assignment, and explore the uses of objects with local state in designing simulations.
 
 <div class="exercise">
 <p> <b>Exercise 3.7:</b> Consider the bank account objects created by <tt>make-account</tt>, with the password modification described in Exercise 3-3. Suppose that our banking system requires the ability to make joint accounts. Define a procedure <tt>make-joint</tt> that accomplishes this. <tt>Make-joint</tt> should take three arguments. The first is a password-protected account. The second argument must match the password with which the account was defined in order for the <tt>make-joint</tt> operation to proceed. The third argument is a new password. <tt>Make-joint</tt> is to create an additional access to the original account using the new password. For example, if <tt>peter-acc</tt> is a bank account with password <tt>open-sesame</tt>, then
@@ -626,19 +629,19 @@ C.prompt("scheme-define-paul-acc-joint");
 <p>
 
 <div class="exercise">
-<p> <b>Exercise 3.8:</b> When we defined the evaluation model in section 1-1-3, we said that the first step in evaluating an expression is to evaluate its subexpressions. But we never specified the order in which the subexpressions should be evaluated (e.g., left to right or right to left). When we introduce assignment, the order in which the arguments to a procedure are evaluated can make a difference to the result. Define a simple procedure <tt>f</tt> such that evaluating <tt>(+ (f 0) (f 1))</tt> will return 0 if the arguments to <tt>+</tt> are evaluated from left to right but will return 1 if the arguments are evaluated from right to left.
+<p> <b>Exercise 3.8:</b> When we defined the evaluation model in section <a href="1-1-elements.content.html">1.1.3</a>, we said that the first step in evaluating an expression is to evaluate its subexpressions. But we never specified the order in which the subexpressions should be evaluated (e.g., left to right or right to left). When we introduce assignment, the order in which the arguments to a procedure are evaluated can make a difference to the result. Define a simple procedure <tt>f</tt> such that evaluating <tt>(+ (f 0) (f 1))</tt> will return 0 if the arguments to <tt>+</tt> are evaluated from left to right but will return 1 if the arguments are evaluated from right to left.
 </div>
 @@
 
 {{footnotes}}
 <div id="footnote_3-1" class="footnote">
-<p><a href="#footnote_link_3-1" class="footnote_backlink">1</a> Actually, this is not quite true. One exception was the random-number generator in section 1.2.6. Another exception involved the operation/type tables we introduced in section 2.4.3, where the values of two calls to get with the same arguments depended on intervening calls to put. On the other hand, until we introduce assignment, we have no way to create such procedures ourselves.
+<p><a href="#footnote_link_3-1" class="footnote_backlink">1</a> Actually, this is not quite true. One exception was the random-number generator in section <a href="1-2-procedures.html#%_sec_1.2.6">1.2.6</a>. Another exception involved the operation/type tables we introduced in section <a href="2-4-representation.content.html#%_sec_2.4.3">2.4.3</a>, where the values of two calls to get with the same arguments depended on intervening calls to put. On the other hand, until we introduce assignment, we have no way to create such procedures ourselves.
 </div>
 
 <div id="footnote_3-2" class="footnote">
 <p><a href="#footnote_link_3-2" class="footnote_backlink">2</a> The value of a <tt>set!</tt> expression is implementation-dependent. <tt>set!</tt> should be used only for its effect, not for its value.
 
-<p> The name <tt>set!</tt> reflects a naming convention used in Scheme: Operations that change the values of variables (or that change data structures, as we will see in section 3.3) are given names that end with an exclamation point. This is similar to the convention of designating predicates by names that end with a question mark.
+<p> The name <tt>set!</tt> reflects a naming convention used in Scheme: Operations that change the values of variables (or that change data structures, as we will see in section <a href="3-3-modeling.html">3.3</a>) are given names that end with an exclamation point. This is similar to the convention of designating predicates by names that end with a question mark.
 </div>
 
 <div id="footnote_3-3" class="footnote">
@@ -650,7 +653,7 @@ C.prompt("scheme-define-paul-acc-joint");
 </div>
 
 <div id="footnote_3-5" class="footnote">
-<p><a href="#footnote_link_3-5" class="footnote_backlink">5</a> In contrast with new-withdraw above, we do not have to use let to make balance a local variable, since formal parameters are already local. This will be clearer after the discussion of the environment model of evaluation in section 3.2. (See also exercise 3.10.)
+<p><a href="#footnote_link_3-5" class="footnote_backlink">5</a> In contrast with new-withdraw above, we do not have to use let to make balance a local variable, since formal parameters are already local. This will be clearer after the discussion of the environment model of evaluation in section <a href="3-2-environment.html">3.2</a>. (See also exercise 3.10.)
 </div>
 
 <div id="footnote_3-6" class="footnote">
@@ -662,7 +665,7 @@ C.prompt("scheme-define-paul-acc-joint");
 </div>
 
 <div id="footnote_3-8" class="footnote">
-<p><a href="#footnote_link_3-8" class="footnote_backlink">8</a> MIT Scheme provides such a procedure. If random is given an exact integer (as in section 1.2.6) it returns an exact integer, but if it is given a decimal value (as in this exercise) it returns a decimal value.
+<p><a href="#footnote_link_3-8" class="footnote_backlink">8</a> MIT Scheme provides such a procedure. If random is given an exact integer (as in section <a href="1-2-procedures.html#%_sec_1.2.6">1.2.6</a>) it returns an exact integer, but if it is given a decimal value (as in this exercise) it returns a decimal value.
 </div>
 
 
@@ -671,7 +674,7 @@ C.prompt("scheme-define-paul-acc-joint");
 </div>
 
 <div id="footnote_3-10" class="footnote">
-<p><a href="#footnote_link_3-10" class="footnote_backlink">10</a> The phenomenon of a single computational object being accessed by more than one name is known as aliasing. The joint bank account situation illustrates a very simple example of an alias. In section 3.3 we will see much more complex examples, such as ``distinct'' compound data structures that share parts. Bugs can occur in our programs if we forget that a change to an object may also, as a ``side effect,'' change a ``different'' object because the two ``different'' objects are actually a single object appearing under different aliases. These so-called side-effect bugs are so difficult to locate and to analyze that some people have proposed that programming languages be designed in such a way as to not allow side effects or aliasing (Lampson et al. 1981; Morris, Schmidt, and Wadler 1980).
+<p><a href="#footnote_link_3-10" class="footnote_backlink">10</a> The phenomenon of a single computational object being accessed by more than one name is known as aliasing. The joint bank account situation illustrates a very simple example of an alias. In section <a href="3-3-modeling.html">3.3</a> we will see much more complex examples, such as ``distinct'' compound data structures that share parts. Bugs can occur in our programs if we forget that a change to an object may also, as a ``side effect,'' change a ``different'' object because the two ``different'' objects are actually a single object appearing under different aliases. These so-called side-effect bugs are so difficult to locate and to analyze that some people have proposed that programming languages be designed in such a way as to not allow side effects or aliasing (Lampson et al. 1981; Morris, Schmidt, and Wadler 1980).
 </div>
 
 <div id="footnote_3-11" class="footnote">

@@ -16,19 +16,20 @@
 
 <p> Let's step back and review where this complexity comes from. In an attempt to model real-world phenomena, we made some apparently reasonable decisions: We modeled real-world objects with local state by computational objects with local variables. We identified time variation in the real world with time variation in the computer. We implemented the time variation of the states of the model objects in the computer with assignments to the local variables of the model objects.
 
-<p> Is there another approach? Can we avoid identifying time in the computer with time in the modeled world? Must we make the model change with time in order to model phenomena in a changing world? Think about the issue in terms of mathematical functions. We can describe the time-varying behavior of a quantity x as a function of time x(t). If we concentrate on x instant by instant, we think of it as a changing quantity. Yet if we concentrate on the entire time history of values, we do not emphasize change---the function itself does not change.@footnote{Physicists sometimes adopt this view by introducing the ``world lines'' of particles as a device for reasoning about motion. We've also already mentioned (section 2-2-3) that this is the natural way to think about signal-processing systems. We will explore applications of streams to signal processing in section 3-5-3.}
+<p> Is there another approach? Can we avoid identifying time in the computer with time in the modeled world? Must we make the model change with time in order to model phenomena in a changing world? Think about the issue in terms of mathematical functions. We can describe the time-varying behavior of a quantity x as a function of time x(t). If we concentrate on x instant by instant, we think of it as a changing quantity. Yet if we concentrate on the entire time history of values, we do not emphasize change---the function itself does not change.@footnote{Physicists sometimes adopt this view by introducing the ``world lines'' of particles as a device for reasoning about motion. We've also already mentioned (section <a href="2-2-closure.content.html">2.2.3</a>) that this is the natural way to think about signal-processing systems. We will explore applications of streams to signal processing in section <a href="3-5-streams.content.html">3.5.3</a>.}
 
-<p> If time is measured in discrete steps, then we can model a time function as a (possibly infinite) sequence. In this section, we will see how to model change in terms of sequences that represent the time histories of the systems being modeled. To accomplish this, we introduce new data structures called <tt>streams</tt> . From an abstract point of view, a stream is simply a sequence. However, we will find that the straightforward implementation of streams as lists (as in section 2-2-1) doesn't fully reveal the power of stream processing. As an alternative, we introduce the technique of <tt>delayed evaluation</tt> , which enables us to represent very large (even infinite) sequences as streams.
+<p> If time is measured in discrete steps, then we can model a time function as a (possibly infinite) sequence. In this section, we will see how to model change in terms of sequences that represent the time histories of the systems being modeled. To accomplish this, we introduce new data structures called <tt>streams</tt> . From an abstract point of view, a stream is simply a sequence. However, we will find that the straightforward implementation of streams as lists (as in section <a href="2-2-closure.content.html">2.2.1</a>) doesn't fully reveal the power of stream processing. As an alternative, we introduce the technique of <tt>delayed evaluation</tt> , which enables us to represent very large (even infinite) sequences as streams.
 
 <p> Stream processing lets us model systems that have state without ever using assignment or mutable data. This has important implications, both theoretical and practical, because we can build models that avoid the drawbacks inherent in introducing assignment. On the other hand, the stream framework raises difficulties of its own, and the question of which modeling technique leads to more modular and more easily maintained systems remains open.
 
-<h3> Streams Are Delayed Lists </h3>
+<a name="%_sec_3.5.1" />
+<h3> 3.5.1 Streams Are Delayed Lists </h3>
 
-<p> As we saw in section 2-2-3, sequences can serve as standard interfaces for combining program modules. We formulated powerful abstractions for manipulating sequences, such as <tt>map</tt>, <tt>filter</tt>, and <tt>accumulate</tt>, that capture a wide variety of operations in a manner that is both succinct and elegant.
+<p> As we saw in section <a href="2-2-closure.content.html">2.2.3</a>, sequences can serve as standard interfaces for combining program modules. We formulated powerful abstractions for manipulating sequences, such as <tt>map</tt>, <tt>filter</tt>, and <tt>accumulate</tt>, that capture a wide variety of operations in a manner that is both succinct and elegant.
 
 <p> Unfortunately, if we represent sequences as lists, this elegance is bought at the price of severe inefficiency with respect to both the time and space required by our computations. When we represent manipulations on sequences as transformations of lists, our programs must construct and copy data structures (which may be huge) at every step of a process.
 
-<p> To see why this is true, let us compare two programs for computing the sum of all the prime numbers in an interval. The first program is written in standard iterative style:@footnote{Assume that we have a predicate <tt>prime?</tt> (e.g., as in section 1-2-6) that tests for primality.}
+<p> To see why this is true, let us compare two programs for computing the sum of all the prime numbers in an interval. The first program is written in standard iterative style:@footnote{Assume that we have a predicate <tt>prime?</tt> (e.g., as in section <a href="1-2-procedures.content.html">1.2.6</a>) that tests for primality.}
 
 <div id="">
 (define (sum-primes a b)
@@ -42,7 +43,7 @@
 C.prompt();
 </script>
 
-<p> The second program performs the same computation using the sequence operations of section 2-2-3:
+<p> The second program performs the same computation using the sequence operations of section <a href="2-2-closure.content.html">2.2.3</a>:
 
 <div id="">
 (define (sum-primes a b)
@@ -77,7 +78,7 @@ C.prompt();
 (stream-cdr (cons-stream x y)) = y
 </pre>
 
-<p> There is a distinguishable object, <tt>the-empty-stream</tt>, which cannot be the result of any <tt>cons-stream</tt> operation, and which can be identified with the predicate <tt>stream-null?</tt>.@footnote{In the @acronym{MIT} implementation, <tt>the-empty-stream</tt> is the same as the empty list <tt>'()</tt>, and <tt>stream-null?</tt> is the same as <tt>null?</tt>.}  Thus we can make and use streams, in just the same way as we can make and use lists, to represent aggregate data arranged in a sequence. In particular, we can build stream analogs of the list operations from Chapter 2, such as <tt>list-ref</tt>, <tt>map</tt>, and <tt>for-each</tt>:@footnote{This should bother you. The fact that we are defining such similar procedures for streams and lists indicates that we are missing some underlying abstraction. Unfortunately, in order to exploit this abstraction, we will need to exert finer control over the process of evaluation than we can at present. We will discuss this point further at the end of section 3-5-4. In section 4-2, we'll develop a framework that unifies lists and streams.}
+<p> There is a distinguishable object, <tt>the-empty-stream</tt>, which cannot be the result of any <tt>cons-stream</tt> operation, and which can be identified with the predicate <tt>stream-null?</tt>.@footnote{In the @acronym{MIT} implementation, <tt>the-empty-stream</tt> is the same as the empty list <tt>'()</tt>, and <tt>stream-null?</tt> is the same as <tt>null?</tt>.}  Thus we can make and use streams, in just the same way as we can make and use lists, to represent aggregate data arranged in a sequence. In particular, we can build stream analogs of the list operations from Chapter 2, such as <tt>list-ref</tt>, <tt>map</tt>, and <tt>for-each</tt>:@footnote{This should bother you. The fact that we are defining such similar procedures for streams and lists indicates that we are missing some underlying abstraction. Unfortunately, in order to exploit this abstraction, we will need to exert finer control over the process of evaluation than we can at present. We will discuss this point further at the end of section <a href="3-5-streams.content.html">3.5.4</a>. In section <a href="4-2-lazy.html">4.2</a>, we'll develop a framework that unifies lists and streams.}
 
 <div id="">
 (define (stream-ref s n)
@@ -115,7 +116,7 @@ C.prompt();
 C.prompt();
 </script>
 
-<p> To make the stream implementation automatically and transparently interleave the construction of a stream with its use, we will arrange for the <tt>cdr</tt> of a stream to be evaluated when it is accessed by the <tt>stream-cdr</tt> procedure rather than when the stream is constructed by <tt>cons-stream</tt>. This implementation choice is reminiscent of our discussion of rational numbers in section 2-1-2, where we saw that we can choose to implement rational numbers so that the reduction of numerator and denominator to lowest terms is performed either at construction time or at selection time. The two rational-number implementations produce the same data abstraction, but the choice has an effect on efficiency. There is a similar relationship between streams and ordinary lists. As a data abstraction, streams are the same as lists. The difference is the time at which the elements are evaluated. With ordinary lists, both the <tt>car</tt> and the <tt>cdr</tt> are evaluated at construction time. With streams, the <tt>cdr</tt> is evaluated at selection time.
+<p> To make the stream implementation automatically and transparently interleave the construction of a stream with its use, we will arrange for the <tt>cdr</tt> of a stream to be evaluated when it is accessed by the <tt>stream-cdr</tt> procedure rather than when the stream is constructed by <tt>cons-stream</tt>. This implementation choice is reminiscent of our discussion of rational numbers in section <a href="2-1-data.content.html">2.1.2</a>, where we saw that we can choose to implement rational numbers so that the reduction of numerator and denominator to lowest terms is performed either at construction time or at selection time. The two rational-number implementations produce the same data abstraction, but the choice has an effect on efficiency. There is a similar relationship between streams and ordinary lists. As a data abstraction, streams are the same as lists. The difference is the time at which the elements are evaluated. With ordinary lists, both the <tt>car</tt> and the <tt>cdr</tt> are evaluated at construction time. With streams, the <tt>cdr</tt> is evaluated at selection time.
 
 <p> Our implementation of streams will be based on a special form called <tt>delay</tt>. Evaluating <tt>(delay <exp</tt>>) does not evaluate the expression <exp>, but rather returns a so-called <tt>delayed object</tt> , which we can think of as a ``promise'' to evaluate <exp> at some future time. As a companion to <tt>delay</tt>, there is a procedure called <tt>force</tt> that takes a delayed object as argument and performs the evaluation---in effect, forcing the <tt>delay</tt> to fulfill its promise. We will see below how <tt>delay</tt> and <tt>force</tt> can be implemented, but first let us use these to construct streams.
 
@@ -167,7 +168,7 @@ C.prompt();
 
 <p> We will see that it does indeed work efficiently.
 
-<p> We begin by calling <tt>stream-enumerate-interval</tt> with the arguments 10,000 and 1,000,000. <tt>Stream-enumerate-interval</tt> is the stream analog of <tt>enumerate-interval</tt> (section 2-2-3):
+<p> We begin by calling <tt>stream-enumerate-interval</tt> with the arguments 10,000 and 1,000,000. <tt>Stream-enumerate-interval</tt> is the stream analog of <tt>enumerate-interval</tt> (section <a href="2-2-closure.content.html">2.2.3</a>):
 
 <div id="">
 (define (stream-enumerate-interval low high)
@@ -191,7 +192,7 @@ C.prompt();
 C.prompt();
 </script>
 
-<p> That is, <tt>stream-enumerate-interval</tt> returns a stream represented as a pair whose <tt>car</tt> is 10,000 and whose <tt>cdr</tt> is a promise to enumerate more of the interval if so requested. This stream is now filtered for primes, using the stream analog of the <tt>filter</tt> procedure (section 2-2-3):
+<p> That is, <tt>stream-enumerate-interval</tt> returns a stream represented as a pair whose <tt>car</tt> is 10,000 and whose <tt>cdr</tt> is a promise to enumerate more of the interval if so requested. This stream is now filtered for primes, using the stream analog of the <tt>filter</tt> procedure (section <a href="2-2-closure.content.html">2.2.3</a>):
 
 <div id="">
 (define (stream-filter pred stream)
@@ -321,7 +322,7 @@ C.prompt();
 <p> and <tt>force</tt> is as defined previously.@footnote{There are many possible implementations of streams other than the one described in this section. Delayed evaluation, which is the key to making streams practical, was inherent in Algol 60's <tt>call-by-name</tt> parameter-passing method. The use of this mechanism to implement streams was first described by Landin (1965). Delayed evaluation for streams was introduced into Lisp by Friedman and Wise (1976). In their implementation, <tt>cons</tt> always delays evaluating its arguments, so that lists automatically behave as streams. The memoizing optimization is also known as <tt>call-by-need</tt> . The Algol community would refer to our original delayed objects as <tt>call-by-name thunks</tt> and to the optimized versions as <tt>call-by-need thunks</tt> .}
 
 <div class="exercise">
-<p> <b>Exercise 3.50:</b> Complete the following definition, which generalizes <tt>stream-map</tt> to allow procedures that take multiple arguments, analogous to <tt>map</tt> in section 2-2-3, footnote Footnote 12.
+<p> <b>Exercise 3.50:</b> Complete the following definition, which generalizes <tt>stream-map</tt> to allow procedures that take multiple arguments, analogous to <tt>map</tt> in section <a href="2-2-closure.content.html">2.2.3</a>, footnote Footnote 12.
 
 <div id="">
 (define (stream-map proc . argstreams)
@@ -390,7 +391,8 @@ C.prompt();
 <p> What is the value of <tt>sum</tt> after each of the above expressions is evaluated?  What is the printed response to evaluating the <tt>stream-ref</tt> and <tt>display-stream</tt> expressions?  Would these responses differ if we had implemented <tt>(delay <exp</tt>>) simply as <tt>(lambda () <exp</tt>>) without using the optimization provided by <tt>memo-proc</tt>?  Explain
 </div>
 
-<h3> Infinite Streams </h3>
+<a name="%_sec_3.5.2" />
+<h3> 3.5.2 Infinite Streams </h3>
 
 <p> We have seen how to support the illusion of manipulating streams as complete entities even though, in actuality, we compute only as much of the stream as we need to access. We can exploit this technique to represent sequences efficiently as streams, even if the sequences are very long. What is more striking, we can use streams to represent sequences that are infinitely long. For instance, consider the following definition of the stream of positive integers:
 
@@ -443,7 +445,7 @@ C.prompt();
 
 <p> <tt>Fibs</tt> is a pair whose <tt>car</tt> is 0 and whose <tt>cdr</tt> is a promise to evaluate <tt>(fibgen 1 1)</tt>. When we evaluate this delayed <tt>(fibgen 1 1)</tt>, it will produce a pair whose <tt>car</tt> is 1 and whose <tt>cdr</tt> is a promise to evaluate <tt>(fibgen 1 2)</tt>, and so on.
 
-<p> For a look at a more exciting infinite stream, we can generalize the <tt>no-sevens</tt> example to construct the infinite stream of prime numbers, using a method known as the <tt>sieve of Eratosthenes</tt> .@footnote{Eratosthenes, a third-century @acronym{B.C.} Alexandrian Greek philosopher, is famous for giving the first accurate estimate of the circumference of the Earth, which he computed by observing shadows cast at noon on the day of the summer solstice. Eratosthenes's sieve method, although ancient, has formed the basis for special-purpose hardware ``sieves''that, until recently, were the most powerful tools in existence for locating large primes. Since the 70s, however, these methods have been superseded by outgrowths of the probabilistic techniques discussed in section 1-2-6.} We start with the integers beginning with 2, which is the first prime. To get the rest of the primes, we start by filtering the multiples of 2 from the rest of the integers. This leaves a stream beginning with 3, which is the next prime. Now we filter the multiples of 3 from the rest of this stream. This leaves a stream beginning with 5, which is the next prime, and so on. In other words, we construct the primes by a sieving process, described as follows: To sieve a stream <tt>S</tt>, form a stream whose first element is the first element of <tt>S</tt> and the rest of which is obtained by filtering all multiples of the first element of <tt>S</tt> out of the rest of <tt>S</tt> and sieving the result. This process is readily described in terms of stream operations:
+<p> For a look at a more exciting infinite stream, we can generalize the <tt>no-sevens</tt> example to construct the infinite stream of prime numbers, using a method known as the <tt>sieve of Eratosthenes</tt> .@footnote{Eratosthenes, a third-century @acronym{B.C.} Alexandrian Greek philosopher, is famous for giving the first accurate estimate of the circumference of the Earth, which he computed by observing shadows cast at noon on the day of the summer solstice. Eratosthenes's sieve method, although ancient, has formed the basis for special-purpose hardware ``sieves''that, until recently, were the most powerful tools in existence for locating large primes. Since the 70s, however, these methods have been superseded by outgrowths of the probabilistic techniques discussed in section <a href="1-2-procedures.content.html">1.2.6</a>.} We start with the integers beginning with 2, which is the first prime. To get the rest of the primes, we start by filtering the multiples of 2 from the rest of the integers. This leaves a stream beginning with 3, which is the next prime. Now we filter the multiples of 3 from the rest of this stream. This leaves a stream beginning with 5, which is the next prime, and so on. In other words, we construct the primes by a sieving process, described as follows: To sieve a stream <tt>S</tt>, form a stream whose first element is the first element of <tt>S</tt> and the rest of which is obtained by filtering all multiples of the first element of <tt>S</tt> out of the rest of <tt>S</tt> and sieving the result. This process is readily described in terms of stream operations:
 
 <div id="">
 (define (sieve stream)
@@ -683,7 +685,7 @@ Fill in the missing expressions in the places marked <??> above.
 </div>
 
 <div class="exercise">
-<b>Exercise 3.57:</b> How many additions are performed when we compute the nth Fibonacci number using the definition of <tt>fibs</tt> based on the <tt>add-streams</tt> procedure?  Show that the number of additions would be exponentially greater if we had implemented <tt>(delay <exp</tt>>) simply as <tt>(lambda () <exp</tt>>), without using the optimization provided by the <tt>memo-proc</tt> procedure described in section 3-5-1.@footnote{This exercise shows how call-by-need is closely related to ordinary memoization as described in Exercise 3-27. In that exercise, we used assignment to explicitly construct a local table. Our call-by-need stream optimization effectively constructs such a table automatically, storing values in the previously forced parts of the stream.}
+<b>Exercise 3.57:</b> How many additions are performed when we compute the nth Fibonacci number using the definition of <tt>fibs</tt> based on the <tt>add-streams</tt> procedure?  Show that the number of additions would be exponentially greater if we had implemented <tt>(delay <exp</tt>>) simply as <tt>(lambda () <exp</tt>>), without using the optimization provided by the <tt>memo-proc</tt> procedure described in section <a href="3-5-streams.content.html">3.5.1</a>.@footnote{This exercise shows how call-by-need is closely related to ordinary memoization as described in Exercise 3-27. In that exercise, we used assignment to explicitly construct a local table. Our call-by-need stream optimization effectively constructs such a table automatically, storing values in the previously forced parts of the stream.}
 </div>
 
 <div class="exercise">
@@ -703,7 +705,7 @@ C.prompt();
 </div>
 
 <div class="exercise">
-<b>Exercise 3.59:</b> In section 2-5-3 we saw how to implement a polynomial arithmetic system representing polynomials as lists of terms. In a similar way, we can work with <tt>power series</tt> , such as
+<b>Exercise 3.59:</b> In section <a href="2-5-generic.content.html">2.5.3</a> we saw how to implement a polynomial arithmetic system representing polynomials as lists of terms. In a similar way, we can work with <tt>power series</tt> , such as
 
 <pre>
                x^2     x^3       x^4
@@ -790,7 +792,8 @@ In other words, X is the power series whose constant term is 1 and whose higher-
 <b>Exercise 3.62:</b> Use the results of Exercise 3-60 and Exercise 3-61 to define a procedure <tt>div-series</tt> that divides two power series. <tt>Div-series</tt> should work for any two series, provided that the denominator series begins with a nonzero constant term. (If the denominator has a zero constant term, then <tt>div-series</tt> should signal an error.)  Show how to use <tt>div-series</tt> together with the result of Exercise 3-59 to generate the power series for tangent.
 </div>
 
-<h3> Exploiting the Stream Paradigm </h3>
+<a name="%_sec_3.5.3" />
+<h3> 3.5.3 Exploiting the Stream Paradigm </h3>
 
 Streams with delayed evaluation can be a powerful modeling tool, providing many of the benefits of local state and assignment. Moreover, they avoid some of the theoretical tangles that accompany the introduction of assignment into a programming language.
 
@@ -798,7 +801,7 @@ The stream approach can be illuminating because it allows us to build systems wi
 
 <h4> Formulating iterations as stream processes </h4>
 
-In section 1-2-1, we introduced iterative processes, which proceed by updating state variables. We know now that we can represent state as a ``timeless'' stream of values rather than as a set of variables to be updated. Let's adopt this perspective in revisiting the square-root procedure from section 1-1-7. Recall that the idea is to generate a sequence of better and better guesses for the square root of x by applying over and over again the procedure that improves guesses:
+In section <a href="1-2-procedures.content.html">1.2.1</a>, we introduced iterative processes, which proceed by updating state variables. We know now that we can represent state as a ``timeless'' stream of values rather than as a set of variables to be updated. Let's adopt this perspective in revisiting the square-root procedure from section <a href="1-1-elements.content.html">1.1.7</a>. Recall that the idea is to generate a sequence of better and better guesses for the square root of x by applying over and over again the procedure that improves guesses:
 
 <div id="">
 (define (sqrt-improve guess x)
@@ -833,7 +836,7 @@ C.prompt();
 
 We can generate more and more terms of the stream to get better and better guesses. If we like, we can write a procedure that keeps generating terms until the answer is good enough. (See Exercise 3-64.)
 
-Another iteration that we can treat in the same way is to generate an approximation to [pi], based upon the alternating series that we saw in section 1-3-1:
+Another iteration that we can treat in the same way is to generate an approximation to [pi], based upon the alternating series that we saw in section <a href="1-3-hop.content.html">1.3.1</a>:
 
 <pre>
 [pi]        1     1     1
@@ -980,7 +983,7 @@ We could have implemented these acceleration techniques without using streams. B
 C.prompt();
 </script>
 
-Alyssa P. Hacker replies that this version of the procedure is considerably less efficient because it performs redundant computation. Explain Alyssa's answer. Would the two versions still differ in efficiency if our implementation of <tt>delay</tt> used only <tt>(lambda () <exp</tt>>) without using the optimization provided by <tt>memo-proc</tt> (section 3-5-1)?
+Alyssa P. Hacker replies that this version of the procedure is considerably less efficient because it performs redundant computation. Explain Alyssa's answer. Would the two versions still differ in efficiency if our implementation of <tt>delay</tt> used only <tt>(lambda () <exp</tt>>) without using the optimization provided by <tt>memo-proc</tt> (section <a href="3-5-streams.content.html">3.5.1</a>)?
 </div>
 
 <div class="exercise">
@@ -1009,9 +1012,9 @@ to compute three sequences of approximations to the natural logarithm of 2, in t
 
 <h4> Infinite streams of pairs </h4>
 
-In section 2-2-3, we saw how the sequence paradigm handles traditional nested loops as processes defined on sequences of pairs. If we generalize this technique to infinite streams, then we can write programs that are not easily represented as loops, because the ``looping'' must range over an infinite set.
+In section <a href="2-2-closure.content.html">2.2.3</a>, we saw how the sequence paradigm handles traditional nested loops as processes defined on sequences of pairs. If we generalize this technique to infinite streams, then we can write programs that are not easily represented as loops, because the ``looping'' must range over an infinite set.
 
-For example, suppose we want to generalize the <tt>prime-sum-pairs</tt> procedure of section 2-2-3 to produce the stream of pairs of <em>all</em> integers (i,j) with i &lt;= j such that i + j is prime. If <tt>int-pairs</tt> is the sequence of all pairs of integers (i,j) with i &lt;= j, then our required stream is simply@footnote{As in section 2-2-3, we represent a pair of integers as a list rather than a Lisp pair.}
+For example, suppose we want to generalize the <tt>prime-sum-pairs</tt> procedure of section <a href="2-2-closure.content.html">2.2.3</a> to produce the stream of pairs of <em>all</em> integers (i,j) with i &lt;= j such that i + j is prime. If <tt>int-pairs</tt> is the sequence of all pairs of integers (i,j) with i &lt;= j, then our required stream is simply@footnote{As in section <a href="2-2-closure.content.html">2.2.3</a>, we represent a pair of integers as a list rather than a Lisp pair.}
 
 <div id="">
 (stream-filter (lambda (pair)
@@ -1077,7 +1080,7 @@ Thus we can form our stream of pairs as follows:
 C.prompt();
 </script>
 
-In order to complete the procedure, we must choose some way to combine the two inner streams. One idea is to use the stream analog of the <tt>append</tt> procedure from section 2-2-1:
+In order to complete the procedure, we must choose some way to combine the two inner streams. One idea is to use the stream analog of the <tt>append</tt> procedure from section <a href="2-2-closure.content.html">2.2.1</a>:
 
 <div id="">
 (define (stream-append s1 s2)
@@ -1196,7 +1199,7 @@ S_i = C + >   x_j dt
           j=1
 </pre>
 
-and returns the stream of values S = (S_i). The following <tt>integral</tt> procedure is reminiscent of the ``implicit style'' definition of the stream of integers (section 3-5-2):
+and returns the stream of values S = (S_i). The following <tt>integral</tt> procedure is reminiscent of the ``implicit style'' definition of the stream of integers (section <a href="3-5-streams.content.html">3.5.2</a>):
 
 <div id="">
 (define (integral integrand initial-value dt)
@@ -1324,7 +1327,8 @@ This does not correctly implement Alyssa's plan. Find the bug that Louis has ins
 <b>Exercise 3.76:</b> Eva Lu Ator has a criticism of Louis's approach in Exercise 3-75. The program he wrote is not modular, because it intermixes the operation of smoothing with the zero-crossing extraction. For example, the extractor should not have to be changed if Alyssa finds a better way to condition her input signal. Help Louis by writing a procedure <tt>smooth</tt> that takes a stream as input and produces a stream in which each element is the average of two successive input stream elements. Then use <tt>smooth</tt> as a component to implement the zero-crossing detector in a more modular style.
 </div>
 
-<h3> Streams and Delayed Evaluation </h3>
+<a name="%_sec_3.5.4" />
+<h3> 3.5.4 Streams and Delayed Evaluation </h3>
 
 The <tt>integral</tt> procedure at the end of the preceding section shows how we can use streams to model signal-processing systems that contain feedback loops. The feedback loop for the adder shown in Figure 3-32 is modeled by the fact that <tt>integral</tt>'s internal stream <tt>int</tt> is defined in terms of itself:
 
@@ -1389,7 +1393,7 @@ To take advantage of this idea, we will redefine <tt>integral</tt> to expect the
 C.prompt();
 </script>
 
-Now we can implement our <tt>solve</tt> procedure by delaying the evaluation of <tt>dy</tt> in the definition of <tt>y</tt>:@footnote{This procedure is not guaranteed to work in all Scheme implementations, although for any implementation there is a simple variation that will work. The problem has to do with subtle differences in the ways that Scheme implementations handle internal definitions. (See section 4-1-6.)}
+Now we can implement our <tt>solve</tt> procedure by delaying the evaluation of <tt>dy</tt> in the definition of <tt>y</tt>:@footnote{This procedure is not guaranteed to work in all Scheme implementations, although for any implementation there is a simple variation that will work. The problem has to do with subtle differences in the ways that Scheme implementations handle internal definitions. (See section <a href="4-1-metacircular.content.html">4.1.6</a>.)}
 
 <div id="">
 (define (solve f y0 dt)
@@ -1412,7 +1416,7 @@ C.prompt();
 </script>
 
 <div class="exercise">
-<b>Exercise 3.77:</b> The <tt>integral</tt> procedure used above was analogous to the ``implicit'' definition of the infinite stream of integers in section 3-5-2. Alternatively, we can give a definition of <tt>integral</tt> that is more like <tt>integers-starting-from</tt> (also in section 3-5-2):
+<b>Exercise 3.77:</b> The <tt>integral</tt> procedure used above was analogous to the ``implicit'' definition of the infinite stream of integers in section <a href="3-5-streams.content.html">3.5.2</a>. Alternatively, we can give a definition of <tt>integral</tt> that is more like <tt>integers-starting-from</tt> (also in section <a href="3-5-streams.content.html">3.5.2</a>):
 
 <div id="">
 (define (integral integrand initial-value dt)
@@ -1564,11 +1568,12 @@ Write a procedure <tt>RLC</tt> that takes as arguments the parameters R, L, and 
 
 The examples in this section illustrate how the explicit use of <tt>delay</tt> and <tt>force</tt> provides great programming flexibility, but the same examples also show how this can make our programs more complex. Our new <tt>integral</tt> procedure, for instance, gives us the power to model systems with loops, but we must now remember that <tt>integral</tt> should be called with a delayed integrand, and every procedure that uses <tt>integral</tt> must be aware of this. In effect, we have created two classes of procedures: ordinary procedures and procedures that take delayed arguments. In general, creating separate classes of procedures forces us to create separate classes of higher-order procedures as well.@footnote{This is a small reflection, in Lisp, of the difficulties that conventional strongly typed languages such as Pascal have in coping with higher-order procedures. In such languages, the programmer must specify the data types of the arguments and the result of each procedure: number, logical value, sequence, and so on. Consequently, we could not express an abstraction such as ``map a given procedure <tt>proc</tt> over all the elements in a sequence'' by a single higher-order procedure such as <tt>stream-map</tt>. Rather, we would need a different mapping procedure for each different combination of argument and result data types that might be specified for a <tt>proc</tt>. Maintaining a practical notion of ``data type'' in the presence of higher-order procedures raises many difficult issues. One way of dealing with this problem is illustrated by the language ML (Gordon, Milner, and Wadsworth 1979), whose ``polymorphic data types'' include templates for higher-order transformations between data types. Moreover, data types for most procedures in ML are never explicitly declared by the programmer. Instead, ML includes a <tt>type-inferencing</tt> mechanism that uses information in the environment to deduce the data types for newly defined procedures.}
 
-One way to avoid the need for two different classes of procedures is to make all procedures take delayed arguments. We could adopt a model of evaluation in which all arguments to procedures are automatically delayed and arguments are forced only when they are actually needed (for example, when they are required by a primitive operation). This would transform our language to use normal-order evaluation, which we first described when we introduced the substitution model for evaluation in section 1-1-5. Converting to normal-order evaluation provides a uniform and elegant way to simplify the use of delayed evaluation, and this would be a natural strategy to adopt if we were concerned only with stream processing. In section 4-2, after we have studied the evaluator, we will see how to transform our language in just this way. Unfortunately, including delays in procedure calls wreaks havoc with our ability to design programs that depend on the order of events, such as programs that use assignment, mutate data, or perform input or output. Even the single <tt>delay</tt> in <tt>cons-stream</tt> can cause great confusion, as illustrated by Exercise 3-51 and Exercise 3-52. As far as anyone knows, mutability and delayed evaluation do not mix well in programming languages, and devising ways to deal with both of these at once is an active area of research.
+One way to avoid the need for two different classes of procedures is to make all procedures take delayed arguments. We could adopt a model of evaluation in which all arguments to procedures are automatically delayed and arguments are forced only when they are actually needed (for example, when they are required by a primitive operation). This would transform our language to use normal-order evaluation, which we first described when we introduced the substitution model for evaluation in section <a href="1-1-elements.content.html">1.1.5</a>. Converting to normal-order evaluation provides a uniform and elegant way to simplify the use of delayed evaluation, and this would be a natural strategy to adopt if we were concerned only with stream processing. In section <a href="4-2-lazy.html">4.2</a>, after we have studied the evaluator, we will see how to transform our language in just this way. Unfortunately, including delays in procedure calls wreaks havoc with our ability to design programs that depend on the order of events, such as programs that use assignment, mutate data, or perform input or output. Even the single <tt>delay</tt> in <tt>cons-stream</tt> can cause great confusion, as illustrated by Exercise 3-51 and Exercise 3-52. As far as anyone knows, mutability and delayed evaluation do not mix well in programming languages, and devising ways to deal with both of these at once is an active area of research.
 
-<h3> Modularity of Functional Programs and Modularity of Objects </h3>
+<a name="%_sec_3.5.5" />
+<h3> 3.5.5 Modularity of Functional Programs and Modularity of Objects </h3>
 
-As we saw in section 3-1-2, one of the major benefits of introducing assignment is that we can increase the modularity of our systems by encapsulating, or ``hiding,'' parts of the state of a large system within local variables. Stream models can provide an equivalent modularity without the use of assignment. As an illustration, we can reimplement the Monte Carlo estimation of [pi], which we examined in section 3-1-2, from a stream-processing point of view.
+As we saw in section <a href="3-1-assignment.content.html">3.1.2</a>, one of the major benefits of introducing assignment is that we can increase the modularity of our systems by encapsulating, or ``hiding,'' parts of the state of a large system within local variables. Stream models can provide an equivalent modularity without the use of assignment. As an illustration, we can reimplement the Monte Carlo estimation of [pi], which we examined in section <a href="3-1-assignment.content.html">3.1.2</a>, from a stream-processing point of view.
 
 The key modularity issue was that we wished to hide the internal state of a random-number generator from programs that used random numbers. We began with a procedure <tt>rand-update</tt>, whose successive values furnished our supply of random numbers, and used this to produce a random-number generator:
 
@@ -1647,7 +1652,7 @@ Let us now return to the issues of objects and state that were raised at the beg
 
 Now we have seen that streams provide an alternative way to model objects with local state. We can model a changing quantity, such as the local state of some object, using a stream that represents the time history of successive states. In essence, we represent time explicitly, using streams, so that we decouple time in our simulated world from the sequence of events that take place during evaluation. Indeed, because of the presence of <tt>delay</tt> there may be little relation between simulated time in the model and the order of events during the evaluation.
 
-In order to contrast these two approaches to modeling, let us reconsider the implementation of a ``withdrawal processor'' that monitors the balance in a bank account. In section 3-1-3 we implemented a simplified version of such a processor:
+In order to contrast these two approaches to modeling, let us reconsider the implementation of a ``withdrawal processor'' that monitors the balance in a bank account. In section <a href="3-1-assignment.content.html">3.1.3</a> we implemented a simplified version of such a processor:
 
 <div id="">
 (define (make-simplified-withdraw balance)
@@ -1674,7 +1679,7 @@ Alternatively, we can model a withdrawal processor as a procedure that takes as 
 C.prompt();
 </script>
 
-<tt>Stream-withdraw</tt> implements a well-defined mathematical function whose output is fully determined by its input. Suppose, however, that the input <tt>amount-stream</tt> is the stream of successive values typed by the user and that the resulting stream of balances is displayed. Then, from the perspective of the user who is typing values and watching results, the stream process has the same behavior as the object created by <tt>make-simplified-withdraw</tt>. However, with the stream version, there is no assignment, no local state variable, and consequently none of the theoretical difficulties that we encountered in section 3-1-3. Yet the system has state!
+<tt>Stream-withdraw</tt> implements a well-defined mathematical function whose output is fully determined by its input. Suppose, however, that the input <tt>amount-stream</tt> is the stream of successive values typed by the user and that the resulting stream of balances is displayed. Then, from the perspective of the user who is typing values and watching results, the stream process has the same behavior as the object created by <tt>make-simplified-withdraw</tt>. However, with the stream version, there is no assignment, no local state variable, and consequently none of the theoretical difficulties that we encountered in section <a href="3-1-assignment.content.html">3.1.3</a>. Yet the system has state!
 
 This is really remarkable. Even though <tt>stream-withdraw</tt> implements a well-defined mathematical function whose behavior does not change, the user's perception here is one of interacting with a system that has a changing state. One way to resolve this paradox is to realize that it is the user's temporal existence that imposes state on the system. If the user could step back from the interaction and think in terms of streams of balances rather than individual transactions, the system would appear stateless.@footnote{Similarly in physics, when we observe a moving particle, we say that the position (state) of the particle is changing. However, from the perspective of the particle's world line in space-time there is no change involved.}
 
@@ -1682,7 +1687,7 @@ From the point of view of one part of a complex process, the other parts appear 
 
 Modeling with objects is powerful and intuitive, largely because this matches the perception of interacting with a world of which we are part. However, as we've seen repeatedly throughout this chapter, these models raise thorny problems of constraining the order of events and of synchronizing multiple processes. The possibility of avoiding these problems has stimulated the development of <tt>functional programming languages</tt> , which do not include any provision for assignment or mutable data. In such a language, all procedures implement well-defined mathematical functions of their arguments, whose behavior does not change. The functional approach is extremely attractive for dealing with concurrent systems.@footnote{John Backus, the inventor of Fortran, gave high visibility to functional programming when he was awarded the @acronym{ACM} Turing award in 1978. His acceptance speech (Backus 1978) strongly advocated the functional approach. A good overview of functional programming is given in Henderson 1980 and in Darlington, Henderson, and Turner 1982.}
 
-On the other hand, if we look closely, we can see time-related problems creeping into functional models as well. One particularly troublesome area arises when we wish to design interactive systems, especially ones that model interactions between independent entities. For instance, consider once more the implementation a banking system that permits joint bank accounts. In a conventional system using assignment and objects, we would model the fact that Peter and Paul share an account by having both Peter and Paul send their transaction requests to the same bank-account object, as we saw in section 3-1-3. From the stream point of view, where there are no ``objects''<em>per se</em>, we have already indicated that a bank account can be modeled as a process that operates on a stream of transaction requests to produce a stream of responses. Accordingly, we could model the fact that Peter and Paul have a joint bank account by merging Peter's stream of transaction requests with Paul's stream of requests and feeding the result to the bank-account stream process, as shown in Figure 3-38.
+On the other hand, if we look closely, we can see time-related problems creeping into functional models as well. One particularly troublesome area arises when we wish to design interactive systems, especially ones that model interactions between independent entities. For instance, consider once more the implementation a banking system that permits joint bank accounts. In a conventional system using assignment and objects, we would model the fact that Peter and Paul share an account by having both Peter and Paul send their transaction requests to the same bank-account object, as we saw in section <a href="3-1-assignment.content.html">3.1.3</a>. From the stream point of view, where there are no ``objects''<em>per se</em>, we have already indicated that a bank account can be modeled as a process that operates on a stream of transaction requests to produce a stream of responses. Accordingly, we could model the fact that Peter and Paul have a joint bank account by merging Peter's stream of transaction requests with Paul's stream of requests and feeding the result to the bank-account stream process, as shown in Figure 3-38.
 
 <div class="exercise">
 <b>Figure 3.38:</b> A joint bank account, modeled by
@@ -1697,7 +1702,7 @@ Paul's requests    |  merge  |---->| bank    |---->
 </pre>
 </div>
 
-The trouble with this formulation is in the notion of <tt>merge</tt> . It will not do to merge the two streams by simply taking alternately one request from Peter and one request from Paul. Suppose Paul accesses the account only very rarely. We could hardly force Peter to wait for Paul to access the account before he could issue a second transaction. However such a merge is implemented, it must interleave the two transaction streams in some way that is constrained by ``real time'' as perceived by Peter and Paul, in the sense that, if Peter and Paul meet, they can agree that certain transactions were processed before the meeting, and other transactions were processed after the meeting.@footnote{Observe that, for any two streams, there is in general more than one acceptable order of interleaving. Thus, technically, ``merge'' is a relation rather than a function---the answer is not a deterministic function of the inputs. We already mentioned (Footnote 39) that nondeterminism is essential when dealing with concurrency. The merge relation illustrates the same essential nondeterminism, from the functional perspective. In section 4-3, we will look at nondeterminism from yet another point of view.} This is precisely the same constraint that we had to deal with in section 3-4-1, where we found the need to introduce explicit synchronization to ensure a ``correct'' order of events in concurrent processing of objects with state. Thus, in an attempt to support the functional style, the need to merge inputs from different agents reintroduces the same problems that the functional style was meant to eliminate.
+The trouble with this formulation is in the notion of <tt>merge</tt> . It will not do to merge the two streams by simply taking alternately one request from Peter and one request from Paul. Suppose Paul accesses the account only very rarely. We could hardly force Peter to wait for Paul to access the account before he could issue a second transaction. However such a merge is implemented, it must interleave the two transaction streams in some way that is constrained by ``real time'' as perceived by Peter and Paul, in the sense that, if Peter and Paul meet, they can agree that certain transactions were processed before the meeting, and other transactions were processed after the meeting.@footnote{Observe that, for any two streams, there is in general more than one acceptable order of interleaving. Thus, technically, ``merge'' is a relation rather than a function---the answer is not a deterministic function of the inputs. We already mentioned (Footnote 39) that nondeterminism is essential when dealing with concurrency. The merge relation illustrates the same essential nondeterminism, from the functional perspective. In section <a href="4-3-nondeterministic.html">4.3</a>, we will look at nondeterminism from yet another point of view.} This is precisely the same constraint that we had to deal with in section <a href="3-4-concurrency.content.html">3.4.1</a>, where we found the need to introduce explicit synchronization to ensure a ``correct'' order of events in concurrent processing of objects with state. Thus, in an attempt to support the functional style, the need to merge inputs from different agents reintroduces the same problems that the functional style was meant to eliminate.
 
 We began this chapter with the goal of building computational models whose structure matches our perception of the real world we are trying to model. We can model the world as a collection of separate, time-bound, interacting objects with state, or we can model the world as a single, timeless, stateless unity. Each view has powerful advantages, but neither view alone is completely satisfactory. A grand unification has yet to emerge.@footnote{The object model approximates the world by dividing it into separate pieces. The functional model does not modularize along object boundaries. The object model is useful when the unshared state of the ``objects'' is much larger than the state that they share. An example of a place where the object viewpoint fails is quantum mechanics, where thinking of things as individual particles leads to paradoxes and confusions. Unifying the object view with the functional view may have little to do with programming, but rather with fundamental epistemological issues.}
 @@

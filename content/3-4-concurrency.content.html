@@ -12,9 +12,9 @@
 
 <h2> Concurrency: Time Is of the Essence </h2>
 
-<p> We've seen the power of computational objects with local state as tools for modeling. Yet, as section 3-1-3 warned, this power extracts a price: the loss of referential transparency, giving rise to a thicket of questions about sameness and change, and the need to abandon the substitution model of evaluation in favor of the more intricate environment model.
+<p> We've seen the power of computational objects with local state as tools for modeling. Yet, as section <a href="3-1-assignment.content.html">3.1.3</a> warned, this power extracts a price: the loss of referential transparency, giving rise to a thicket of questions about sameness and change, and the need to abandon the substitution model of evaluation in favor of the more intricate environment model.
 
-<p> The central issue lurking beneath the complexity of state, sameness, and change is that by introducing assignment we are forced to admit <tt>time</tt> into our computational models. Before we introduced assignment, all our programs were timeless, in the sense that any expression that has a value always has the same value. In contrast, recall the example of modeling withdrawals from a bank account and returning the resulting balance, introduced at the beginning of section 3-1-1:
+<p> The central issue lurking beneath the complexity of state, sameness, and change is that by introducing assignment we are forced to admit <tt>time</tt> into our computational models. Before we introduced assignment, all our programs were timeless, in the sense that any expression that has a value always has the same value. In contrast, recall the example of modeling withdrawals from a bank account and returning the resulting balance, introduced at the beginning of section <a href="3-1-assignment.content.html">3.1.1</a>:
 
 <div id="">
 (withdraw 25)
@@ -35,13 +35,14 @@ C.prompt();
 
 <p> Unfortunately, the complexities introduced by assignment become even more problematic in the presence of concurrency. The fact of concurrent execution, either because the world operates in parallel or because our computers do, entails additional complexity in our understanding of time.
 
-<h3> The Nature of Time in Concurrent Systems </h3>
+<a name="%_sec_3.4.1" />
+<h3> 3.4.1 The Nature of Time in Concurrent Systems </h3>
 
 <span class="tex2jax_ignore"><p> On the surface, time seems straightforward. It is an ordering imposed on events.@footnote{To quote some graffiti seen on a Cambridge building wall: ``Time is a device that was invented to keep everything from happening at once.''}  For any events A and B, either A occurs before B, A and B are simultaneous, or A occurs after B. For instance, returning to the bank account example, suppose that Peter withdraws $10 and Paul withdraws $25 from a joint account that initially contains $100, leaving $65 in the account. Depending on the order of the two withdrawals, the sequence of balances in the account is either $100 -> $90 -> $65 or $100 -> $75 -> $65. In a computer implementation of the banking system, this changing sequence of balances could be modeled by successive assignments to a variable <tt>balance</tt>.</span>
 
 <p> In complex situations, however, such a view can be problematic. Suppose that Peter and Paul, and other people besides, are accessing the same bank account through a network of banking machines distributed all over the world. The actual sequence of balances in the account will depend critically on the detailed timing of the accesses and the details of the communication among the machines.
 
-<p> This indeterminacy in the order of events can pose serious problems in the design of concurrent systems. For instance, suppose that the withdrawals made by Peter and Paul are implemented as two separate processes sharing a common variable <tt>balance</tt>, each process specified by the procedure given in section 3-1-1:
+<p> This indeterminacy in the order of events can pose serious problems in the design of concurrent systems. For instance, suppose that the withdrawals made by Peter and Paul are implemented as two separate processes sharing a common variable <tt>balance</tt>, each process specified by the procedure given in section <a href="3-1-assignment.content.html">3.1.1</a>:
 
 <div id="">
 (define (withdraw amount)
@@ -73,7 +74,7 @@ C.prompt();
 
 <h4> Correct behavior of concurrent programs </h4>
 
-<p> The above example typifies the subtle bugs that can creep into concurrent programs. The root of this complexity lies in the assignments to variables that are shared among the different processes. We already know that we must be careful in writing programs that use <tt>set!</tt>, because the results of a computation depend on the order in which the assignments occur.@footnote{The factorial program in section 3-1-3 illustrates this for a single sequential process.}  With concurrent processes we must be especially careful about assignments, because we may not be able to control the order of the assignments made by the different processes. If several such changes might be made concurrently (as with two depositors accessing a joint account) we need some way to ensure that our system behaves correctly. For example, in the case of withdrawals from a joint bank account, we must ensure that money is conserved. To make concurrent programs behave correctly, we may have to place some restrictions on concurrent execution.
+<p> The above example typifies the subtle bugs that can creep into concurrent programs. The root of this complexity lies in the assignments to variables that are shared among the different processes. We already know that we must be careful in writing programs that use <tt>set!</tt>, because the results of a computation depend on the order in which the assignments occur.@footnote{The factorial program in section <a href="3-1-assignment.content.html">3.1.3</a> illustrates this for a single sequential process.}  With concurrent processes we must be especially careful about assignments, because we may not be able to control the order of the assignments made by the different processes. If several such changes might be made concurrently (as with two depositors accessing a joint account) we need some way to ensure that our system behaves correctly. For example, in the case of withdrawals from a joint bank account, we must ensure that money is conserved. To make concurrent programs behave correctly, we may have to place some restrictions on concurrent execution.
 
 <div class="exercise">
 <p> <b>Figure 3.29:</b> Timing diagram showing how interleaving the order of events in two banking withdrawals can lead to an incorrect final balance.
@@ -136,7 +137,7 @@ time
 </pre>
 </div>
 
-<span class="tex2jax_ignore"><p> A less stringent restriction on concurrency would ensure that a concurrent system produces the same result as if the processes had run sequentially in some order. There are two important aspects to this requirement. First, it does not require the processes to actually run sequentially, but only to produce results that are the same <em>as if</em> they had run sequentially. For the example in Figure 3-30, the designer of the bank account system can safely allow Paul's deposit and Peter's withdrawal to happen concurrently, because the net result will be the same as if the two operations had happened sequentially. Second, there may be more than one possible ``correct'' result produced by a concurrent program, because we require only that the result be the same as for <em>some</em> sequential order. For example, suppose that Peter and Paul's joint account starts out with $100, and Peter deposits $40 while Paul concurrently withdraws half the money in the account. Then sequential execution could result in the account balance being either $70 or $90 (see Exercise 3-38).@footnote{[Footnote 39] A more formal way to express this idea is to say that concurrent programs are inherently <tt>nondeterministic</tt> . That is, they are described not by single-valued functions, but by functions whose results are sets of possible values. In section 4-3 we will study a language for expressing nondeterministic computations.}</span>
+<span class="tex2jax_ignore"><p> A less stringent restriction on concurrency would ensure that a concurrent system produces the same result as if the processes had run sequentially in some order. There are two important aspects to this requirement. First, it does not require the processes to actually run sequentially, but only to produce results that are the same <em>as if</em> they had run sequentially. For the example in Figure 3-30, the designer of the bank account system can safely allow Paul's deposit and Peter's withdrawal to happen concurrently, because the net result will be the same as if the two operations had happened sequentially. Second, there may be more than one possible ``correct'' result produced by a concurrent program, because we require only that the result be the same as for <em>some</em> sequential order. For example, suppose that Peter and Paul's joint account starts out with $100, and Peter deposits $40 while Paul concurrently withdraws half the money in the account. Then sequential execution could result in the account balance being either $70 or $90 (see Exercise 3-38).@footnote{[Footnote 39] A more formal way to express this idea is to say that concurrent programs are inherently <tt>nondeterministic</tt> . That is, they are described not by single-valued functions, but by functions whose results are sets of possible values. In section <a href="4-3-nondeterministic.html">4.3</a> we will study a language for expressing nondeterministic computations.}</span>
 
 <p> There are still weaker requirements for correct execution of concurrent programs. A program for simulating diffusion (say, the flow of heat in an object) might consist of a large number of processes, each one representing a small volume of space, that update their values concurrently. Each process repeatedly changes its value to the average of its own value and its neighbors'values. This algorithm converges to the right answer independent of the order in which the operations are done; there is no need for any restrictions on concurrent use of the shared values.
 
@@ -162,7 +163,8 @@ What are some other values that could be produced if the system allows the proce
 </ul>
 </div>
 
-<h3> Mechanisms for Controlling Concurrency </h3>
+<a name="%_sec_3.4.2" />
+<h3> 3.4.2 Mechanisms for Controlling Concurrency </h3>
 
 <p> We've seen that the difficulty in dealing with concurrent processes is rooted in the need to consider the interleaving of the order of events in the different processes. For example, suppose we have two processes, one with three ordered events (a,b,c) and one with three ordered events (x,y,z). If the two processes run concurrently, with no constraints on how their execution is interleaved, then there are 20 different possible orderings for the events that are consistent with the individual orderings for the two processes:
 
@@ -243,7 +245,7 @@ C.prompt();
 
 <p> can produce only two possible values for <tt>x</tt>, 101 or 121. The other possibilities are eliminated, because the execution of P_1 and P_2 cannot be interleaved.
 
-<p> Here is a version of the <tt>make-account</tt> procedure from section 3-1-1, where the deposits and withdrawals have been serialized:
+<p> Here is a version of the <tt>make-account</tt> procedure from section <a href="3-1-assignment.content.html">3.1.1</a>, where the deposits and withdrawals have been serialized:
 
 <div id="">
 (define (make-account balance)
@@ -398,7 +400,7 @@ C.prompt();
 
 <span class="tex2jax_ignore"><p> This procedure works well when only a single process is trying to do the exchange. Suppose, however, that Peter and Paul both have access to accounts a1, a2, and a3, and that Peter exchanges a1 and a2 while Paul concurrently exchanges a1 and a3. Even with account deposits and withdrawals serialized for individual accounts (as in the <tt>make-account</tt> procedure shown above in this section), <tt>exchange</tt> can still produce incorrect results. For example, Peter might compute the difference in the balances for a1 and a2, but then Paul might change the balance in a1 before Peter is able to complete the exchange.@footnote{If the account balances start out as $10, $20, and $30, then after any number of concurrent exchanges, the balances should still be $10, $20, and $30 in some order. Serializing the deposits to individual accounts is not sufficient to guarantee this. See Exercise 3-43.}  For correct behavior, we must arrange for the <tt>exchange</tt> procedure to lock out any other concurrent accesses to the accounts during the entire time of the exchange.</span>
 
-<p> One way we can accomplish this is by using both accounts' serializers to serialize the entire <tt>exchange</tt> procedure. To do this, we will arrange for access to an account's serializer. Note that we are deliberately breaking the modularity of the bank-account object by exposing the serializer. The following version of <tt>make-account</tt> is identical to the original version given in section 3-1-1, except that a serializer is provided to protect the balance variable, and the serializer is exported via message passing:
+<p> One way we can accomplish this is by using both accounts' serializers to serialize the entire <tt>exchange</tt> procedure. To do this, we will arrange for access to an account's serializer. Note that we are deliberately breaking the modularity of the bank-account object by exposing the serializer. The following version of <tt>make-account</tt> is identical to the original version given in section <a href="3-1-assignment.content.html">3.1.1</a>, except that a serializer is provided to protect the balance variable, and the serializer is exported via message passing:
 
 <div id="">
 (define (make-account-and-serializer balance)
