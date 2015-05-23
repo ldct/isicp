@@ -14,7 +14,7 @@
 
 <p> Our evaluator for Lisp will be implemented as a Lisp program. It may seem circular to think about evaluating Lisp programs using an evaluator that is itself implemented in Lisp. However, evaluation is a process, so it is appropriate to describe the evaluation process using Lisp, which, after all, is our tool for describing processes.@footnote{Even so, there will remain important aspects of the evaluation process that are not elucidated by our evaluator. The most important of these are the detailed mechanisms by which procedures call other procedures and return values to their callers. We will address these issues in Chapter 5, where we take a closer look at the evaluation process by implementing the evaluator as a simple register machine.} An evaluator that is written in the same language that it evaluates is said to be <tt>metacircular</tt>  .
 The metacircular evaluator is essentially a Scheme formulation of the
-environment model of evaluation described in section 3-2. Recall that
+environment model of evaluation described in section <a href="3-2-environment.html">3.2</a>. Recall that
 the model has two basic parts:
 
 <ul>
@@ -486,7 +486,7 @@ sequence.@footnote{These selectors for a list of expressions---and the
 corresponding ones for a list of operands---are not intended as a data
 abstraction. They are introduced as mnemonic names for the basic list
 operations in order to make it easier to understand the explicit-control
-evaluator in section 5-4.}
+evaluator in section <a href="5-4-explicit-control.html">5.4</a>.}
 
 <div id="">
 (define (begin? exp) (tagged-list? exp 'begin))
@@ -910,7 +910,7 @@ C.prompt();
 <h4> Operations on Environments </h4>
 
 The evaluator needs operations for manipulating environments. As explained in
-section 3-2, an environment is a sequence of frames, where each frame is
+section <a href="3-2-environment.html">3.2</a>, an environment is a sequence of frames, where each frame is
 a table of bindings that associate variables with their corresponding values.
 We use the following operations for manipulating environments:
 

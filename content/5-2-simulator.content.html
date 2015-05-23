@@ -73,7 +73,7 @@ C.prompt();
 C.prompt();
 </script>
 
-<p> The first argument to <tt>make-machine</tt> is a list of register names. The next argument is a table (a list of two-element lists) that pairs each operation name with a Scheme procedure that implements the operation (that is, produces the same output value given the same input values). The last argument specifies the controller as a list of labels and machine instructions, as in section 5-1.
+<p> The first argument to <tt>make-machine</tt> is a list of register names. The next argument is a table (a list of two-element lists) that pairs each operation name with a Scheme procedure that implements the operation (that is, produces the same output value given the same input values). The last argument specifies the controller as a list of labels and machine instructions, as in section 5.1.
 
 <p> To compute GCDs with this machine, we set the input registers, start the machine, and examine the result when the simulation terminates:
 
@@ -259,7 +259,7 @@ C.prompt();
 
 <p> <tt>Make-new-machine</tt> returns a <tt>dispatch</tt> procedure that implements message-passing access to the internal state. Notice that starting the machine is accomplished by setting <tt>pc</tt> to the beginning of the instruction sequence and calling <tt>execute</tt>.
 
-<p> For convenience, we provide an alternate procedural interface to a machine's <tt>start</tt> operation, as well as procedures to set and examine register contents, as specified at the beginning of section 5-2:
+<p> For convenience, we provide an alternate procedural interface to a machine's <tt>start</tt> operation, as well as procedures to set and examine register contents, as specified at the beginning of section 5.2:
 
 <div id="">
 (define (start machine)

@@ -546,7 +546,7 @@ C.editor_of["scheme-ex-define-same-parity"].setOption("onBlur", function(){
 C.prompt("scheme-define-scale-list");
 </script>
 
-<p> We can abstract this general idea and capture it as a common pattern expressed as a higher-order procedure, just as in section 1-3. The higher-order procedure here is called <tt>map</tt>. <tt>map</tt> takes as arguments a procedure of one argument and a list, and returns a list of the results produced by applying the procedure to each element in the list:<a name="footnote_link_2-12" class="footnote_link" href="#footnote_2-12">12</a>
+<p> We can abstract this general idea and capture it as a common pattern expressed as a higher-order procedure, just as in section <a href="1-3-hop.html">1.3</a>. The higher-order procedure here is called <tt>map</tt>. <tt>map</tt> takes as arguments a procedure of one argument and a list, and returns a list of the results produced by applying the procedure to each element in the list:<a name="footnote_link_2-12" class="footnote_link" href="#footnote_2-12">12</a>
 
 <div id="scheme-define-map">
 (define (map proc items)
@@ -1495,7 +1495,7 @@ C.editor_of["scheme-ex-define-subset"].setOption("onBlur", function(){
 
 <p> In working with compound data, we've stressed how data abstraction permits us to design programs without becoming enmeshed in the details of data representations, and how abstraction preserves for us the flexibility to experiment with alternative representations. In this section, we introduce another powerful design principle for working with data structures &ndash; the use of <tt>conventional interfaces</tt> .
 
-<p> In section 1-3 we saw how program abstractions, implemented as higher-order procedures, can capture common patterns in programs that deal with numerical data. Our ability to formulate analogous operations for working with compound data depends crucially on the style in which we manipulate our data structures. Consider, for example, the following procedure, analogous to the <tt>count-leaves</tt> procedure of section <a href="2-2-closure.content.html">2.2.2</a>, which takes a tree as argument and computes the sum of the squares of the leaves that are odd:
+<p> In section <a href="1-3-hop.html">1.3</a> we saw how program abstractions, implemented as higher-order procedures, can capture common patterns in programs that deal with numerical data. Our ability to formulate analogous operations for working with compound data depends crucially on the style in which we manipulate our data structures. Consider, for example, the following procedure, analogous to the <tt>count-leaves</tt> procedure of section <a href="2-2-closure.content.html">2.2.2</a>, which takes a tree as argument and computes the sum of the squares of the leaves that are odd:
 
 <div id="scheme-define-sum-odd-squares">
 (define (sum-odd-squares tree)
@@ -1797,7 +1797,7 @@ C.prompt("scheme-define-salary-of-highest-paid-programmer");
 
 <p> These examples give just a hint of the vast range of operations that can be expressed as sequence operations.<a name="footnote_link_2-15" class="footnote_link" href="#footnote_2-15">15</a>
 
-<p> Sequences, implemented here as lists, serve as a conventional interface that permits us to combine processing modules. Additionally, when we uniformly represent structures as sequences, we have localized the data-structure dependencies in our programs to a small number of sequence operations. By changing these, we can experiment with alternative representations of sequences, while leaving the overall design of our programs intact. We will exploit this capability in section 3-5, when we generalize the sequence-processing paradigm to admit infinite sequences.
+<p> Sequences, implemented here as lists, serve as a conventional interface that permits us to combine processing modules. Additionally, when we uniformly represent structures as sequences, we have localized the data-structure dependencies in our programs to a small number of sequence operations. By changing these, we can experiment with alternative representations of sequences, while leaving the overall design of our programs intact. We will exploit this capability in section <a href="3-5-streams.html">3.5</a>, when we generalize the sequence-processing paradigm to admit infinite sequences.
 
 <div class="exercise">
 <p> <b>Exercise 2.33:</b> Fill in the missing expressions to complete the following definitions of some basic list-manipulation operations as accumulations:
@@ -2392,7 +2392,7 @@ C.no_output_frozen_prompt("scheme-louise-queens-flatmap");
 
 <h4> The picture language </h4>
 
-<p> When we began our study of programming in section 1-1, we emphasized the importance of describing a language by focusing on the language's primitives, its means of combination, and its means of abstraction. We'll follow that framework here.
+<p> When we began our study of programming in section <a href="1-1-elements.html">1.1</a>, we emphasized the importance of describing a language by focusing on the language's primitives, its means of combination, and its means of abstraction. We'll follow that framework here.
 
 <p> Part of the elegance of this picture language is that there is only one kind of element, called a <tt>painter</tt> . A painter draws an image that is shifted and scaled to fit within a designated parallelogram-shaped frame. For example, there's a primitive painter we'll call <tt>wave</tt> that makes a crude line drawing, as shown in Figure 2-10. The actual shape of the drawing depends on the frame---all four images in Figure 2-10 are produced by the same <tt>wave</tt> painter, but with respect to four different frames. Painters can be more elaborate than this: The primitive painter called <tt>rogers</tt> paints a picture of MIT's founder, William Barton Rogers, as shown in Figure 2-11.<a name="footnote_link_2-23" class="footnote_link" href="#footnote_2-23">23</a> The four images in Figure 2-11 are drawn with respect to the same four frames as the <tt>wave</tt> images in Figure 2-10.
 
@@ -2891,7 +2891,7 @@ Modify the version of <tt>square-limit</tt> that uses <tt>square-of-four</tt> so
 </div>
 
 <div id="footnote_2-10" class="footnote">
-<p> <a href="#footnote_link_2-10" class="footnote_backlink">10</a> It's remarkable how much energy in the standardization of Lisp dialects has been dissipated in arguments that are literally over nothing: Should nil be an ordinary name? Should the value of nil be a symbol? Should it be a list? Should it be a pair? In Scheme, nil is an ordinary name, which we use in this section as a variable whose value is the end-of-list marker (just as true is an ordinary variable that has a true value). Other dialects of Lisp, including Common Lisp, treat nil as a special symbol. The authors of this book, who have endured too many language standardization brawls, would like to avoid the entire issue. Once we have introduced quotation in section 2.3, we will denote the empty list as '() and dispense with the variable nil entirely.
+<p> <a href="#footnote_link_2-10" class="footnote_backlink">10</a> It's remarkable how much energy in the standardization of Lisp dialects has been dissipated in arguments that are literally over nothing: Should nil be an ordinary name? Should the value of nil be a symbol? Should it be a list? Should it be a pair? In Scheme, nil is an ordinary name, which we use in this section as a variable whose value is the end-of-list marker (just as true is an ordinary variable that has a true value). Other dialects of Lisp, including Common Lisp, treat nil as a special symbol. The authors of this book, who have endured too many language standardization brawls, would like to avoid the entire issue. Once we have introduced quotation in section <a href="2-3-symbolic.html">2.3</a>, we will denote the empty list as '() and dispense with the variable nil entirely.
 </div>
 
 <div id="footnote_2-11" class="footnote">

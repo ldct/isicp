@@ -22,7 +22,7 @@ C.no_output_frozen_prompt("scheme-set-balance");
 
 <p> that changes the balance of the designated account to the designated new value. Data objects for which mutators are defined are known as <tt>mutable data objects</tt>.
 
-<p> Chapter 2 introduced pairs as a general-purpose "glue" for synthesizing compound data. We begin this section by defining basic mutators for pairs, so that pairs can serve as building blocks for constructing mutable data objects. These mutators greatly enhance the representational power of pairs, enabling us to build data structures other than the sequences and trees that we worked with in section 2-2. We also present some examples of simulations in which complex systems are modeled as collections of objects with local state.
+<p> Chapter 2 introduced pairs as a general-purpose "glue" for synthesizing compound data. We begin this section by defining basic mutators for pairs, so that pairs can serve as building blocks for constructing mutable data objects. These mutators greatly enhance the representational power of pairs, enabling us to build data structures other than the sequences and trees that we worked with in section <a href="2-2-closure.html">2.2</a>. We also present some examples of simulations in which complex systems are modeled as collections of objects with local state.
 
 <a name="%_sec_3.3.1" />
 <h3> 3.3.1 Mutable List Structure </h3>
@@ -922,7 +922,7 @@ C.prompt("scheme-define-full-adder", ["scheme-define-half-adder"]);
 <p> <b>Figure 3.26:</b> A full-adder circuit.
 </div>
 
-<p> In essence, our simulator provides us with the tools to construct a language of circuits. If we adopt the general perspective on languages with which we approached the study of Lisp in section 1-1, we can say that the primitive function boxes form the primitive elements of the language, that wiring boxes together provides a means of combination, and that specifying wiring patterns as procedures serves as a means of abstraction.
+<p> In essence, our simulator provides us with the tools to construct a language of circuits. If we adopt the general perspective on languages with which we approached the study of Lisp in section <a href="1-1-elements.html">1.1</a>, we can say that the primitive function boxes form the primitive elements of the language, that wiring boxes together provides a means of combination, and that specifying wiring patterns as procedures serves as a means of abstraction.
 
 <h4> Primitive function boxes </h4>
 
