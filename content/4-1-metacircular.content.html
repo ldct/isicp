@@ -50,9 +50,9 @@ from procedure calls.
 </ul>
 } This evaluation cycle will be embodied by the interplay between the two
 critical procedures in the evaluator, <tt>eval</tt> and <tt>apply</tt>, which are
-described in section 4-1-1 (see Figure 4-1).
+described in section <a href="4-1-metacircular.content.html">4.1.1</a> (see Figure 4-1).
 
-<p> The implementation of the evaluator will depend upon procedures that define the <em>syntax</em> of the expressions to be evaluated. We will use data abstraction to make the evaluator independent of the representation of the language. For example, rather than committing to a choice that an assignment is to be represented by a list beginning with the symbol <tt>set!</tt> we use an abstract predicate <tt>assignment?</tt> to test for an assignment, and we use abstract selectors <tt>assignment-variable</tt> and <tt>assignment-value</tt> to access the parts of an assignment. Implementation of expressions will be described in detail in section 4-1-2. There are also operations, described in section 4-1-3, that specify the representation of procedures and environments. For example, <tt>make-procedure</tt> constructs compound procedures, <tt>lookup-variable-value</tt> accesses the values of variables, and <tt>apply-primitive-procedure</tt> applies a primitive procedure to a given list of arguments.
+<p> The implementation of the evaluator will depend upon procedures that define the <em>syntax</em> of the expressions to be evaluated. We will use data abstraction to make the evaluator independent of the representation of the language. For example, rather than committing to a choice that an assignment is to be represented by a list beginning with the symbol <tt>set!</tt> we use an abstract predicate <tt>assignment?</tt> to test for an assignment, and we use abstract selectors <tt>assignment-variable</tt> and <tt>assignment-value</tt> to access the parts of an assignment. Implementation of expressions will be described in detail in section <a href="4-1-metacircular.content.html">4.1.2</a>. There are also operations, described in section <a href="4-1-metacircular.content.html">4.1.3</a>, that specify the representation of procedures and environments. For example, <tt>make-procedure</tt> constructs compound procedures, <tt>lookup-variable-value</tt> accesses the values of variables, and <tt>apply-primitive-procedure</tt> applies a primitive procedure to a given list of arguments.
 
 <a name="%_sec_4.1.1" />
 <h3> 4.1.1 The Core of the Evaluator </h3>
@@ -241,7 +241,7 @@ C.prompt("scheme-eval-assignment");
 Definitions of variables are handled in a similar manner.@footnote{This
 implementation of <tt>define</tt> ignores a subtle issue in the handling of
 internal definitions, although it works correctly in most cases. We will see
-what the problem is and how to solve it in section 4-1-6.}
+what the problem is and how to solve it in section <a href="4-1-metacircular.content.html">4.1.6</a>.}
 
 <div id="">
 (define (eval-definition exp env)
@@ -277,7 +277,7 @@ a version of <tt>list-of-values</tt> that evaluates operands from right to left.
 <h3> 4.1.2 Representing Expressions </h3>
 
 The evaluator is reminiscent of the symbolic differentiation program discussed
-in section 2-3-2. Both programs operate on symbolic expressions. In
+in section <a href="2-3-symbolic.content.html">2.3.2</a>. Both programs operate on symbolic expressions. In
 both programs, the result of operating on a compound expression is determined
 by operating recursively on the pieces of the expression and combining the
 results in a way that depends on the type of the expression. In both programs
@@ -318,7 +318,7 @@ C.prompt();
 
 @item
 Quotations have the form <tt>(quote <text-of-quotation</tt>>):@footnote{As
-mentioned in section 2-3-1, the evaluator sees a quoted expression as a
+mentioned in section <a href="2-3-symbolic.content.html">2.3.1</a>, the evaluator sees a quoted expression as a
 list beginning with <tt>quote</tt>, even if the expression is typed with the
 quotation mark. For example, the expression <tt>'a</tt> would be seen by the
 evaluator as <tt>(quote a)</tt>. See Exercise 2-55.}
@@ -447,7 +447,7 @@ Conditionals begin with <tt>if</tt> and have a predicate, a consequent, and an
 when the predicate is false and there is no alternative is unspecified in
 Scheme; we have chosen here to make it false. We will support the use of the
 variables <tt>true</tt> and <tt>false</tt> in expressions to be evaluated by
-binding them in the global environment. See section 4-1-4.}
+binding them in the global environment. See section <a href="4-1-metacircular.content.html">4.1.4</a>.}
 
 <div id="">
 (define (if? exp) (tagged-list? exp 'if))
@@ -1086,7 +1086,7 @@ an approach is referred to as <tt>deep binding</tt>
 .)  One way to avoid this
 inefficiency is to make use of a strategy called <tt>lexical addressing</tt>
 ,
-which will be discussed in section 5-5-6.}
+which will be discussed in section <a href="5-5-compilation.content.html">5.5.6</a>.}
 
 <div class="exercise">
 <b>Exercise 4.11:</b> Instead of representing a frame
@@ -1205,7 +1205,7 @@ To apply a primitive procedure, we simply apply the implementation procedure to
 the arguments, using the underlying Lisp
 system:@footnote{<tt>Apply-in-underlying-scheme</tt> is the <tt>apply</tt>
 procedure we have used in earlier chapters. The metacircular evaluator's
-<tt>apply</tt> procedure (section 4-1-1) models the working of this
+<tt>apply</tt> procedure (section <a href="4-1-metacircular.content.html">4.1.1</a>) models the working of this
 primitive. Having two different things called <tt>apply</tt> leads to a
 technical problem in running the metacircular evaluator, because defining the
 metacircular evaluator's <tt>apply</tt> will mask the definition of the
@@ -1453,9 +1453,9 @@ expression, by making <tt>eval</tt> available for use in programs. Many Lisp
 dialects provide a primitive <tt>eval</tt> procedure that takes as arguments an
 expression and an environment and evaluates the expression relative to the
 environment.@footnote{Warning: This <tt>eval</tt> primitive is not identical to
-the <tt>eval</tt> procedure we implemented in section 4-1-1, because it
+the <tt>eval</tt> procedure we implemented in section <a href="4-1-metacircular.content.html">4.1.1</a>, because it
 uses <em>actual</em> Scheme environments rather than the sample environment
-structures we built in section 4-1-3. These actual environments cannot
+structures we built in section <a href="4-1-metacircular.content.html">4.1.3</a>. These actual environments cannot
 be manipulated by the user as ordinary lists; they must be accessed via
 <tt>eval</tt> or other special operations. Similarly, the <tt>apply</tt> primitive
 we saw earlier is not identical to the metacircular <tt>apply</tt>, because it
@@ -1579,7 +1579,7 @@ the definitions are being evaluated, the @acronym{IEEE} standard for Scheme
 leaves implementors some choice in the mechanism used to evaluate these
 definitions. The choice of one evaluation rule rather than another here may
 seem like a small issue, affecting only the interpretation of ``badly formed''
-programs. However, we will see in section 5-5-6 that moving to a model
+programs. However, we will see in section <a href="5-5-compilation.content.html">5.5.6</a> that moving to a model
 of simultaneous scoping for internal definitions avoids some nasty difficulties
 that would otherwise arise in implementing a compiler.}
 
@@ -1639,7 +1639,7 @@ the evaluator supports <tt>let</tt> (see Exercise 4-6).
 
 <ul>
 @item
-Change <tt>lookup-variable-value</tt> (section 4-1-3) to signal an error if
+Change <tt>lookup-variable-value</tt> (section <a href="4-1-metacircular.content.html">4.1.3</a>) to signal an error if
 the value it finds is the symbol <tt>*unassigned*</tt>.
 
 @item
@@ -1649,7 +1649,7 @@ transformation described above.
 
 @item
 Install <tt>scan-out-defines</tt> in the interpreter, either in
-<tt>make-procedure</tt> or in <tt>procedure-body</tt> (see section 4-1-3).
+<tt>make-procedure</tt> or in <tt>procedure-body</tt> (see section <a href="4-1-metacircular.content.html">4.1.3</a>).
 Which place is better?  Why?
 
 </ul>
@@ -1687,7 +1687,7 @@ C.prompt();
 
 Here <tt>a</tt> and <tt>b</tt> are meant to represent new variable names, created
 by the interpreter, that do not appear in the user's program. Consider the
-<tt>solve</tt> procedure from section 3-5-4:
+<tt>solve</tt> procedure from section <a href="3-5-streams.content.html">3.5.4</a>:
 
 <div id="">
 (define (solve f y0 dt)
@@ -1947,7 +1947,7 @@ C.prompt();
 
 The result of calling <tt>analyze</tt> is the execution procedure to be applied
 to the environment. The <tt>analyze</tt> procedure is the same case analysis as
-performed by the original <tt>eval</tt> of section 4-1-1, except that the
+performed by the original <tt>eval</tt> of section <a href="4-1-metacircular.content.html">4.1.1</a>, except that the
 procedures to which we dispatch perform only analysis, not full evaluation:
 
 <div id="">
@@ -1998,7 +1998,7 @@ C.prompt();
 Looking up a variable value must still be done in the execution phase, since
 this depends upon knowing the environment.@footnote{There is, however, an
 important part of the variable search that <em>can</em> be done as part of the
-syntactic analysis. As we will show in section 5-5-6, one can determine
+syntactic analysis. As we will show in section <a href="5-5-compilation.content.html">5.5.6</a>, one can determine
 the position in the environment structure where the value of the variable will
 be found, thus obviating the need to scan the environment for the entry that
 matches the variable.}

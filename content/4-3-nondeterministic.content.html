@@ -14,7 +14,7 @@
 
 <p> In this section, we extend the Scheme evaluator to support a programming paradigm called <tt>nondeterministic computing</tt> by building into the evaluator a facility to support automatic search. This is a much more profound change to the language than the introduction of lazy evaluation in section 4-2.
 
-<p> Nondeterministic computing, like stream processing, is useful for ``generate and test'' applications. Consider the task of starting with two lists of positive integers and finding a pair of integers---one from the first list and one from the second list---whose sum is prime. We saw how to handle this with finite sequence operations in section 2-2-3 and with infinite streams in section 3-5-3. Our approach was to generate the sequence of all possible pairs and filter these to select the pairs whose sum is prime. Whether we actually generate the entire sequence of pairs first as in Chapter 2, or interleave the generating and filtering as in Chapter 3, is immaterial to the essential image of how the computation is organized.
+<p> Nondeterministic computing, like stream processing, is useful for ``generate and test'' applications. Consider the task of starting with two lists of positive integers and finding a pair of integers---one from the first list and one from the second list---whose sum is prime. We saw how to handle this with finite sequence operations in section <a href="2-2-closure.content.html">2.2.3</a> and with infinite streams in section <a href="3-5-streams.content.html">3.5.3</a>. Our approach was to generate the sequence of all possible pairs and filter these to select the pairs whose sum is prime. Whether we actually generate the entire sequence of pairs first as in Chapter 2, or interleave the generating and filtering as in Chapter 3, is immaterial to the essential image of how the computation is organized.
 
 <p> The nondeterministic approach evokes a different image. Imagine simply that we choose (in some way) a number from the first list and a number from the second list and require (using some mechanism) that their sum be prime. This is expressed by following procedure:
 
@@ -29,7 +29,7 @@
 C.prompt();
 </script>
 
-<p> It might seem as if this procedure merely restates the problem, rather than specifying a way to solve it. Nevertheless, this is a legitimate nondeterministic program.@footnote{We assume that we have previously defined a procedure <tt>prime?</tt> that tests whether numbers are prime. Even with <tt>prime?</tt> defined, the <tt>prime-sum-pair</tt> procedure may look suspiciously like the unhelpful ``pseudo-Lisp'' attempt to define the square-root function, which we described at the beginning of section 1-1-7. In fact, a square-root procedure along those lines can actually be formulated as a nondeterministic program. By incorporating a search mechanism into the evaluator, we are eroding the distinction between purely declarative descriptions and imperative specifications of how to compute answers. We'll go even farther in this direction in section 4-4.}
+<p> It might seem as if this procedure merely restates the problem, rather than specifying a way to solve it. Nevertheless, this is a legitimate nondeterministic program.@footnote{We assume that we have previously defined a procedure <tt>prime?</tt> that tests whether numbers are prime. Even with <tt>prime?</tt> defined, the <tt>prime-sum-pair</tt> procedure may look suspiciously like the unhelpful ``pseudo-Lisp'' attempt to define the square-root function, which we described at the beginning of section <a href="1-1-elements.content.html">1.1.7</a>. In fact, a square-root procedure along those lines can actually be formulated as a nondeterministic program. By incorporating a search mechanism into the evaluator, we are eroding the distinction between purely declarative descriptions and imperative specifications of how to compute answers. We'll go even farther in this direction in section 4-4.}
 
 <p> The key idea here is that expressions in a nondeterministic language can have more than one possible value. For instance, <tt>an-element-of</tt> might return any element of the given list. Our nondeterministic program evaluator will work by automatically choosing a possible value and keeping track of the choice. If a subsequent requirement is not met, the evaluator will try a different choice, and it will keep trying new choices until the evaluation succeeds, or until we run out of choices. Just as the lazy evaluator freed the programmer from the details of how values are delayed and forced, the nondeterministic program evaluator will free the programmer from the details of how choices are made.
 
@@ -50,7 +50,7 @@ C.prompt();
 
 <p> The value returned was obtained after the evaluator repeatedly chose elements from each of the lists, until a successful choice was made.
 
-<p> Section 4-3-1 introduces <tt>amb</tt> and explains how it supports nondeterminism through the evaluator's automatic search mechanism. Section 4-3-2 presents examples of nondeterministic programs, and section 4-3-3 gives the details of how to implement the <tt>amb</tt> evaluator by modifying the ordinary Scheme evaluator.
+<p> Section <a href="4-3-nondeterministic.content.html">4.3.1</a> introduces <tt>amb</tt> and explains how it supports nondeterminism through the evaluator's automatic search mechanism. Section <a href="4-3-nondeterministic.content.html">4.3.2</a> presents examples of nondeterministic programs, and section <a href="4-3-nondeterministic.content.html">4.3.3</a> gives the details of how to implement the <tt>amb</tt> evaluator by modifying the ordinary Scheme evaluator.
 
 @menu
 * 4-3-1::            Amb and Search
@@ -120,7 +120,7 @@ C.prompt();
 C.prompt();
 </script>
 
-<p> This is like the stream procedure <tt>integers-starting-from</tt> described in section 3-5-2, but with an important difference: The stream procedure returns an object that represents the sequence of all integers beginning with n, whereas the <tt>amb</tt> procedure returns a single integer.@footnote{In actuality, the distinction between nondeterministically returning a single choice and returning all choices depends somewhat on our point of view. From the perspective of the code that uses the value, the nondeterministic choice returns a single value. From the perspective of the programmer designing the code, the nondeterministic choice potentially returns all possible values, and the computation branches so that each value is investigated separately.}
+<p> This is like the stream procedure <tt>integers-starting-from</tt> described in section <a href="3-5-streams.content.html">3.5.2</a>, but with an important difference: The stream procedure returns an object that represents the sequence of all integers beginning with n, whereas the <tt>amb</tt> procedure returns a single integer.@footnote{In actuality, the distinction between nondeterministically returning a single choice and returning all choices depends somewhat on our point of view. From the perspective of the code that uses the value, the nondeterministic choice returns a single value. From the perspective of the programmer designing the code, the nondeterministic choice potentially returns all possible values, and the computation branches so that each value is investigated separately.}
 
 <p> Abstractly, we can imagine that evaluating an <tt>amb</tt> expression causes time to split into branches, where the computation continues on each branch with one of the possible values of the expression. We say that <tt>amb</tt> represents a <tt>nondeterministic choice point</tt> . If we had a machine with a sufficient number of processors that could be dynamically allocated, we could implement the search in a straightforward way. Execution would proceed as in a sequential machine, until an <tt>amb</tt> expression is encountered. At this point, more processors would be allocated and initialized to continue all of the parallel executions implied by the choice. Each processor would proceed sequentially as if it were the only choice, until it either terminates by encountering a failure, or it further subdivides, or it finishes.@footnote{One might object that this is a hopelessly inefficient mechanism. It might require millions of processors to solve some easily stated problem this way, and most of the time most of those processors would be idle. This objection should be taken in the context of history. Memory used to be considered just such an expensive commodity. In 1964 a megabyte of RAM cost about $400,000. Now every personal computer has many megabytes of RAM, and most of the time most of that RAM is unused. It is hard to underestimate the cost of mass-produced electronics.}
 
@@ -204,7 +204,7 @@ C.prompt();
 <a name="%_sec_4.3.2" />
 <h3> 4.3.2 Examples of Nondeterministic Programs </h3>
 
-<p> Section 4-3-3 describes the implementation of the <tt>amb</tt> evaluator. First, however, we give some examples of how it can be used. The advantage of nondeterministic programming is that we can suppress the details of how search is carried out, thereby expressing our programs at a higher level of abstraction.
+<p> Section <a href="4-3-nondeterministic.content.html">4.3.3</a> describes the implementation of the <tt>amb</tt> evaluator. First, however, we give some examples of how it can be used. The advantage of nondeterministic programming is that we can suppress the details of how search is carried out, thereby expressing our programs at a higher level of abstraction.
 
 <h4> Logic Puzzles </h4>
 
@@ -590,7 +590,7 @@ C.prompt();
 
 <p> The evaluation of an ordinary Scheme expression may return a value, may never terminate, or may signal an error. In nondeterministic Scheme the evaluation of an expression may in addition result in the discovery of a dead end, in which case evaluation must backtrack to a previous choice point. The interpretation of nondeterministic Scheme is complicated by this extra case.
 
-<p> We will construct the <tt>amb</tt> evaluator for nondeterministic Scheme by modifying the analyzing evaluator of section 4-1-7.@footnote{We chose to implement the lazy evaluator in section 4-2 as a modification of the ordinary metacircular evaluator of section 4-1-1. In contrast, we will base the <tt>amb</tt> evaluator on the analyzing evaluator of section 4-1-7, because the execution procedures in that evaluator provide a convenient framework for implementing backtracking.}  As in the analyzing evaluator, evaluation of an expression is accomplished by calling an execution procedure produced by analysis of that expression. The difference between the interpretation of ordinary Scheme and the interpretation of nondeterministic Scheme will be entirely in the execution procedures.
+<p> We will construct the <tt>amb</tt> evaluator for nondeterministic Scheme by modifying the analyzing evaluator of section <a href="4-1-metacircular.content.html">4.1.7</a>.@footnote{We chose to implement the lazy evaluator in section 4-2 as a modification of the ordinary metacircular evaluator of section <a href="4-1-metacircular.content.html">4.1.1</a>. In contrast, we will base the <tt>amb</tt> evaluator on the analyzing evaluator of section <a href="4-1-metacircular.content.html">4.1.7</a>, because the execution procedures in that evaluator provide a convenient framework for implementing backtracking.}  As in the analyzing evaluator, evaluation of an expression is accomplished by calling an execution procedure produced by analysis of that expression. The difference between the interpretation of ordinary Scheme and the interpretation of nondeterministic Scheme will be entirely in the execution procedures.
 
 <h4> Execution procedures and continuations </h4>
 
@@ -600,7 +600,7 @@ C.prompt();
 
 <p> It is the job of the failure continuation to try another branch of the nondeterministic process. The essence of the nondeterministic language is in the fact that expressions may represent choices among alternatives. The evaluation of such an expression must proceed with one of the indicated alternative choices, even though it is not known in advance which choices will lead to acceptable results. To deal with this, the evaluator picks one of the alternatives and passes this value to the success continuation. Together with this value, the evaluator constructs and passes along a failure continuation that can be called later to choose a different alternative.
 
-<p> A failure is triggered during evaluation (that is, a failure continuation is called) when a user program explicitly rejects the current line of attack (for example, a call to <tt>require</tt> may result in execution of <tt>(amb)</tt>, an expression that always fails---see section 4-3-1). The failure continuation in hand at that point will cause the most recent choice point to choose another alternative. If there are no more alternatives to be considered at that choice point, a failure at an earlier choice point is triggered, and so on. Failure continuations are also invoked by the driver loop in response to a <tt>try-again</tt> request, to find another value of the expression.
+<p> A failure is triggered during evaluation (that is, a failure continuation is called) when a user program explicitly rejects the current line of attack (for example, a call to <tt>require</tt> may result in execution of <tt>(amb)</tt>, an expression that always fails---see section <a href="4-3-nondeterministic.content.html">4.3.1</a>). The failure continuation in hand at that point will cause the most recent choice point to choose another alternative. If there are no more alternatives to be considered at that choice point, a failure at an earlier choice point is triggered, and so on. Failure continuations are also invoked by the driver loop in response to a <tt>try-again</tt> request, to find another value of the expression.
 
 <p> In addition, if a side-effect operation (such as assignment to a variable) occurs on a branch of the process resulting from a choice, it may be necessary, when the process finds a dead end, to undo the side effect before making a new choice. This is accomplished by having the side-effect operation produce a failure continuation that undoes the side effect and propagates the failure.
 
@@ -652,7 +652,7 @@ to propagate the failure back to the previous choice point or to the top level.
 
 <h4> Structure of the evaluator </h4>
 
-<p> The syntax- and data-representation procedures for the <tt>amb</tt> evaluator, and also the basic <tt>analyze</tt> procedure, are identical to those in the evaluator of section 4-1-7, except for the fact that we need additional syntax procedures to recognize the <tt>amb</tt> special form:@footnote{We assume that the evaluator supports <tt>let</tt> (see Exercise 4-22), which we have used in our nondeterministic programs.}
+<p> The syntax- and data-representation procedures for the <tt>amb</tt> evaluator, and also the basic <tt>analyze</tt> procedure, are identical to those in the evaluator of section <a href="4-1-metacircular.content.html">4.1.7</a>, except for the fact that we need additional syntax procedures to recognize the <tt>amb</tt> special form:@footnote{We assume that the evaluator supports <tt>let</tt> (see Exercise 4-22), which we have used in our nondeterministic programs.}
 
 <div id="">
 (define (amb? exp) (tagged-list? exp 'amb))
@@ -672,7 +672,7 @@ C.prompt();
 C.prompt();
 </script>
 
-<p> The top-level procedure <tt>ambeval</tt> (similar to the version of <tt>eval</tt> given in section 4-1-7) analyzes the given expression and applies the resulting execution procedure to the given environment, together with two given continuations:
+<p> The top-level procedure <tt>ambeval</tt> (similar to the version of <tt>eval</tt> given in section <a href="4-1-metacircular.content.html">4.1.7</a>) analyzes the given expression and applies the resulting execution procedure to the given environment, together with two given continuations:
 
 <div id="">
 (define (ambeval exp env succeed fail)
@@ -708,7 +708,7 @@ C.prompt();
 
 <p> will attempt to evaluate the given expression and will return either the expression's value (if the evaluation succeeds) or the symbol <tt>failed</tt> (if the evaluation fails). The call to <tt>ambeval</tt> in the driver loop shown below uses much more complicated continuation procedures, which continue the loop and support the <tt>try-again</tt> request.
 
-<p> Most of the complexity of the <tt>amb</tt> evaluator results from the mechanics of passing the continuations around as the execution procedures call each other. In going through the following code, you should compare each of the execution procedures with the corresponding procedure for the ordinary evaluator given in section 4-1-7.
+<p> Most of the complexity of the <tt>amb</tt> evaluator results from the mechanics of passing the continuations around as the execution procedures call each other. In going through the following code, you should compare each of the execution procedures with the corresponding procedure for the ordinary evaluator given in section <a href="4-1-metacircular.content.html">4.1.7</a>.
 
 <h4> Simple expressions </h4>
 
@@ -813,7 +813,7 @@ C.prompt();
 
 <p> Assignments are more interesting. This is the first place where we really use the continuations, rather than just passing them around. The execution procedure for assignments starts out like the one for definitions. It first attempts to obtain the new value to be assigned to the variable. If this evaluation of <tt>vproc</tt> fails, the assignment fails.
 
-<p> If <tt>vproc</tt> succeeds, however, and we go on to make the assignment, we must consider the possibility that this branch of the computation might later fail, which will require us to backtrack out of the assignment. Thus, we must arrange to undo the assignment as part of the backtracking process.@footnote{We didn't worry about undoing definitions, since we can assume that internal definitions are scanned out (section 4-1-6).}
+<p> If <tt>vproc</tt> succeeds, however, and we go on to make the assignment, we must consider the possibility that this branch of the computation might later fail, which will require us to backtrack out of the assignment. Thus, we must arrange to undo the assignment as part of the backtracking process.@footnote{We didn't worry about undoing definitions, since we can assume that internal definitions are scanned out (section <a href="4-1-metacircular.content.html">4.1.6</a>).}
 
 <p> This is accomplished by giving <tt>vproc</tt> a success continuation (marked with the comment ``*1*'' below) that saves the old value of the variable before assigning the new value to the variable and proceeding from the assignment. The failure continuation that is passed along with the value of the assignment (marked with the comment ``*2*'' below) restores the old value of the variable before continuing the failure. That is, a successful assignment provides a failure continuation that will intercept a subsequent failure; whatever failure would otherwise have called <tt>fail2</tt> calls this procedure instead, to undo the assignment before actually calling <tt>fail2</tt>.
 

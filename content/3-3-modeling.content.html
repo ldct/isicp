@@ -75,7 +75,7 @@ C.prompt("scheme-define-cons-with-set");
 <p>
 
 <div class="exercise">
-<p> <b>Exercise 3.12:</b> The following procedure for appending lists was introduced in section 2-2-1:
+<p> <b>Exercise 3.12:</b> The following procedure for appending lists was introduced in section <a href="2-2-closure.content.html">2.2.1</a>:
 
 <div id="scheme-define-append">
 (define (append x y)
@@ -189,7 +189,7 @@ C.prompt("scheme-define-mystery");
 
 <h4> Sharing and identity </h4>
 
-<p> We mentioned in section 3-1-3 the theoretical issues of ``sameness'' and ``change'' raised by the introduction of assignment. These issues arise in practice when individual pairs are <tt>shared</tt> among different data objects. For example, consider the structure formed by
+<p> We mentioned in section <a href="3-1-assignment.content.html">3.1.3</a> the theoretical issues of ``sameness'' and ``change'' raised by the introduction of assignment. These issues arise in practice when individual pairs are <tt>shared</tt> among different data objects. For example, consider the structure formed by
 
 <div id="scheme-define-x">
 (define x (list 'a 'b))
@@ -276,7 +276,7 @@ C.prompt("scheme-z2", ["scheme-define-z2"]);
 C.prompt("scheme-test-set-to-wow-z2", ["scheme-define-z2", "scheme-define-set-to-wow"]);
 </script>
 
-<p> One way to detect sharing in list structures is to use the predicate <tt>eq?</tt>, which we introduced in section 2-3-1 as a way to test whether two symbols are equal. More generally, <tt>(eq?  x y)</tt> tests whether <tt>x</tt> and <tt>y</tt> are the same object (that is, whether <tt>x</tt> and <tt>y</tt> are equal as pointers). Thus, with <tt>z1</tt> and <tt>z2</tt> as defined in figures Figure 3-16 and Figure 3-17, <tt>(eq?  (car z1) (cdr z1))</tt> is true and <tt>(eq? (car z2) (cdr z2))</tt> is false.
+<p> One way to detect sharing in list structures is to use the predicate <tt>eq?</tt>, which we introduced in section <a href="2-3-symbolic.content.html">2.3.1</a> as a way to test whether two symbols are equal. More generally, <tt>(eq?  x y)</tt> tests whether <tt>x</tt> and <tt>y</tt> are the same object (that is, whether <tt>x</tt> and <tt>y</tt> are equal as pointers). Thus, with <tt>z1</tt> and <tt>z2</tt> as defined in figures Figure 3-16 and Figure 3-17, <tt>(eq?  (car z1) (cdr z1))</tt> is true and <tt>(eq? (car z2) (cdr z2))</tt> is false.
 
 <p> As will be seen in the following sections, we can exploit sharing to greatly extend the repertoire of data structures that can be represented by pairs. On the other hand, sharing can also be dangerous, since modifications made to structures will also affect other structures that happen to share the modified parts. The mutation operations <tt>set-car!</tt> and <tt>set-cdr!</tt> should be used with care; unless we have a good understanding of how our data objects are shared, mutation can have unanticipated results.<a name="footnote_link_3-20" class="footnote_link" href="#footnote_3-20">20</a>
 
@@ -324,7 +324,7 @@ C.prompt("scheme-define-count-pairs");
 
 <h4> Mutation is just assignment </h4>
 
-<p> When we introduced compound data, we observed in section 2-1-3 that pairs can be represented purely in terms of procedures:
+<p> When we introduced compound data, we observed in section <a href="2-1-data.content.html">2.1.3</a> that pairs can be represented purely in terms of procedures:
 
 <div id="scheme-define-cons">
 (define (cons x y)
@@ -342,7 +342,7 @@ C.prompt("scheme-define-count-pairs");
 C.prompt("scheme-define-cons");
 </script>
 
-<p> The same observation is true for mutable data. We can implement mutable data objects as procedures using assignment and local state. For instance, we can extend the above pair implementation to handle <tt>set-car!</tt> and <tt>set-cdr!</tt> in a manner analogous to the way we implemented bank accounts using <tt>make-account</tt> in section 3-1-1:
+<p> The same observation is true for mutable data. We can implement mutable data objects as procedures using assignment and local state. For instance, we can extend the above pair implementation to handle <tt>set-car!</tt> and <tt>set-cdr!</tt> in a manner analogous to the way we implemented bank accounts using <tt>make-account</tt> in section <a href="3-1-assignment.content.html">3.1.1</a>:
 
 <div id="scheme-define-cons-set-car-cdr">
 (define (cons x y)
@@ -394,7 +394,7 @@ C.prompt("scheme-test-procedural-set-car-cdr", ["scheme-define-cons-set-car-cdr"
 <a name="%_sec_3.3.2" />
 <h3> 3.3.2 Representing Queues </h3>
 
-<p> The mutators <tt>set-car!</tt> and <tt>set-cdr!</tt> enable us to use pairs to construct data structures that cannot be built with <tt>cons</tt>, <tt>car</tt>, and <tt>cdr</tt> alone. This section shows how to use pairs to represent a data structure called a queue. Section 3-3-3 will show how to represent data structures called tables.
+<p> The mutators <tt>set-car!</tt> and <tt>set-cdr!</tt> enable us to use pairs to construct data structures that cannot be built with <tt>cons</tt>, <tt>car</tt>, and <tt>cdr</tt> alone. This section shows how to use pairs to represent a data structure called a queue. Section <a href="3-3-modeling.content.html">3.3.3</a> will show how to represent data structures called tables.
 
 <p> A <tt>queue</tt> is a sequence in which items are inserted at one end (called the <tt>rear</tt> of the queue) and deleted from the other end (the <tt>front</tt> ). Figure 3-18 shows an initially empty queue in which the items <tt>a</tt> and <tt>b</tt> are inserted. Then <tt>a</tt> is removed, <tt>c</tt> and <tt>d</tt> are inserted, and <tt>b</tt> is removed. Because items are always removed in the order in which they are inserted, a queue is sometimes called a <tt>FIFO</tt> (first in, first out) buffer.
 
@@ -589,7 +589,7 @@ C.prompt("scheme-define-make-queue-dispatch");
 <a name="%_sec_3.3.3" />
 <h3> 3.3.3 Representing Tables </h3>
 
-<p> When we studied various ways of representing sets in Chapter 2, we mentioned in section 2-3-3 the task of maintaining a table of records indexed by identifying keys. In the implementation of data-directed programming in section 2-4-3, we made extensive use of two-dimensional tables, in which information is stored and retrieved using two keys. Here we see how to build tables as mutable list structures.
+<p> When we studied various ways of representing sets in Chapter 2, we mentioned in section <a href="2-3-symbolic.content.html">2.3.3</a> the task of maintaining a table of records indexed by identifying keys. In the implementation of data-directed programming in section <a href="2-4-representation.content.html">2.4.3</a>, we made extensive use of two-dimensional tables, in which information is stored and retrieved using two keys. Here we see how to build tables as mutable list structures.
 
 <p> We first consider a one-dimensional table, in which each value is stored under a single key. We implement the table as a list of records, each of which is implemented as a pair consisting of a key and the associated value. The records are glued together to form a list by pairs whose <tt>car</tt>s point to successive records. These gluing pairs are called the <tt>backbone</tt> of the table. In order to have a place that we can change when we add a new record to the table, we build the table as a <tt>headed list</tt> . A headed list has a special backbone pair at the beginning, which holds a dummy ``record''---in this case the arbitrarily chosen symbol <tt>*table*</tt>. Figure 3-22 shows the box-and-pointer diagram for the table
 
@@ -750,7 +750,7 @@ C.prompt("scheme-define-insert-2table", ["scheme-define-assoc", "scheme-define-l
 C.prompt("scheme-define-make-2table", ["scheme-define-insert-2table"]);
 </script>
 
-<p> Using <tt>make-table</tt>, we could implement the <tt>get</tt> and <tt>put</tt> operations used in section 2-4-3 for data-directed programming, as follows:
+<p> Using <tt>make-table</tt>, we could implement the <tt>get</tt> and <tt>put</tt> operations used in section <a href="2-4-representation.content.html">2.4.3</a> for data-directed programming, as follows:
 
 <div id="scheme-define-get-put">
 (define operation-table (make-table))
@@ -776,13 +776,13 @@ C.prompt("scheme-define-get-put", ["scheme-define-make-2table"]);
 <p>
 
 <div class="exercise">
-<p> <b>Exercise 3.26:</b> To search a table as implemented above, one needs to scan through the list of records. This is basically the unordered list representation of section 2-3-3. For large tables, it may be more efficient to structure the table in a different manner. Describe a table implementation where the (key, value) records are organized using a binary tree, assuming that keys can be ordered in some way (e.g., numerically or alphabetically). (Compare Exercise 2-66 of Chapter 2.)
+<p> <b>Exercise 3.26:</b> To search a table as implemented above, one needs to scan through the list of records. This is basically the unordered list representation of section <a href="2-3-symbolic.content.html">2.3.3</a>. For large tables, it may be more efficient to structure the table in a different manner. Describe a table implementation where the (key, value) records are organized using a binary tree, assuming that keys can be ordered in some way (e.g., numerically or alphabetically). (Compare Exercise 2-66 of Chapter 2.)
 </div>
 
 <p>
 
 <div class="exercise">
-<p> <b>Exercise 3.27:</b> <tt>Memoization</tt> (also called <tt>tabulation</tt> ) is a technique that enables a procedure to record, in a local table, values that have previously been computed. This technique can make a vast difference in the performance of a program. A memoized procedure maintains a table in which values of previous calls are stored using as keys the arguments that produced the values. When the memoized procedure is asked to compute a value, it first checks the table to see if the value is already there and, if so, just returns that value. Otherwise, it computes the new value in the ordinary way and stores this in the table. As an example of memoization, recall from section 1-2-2 the exponential process for computing Fibonacci numbers:
+<p> <b>Exercise 3.27:</b> <tt>Memoization</tt> (also called <tt>tabulation</tt> ) is a technique that enables a procedure to record, in a local table, values that have previously been computed. This technique can make a vast difference in the performance of a program. A memoized procedure maintains a table in which values of previous calls are stored using as keys the arguments that produced the values. When the memoized procedure is asked to compute a value, it first checks the table to see if the value is already there and, if so, just returns that value. Otherwise, it computes the new value in the ordinary way and stores this in the table. As an example of memoization, recall from section <a href="1-2-procedures.content.html">1.2.2</a> the exponential process for computing Fibonacci numbers:
 
 <div id="scheme-define-fib">
 (define (fib n)
@@ -1044,7 +1044,7 @@ C ------+   |     +-----+   |     +-----+   |     :  ------+   |
 
 <h4> Representing wires </h4>
 
-<p> A wire in our simulation will be a computational object with two local state variables: a <tt>signal-value</tt> (initially taken to be 0) and a collection of <tt>action-procedures</tt> to be run when the signal changes value. We implement the wire, using message-passing style, as a collection of local procedures together with a <tt>dispatch</tt> procedure that selects the appropriate local operation, just as we did with the simple bank-account object in section 3-1-1:
+<p> A wire in our simulation will be a computational object with two local state variables: a <tt>signal-value</tt> (initially taken to be 0) and a collection of <tt>action-procedures</tt> to be run when the signal changes value. We implement the wire, using message-passing style, as a collection of local procedures together with a <tt>dispatch</tt> procedure that selects the appropriate local operation, just as we did with the simple bank-account object in section <a href="3-1-assignment.content.html">3.1.1</a>:
 
 <div id="scheme-define-make-wire">
 (define (make-wire)
@@ -1280,9 +1280,9 @@ C.prompt();
 C.prompt();
 </script>
 
-<p> We will operate on the time-segment queues using the queue operations described in section 3-3-2.
+<p> We will operate on the time-segment queues using the queue operations described in section <a href="3-3-modeling.content.html">3.3.2</a>.
 
-<p> The agenda itself is a one-dimensional table of time segments. It differs from the tables described in section 3-3-3 in that the segments will be sorted in order of increasing time. In addition, we store the <tt>current time</tt>
+<p> The agenda itself is a one-dimensional table of time segments. It differs from the tables described in section <a href="3-3-modeling.content.html">3.3.3</a> in that the segments will be sorted in order of increasing time. In addition, we store the <tt>current time</tt>
 
 <p> (i.e., the time of the last action that was processed) at the head of the agenda. A newly constructed agenda has no time segments and has a current time of 0:<a name="footnote_link_3-28" class="footnote_link" href="#footnote_3-28">28</a>
 
@@ -1456,9 +1456,9 @@ C.prompt();
 C.prompt();
 </script>
 
-<p> This procedure creates the internal connectors <tt>u</tt>, <tt>v</tt>, <tt>w</tt>, <tt>x</tt>, and <tt>y</tt>, and links them as shown in Figure 3-28 using the primitive constraint constructors <tt>adder</tt>, <tt>multiplier</tt>, and <tt>constant</tt>. Just as with the digital-circuit simulator of section 3-3-4, expressing these combinations of primitive elements in terms of procedures automatically provides our language with a means of abstraction for compound objects.
+<p> This procedure creates the internal connectors <tt>u</tt>, <tt>v</tt>, <tt>w</tt>, <tt>x</tt>, and <tt>y</tt>, and links them as shown in Figure 3-28 using the primitive constraint constructors <tt>adder</tt>, <tt>multiplier</tt>, and <tt>constant</tt>. Just as with the digital-circuit simulator of section <a href="3-3-modeling.content.html">3.3.4</a>, expressing these combinations of primitive elements in terms of procedures automatically provides our language with a means of abstraction for compound objects.
 
-<p> To watch the network in action, we can place probes on the connectors <tt>C</tt> and <tt>F</tt>, using a <tt>probe</tt> procedure similar to the one we used to monitor wires in section 3-3-4. Placing a probe on a connector will cause a message to be printed whenever the connector is given a value:
+<p> To watch the network in action, we can place probes on the connectors <tt>C</tt> and <tt>F</tt>, using a <tt>probe</tt> procedure similar to the one we used to monitor wires in section <a href="3-3-modeling.content.html">3.3.4</a>. Placing a probe on a connector will cause a message to be printed whenever the connector is given a value:
 
 <div id="">
 (probe "Celsius temp" C)
@@ -1522,7 +1522,7 @@ C.prompt();
 
 <h4> Implementing the constraint system </h4>
 
-<p> The constraint system is implemented via procedural objects with local state, in a manner very similar to the digital-circuit simulator of section 3-3-4. Although the primitive objects of the constraint system are somewhat more complex, the overall system is simpler, since there is no concern about agendas and logic delays.
+<p> The constraint system is implemented via procedural objects with local state, in a manner very similar to the digital-circuit simulator of section <a href="3-3-modeling.content.html">3.3.4</a>. Although the primitive objects of the constraint system are somewhat more complex, the overall system is simpler, since there is no concern about agendas and logic delays.
 
 <p> The basic operations on connectors are the following:
 
@@ -1593,7 +1593,7 @@ that the retractor is requesting it to forget its value.
 C.prompt();
 </script>
 
-<p> <tt>Adder</tt> connects the new adder to the designated connectors and returns it as its value. The procedure <tt>me</tt>, which represents the adder, acts as a dispatch to the local procedures. The following ``syntax interfaces'' (see footnote Footnote 27 in section 3-3-4) are used in conjunction with the dispatch:
+<p> <tt>Adder</tt> connects the new adder to the designated connectors and returns it as its value. The procedure <tt>me</tt>, which represents the adder, acts as a dispatch to the local procedures. The following ``syntax interfaces'' (see footnote Footnote 27 in section <a href="3-3-modeling.content.html">3.3.4</a>) are used in conjunction with the dispatch:
 
 <div id="">
 (define (inform-about-value constraint)

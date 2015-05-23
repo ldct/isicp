@@ -12,7 +12,7 @@
 <br> <br>
 <h2> Multiple Representations for Abstract Data </h2>
 
-<p> We have introduced data abstraction, a methodology for structuring systems in such a way that much of a program ca2 be specified independent of the choices involved in implementing the data objects that the program manipulates. For example, we saw in section 2-1-1 how to separate the task of designing a program that uses rational numbers from the task of implementing rational numbers in terms of the computer language's primitive mechanisms for constructing compound data. The key idea was to erect an abstraction barrier -- in this case, the selectors and constructors for rational numbers (<tt>make-rat</tt>, <tt>numer</tt>, <tt>denom</tt>)---that isolates the way rational numbers are used from their underlying representation in terms of list structure. A similar ab2traction barrier isolates the details of the procedures that perform rational arithmetic (<tt>add-rat</tt>, <tt>sub-rat</tt>, <tt>mul-rat</tt>, and <tt>div-rat</tt>) from the ``higher-level'' procedures that use rational numbers. The resulting program has the structure shown in Figure 2-1.
+<p> We have introduced data abstraction, a methodology for structuring systems in such a way that much of a program ca2 be specified independent of the choices involved in implementing the data objects that the program manipulates. For example, we saw in section <a href="2-1-data.content.html">2.1.1</a> how to separate the task of designing a program that uses rational numbers from the task of implementing rational numbers in terms of the computer language's primitive mechanisms for constructing compound data. The key idea was to erect an abstraction barrier -- in this case, the selectors and constructors for rational numbers (<tt>make-rat</tt>, <tt>numer</tt>, <tt>denom</tt>)---that isolates the way rational numbers are used from their underlying representation in terms of list structure. A similar ab2traction barrier isolates the details of the procedures that perform rational arithmetic (<tt>add-rat</tt>, <tt>sub-rat</tt>, <tt>mul-rat</tt>, and <tt>div-rat</tt>) from the ``higher-level'' procedures that use rational numbers. The resulting program has the structure shown in Figure 2-1.
 
 <p> These data-abstraction barriers are powerful tools for controlling complexity. By isolating the underlying representa2ions of data objects, we can divide the task of designing a large program into smaller tasks that can be performed separately. But this kind of data abstraction is not yet powerful enough, because it may not always make sense to speak of ``the underlying representation'' for a data object.
 
@@ -31,12 +31,12 @@
 <p> <b>Figure 2.19:</b> Data-abstraction barriers in the complex-number system.
 </div>
 
-<p> In section 2-5 we will show how to use type tags and data-directed style to develop a generic arithmetic package. This provides procedures (<tt>add</tt>, <tt>mul</tt>, and so on) that can be used to manipulate all sorts of ``numbers''and can be easily extended when a new kind of number is needed. In section 2-5-3, we'll show how to use generic arithmetic in a system that performs symbolic algebra.
+<p> In section 2-5 we will show how to use type tags and data-directed style to develop a generic arithmetic package. This provides procedures (<tt>add</tt>, <tt>mul</tt>, and so on) that can be used to manipulate all sorts of ``numbers''and can be easily extended when a new kind of number is needed. In section <a href="2-5-generic.content.html">2.5.3</a>, we'll show how to use generic arithmetic in a system that performs symbolic algebra.
 
 <a name="%_sec_2.4.1" />
 <h3> 2.4.1 Representations for Complex Numbers </h3>
 
-<p> We will develop a system that performs arithmetic operations on complex numbers as a simple but unrealistic example of a program that uses generic operations. We begin by discussing two plausible representations for complex numbers as ordered pairs: rectangular form (real part and imaginary part) and polar form (magnitude and angle).<a name="footnote_link_2-43" class="footnote_link" href="#footnote_2-43">43</a> Section 2-4-2 will show how both representations can be made to coexist in a single system through the use of type tags and generic operations.
+<p> We will develop a system that performs arithmetic operations on complex numbers as a simple but unrealistic example of a program that uses generic operations. We begin by discussing two plausible representations for complex numbers as ordered pairs: rectangular form (real part and imaginary part) and polar form (magnitude and angle).<a name="footnote_link_2-43" class="footnote_link" href="#footnote_2-43">43</a> Section <a href="2-4-representation.content.html">2.4.2</a> will show how both representations can be made to coexist in a single system through the use of type tags and generic operations.
 
 <p> Like rational numbers, complex numbers are naturally represented as ordered pairs. The set of complex numbers can be thought of as a two-dimensional space with two orthogonal axes, the "real" axis and the "imaginary" axis. (See Figure 2-20.)  From this point of view, the complex number $z = x + iy$ (where $i^2 = - 1$) can be thought of as the point in the plane whose real coordinate is $x$ and whose imaginary coordinate is $y$. Addition of complex numbers reduces in this representation to addition of coordinates:
 
@@ -63,7 +63,7 @@
 <p> <b>Figure 2.20:</b> Complex numbers as points in the plane.
 </div>
 
-<p> To design such a system, we can follow the same data-abstraction strategy we followed in designing the rational-number package in section 2-1-1. Assume that the operations on complex numbers are implemented in terms of four selectors: <tt>real-part</tt>, <tt>imag-part</tt>, <tt>magnitude</tt>, and <tt>angle</tt>. Also assume that we have two procedures for constructing complex numbers: <tt>make-from-real-imag</tt> returns a complex number with specified real and imaginary parts, and <tt>make-from-mag-ang</tt> returns a complex number with specified magnitude and angle. These procedures have the property that, for any complex number <tt>z</tt>, both
+<p> To design such a system, we can follow the same data-abstraction strategy we followed in designing the rational-number package in section <a href="2-1-data.content.html">2.1.1</a>. Assume that the operations on complex numbers are implemented in terms of four selectors: <tt>real-part</tt>, <tt>imag-part</tt>, <tt>magnitude</tt>, and <tt>angle</tt>. Also assume that we have two procedures for constructing complex numbers: <tt>make-from-real-imag</tt> returns a complex number with specified real and imaginary parts, and <tt>make-from-mag-ang</tt> returns a complex number with specified magnitude and angle. These procedures have the property that, for any complex number <tt>z</tt>, both
 
 <div id="scheme-reconstruct-real-imag">
 (make-from-real-imag (real-part z) (imag-part z))
@@ -83,7 +83,7 @@ C.no_output_prompt("scheme-reconstruct-magnitude-angle");
 
 <p> produce complex numbers that are equal to <tt>z</tt>.
 
-<p> Using these constructors and selectors, we can implement arithmetic on complex numbers using the ``abstract data'' specified by the constructors and selectors, just as we did for rational numbers in section 2-1-1. As shown in the formulas above, we can add and subtract complex numbers in terms of real and imaginary parts while multiplying and dividing complex numbers in terms of magnitudes and angles:
+<p> Using these constructors and selectors, we can implement arithmetic on complex numbers using the ``abstract data'' specified by the constructors and selectors, just as we did for rational numbers in section <a href="2-1-data.content.html">2.1.1</a>. As shown in the formulas above, we can add and subtract complex numbers in terms of real and imaginary parts while multiplying and dividing complex numbers in terms of magnitudes and angles:
 
 <div id="scheme-define-complex-arith">
 (define (add-complex z1 z2)
@@ -165,7 +165,7 @@ C.prompt("scheme-define-polar-selectors");
 <a name="%_sec_2.4.2" />
 <h3> 2.4.2 Tagged data </h3>
 
-<p> One way to view data abstraction is as an application of the "principle of least commitment."  In implementing the complex-number system in section 2-4-1, we can use either Ben's rectangular representation or Alyssa's polar representation. The abstraction barrier formed by the selectors and constructors permits us to defer to the last possible moment the choice of a concrete representation for our data objects and thus retain maximum flexibility in our system design.
+<p> One way to view data abstraction is as an application of the "principle of least commitment."  In implementing the complex-number system in section <a href="2-4-representation.content.html">2.4.1</a>, we can use either Ben's rectangular representation or Alyssa's polar representation. The abstraction barrier formed by the selectors and constructors permits us to defer to the last possible moment the choice of a concrete representation for our data objects and thus retain maximum flexibility in our system design.
 
 <p> The principle of least commitment can be carried to even further extremes. If we desire, we can maintain the ambiguity of representation even <em>after</em> we have designed the selectors and constructors, and elect to use both Ben's representation <em>and</em> Alyssa's representation. If both representations are included in a single system, however, we will need some way to distinguish data in polar form from data in rectangular form. Otherwise, if we were asked, for instance, to find the <tt>magnitude</tt> of the pair <tt>(3,4)</tt>, we wouldn't know whether to answer $5$ (interpreting the number in rectangular form) or $3$ (interpreting the number in polar form). A straightforward way to accomplish this distinction is to include a <em>type tag</em> ---the symbol <tt>rectangular</tt> or <tt>polar</tt>---as part of each complex number. Then when we need to manipulate a complex number we can use the tag to decide which selector to apply.
 
@@ -202,7 +202,7 @@ C.prompt("scheme-define-type-tag");
 C.prompt("scheme-define-recognise-rectangular-polar-tags", ["scheme-define-type-tag"]);
 </script>
 
-<p> With type tags, Ben and Alyssa can now modify their code so that their two different representations can coexist in the same system. Whenever Ben constructs a complex number, he tags it as rectangular. Whenever Alyssa constructs a complex number, she tags it as polar. In addition, Ben and Alyssa must make sure that the names of their procedures do not conflict. One way to do this is for Ben to append the suffix <tt>rectangular</tt> to the name of each of his representation procedures and for Alyssa to append <tt>polar</tt> to the names of hers. Here is Ben's revised rectangular representation from section 2-4-1:
+<p> With type tags, Ben and Alyssa can now modify their code so that their two different representations can coexist in the same system. Whenever Ben constructs a complex number, he tags it as rectangular. Whenever Alyssa constructs a complex number, she tags it as polar. In addition, Ben and Alyssa must make sure that the names of their procedures do not conflict. One way to do this is for Ben to append the suffix <tt>rectangular</tt> to the name of each of his representation procedures and for Alyssa to append <tt>polar</tt> to the names of hers. Here is Ben's revised rectangular representation from section <a href="2-4-representation.content.html">2.4.1</a>:
 
 <div id="scheme-define-rectangular-tagged-selectors">
 (define (real-part-rectangular z) (car z))
@@ -288,7 +288,7 @@ C.prompt("scheme-define-polar-tagged-selectors", ["scheme-define-type-tag"]);
 C.prompt("scheme-define-tagged-complex-selectors", ["scheme-define-recognise-rectangular-polar-tags", "scheme-define-rectangular-tagged-selectors", "scheme-define-polar-tagged-selectors"]);
 </script>
 
-<p> To implement the complex-number arithmetic operations, we can use the same procedures <tt>add-complex</tt>, <tt>sub-complex</tt>, <tt>mul-complex</tt>, and <tt>div-complex</tt> from section 2-4-1, because the selectors they call are generic, and so will work with either representation. For example, the procedure <tt>add-complex</tt> is still
+<p> To implement the complex-number arithmetic operations, we can use the same procedures <tt>add-complex</tt>, <tt>sub-complex</tt>, <tt>mul-complex</tt>, and <tt>div-complex</tt> from section <a href="2-4-representation.content.html">2.4.1</a>, because the selectors they call are generic, and so will work with either representation. For example, the procedure <tt>add-complex</tt> is still
 
 <div id="scheme-define-tagged-add-complex">
 (define (add-complex z1 z2)
@@ -329,9 +329,9 @@ C.prompt("scheme-define-tagged-constructors");
 <a name="%_sec_2.4.3" />
 <h3> 2.4.3 Data-Directed Programming and Additivity </h3>
 
-<p> The general strategy of checking the type of a datum and calling an appropriate procedure is called <em>dispatching on type</em> . This is a powerful strategy for obtaining modularity in system design. Oh the other hand, implementing the dispatch as in section 2-4-2 has two significant weaknesses. One weakness is that the generic interface procedures (<tt>real-part</tt>, <tt>imag-part</tt>, <tt>magnitude</tt>, and <tt>angle</tt>) must know about all the different representations. For instance, suppose we wanted to incorporate a new representation for complex numbers into our complex-number system. We would need to identify this new representation with a type, and then add a clause to each of the generic interface procedures to check for the new type and apply the appropriate selector for that representation.
+<p> The general strategy of checking the type of a datum and calling an appropriate procedure is called <em>dispatching on type</em> . This is a powerful strategy for obtaining modularity in system design. Oh the other hand, implementing the dispatch as in section <a href="2-4-representation.content.html">2.4.2</a> has two significant weaknesses. One weakness is that the generic interface procedures (<tt>real-part</tt>, <tt>imag-part</tt>, <tt>magnitude</tt>, and <tt>angle</tt>) must know about all the different representations. For instance, suppose we wanted to incorporate a new representation for complex numbers into our complex-number system. We would need to identify this new representation with a type, and then add a clause to each of the generic interface procedures to check for the new type and apply the appropriate selector for that representation.
 
-<p> Another weakness of the technique is that even though the individual representations can be designed separately, we must guarantee that no two procedures in the entire system have the same name. This is why Ben and Alyssa had to change the names of their original procedures from section 2-4-1.
+<p> Another weakness of the technique is that even though the individual representations can be designed separately, we must guarantee that no two procedures in the entire system have the same name. This is why Ben and Alyssa had to change the names of their original procedures from section <a href="2-4-representation.content.html">2.4.1</a>.
 
 <p> The issue underlying both of these weaknesses is that the technique for implementing generic interfaces is not <tt>additive</tt> . The person implementing the generic selector procedures must modify those procedures each time a new representation is installed, and the people interfacing the individual representations must modify their code to avoid name conflicts. In each of these cases, the changes that must be made to the code are straightforward, but they must be made nonetheless, and this is a source of inconvenience and error. This is not much of a problem for the complex-number system as it stands, but suppose there were not two but hundreds of different representations for complex numbers. And suppose that there were many generic selectors to be maintained in the abstract-data interface. Suppose, in fact, that no one programmer knew all the interface procedures or all the representations. The problem is real and must be addressed in such programs as large-scale data-base-management systems.
 
@@ -357,7 +357,7 @@ C.prompt("scheme-define-tagged-constructors");
 </li>
 </ul>
 
-<p> For now, we can assume that <tt>put</tt> and <tt>get</tt> are included in our language. In Chapter 3 (section 3-3-3, Exercise 3-24) we will see how to implement these and other operations for manipulating tables.
+<p> For now, we can assume that <tt>put</tt> and <tt>get</tt> are included in our language. In Chapter 3 (section <a href="3-3-modeling.content.html">3.3.3</a>, Exercise 3-24) we will see how to implement these and other operations for manipulating tables.
 
 <p> Here is how data-directed programming can be used in the complex-number system. Ben, who developed the rectangular representation, implements his code just as he did originally. He defines a collection of procedures, or a <tt>package</tt> , and interfaces these to the rest of the system by adding entries to the table that tell the system how to operate on rectangular numbers. This is accomplished by calling the following procedure:
 
@@ -391,7 +391,7 @@ C.prompt("scheme-define-tagged-constructors");
 C.prompt("scheme-define-install-rectangular-package");
 </script>
 
-<p> Notice that the internal procedures here are the same procedures from section 2-4-1 that Ben wrote when he was working in isolation. No changes are necessary in order to interface them to the rest of the system. Moreover, since these procedure definitions are internal to the installation procedure, Ben needn't worry about name conflicts with other procedures outside the rectangular package. To interface these to the rest of the system, Ben installs his <tt>real-part</tt> procedure under the operation name <tt>real-part</tt> and the type <tt>(rectangular)</tt>, and similarly for the other selectors.<a name="footnote_link_2-45" class="footnote_link" href="#footnote_2-45">45</a> The interface also defines the constructors to be used by the external system.<a name="footnote_link_2-46" class="footnote_link" href="#footnote_2-46">46</a> These are identical to Ben's internally defined constructors, except that they attach the tag.
+<p> Notice that the internal procedures here are the same procedures from section <a href="2-4-representation.content.html">2.4.1</a> that Ben wrote when he was working in isolation. No changes are necessary in order to interface them to the rest of the system. Moreover, since these procedure definitions are internal to the installation procedure, Ben needn't worry about name conflicts with other procedures outside the rectangular package. To interface these to the rest of the system, Ben installs his <tt>real-part</tt> procedure under the operation name <tt>real-part</tt> and the type <tt>(rectangular)</tt>, and similarly for the other selectors.<a name="footnote_link_2-45" class="footnote_link" href="#footnote_2-45">45</a> The interface also defines the constructors to be used by the external system.<a name="footnote_link_2-46" class="footnote_link" href="#footnote_2-46">46</a> These are identical to Ben's internally defined constructors, except that they attach the tag.
 
 <p> Alyssa's polar package is analogous:
 
@@ -425,7 +425,7 @@ C.prompt("scheme-define-install-rectangular-package");
 C.prompt("scheme-define-install-polar-package");
 </script>
 
-<p> Even though Ben and Alyssa both still use their original procedures defined with the same names as each other's (e.g., <tt>real-part</tt>), these definitions are now internal to different procedures (see section 1-1-8), so there is no name conflict.
+<p> Even though Ben and Alyssa both still use their original procedures defined with the same names as each other's (e.g., <tt>real-part</tt>), these definitions are now internal to different procedures (see section <a href="1-1-elements.content.html">1.1.8</a>), so there is no name conflict.
 
 <p> The complex-arithmetic selectors access the table by means of a general ``operation'' procedure called <tt>apply-generic</tt>, which applies a generic operation to some arguments. <tt>apply-generic</tt> looks in the table under the name of the operation and the types of the arguments and applies the resulting procedure if one is present:<a name="footnote_link_2-47" class="footnote_link" href="#footnote_2-47">47</a>
 
@@ -457,7 +457,7 @@ C.prompt("scheme-define-generic-selectors");
 
 <p> Observe that these do not change at all if a new representation is added to the system.
 
-<p> We can also extract from the table the constructors to be used by the programs external to the packages in making complex numbers from real and imaginary parts and from magnitudes and angles. As in section 2-4-2, we construct rectangular numbers whenever we have real and imaginary parts, and polar numbers whenever we have magnitudes and angles:
+<p> We can also extract from the table the constructors to be used by the programs external to the packages in making complex numbers from real and imaginary parts and from magnitudes and angles. As in section <a href="2-4-representation.content.html">2.4.2</a>, we construct rectangular numbers whenever we have real and imaginary parts, and polar numbers whenever we have magnitudes and angles:
 
 <div id="scheme-define-generic-constructors">
 (define (make-from-real-imag x y)
@@ -473,7 +473,7 @@ C.prompt("scheme-define-generic-constructors");
 <p>
 
 <div class="exercise">
-<p> <b>Exercise 2.73:</b> Section 2-3-2 described a program that performs symbolic differentiation:
+<p> <b>Exercise 2.73:</b> Section <a href="2-3-symbolic.content.html">2.3.2</a> described a program that performs symbolic differentiation:
 
 <div id="scheme-define-deriv">
 (define (deriv exp var)
@@ -569,7 +569,7 @@ What corresponding changes to the derivative system are required?
 
 <h4> Message passing </h4>
 
-<p> The key idea of data-directed programming is to handle generic operations in programs by dealing explicitly with operation-and-type tables, such as the table in Figure 2-22. The style of programming we used in section 2-4-2 organized the required dispatching on type by having each operation take care of its own dispatching. In effect, this decomposes the operation-and-type table into rows, with each generic operation procedure representing a row of the table.
+<p> The key idea of data-directed programming is to handle generic operations in programs by dealing explicitly with operation-and-type tables, such as the table in Figure 2-22. The style of programming we used in section <a href="2-4-representation.content.html">2.4.2</a> organized the required dispatching on type by having each operation take care of its own dispatching. In effect, this decomposes the operation-and-type table into rows, with each generic operation procedure representing a row of the table.
 
 <p> An alternative implementation strategy is to decompose the table into columns and, instead of using "intelligent operations" that dispatch on data types, to work with "intelligent data objects" that dispatch on operation names. We can do this by arranging things so that a data object, such as a rectangular number, is represented as a procedure that takes as input the required operation name and performs the operation indicated. In such a discipline, <tt>make-from-real-imag</tt> could be written as
 
@@ -600,7 +600,7 @@ C.prompt("scheme-define-message-passing-apply-generic");
 
 <p> Note that the value returned by <tt>make-from-real-imag</tt> is a procedure---the internal <tt>dispatch</tt> procedure. This is the procedure that is invoked when <tt>apply-generic</tt> requests an operation to be performed.
 
-<p> This style of programming is called <tt>message passing</tt> . The name comes from the image that a data object is an entity that receives the requested operation name as a ``message.''  We have already seen an example of message passing in section 2-1-3, where we saw how <tt>cons</tt>, <tt>car</tt>, and <tt>cdr</tt> could be defined with no data objects but only procedures. Here we see that message passing is not a mathematical trick but a useful technique for organizing systems with generic operations. In the remainder of this chapter we will continue to use data-directed programming, rather than message passing, to discuss generic arithmetic operations. In Chapter 3 we will return to message passing, and we will see that it can be a powerful tool for structuring simulation programs.
+<p> This style of programming is called <tt>message passing</tt> . The name comes from the image that a data object is an entity that receives the requested operation name as a ``message.''  We have already seen an example of message passing in section <a href="2-1-data.content.html">2.1.3</a>, where we saw how <tt>cons</tt>, <tt>car</tt>, and <tt>cdr</tt> could be defined with no data objects but only procedures. Here we see that message passing is not a mathematical trick but a useful technique for organizing systems with generic operations. In the remainder of this chapter we will continue to use data-directed programming, rather than message passing, to discuss generic arithmetic operations. In Chapter 3 we will return to message passing, and we will see that it can be a powerful tool for structuring simulation programs.
 
 <div class="exercise">
 <p> <b>Exercise 2.75:</b> Implement the constructor <tt>make-from-mag-ang</tt> in message-passing style. This procedure should be analogous to the <tt>make-from-real-imag</tt> procedure given above.

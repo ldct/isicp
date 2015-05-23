@@ -860,7 +860,7 @@ C.deps_of["scheme-define-search"] = ["scheme-define-average", "scheme-define-clo
 
 <p> We assume that we are initially given the function <em> f </em> together with points at which its values are negative and positive. We first compute the midpoint of the two given points. Next we check to see if the given interval is small enough, and if so we simply return the midpoint as our answer. Otherwise, we compute as a test value the value of <em> f </em> at the midpoint. If the test value is positive, then we continue the process with a new interval running from the original negative point to the midpoint. If the test value is negative, we continue with the interval from the midpoint to the positive point. Finally, there is the possibility that the test value is 0, in which case the midpoint is itself the root we are searching for.
 
-<p> To test whether the endpoints are &ldquo;close enough&rdquo; we can use a procedure similar to the one used in section 1-1-7 for computing square roots:<a name="footnote_link_1-55" class="footnote_link" href="#footnote_1-55">55</a>
+<p> To test whether the endpoints are &ldquo;close enough&rdquo; we can use a procedure similar to the one used in section <a href="1-1-elements.content.html">1.1.7</a> for computing square roots:<a name="footnote_link_1-55" class="footnote_link" href="#footnote_1-55">55</a>
 
 <div id="scheme-define-close-enough">
 (define (close-enough? x y)

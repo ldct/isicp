@@ -12,9 +12,9 @@
 
 <h2> Concurrency: Time Is of the Essence </h2>
 
-<p> We've seen the power of computational objects with local state as tools for modeling. Yet, as section 3-1-3 warned, this power extracts a price: the loss of referential transparency, giving rise to a thicket of questions about sameness and change, and the need to abandon the substitution model of evaluation in favor of the more intricate environment model.
+<p> We've seen the power of computational objects with local state as tools for modeling. Yet, as section <a href="3-1-assignment.content.html">3.1.3</a> warned, this power extracts a price: the loss of referential transparency, giving rise to a thicket of questions about sameness and change, and the need to abandon the substitution model of evaluation in favor of the more intricate environment model.
 
-<p> The central issue lurking beneath the complexity of state, sameness, and change is that by introducing assignment we are forced to admit <tt>time</tt> into our computational models. Before we introduced assignment, all our programs were timeless, in the sense that any expression that has a value always has the same value. In contrast, recall the example of modeling withdrawals from a bank account and returning the resulting balance, introduced at the beginning of section 3-1-1:
+<p> The central issue lurking beneath the complexity of state, sameness, and change is that by introducing assignment we are forced to admit <tt>time</tt> into our computational models. Before we introduced assignment, all our programs were timeless, in the sense that any expression that has a value always has the same value. In contrast, recall the example of modeling withdrawals from a bank account and returning the resulting balance, introduced at the beginning of section <a href="3-1-assignment.content.html">3.1.1</a>:
 
 <div id="">
 (withdraw 25)
@@ -42,7 +42,7 @@ C.prompt();
 
 <p> In complex situations, however, such a view can be problematic. Suppose that Peter and Paul, and other people besides, are accessing the same bank account through a network of banking machines distributed all over the world. The actual sequence of balances in the account will depend critically on the detailed timing of the accesses and the details of the communication among the machines.
 
-<p> This indeterminacy in the order of events can pose serious problems in the design of concurrent systems. For instance, suppose that the withdrawals made by Peter and Paul are implemented as two separate processes sharing a common variable <tt>balance</tt>, each process specified by the procedure given in section 3-1-1:
+<p> This indeterminacy in the order of events can pose serious problems in the design of concurrent systems. For instance, suppose that the withdrawals made by Peter and Paul are implemented as two separate processes sharing a common variable <tt>balance</tt>, each process specified by the procedure given in section <a href="3-1-assignment.content.html">3.1.1</a>:
 
 <div id="">
 (define (withdraw amount)
@@ -74,7 +74,7 @@ C.prompt();
 
 <h4> Correct behavior of concurrent programs </h4>
 
-<p> The above example typifies the subtle bugs that can creep into concurrent programs. The root of this complexity lies in the assignments to variables that are shared among the different processes. We already know that we must be careful in writing programs that use <tt>set!</tt>, because the results of a computation depend on the order in which the assignments occur.@footnote{The factorial program in section 3-1-3 illustrates this for a single sequential process.}  With concurrent processes we must be especially careful about assignments, because we may not be able to control the order of the assignments made by the different processes. If several such changes might be made concurrently (as with two depositors accessing a joint account) we need some way to ensure that our system behaves correctly. For example, in the case of withdrawals from a joint bank account, we must ensure that money is conserved. To make concurrent programs behave correctly, we may have to place some restrictions on concurrent execution.
+<p> The above example typifies the subtle bugs that can creep into concurrent programs. The root of this complexity lies in the assignments to variables that are shared among the different processes. We already know that we must be careful in writing programs that use <tt>set!</tt>, because the results of a computation depend on the order in which the assignments occur.@footnote{The factorial program in section <a href="3-1-assignment.content.html">3.1.3</a> illustrates this for a single sequential process.}  With concurrent processes we must be especially careful about assignments, because we may not be able to control the order of the assignments made by the different processes. If several such changes might be made concurrently (as with two depositors accessing a joint account) we need some way to ensure that our system behaves correctly. For example, in the case of withdrawals from a joint bank account, we must ensure that money is conserved. To make concurrent programs behave correctly, we may have to place some restrictions on concurrent execution.
 
 <div class="exercise">
 <p> <b>Figure 3.29:</b> Timing diagram showing how interleaving the order of events in two banking withdrawals can lead to an incorrect final balance.
@@ -245,7 +245,7 @@ C.prompt();
 
 <p> can produce only two possible values for <tt>x</tt>, 101 or 121. The other possibilities are eliminated, because the execution of P_1 and P_2 cannot be interleaved.
 
-<p> Here is a version of the <tt>make-account</tt> procedure from section 3-1-1, where the deposits and withdrawals have been serialized:
+<p> Here is a version of the <tt>make-account</tt> procedure from section <a href="3-1-assignment.content.html">3.1.1</a>, where the deposits and withdrawals have been serialized:
 
 <div id="">
 (define (make-account balance)
@@ -400,7 +400,7 @@ C.prompt();
 
 <span class="tex2jax_ignore"><p> This procedure works well when only a single process is trying to do the exchange. Suppose, however, that Peter and Paul both have access to accounts a1, a2, and a3, and that Peter exchanges a1 and a2 while Paul concurrently exchanges a1 and a3. Even with account deposits and withdrawals serialized for individual accounts (as in the <tt>make-account</tt> procedure shown above in this section), <tt>exchange</tt> can still produce incorrect results. For example, Peter might compute the difference in the balances for a1 and a2, but then Paul might change the balance in a1 before Peter is able to complete the exchange.@footnote{If the account balances start out as $10, $20, and $30, then after any number of concurrent exchanges, the balances should still be $10, $20, and $30 in some order. Serializing the deposits to individual accounts is not sufficient to guarantee this. See Exercise 3-43.}  For correct behavior, we must arrange for the <tt>exchange</tt> procedure to lock out any other concurrent accesses to the accounts during the entire time of the exchange.</span>
 
-<p> One way we can accomplish this is by using both accounts' serializers to serialize the entire <tt>exchange</tt> procedure. To do this, we will arrange for access to an account's serializer. Note that we are deliberately breaking the modularity of the bank-account object by exposing the serializer. The following version of <tt>make-account</tt> is identical to the original version given in section 3-1-1, except that a serializer is provided to protect the balance variable, and the serializer is exported via message passing:
+<p> One way we can accomplish this is by using both accounts' serializers to serialize the entire <tt>exchange</tt> procedure. To do this, we will arrange for access to an account's serializer. Note that we are deliberately breaking the modularity of the bank-account object by exposing the serializer. The following version of <tt>make-account</tt> is identical to the original version given in section <a href="3-1-assignment.content.html">3.1.1</a>, except that a serializer is provided to protect the balance variable, and the serializer is exported via message passing:
 
 <div id="">
 (define (make-account-and-serializer balance)
