@@ -1,6 +1,5 @@
 body {
   margin-top: 1em;
-  margin-left: 3em;
 }
 
 /*english text, meant for reading*/
@@ -9,6 +8,10 @@ p, table, label, h1, h2, h3, h4, a {
   color:#2E2E2E;
   line-height:1.5em;
   text-align: justify;
+}
+
+p {
+  font-size: 1.2em;
 }
 
 h1, h2, h3, h4 {
@@ -134,7 +137,8 @@ li {
 
 #main {
   width: 60%;
-  float: left;
+  min-width: 800px;
+  margin: auto;
   margin-bottom: 3em;
 }
 
@@ -194,10 +198,10 @@ div.CodeMirror span.CodeMirror-matchingbracket {
     color: #5f5f5f; /*#869CEB; /*why can't we use .CodeMirror-matchingbracket? */
 }
 
-#toc .h3 { 
+#toc .h3 {
   font-size:14px;
 }
-#toc .h4, .div{ 
+#toc .h4, .div{
   margin-left: 2em;
   font-size:12px;
 }
@@ -214,8 +218,8 @@ label { /*thx cousera*/
 }
 
 img.center {
-  display:block; 
-  margin-left:auto; 
+  display:block;
+  margin-left:auto;
   margin-right:auto;
 }
 
