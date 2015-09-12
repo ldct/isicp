@@ -136,8 +136,8 @@ li {
 }
 
 #main {
-  width: 60%;
-  min-width: 800px;
+  width: 45%;
+  min-width: 400px;
   margin: auto;
   margin-bottom: 3em;
 }
@@ -152,50 +152,20 @@ li {
 
 /*identifying editable portions*/
 
-.CodeMirror-scroll:hover:not(.static):not(.CodeMirror-focused) {
-  background: rgba(0,0,0,0.05);
+.CodeMirror-scroll:hover:not(.static) {
+  background: rgba(0, 0, 0, 0.05);
 }
 
-.CodeMirror-scroll:hover.static:not(.CodeMirror-focused) {
-  background-color: rgba(0,0,0,0.01);
-}
-
-.CodeMirror-focused:not(:hover) {
-  background: rgba(0,0,0,0.07);
-}
-
-.CodeMirror-focused:hover {
-  background: rgba(0,0,0,0.075);
-}
-
-/**/
-
-.exercise .CodeMirror-scroll:hover:not(.static):not(.CodeMirror-focused) {
-  background: rgba(38, 92, 115, 0.05);
-}
-
-.exercise .CodeMirror-scroll:hover.static:not(.CodeMirror-focused) {
-  background-color: rgba(38, 92, 115, 0.01);
-}
-
-.exercise .CodeMirror-focused:not(:hover) {
-  background: rgba(38, 92, 115, 0.07);
-}
-
-.exercise .CodeMirror-focused:hover {
-  background: rgba(38, 92, 115, 0.075);
-}
-
-/**/
-
-.CodeMirror-matchingbracket {
-  background: rgba(0,0,0,0.1);
+.CodeMirror {
+  margin-bottom: 0.5em;
 }
 
 /**/
 
 div.CodeMirror span.CodeMirror-matchingbracket {
-    color: #5f5f5f; /*#869CEB; /*why can't we use .CodeMirror-matchingbracket? */
+  text-decoration: none;
+  font-weight: bolder;
+  color: #2A2B25;
 }
 
 #toc .h3 {
