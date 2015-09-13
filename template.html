@@ -16,7 +16,15 @@
 <script src="coding-js/coding.js"> </script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/raphael/2.1.2/raphael-min.js"></script>
 <script>
-  C = new CodingJS("coding-js/");
+  C = new CodingJS("coding-js/", "scheme", function (s) {
+    var ts = "";
+    for (var i = 0, d = C.get_all_deps(s); i < d.length; i++) {  //TODO list all deps
+        ts += C.editor_of[d[i]].getValue() + "\n\n";
+    }
+
+    ts += "<b>" + C.editor_of[s].getValue() + "</b>";
+    console.log(ts);
+  });
 </script>
 <script src="js/footnotes.js"></script>
 
@@ -43,13 +51,7 @@ MathJax.Hub.Config({
 
 <script>
 
-paper = Raphael($("#raphael-target")[0]);
-
-$('#sidebox .tab').toggle(function(){
-    $('#sidebox').animate({'right':'0%'});
-}, function(){
-    $('#sidebox').animate({'right':'-30%'});
-});
+// paper = Raphael($("#raphael-target")[0]);
 
 </script>
 
