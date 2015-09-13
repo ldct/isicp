@@ -24,6 +24,9 @@
 
     ts += "<b>" + C.editor_of[s].getValue() + "</b>";
     console.log(ts);
+
+    ga('send', 'event', 'editor', 'focus', s, 1);
+
   });
 </script>
 <script src="js/footnotes.js"></script>
