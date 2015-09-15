@@ -25,7 +25,6 @@
       }
 
       ts += "<b>" + C.editor_of[s].getValue() + "</b>";
-      console.log(ts);
 
       if (!window.initialEvalIsCompleted) return;
 
@@ -39,9 +38,9 @@
       if (!window.initialEvalIsCompleted) return;
       mixpanel.track('editor blur', {
         'editor_name': s,
-        'editor_value': editor_value,
+        'editor_value': C.editor_of[s].getValue(),
       });
-      console.log('mixpanel editor blur');
+      console.log('mixpanel editor blur', s, C.editor_of[s].getValue());
     },
     onInitialEvalHasCompleted: function () {
       window.initialEvalIsCompleted = true;
