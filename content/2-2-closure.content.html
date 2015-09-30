@@ -372,7 +372,7 @@ C.editor_of["scheme-ex-define-reverse"].setOption("onBlur", function(){
 <p>
 
 <div class="exercise">
-<p> <b>Exercise 2.19:</b> Consider the change-counting program of section <a href="1-2-procedures.content.html">1.2.2</a>. It would be nice to be able to easily change the currency used by the program, so that we could compute the number of ways to change a British pound, for example. As the program is written, the knowledge of the currency is distributed partly into the procedure <tt>first-denomination</tt> and partly into the procedure <tt>count-change</tt> (which knows that there are five kinds of U.S. coins). It would be nicer to be able to supply a list of coins to be used for making change.
+<p> <b>Exercise 2.19:</b> Consider the change-counting program of section <a href="1-2-procedures.html">1.2.2</a>. It would be nice to be able to easily change the currency used by the program, so that we could compute the number of ways to change a British pound, for example. As the program is written, the knowledge of the currency is distributed partly into the procedure <tt>first-denomination</tt> and partly into the procedure <tt>count-change</tt> (which knows that there are five kinds of U.S. coins). It would be nicer to be able to supply a list of coins to be used for making change.
 
 <p> We want to rewrite the procedure <tt>cc</tt> so that its second argument is a list of the values of the coins to use rather than an integer specifying which coins to use. We could then have lists that defined each kind of currency:
 
@@ -582,7 +582,7 @@ C.prompt("scheme-test-map", ["scheme-define-map"]);
 C.prompt("scheme-define-scale-list-with-map");
 </script>
 
-<p> <tt>map</tt> is an important construct, not only because it captures a common pattern, but because it establishes a higher level of abstraction in dealing with lists. In the original definition of <tt>scale-list</tt>, the recursive structure of the program draws attention to the element-by-element processing of the list. Defining <tt>scale-list</tt> in terms of <tt>map</tt> suppresses that level of detail and emphasizes that scaling transforms a list of elements to a list of results. The difference between the two definitions is not that the computer is performing a different process (it isn't) but that we think about the process differently. In effect, <tt>map</tt> helps establish an abstraction barrier that isolates the implementation of procedures that transform lists from the details of how the elements of the list are extracted and combined. Like the barriers shown in Figure 2-1, this abstraction gives us the flexibility to change the low-level details of how sequences are implemented, while preserving the conceptual framework of operations that transform sequences to sequences. Section <a href="2-2-closure.content.html">2.2.3</a> expands on this use of sequences as a framework for organizing programs.
+<p> <tt>map</tt> is an important construct, not only because it captures a common pattern, but because it establishes a higher level of abstraction in dealing with lists. In the original definition of <tt>scale-list</tt>, the recursive structure of the program draws attention to the element-by-element processing of the list. Defining <tt>scale-list</tt> in terms of <tt>map</tt> suppresses that level of detail and emphasizes that scaling transforms a list of elements to a list of results. The difference between the two definitions is not that the computer is performing a different process (it isn't) but that we think about the process differently. In effect, <tt>map</tt> helps establish an abstraction barrier that isolates the implementation of procedures that transform lists from the details of how the elements of the list are extracted and combined. Like the barriers shown in Figure 2-1, this abstraction gives us the flexibility to change the low-level details of how sequences are implemented, while preserving the conceptual framework of operations that transform sequences to sequences. Section <a href="2-2-closure.html">2.2.3</a> expands on this use of sequences as a framework for organizing programs.
 
 <div class="exercise">
 <p> <b>Exercise 2.21:</b> The procedure <tt>square-list</tt> takes a list of numbers as argument and returns a list of the squares of those numbers.
@@ -766,7 +766,7 @@ C.prompt("scheme-show-1-2-pair-3-4");
 
 <p style="text-align:center"> <b>Figure 2.6:</b> The list structure in Figure 2-5 viewed as a tree.
 
-<p> Recursion is a natural tool for dealing with tree structures, since we can often reduce operations on trees to operations on their branches, which reduce in turn to operations on the branches of the branches, and so on, until we reach the leaves of the tree. As an example, compare the <tt>length</tt> procedure of section <a href="2-2-closure.content.html">2.2.1</a> with the <tt>count-leaves</tt> procedure, which returns the total number of leaves of a tree:
+<p> Recursion is a natural tool for dealing with tree structures, since we can often reduce operations on trees to operations on their branches, which reduce in turn to operations on the branches of the branches, and so on, until we reach the leaves of the tree. As an example, compare the <tt>length</tt> procedure of section <a href="2-2-closure.html">2.2.1</a> with the <tt>count-leaves</tt> procedure, which returns the total number of leaves of a tree:
 
 <div id="scheme-define-x">
 (define x (cons (list 1 2) (list 3 4)))
@@ -1299,7 +1299,7 @@ C.prompt("scheme-define-make-mobile-branch-cons");
 
 <h4> Mapping over trees </h4>
 
-<p> Just as <tt>map</tt> is a powerful abstraction for dealing with sequences, <tt>map</tt> together with recursion is a powerful abstraction for dealing with trees. For instance, the <tt>scale-tree</tt> procedure, analogous to <tt>scale-list</tt> of section <a href="2-2-closure.content.html">2.2.1</a>, takes as arguments a numeric factor and a tree whose leaves are numbers. It returns a tree of the same shape, where each number is multiplied by the factor. The recursive plan for <tt>scale-tree</tt> is similar to the one for <tt>count-leaves</tt>:
+<p> Just as <tt>map</tt> is a powerful abstraction for dealing with sequences, <tt>map</tt> together with recursion is a powerful abstraction for dealing with trees. For instance, the <tt>scale-tree</tt> procedure, analogous to <tt>scale-list</tt> of section <a href="2-2-closure.html">2.2.1</a>, takes as arguments a numeric factor and a tree whose leaves are numbers. It returns a tree of the same shape, where each number is multiplied by the factor. The recursive plan for <tt>scale-tree</tt> is similar to the one for <tt>count-leaves</tt>:
 
 <div id="scheme-define-scale-tree">
 (define (scale-tree tree factor)
@@ -1495,7 +1495,7 @@ C.editor_of["scheme-ex-define-subset"].setOption("onBlur", function(){
 
 <p> In working with compound data, we've stressed how data abstraction permits us to design programs without becoming enmeshed in the details of data representations, and how abstraction preserves for us the flexibility to experiment with alternative representations. In this section, we introduce another powerful design principle for working with data structures &ndash; the use of <tt>conventional interfaces</tt> .
 
-<p> In section <a href="1-3-hop.html">1.3</a> we saw how program abstractions, implemented as higher-order procedures, can capture common patterns in programs that deal with numerical data. Our ability to formulate analogous operations for working with compound data depends crucially on the style in which we manipulate our data structures. Consider, for example, the following procedure, analogous to the <tt>count-leaves</tt> procedure of section <a href="2-2-closure.content.html">2.2.2</a>, which takes a tree as argument and computes the sum of the squares of the leaves that are odd:
+<p> In section <a href="1-3-hop.html">1.3</a> we saw how program abstractions, implemented as higher-order procedures, can capture common patterns in programs that deal with numerical data. Our ability to formulate analogous operations for working with compound data depends crucially on the style in which we manipulate our data structures. Consider, for example, the following procedure, analogous to the <tt>count-leaves</tt> procedure of section <a href="2-2-closure.html">2.2.2</a>, which takes a tree as argument and computes the sum of the squares of the leaves that are odd:
 
 <div id="scheme-define-sum-odd-squares">
 (define (sum-odd-squares tree)
@@ -1577,7 +1577,7 @@ empty list.
 
 <h4> Sequence Operations </h4>
 
-<p> The key to organizing programs so as to more clearly reflect the signal-flow structure is to concentrate on the ``signals'' that flow from one stage in the process to the next. If we represent these signals as lists, then we can use list operations to implement the processing at each of the stages. For instance, we can implement the mapping stages of the signal-flow diagrams using the <tt>map</tt> procedure from section <a href="2-2-closure.content.html">2.2.1</a>:
+<p> The key to organizing programs so as to more clearly reflect the signal-flow structure is to concentrate on the ``signals'' that flow from one stage in the process to the next. If we represent these signals as lists, then we can use list operations to implement the processing at each of the stages. For instance, we can implement the mapping stages of the signal-flow diagrams using the <tt>map</tt> procedure from section <a href="2-2-closure.html">2.2.1</a>:
 
 <div id="scheme-map-square-1-to-5">
 (map square (list 1 2 3 4 5))
@@ -1975,7 +1975,7 @@ C.no_output_frozen_prompt("scheme-horner-eval-poly-at-2");
 
 <div class="exercise">
 <p> <b>Exercise 2.35:</b> Redefine <tt>count-leaves</tt> from
-section <a href="2-2-closure.content.html">2.2.2</a> as an accumulation:
+section <a href="2-2-closure.html">2.2.2</a> as an accumulation:
 
 <div id="scheme-ex-define-count-leaves-with-accumulate">
 (define (count-leaves t)
@@ -3007,7 +3007,7 @@ C.prompt("scheme-demonstrate-map");
 </div>
 
 <div id="footnote_2-28" class='footnote'>
-<p> <a href="#footnote_link_2-28" class="footnote_backlink">28</a> For example, the rogers painter of figure 2.11 was constructed from a gray-level image. For each point in a given frame, the rogers painter determines the point in the image that is mapped to it under the frame coordinate map, and shades it accordingly. By allowing different types of painters, we are capitalizing on the abstract data idea discussed in section <a href="2-1-data.html#%_sec_2.1.3">2.1.3</a>, where we argued that a rational-number representation could be anything at all that satisfies an appropriate condition. Here we're using the fact that a painter can be implemented in any way at all, so long as it draws something in the designated frame. Section <a href="2-1-data.content.html#%_sec_2.1.3">2.1.3</a> also showed how pairs could be implemented as procedures. Painters are our second example of a procedural representation for data.
+<p> <a href="#footnote_link_2-28" class="footnote_backlink">28</a> For example, the rogers painter of figure 2.11 was constructed from a gray-level image. For each point in a given frame, the rogers painter determines the point in the image that is mapped to it under the frame coordinate map, and shades it accordingly. By allowing different types of painters, we are capitalizing on the abstract data idea discussed in section <a href="2-1-data.html#%_sec_2.1.3">2.1.3</a>, where we argued that a rational-number representation could be anything at all that satisfies an appropriate condition. Here we're using the fact that a painter can be implemented in any way at all, so long as it draws something in the designated frame. Section <a href="2-1-data.html#%_sec_2.1.3">2.1.3</a> also showed how pairs could be implemented as procedures. Painters are our second example of a procedural representation for data.
 </div>
 
 <div id="footnote_2-29" class='footnote'>

@@ -24,7 +24,7 @@
 
 <p> Compared with interpretation, compilation can provide a great increase in the efficiency of program execution, as we will explain below in the overview of the compiler. On the other hand, an interpreter provides a more powerful environment for interactive program development and debugging, because the source program being executed is available at run time to be examined and modified. In addition, because the entire library of primitives is present, new programs can be constructed and added to the system during debugging.
 
-<p> In view of the complementary advantages of compilation and interpretation, modern program-development environments pursue a mixed strategy. Lisp interpreters are generally organized so that interpreted procedures and compiled procedures can call each other. This enables a programmer to compile those parts of a program that are assumed to be debugged, thus gaining the efficiency advantage of compilation, while retaining the interpretive mode of execution for those parts of the program that are in the flux of interactive development and debugging. In section <a href="5-5-compilation.content.html">5.5.7</a>, after we have implemented the compiler, we will show how to interface it with our interpreter to produce an integrated interpreter-compiler development system.
+<p> In view of the complementary advantages of compilation and interpretation, modern program-development environments pursue a mixed strategy. Lisp interpreters are generally organized so that interpreted procedures and compiled procedures can call each other. This enables a programmer to compile those parts of a program that are assumed to be debugged, thus gaining the efficiency advantage of compilation, while retaining the interpretive mode of execution for those parts of the program that are in the flux of interactive development and debugging. In section <a href="5-5-compilation.html">5.5.7</a>, after we have implemented the compiler, we will show how to interface it with our interpreter to produce an integrated interpreter-compiler development system.
 
 <h4> An overview of the compiler </h4>
 
@@ -32,7 +32,7 @@
 
 <p> This description suggests a strategy for implementing a rudimentary compiler: We traverse the expression in the same way the interpreter does. When we encounter a register instruction that the interpreter would perform in evaluating the expression, we do not execute the instruction but instead accumulate it into a sequence. The resulting sequence of instructions will be the object code. Observe the efficiency advantage of compilation over interpretation. Each time the interpreter evaluates an expression---for example, <tt>(f 84 96)</tt>---it performs the work of classifying the expression (discovering that this is a procedure application) and testing for the end of the operand list (discovering that there are two operands). With a compiler, the expression is analyzed only once, when the instruction sequence is generated at compile time. The object code produced by the compiler contains only the instructions that evaluate the operator and the two operands, assemble the argument list, and apply the procedure (in <tt>proc</tt>) to the arguments (in <tt>argl</tt>).
 
-<p> This is the same kind of optimization we implemented in the analyzing evaluator of section <a href="4-1-metacircular.content.html">4.1.7</a>. But there are further opportunities to gain efficiency in compiled code. As the interpreter runs, it follows a process that must be applicable to any expression in the language. In contrast, a given segment of compiled code is meant to execute some particular expression. This can make a big difference, for example in the use of the stack to save registers. When the interpreter evaluates an expression, it must be prepared for any contingency. Before evaluating a subexpression, the interpreter saves all registers that will be needed later, because the subexpression might require an arbitrary evaluation. A compiler, on the other hand, can exploit the structure of the particular expression it is processing to generate code that avoids unnecessary stack operations.
+<p> This is the same kind of optimization we implemented in the analyzing evaluator of section <a href="4-1-metacircular.html">4.1.7</a>. But there are further opportunities to gain efficiency in compiled code. As the interpreter runs, it follows a process that must be applicable to any expression in the language. In contrast, a given segment of compiled code is meant to execute some particular expression. This can make a big difference, for example in the use of the stack to save registers. When the interpreter evaluates an expression, it must be prepared for any contingency. Before evaluating a subexpression, the interpreter saves all registers that will be needed later, because the subexpression might require an arbitrary evaluation. A compiler, on the other hand, can exploit the structure of the particular expression it is processing to generate code that avoids unnecessary stack operations.
 
 <p> As a case in point, consider the combination <tt>(f 84 96)</tt>. Before the interpreter evaluates the operator of the combination, it prepares for this evaluation by saving the registers containing the operands and the environment, whose values will be needed later. The interpreter then evaluates the operator to obtain the result in <tt>val</tt>, restores the saved registers, and finally moves the result from <tt>val</tt> to <tt>proc</tt>. However, in the particular expression we are dealing with, the operator is the symbol <tt>f</tt>, whose evaluation is accomplished by the machine operation <tt>lookup-variable-value</tt>, which does not alter any registers. The compiler that we implement in this section will take advantage of this fact and generate code that evaluates the operator using the instruction
 
@@ -45,14 +45,14 @@ C.prompt();
 
 <p> This code not only avoids the unnecessary saves and restores but also assigns the value of the lookup directly to <tt>proc</tt>, whereas the interpreter would obtain the result in <tt>val</tt> and then move this to <tt>proc</tt>.
 
-<p> A compiler can also optimize access to the environment. Having analyzed the code, the compiler can in many cases know in which frame a particular variable will be located and access that frame directly, rather than performing the <tt>lookup-variable-value</tt> search. We will discuss how to implement such variable access in section <a href="5-5-compilation.content.html">5.5.6</a>. Until then, however, we will focus on the kind of register and stack optimizations described above. There are many other optimizations that can be performed by a compiler, such as coding primitive operations ``in line'' instead of using a general <tt>apply</tt> mechanism (see Exercise 5-38); but we will not emphasize these here. Our main goal in this section is to illustrate the compilation process in a simplified (but still interesting) context.
+<p> A compiler can also optimize access to the environment. Having analyzed the code, the compiler can in many cases know in which frame a particular variable will be located and access that frame directly, rather than performing the <tt>lookup-variable-value</tt> search. We will discuss how to implement such variable access in section <a href="5-5-compilation.html">5.5.6</a>. Until then, however, we will focus on the kind of register and stack optimizations described above. There are many other optimizations that can be performed by a compiler, such as coding primitive operations ``in line'' instead of using a general <tt>apply</tt> mechanism (see Exercise 5-38); but we will not emphasize these here. Our main goal in this section is to illustrate the compilation process in a simplified (but still interesting) context.
 
 <a name="%_sec_5.5.1" />
 <h3> 5.5.1 Structure of the Compiler </h3>
 
-<p> In section <a href="4-1-metacircular.content.html">4.1.7</a> we modified our original metacircular interpreter to separate analysis from execution. We analyzed each expression to produce an execution procedure that took an environment as argument and performed the required operations. In our compiler, we will do essentially the same analysis. Instead of producing execution procedures, however, we will generate sequences of instructions to be run by our register machine.
+<p> In section <a href="4-1-metacircular.html">4.1.7</a> we modified our original metacircular interpreter to separate analysis from execution. We analyzed each expression to produce an execution procedure that took an environment as argument and performed the required operations. In our compiler, we will do essentially the same analysis. Instead of producing execution procedures, however, we will generate sequences of instructions to be run by our register machine.
 
-<p> The procedure <tt>compile</tt> is the top-level dispatch in the compiler. It corresponds to the <tt>eval</tt> procedure of section <a href="4-1-metacircular.content.html">4.1.1</a>, the <tt>analyze</tt> procedure of section <a href="4-1-metacircular.content.html">4.1.7</a>, and the <tt>eval-dispatch</tt> entry point of the explicit-control-evaluator in section <a href="5-4-explicit-control.content.html">5.4.1</a>. The compiler, like the interpreters, uses the expression-syntax procedures defined in section <a href="4-1-metacircular.content.html">4.1.2</a>.@footnote{Notice, however, that our compiler is a Scheme program, and the syntax procedures that it uses to manipulate expressions are the actual Scheme procedures used with the metacircular evaluator. For the explicit-control evaluator, in contrast, we assumed that equivalent syntax operations were available as operations for the register machine. (Of course, when we simulated the register machine in Scheme, we used the actual Scheme procedures in our register machine simulation.)}  <tt>Compile</tt> performs a case analysis on the syntactic type of the expression to be compiled. For each type of expression, it dispatches to a specialized <tt>code generator</tt> :
+<p> The procedure <tt>compile</tt> is the top-level dispatch in the compiler. It corresponds to the <tt>eval</tt> procedure of section <a href="4-1-metacircular.html">4.1.1</a>, the <tt>analyze</tt> procedure of section <a href="4-1-metacircular.html">4.1.7</a>, and the <tt>eval-dispatch</tt> entry point of the explicit-control-evaluator in section <a href="5-4-explicit-control.html">5.4.1</a>. The compiler, like the interpreters, uses the expression-syntax procedures defined in section <a href="4-1-metacircular.html">4.1.2</a>.@footnote{Notice, however, that our compiler is a Scheme program, and the syntax procedures that it uses to manipulate expressions are the actual Scheme procedures used with the metacircular evaluator. For the explicit-control evaluator, in contrast, we assumed that equivalent syntax operations were available as operations for the register machine. (Of course, when we simulated the register machine in Scheme, we used the actual Scheme procedures in our register machine simulation.)}  <tt>Compile</tt> performs a case analysis on the syntactic type of the expression to be compiled. For each type of expression, it dispatches to a specialized <tt>code generator</tt> :
 
 <div id="">
 (define (compile exp target linkage)
@@ -215,7 +215,7 @@ C.prompt();
 C.prompt();
 </script>
 
-<p> The procedures for combining instruction sequences are shown in section <a href="5-5-compilation.content.html">5.5.4</a>.
+<p> The procedures for combining instruction sequences are shown in section <a href="5-5-compilation.html">5.5.4</a>.
 
 <div class="exercise">
 <p> <b>Exercise 5.31:</b> In evaluating a procedure application, the explicit-control evaluator always saves and restores the <tt>env</tt> register around the evaluation of the operator, saves and restores <tt>env</tt> around the evaluation of each operand (except the final one), saves and restores <tt>argl</tt> around the evaluation of each operand, and saves and restores <tt>proc</tt> around the evaluation of the operand sequence. For each of the following combinations, say which of these <tt>save</tt> and <tt>restore</tt> operations are superfluous and thus could be eliminated by the compiler's <tt>preserving</tt> mechanism:
@@ -417,9 +417,9 @@ C.prompt();
 C.prompt();
 </script>
 
-<p> <tt>Env</tt> is preserved around the predicate code because it could be needed by the true and false branches, and <tt>continue</tt> is preserved because it could be needed by the linkage code in those branches. The code for the true and false branches (which are not executed sequentially) is appended using a special combiner <tt>parallel-instruction-sequences</tt> described in section <a href="5-5-compilation.content.html">5.5.4</a>.
+<p> <tt>Env</tt> is preserved around the predicate code because it could be needed by the true and false branches, and <tt>continue</tt> is preserved because it could be needed by the linkage code in those branches. The code for the true and false branches (which are not executed sequentially) is appended using a special combiner <tt>parallel-instruction-sequences</tt> described in section <a href="5-5-compilation.html">5.5.4</a>.
 
-<p> Note that <tt>cond</tt> is a derived expression, so all that the compiler needs to do handle it is to apply the <tt>cond->if</tt> transformer (from section <a href="4-1-metacircular.content.html">4.1.2</a>) and compile the resulting <tt>if</tt> expression.
+<p> Note that <tt>cond</tt> is a derived expression, so all that the compiler needs to do handle it is to apply the <tt>cond->if</tt> transformer (from section <a href="4-1-metacircular.html">4.1.2</a>) and compile the resulting <tt>if</tt> expression.
 
 <h4> Compiling sequences </h4>
 
@@ -452,7 +452,7 @@ C.prompt();
 after-lambda
 
 
-<p> <tt>Compile-lambda</tt> generates the code for constructing the procedure object followed by the code for the procedure body. The procedure object will be constructed at run time by combining the current environment (the environment at the point of definition) with the entry point to the compiled procedure body (a newly generated label).@footnote{[Footnote 38] We need machine operations to implement a data structure for representing compiled procedures, analogous to the structure for compound procedures described in section <a href="4-1-metacircular.content.html">4.1.3</a>:
+<p> <tt>Compile-lambda</tt> generates the code for constructing the procedure object followed by the code for the procedure body. The procedure object will be constructed at run time by combining the current environment (the environment at the point of definition) with the entry point to the compiled procedure body (a newly generated label).@footnote{[Footnote 38] We need machine operations to implement a data structure for representing compiled procedures, analogous to the structure for compound procedures described in section <a href="4-1-metacircular.html">4.1.3</a>:
 
 <div id="">
 (define (make-compiled-procedure entry env)
@@ -491,7 +491,7 @@ C.prompt();
 C.prompt();
 </script>
 
-<p> <tt>Compile-lambda</tt> uses the special combiner <tt>tack-on-instruction-sequence</tt> (section <a href="5-5-compilation.content.html">5.5.4</a>) rather than <tt>append-instruction-sequences</tt> to append the procedure body to the <tt>lambda</tt> expression code, because the body is not part of the sequence of instructions that will be executed when the combined sequence is entered; rather, it is in the sequence only because that was a convenient place to put it.
+<p> <tt>Compile-lambda</tt> uses the special combiner <tt>tack-on-instruction-sequence</tt> (section <a href="5-5-compilation.html">5.5.4</a>) rather than <tt>append-instruction-sequences</tt> to append the procedure body to the <tt>lambda</tt> expression code, because the body is not part of the sequence of instructions that will be executed when the combined sequence is entered; rather, it is in the sequence only because that was a convenient place to put it.
 
 <p> <tt>Compile-lambda-body</tt> constructs the code for the body of the procedure. This code begins with a label for the entry point. Next come instructions that will cause the run-time evaluation environment to switch to the correct environment for evaluating the procedure body---namely, the definition environment of the procedure, extended to include the bindings of the formal parameters to the arguments with which the procedure is called. After this comes the code for the sequence of expressions that makes up the procedure body. The sequence is compiled with linkage <tt>return</tt> and target <tt>val</tt> so that it will end by returning from the procedure with the procedure result in <tt>val</tt>.
 
@@ -604,7 +604,7 @@ C.prompt();
 
 <h4> Applying procedures </h4>
 
-<p> After evaluating the elements of a combination, the compiled code must apply the procedure in <tt>proc</tt> to the arguments in <tt>argl</tt>. The code performs essentially the same dispatch as the <tt>apply</tt> procedure in the metacircular evaluator of section <a href="4-1-metacircular.content.html">4.1.1</a> or the <tt>apply-dispatch</tt> entry point in the explicit-control evaluator of section <a href="5-4-explicit-control.content.html">5.4.1</a>. It checks whether the procedure to be applied is a primitive procedure or a compiled procedure. For a primitive procedure, it uses <tt>apply-primitive-procedure</tt>; we will see shortly how it handles compiled procedures. The procedure-application code has the following form:
+<p> After evaluating the elements of a combination, the compiled code must apply the procedure in <tt>proc</tt> to the arguments in <tt>argl</tt>. The code performs essentially the same dispatch as the <tt>apply</tt> procedure in the metacircular evaluator of section <a href="4-1-metacircular.html">4.1.1</a> or the <tt>apply-dispatch</tt> entry point in the explicit-control evaluator of section <a href="5-4-explicit-control.html">5.4.1</a>. It checks whether the procedure to be applied is a primitive procedure or a compiled procedure. For a primitive procedure, it uses <tt>apply-primitive-procedure</tt>; we will see shortly how it handles compiled procedures. The procedure-application code has the following form:
 
 <div id="">
 (test (op primitive-procedure?) (reg proc))
@@ -769,7 +769,7 @@ C.prompt();
 <a name="%_sec_5.5.4" />
 <h3> 5.5.4 Combining Instruction Sequences </h3>
 
-<p> This section describes the details on how instruction sequences are represented and combined. Recall from section <a href="5-5-compilation.content.html">5.5.1</a> that an instruction sequence is represented as a list of the registers needed, the registers modified, and the actual instructions. We will also consider a label (symbol) to be a degenerate case of an instruction sequence, which doesn't need or modify any registers. So to determine the registers needed and modified by instruction sequences we use the selectors
+<p> This section describes the details on how instruction sequences are represented and combined. Recall from section <a href="5-5-compilation.html">5.5.1</a> that an instruction sequence is represented as a list of the registers needed, the registers modified, and the actual instructions. We will also consider a label (symbol) to be a degenerate case of an instruction sequence, which doesn't need or modify any registers. So to determine the registers needed and modified by instruction sequences we use the selectors
 
 <div id="">
 (define (registers-needed s)
@@ -825,7 +825,7 @@ C.prompt();
 C.prompt();
 </script>
 
-<p> This procedure uses some simple operations for manipulating sets represented as lists, similar to the (unordered) set representation described in section <a href="2-3-symbolic.content.html">2.3.3</a>:
+<p> This procedure uses some simple operations for manipulating sets represented as lists, similar to the (unordered) set representation described in section <a href="2-3-symbolic.html">2.3.3</a>:
 
 <div id="">
 (define (list-union s1 s2)
@@ -1233,7 +1233,7 @@ after-lambda15
 </div>
 
 <div class="exercise">
-<p> <b>Exercise 5.36:</b> What order of evaluation does our compiler produce for operands of a combination?  Is it left-to-right, right-to-left, or some other order?  Where in the compiler is this order determined?  Modify the compiler so that it produces some other order of evaluation. (See the discussion of order of evaluation for the explicit-control evaluator in section <a href="5-4-explicit-control.content.html">5.4.1</a>.)  How does changing the order of operand evaluation affect the efficiency of the code that constructs the argument list?
+<p> <b>Exercise 5.36:</b> What order of evaluation does our compiler produce for operands of a combination?  Is it left-to-right, right-to-left, or some other order?  Where in the compiler is this order determined?  Modify the compiler so that it produces some other order of evaluation. (See the discussion of order of evaluation for the explicit-control evaluator in section <a href="5-4-explicit-control.html">5.4.1</a>.)  How does changing the order of operand evaluation affect the efficiency of the code that constructs the argument list?
 </div>
 
 <div class="exercise">
@@ -1359,7 +1359,7 @@ C.prompt();
 </div>
 
 <div class="exercise">
-<p> <b>Exercise 5.43:</b> We argued in section <a href="4-1-metacircular.content.html">4.1.6</a> that internal definitions for block structure should not be considered ``real''<tt>define</tt>s. Rather, a procedure body should be interpreted as if the internal variables being defined were installed as ordinary <tt>lambda</tt> variables initialized to their correct values using <tt>set!</tt>. Section <a href="4-1-metacircular.content.html">4.1.6</a> and Exercise 4-16 showed how to modify the metacircular interpreter to accomplish this by scanning out internal definitions. Modify the compiler to perform the same transformation before it compiles a procedure body.
+<p> <b>Exercise 5.43:</b> We argued in section <a href="4-1-metacircular.html">4.1.6</a> that internal definitions for block structure should not be considered ``real''<tt>define</tt>s. Rather, a procedure body should be interpreted as if the internal variables being defined were installed as ordinary <tt>lambda</tt> variables initialized to their correct values using <tt>set!</tt>. Section <a href="4-1-metacircular.html">4.1.6</a> and Exercise 4-16 showed how to modify the metacircular interpreter to accomplish this by scanning out internal definitions. Modify the compiler to perform the same transformation before it compiles a procedure body.
 </div>
 
 <div class="exercise">
@@ -1380,7 +1380,7 @@ C.prompt();
 <a name="%_sec_5.5.7" />
 <h3> 5.5.7 Interfacing Compiled Code to the Evaluator </h3>
 
-<p> We have not yet explained how to load compiled code into the evaluator machine or how to run it. We will assume that the explicit-control-evaluator machine has been defined as in section <a href="5-4-explicit-control.content.html">5.4.4</a>, with the additional operations specified in footnote Footnote 38. We will implement a procedure <tt>compile-and-go</tt> that compiles a Scheme expression, loads the resulting object code into the evaluator machine, and causes the machine to run the code in the evaluator global environment, print the result, and enter the evaluator's driver loop. We will also modify the evaluator so that interpreted expressions can call compiled procedures as well as interpreted ones. We can then put a compiled procedure into the machine and use the evaluator to call it:
+<p> We have not yet explained how to load compiled code into the evaluator machine or how to run it. We will assume that the explicit-control-evaluator machine has been defined as in section <a href="5-4-explicit-control.html">5.4.4</a>, with the additional operations specified in footnote Footnote 38. We will implement a procedure <tt>compile-and-go</tt> that compiles a Scheme expression, loads the resulting object code into the evaluator machine, and causes the machine to run the code in the evaluator global environment, print the result, and enter the evaluator's driver loop. We will also modify the evaluator so that interpreted expressions can call compiled procedures as well as interpreted ones. We can then put a compiled procedure into the machine and use the evaluator to call it:
 
 <div id="">
 (compile-and-go
@@ -1400,7 +1400,7 @@ ok
 C.prompt();
 </script>
 
-<p> To allow the evaluator to handle compiled procedures (for example, to evaluate the call to <tt>factorial</tt> above), we need to change the code at <tt>apply-dispatch</tt> (section <a href="5-4-explicit-control.content.html">5.4.1</a>) so that it recognizes compiled procedures (as distinct from compound or primitive procedures) and transfers control directly to the entry point of the compiled code:@footnote{Of course, compiled procedures as well as interpreted procedures are compound (nonprimitive). For compatibility with the terminology used in the explicit-control evaluator, in this section we will use ``compound'' to mean interpreted (as opposed to compiled).}
+<p> To allow the evaluator to handle compiled procedures (for example, to evaluate the call to <tt>factorial</tt> above), we need to change the code at <tt>apply-dispatch</tt> (section <a href="5-4-explicit-control.html">5.4.1</a>) so that it recognizes compiled procedures (as distinct from compound or primitive procedures) and transfers control directly to the entry point of the compiled code:@footnote{Of course, compiled procedures as well as interpreted procedures are compound (nonprimitive). For compatibility with the terminology used in the explicit-control evaluator, in this section we will use ``compound'' to mean interpreted (as opposed to compiled).}
 
 <div id="">
 apply-dispatch
@@ -1446,7 +1446,7 @@ read-eval-print-loop
 C.prompt();
 </script>
 
-<p> <tt>External-entry</tt> assumes that the machine is started with <tt>val</tt> containing the location of an instruction sequence that puts a result into <tt>val</tt> and ends with <tt>(goto (reg continue))</tt>. Starting at this entry point jumps to the location designated by <tt>val</tt>, but first assigns <tt>continue</tt> so that execution will return to <tt>print-result</tt>, which prints the value in <tt>val</tt> and then goes to the beginning of the evaluator's read-eval-print loop.@footnote{Since a compiled procedure is an object that the system may try to print, we also modify the system print operation <tt>user-print</tt> (from section <a href="4-1-metacircular.content.html">4.1.4</a>) so that it will not attempt to print the components of a compiled procedure:
+<p> <tt>External-entry</tt> assumes that the machine is started with <tt>val</tt> containing the location of an instruction sequence that puts a result into <tt>val</tt> and ends with <tt>(goto (reg continue))</tt>. Starting at this entry point jumps to the location designated by <tt>val</tt>, but first assigns <tt>continue</tt> so that execution will return to <tt>print-result</tt>, which prints the value in <tt>val</tt> and then goes to the beginning of the evaluator's read-eval-print loop.@footnote{Since a compiled procedure is an object that the system may try to print, we also modify the system print operation <tt>user-print</tt> (from section <a href="4-1-metacircular.html">4.1.4</a>) so that it will not attempt to print the components of a compiled procedure:
 
 <div id="">
 (define (user-print object)
@@ -1475,7 +1475,7 @@ external-entry
 C.prompt();
 </script>
 
-<p> Now we can use the following procedure to compile a procedure definition, execute the compiled code, and run the read-eval-print loop so we can try the procedure. Because we want the compiled code to return to the location in <tt>continue</tt> with its result in <tt>val</tt>, we compile the expression with a target of <tt>val</tt> and a linkage of <tt>return</tt>. In order to transform the object code produced by the compiler into executable instructions for the evaluator register machine, we use the procedure <tt>assemble</tt> from the register-machine simulator (section <a href="5-2-simulator.content.html">5.2.2</a>). We then initialize the <tt>val</tt> register to point to the list of instructions, set the <tt>flag</tt> so that the evaluator will go to <tt>external-entry</tt>, and start the evaluator.
+<p> Now we can use the following procedure to compile a procedure definition, execute the compiled code, and run the read-eval-print loop so we can try the procedure. Because we want the compiled code to return to the location in <tt>continue</tt> with its result in <tt>val</tt>, we compile the expression with a target of <tt>val</tt> and a linkage of <tt>return</tt>. In order to transform the object code produced by the compiler into executable instructions for the evaluator register machine, we use the procedure <tt>assemble</tt> from the register-machine simulator (section <a href="5-2-simulator.html">5.2.2</a>). We then initialize the <tt>val</tt> register to point to the list of instructions, set the <tt>flag</tt> so that the evaluator will go to <tt>external-entry</tt>, and start the evaluator.
 
 <div id="">
 (define (compile-and-go expression)
@@ -1492,7 +1492,7 @@ C.prompt();
 C.prompt();
 </script>
 
-<p> If we have set up stack monitoring, as at the end of section <a href="5-4-explicit-control.content.html">5.4.4</a>, we can examine the stack usage of compiled code:
+<p> If we have set up stack monitoring, as at the end of section <a href="5-4-explicit-control.html">5.4.4</a>, we can examine the stack usage of compiled code:
 
 <div id="">
 (compile-and-go
@@ -1515,7 +1515,7 @@ ok
 C.prompt();
 </script>
 
-<p> Compare this example with the evaluation of <tt>(factorial 5)</tt> using the interpreted version of the same procedure, shown at the end of section <a href="5-4-explicit-control.content.html">5.4.4</a>. The interpreted version required 144 pushes and a maximum stack depth of 28. This illustrates the optimization that results from our compilation strategy.
+<p> Compare this example with the evaluation of <tt>(factorial 5)</tt> using the interpreted version of the same procedure, shown at the end of section <a href="5-4-explicit-control.html">5.4.4</a>. The interpreted version required 144 pushes and a maximum stack depth of 28. This illustrates the optimization that results from our compilation strategy.
 
 <h4> Interpretation and compilation </h4>
 

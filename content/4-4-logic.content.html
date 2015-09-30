@@ -14,11 +14,11 @@
 
 <p> In Chapter 1 we stressed that computer science deals with imperative (how to) knowledge, whereas mathematics deals with declarative (what is) knowledge. Indeed, programming languages require that the programmer express knowledge in a form that indicates the step-by-step methods for solving particular problems. On the other hand, high-level languages provide, as part of the language implementation, a substantial amount of methodological knowledge that frees the user from concern with numerous details of how a specified computation will progress.
 
-<p> Most programming languages, including Lisp, are organized around computing the values of mathematical functions. Expression-oriented languages (such as Lisp, Fortran, and Algol) capitalize on the ``pun'' that an expression that describes the value of a function may also be interpreted as a means of computing that value. Because of this, most programming languages are strongly biased toward unidirectional computations (computations with well-defined inputs and outputs). There are, however, radically different programming languages that relax this bias. We saw one such example in section <a href="3-3-modeling.content.html">3.3.5</a>, where the objects of computation were arithmetic constraints. In a constraint system the direction and the order of computation are not so well specified; in carrying out a computation the system must therefore provide more detailed ``how to''knowledge than would be the case with an ordinary arithmetic computation. This does not mean, however, that the user is released altogether from the responsibility of providing imperative knowledge. There are many constraint networks that implement the same set of constraints, and the user must choose from the set of mathematically equivalent networks a suitable network to specify a particular computation.
+<p> Most programming languages, including Lisp, are organized around computing the values of mathematical functions. Expression-oriented languages (such as Lisp, Fortran, and Algol) capitalize on the ``pun'' that an expression that describes the value of a function may also be interpreted as a means of computing that value. Because of this, most programming languages are strongly biased toward unidirectional computations (computations with well-defined inputs and outputs). There are, however, radically different programming languages that relax this bias. We saw one such example in section <a href="3-3-modeling.html">3.3.5</a>, where the objects of computation were arithmetic constraints. In a constraint system the direction and the order of computation are not so well specified; in carrying out a computation the system must therefore provide more detailed ``how to''knowledge than would be the case with an ordinary arithmetic computation. This does not mean, however, that the user is released altogether from the responsibility of providing imperative knowledge. There are many constraint networks that implement the same set of constraints, and the user must choose from the set of mathematically equivalent networks a suitable network to specify a particular computation.
 
-<p> The nondeterministic program evaluator of section <a href="4-3-nondeterministic.html">4.3</a> also moves away from the view that programming is about constructing algorithms for computing unidirectional functions. In a nondeterministic language, expressions can have more than one value, and, as a result, the computation is dealing with relations rather than with single-valued functions. Logic programming extends this idea by combining a relational vision of programming with a powerful kind of symbolic pattern matching called <tt>unification</tt> .@footnote{Logic programming has grown out of a long history of research in automatic theorem proving. Early theorem-proving programs could accomplish very little, because they exhaustively searched the space of possible proofs. The major breakthrough that made such a search plausible was the discovery in the early 1960s of the <tt>unification algorithm</tt> and the <tt>resolution principle</tt> (Robinson 1965). Resolution was used, for example, by Green and Raphael (1968) (see also Green 1969) as the basis for a deductive question-answering system. During most of this period, researchers concentrated on algorithms that are guaranteed to find a proof if one exists. Such algorithms were difficult to control and to direct toward a proof. Hewitt (1969) recognized the possibility of merging the control structure of a programming language with the operations of a logic-manipulation system, leading to the work in automatic search mentioned in section <a href="4-3-nondeterministic.content.html">4.3.1</a> (footnote Footnote 4-47). At the same time that this was being done, Colmerauer, in Marseille, was developing rule-based systems for manipulating natural language (see Colmerauer et al. 1973). He invented a programming language called Prolog for representing those rules. Kowalski (1973; 1979), in Edinburgh, recognized that execution of a Prolog program could be interpreted as proving theorems (using a proof technique called linear Horn-clause resolution). The merging of the last two strands led to the logic-programming movement. Thus, in assigning credit for the development of logic programming, the French can point to Prolog's genesis at the University of Marseille, while the British can highlight the work at the University of Edinburgh. According to people at @acronym{MIT}, logic programming was developed by these groups in an attempt to figure out what Hewitt was talking about in his brilliant but impenetrable Ph.D. thesis. For a history of logic programming, see Robinson 1983.}
+<p> The nondeterministic program evaluator of section <a href="4-3-nondeterministic.html">4.3</a> also moves away from the view that programming is about constructing algorithms for computing unidirectional functions. In a nondeterministic language, expressions can have more than one value, and, as a result, the computation is dealing with relations rather than with single-valued functions. Logic programming extends this idea by combining a relational vision of programming with a powerful kind of symbolic pattern matching called <tt>unification</tt> .@footnote{Logic programming has grown out of a long history of research in automatic theorem proving. Early theorem-proving programs could accomplish very little, because they exhaustively searched the space of possible proofs. The major breakthrough that made such a search plausible was the discovery in the early 1960s of the <tt>unification algorithm</tt> and the <tt>resolution principle</tt> (Robinson 1965). Resolution was used, for example, by Green and Raphael (1968) (see also Green 1969) as the basis for a deductive question-answering system. During most of this period, researchers concentrated on algorithms that are guaranteed to find a proof if one exists. Such algorithms were difficult to control and to direct toward a proof. Hewitt (1969) recognized the possibility of merging the control structure of a programming language with the operations of a logic-manipulation system, leading to the work in automatic search mentioned in section <a href="4-3-nondeterministic.html">4.3.1</a> (footnote Footnote 4-47). At the same time that this was being done, Colmerauer, in Marseille, was developing rule-based systems for manipulating natural language (see Colmerauer et al. 1973). He invented a programming language called Prolog for representing those rules. Kowalski (1973; 1979), in Edinburgh, recognized that execution of a Prolog program could be interpreted as proving theorems (using a proof technique called linear Horn-clause resolution). The merging of the last two strands led to the logic-programming movement. Thus, in assigning credit for the development of logic programming, the French can point to Prolog's genesis at the University of Marseille, while the British can highlight the work at the University of Edinburgh. According to people at @acronym{MIT}, logic programming was developed by these groups in an attempt to figure out what Hewitt was talking about in his brilliant but impenetrable Ph.D. thesis. For a history of logic programming, see Robinson 1983.}
 
-<p> This approach, when it works, can be a very powerful way to write programs. Part of the power comes from the fact that a single ``what is'' fact can be used to solve a number of different problems that would have different ``how to'' components. As an example, consider the <tt>append</tt> operation, which takes two lists as arguments and combines their elements to form a single list. In a procedural language such as Lisp, we could define <tt>append</tt> in terms of the basic list constructor <tt>cons</tt>, as we did in section <a href="2-2-closure.content.html">2.2.1</a>:
+<p> This approach, when it works, can be a very powerful way to write programs. Part of the power comes from the fact that a single ``what is'' fact can be used to solve a number of different problems that would have different ``how to'' components. As an example, consider the <tt>append</tt> operation, which takes two lists as arguments and combines their elements to form a single list. In a procedural language such as Lisp, we could define <tt>append</tt> in terms of the basic list constructor <tt>cons</tt>, as we did in section <a href="2-2-closure.html">2.2.1</a>:
 
 <div id="">
 (define (append x y)
@@ -59,7 +59,7 @@ b c d)</tt>.
 
 <p> In a logic programming language, the programmer writes an <tt>append</tt> ``procedure'' by stating the two rules about <tt>append</tt> given above. ``How to'' knowledge is provided automatically by the interpreter to allow this single pair of rules to be used to answer all three types of questions about <tt>append</tt>.@footnote{This certainly does not relieve the user of the entire problem of how to compute the answer. There are many different mathematically equivalent sets of rules for formulating the <tt>append</tt> relation, only some of which can be turned into effective devices for computing in any direction. In addition, sometimes ``what is'' information gives no clue ``how to'' compute an answer. For example, consider the problem of computing the y such that y^2 = x.}
 
-<p> Contemporary logic programming languages (including the one we implement here) have substantial deficiencies, in that their general ``how to'' methods can lead them into spurious infinite loops or other undesirable behavior. Logic programming is an active field of research in computer science.@footnote{Interest in logic programming peaked during the early 80s when the Japanese government began an ambitious project aimed at building superfast computers optimized to run logic programming languages. The speed of such computers was to be measured in LIPS (Logical Inferences Per Second) rather than the usual FLOPS (FLoating-point Operations Per Second). Although the project succeeded in developing hardware and software as originally planned, the international computer industry moved in a different direction. See Feigenbaum and Shrobe 1993 for an overview evaluation of the Japanese project. The logic programming community has also moved on to consider relational programming based on techniques other than simple pattern matching, such as the ability to deal with numerical constraints such as the ones illustrated in the constraint-propagation system of section <a href="3-3-modeling.content.html">3.3.5</a>.}
+<p> Contemporary logic programming languages (including the one we implement here) have substantial deficiencies, in that their general ``how to'' methods can lead them into spurious infinite loops or other undesirable behavior. Logic programming is an active field of research in computer science.@footnote{Interest in logic programming peaked during the early 80s when the Japanese government began an ambitious project aimed at building superfast computers optimized to run logic programming languages. The speed of such computers was to be measured in LIPS (Logical Inferences Per Second) rather than the usual FLOPS (FLoating-point Operations Per Second). Although the project succeeded in developing hardware and software as originally planned, the international computer industry moved in a different direction. See Feigenbaum and Shrobe 1993 for an overview evaluation of the Japanese project. The logic programming community has also moved on to consider relational programming based on techniques other than simple pattern matching, such as the ability to deal with numerical constraints such as the ones illustrated in the constraint-propagation system of section <a href="3-3-modeling.html">3.3.5</a>.}
 
 <p> Earlier in this chapter we explored the technology of implementing interpreters and described the elements that are essential to an interpreter for a Lisp-like language (indeed, to an interpreter for any conventional language). Now we will apply these ideas to discuss an interpreter for a logic programming language. We call this language the <tt>query language</tt> , because it is very useful for retrieving information from data bases by formulating <tt>queries</tt> , or questions, expressed in the language. Even though the query language is very different from Lisp, we will find it convenient to describe the language in terms of the same general framework we have been using all along: as a collection of primitive elements, together with means of combination that enable us to combine simple elements to create more complex elements and means of abstraction that enable us to regard complex elements as single conceptual units. An interpreter for a logic programming language is considerably more complex than an interpreter for a language like Lisp. Nevertheless, we will see that our query-language interpreter contains many of the same elements found in the interpreter of section <a href="4-1-metacircular.html">4.1</a>. In particular, there will be an ``eval'' part that classifies expressions according to type and an ``apply'' part that implements the language's abstraction mechanism (procedures in the case of Lisp, and <tt>rules</tt> in the case of logic programming). Also, a central role is played in the implementation by a frame data structure, which determines the correspondence between symbols and their associated values. One additional interesting aspect of our query-language implementation is that we make substantial use of streams, which were introduced in Chapter 3.
 
@@ -768,7 +768,7 @@ C.prompt();
 C.prompt();
 </script>
 
-<p> The query system may seem to exhibit quite a bit of intelligence in using the rules to deduce the answers to the queries above. Actually, as we will see in the next section, the system is following a well-determined algorithm in unraveling the rules. Unfortunately, although the system works impressively in the <tt>append</tt> case, the general methods may break down in more complex cases, as we will see in section <a href="4-4-logic.content.html">4.4.3</a>.
+<p> The query system may seem to exhibit quite a bit of intelligence in using the rules to deduce the answers to the queries above. Actually, as we will see in the next section, the system is following a well-determined algorithm in unraveling the rules. Unfortunately, although the system works impressively in the <tt>append</tt> case, the general methods may break down in more complex cases, as we will see in section <a href="4-4-logic.html">4.4.3</a>.
 
 <div class="exercise">
 <p> <b>Exercise 4.61:</b> The following rules implement a <tt>next-to</tt> relation that finds adjacent elements of a list:
@@ -823,7 +823,7 @@ C.prompt();
 <a name="%_sec_4.4.2" />
 <h3> 4.4.2 How the Query System Works </h3>
 
-<p> In section <a href="4-4-logic.content.html">4.4.4</a> we will present an implementation of the query interpreter as a collection of procedures. In this section we give an overview that explains the general structure of the system independent of low-level implementation details. After describing the implementation of the interpreter, we will be in a position to understand some of its limitations and some of the subtle ways in which the query language's logical operations differ from the operations of mathematical logic.
+<p> In section <a href="4-4-logic.html">4.4.4</a> we will present an implementation of the query interpreter as a collection of procedures. In this section we give an overview that explains the general structure of the system independent of low-level implementation details. After describing the implementation of the interpreter, we will be in a position to understand some of its limitations and some of the subtle ways in which the query language's logical operations differ from the operations of mathematical logic.
 
 <p> It should be apparent that the query evaluator must perform some kind of search in order to match queries against facts and rules in the data base. One way to do this would be to implement the query system as a nondeterministic program, using the <tt>amb</tt> evaluator of section <a href="4-3-nondeterministic.html">4.3</a> (see Exercise 4-78). Another possibility is to manage the search with the aid of streams. Our implementation follows this second approach.
 
@@ -851,7 +851,7 @@ C.prompt();
 
 <h4> Streams of frames </h4>
 
-<p> The testing of patterns against frames is organized through the use of streams. Given a single frame, the matching process runs through the data-base entries one by one. For each data-base entry, the matcher generates either a special symbol indicating that the match has failed or an extension to the frame. The results for all the data-base entries are collected into a stream, which is passed through a filter to weed out the failures. The result is a stream of all the frames that extend the given frame via a match to some assertion in the data base.@footnote{Because matching is generally very expensive, we would like to avoid applying the full matcher to every element of the data base. This is usually arranged by breaking up the process into a fast, coarse match and the final match. The coarse match filters the data base to produce a small set of candidates for the final match. With care, we can arrange our data base so that some of the work of coarse matching can be done when the data base is constructed rather then when we want to select the candidates. This is called <tt>indexing</tt> the data base. There is a vast technology built around data-base-indexing schemes. Our implementation, described in section <a href="4-4-logic.content.html">4.4.4</a>, contains a simple-minded form of such an optimization.}
+<p> The testing of patterns against frames is organized through the use of streams. Given a single frame, the matching process runs through the data-base entries one by one. For each data-base entry, the matcher generates either a special symbol indicating that the match has failed or an extension to the frame. The results for all the data-base entries are collected into a stream, which is passed through a filter to weed out the failures. The result is a stream of all the frames that extend the given frame via a match to some assertion in the data base.@footnote{Because matching is generally very expensive, we would like to avoid applying the full matcher to every element of the data base. This is usually arranged by breaking up the process into a fast, coarse match and the final match. The coarse match filters the data base to produce a small set of candidates for the final match. With care, we can arrange our data base so that some of the work of coarse matching can be done when the data base is constructed rather then when we want to select the candidates. This is called <tt>indexing</tt> the data base. There is a vast technology built around data-base-indexing schemes. Our implementation, described in section <a href="4-4-logic.html">4.4.4</a>, contains a simple-minded form of such an optimization.}
 
 <p> In our system, a query takes an input stream of frames and performs the above matching operation for every frame in the stream, as indicated in Figure 4-4. That is, for each frame in the input stream, the query generates a new stream consisting of all extensions to that frame by matches to assertions in the data base. All these streams are then combined to form one huge stream, which contains all possible extensions of every frame in the input stream. This stream is the output of the query.
 
@@ -973,7 +973,7 @@ C.prompt();
 C.prompt();
 </script>
 
-<p> the first clause will generate frames with bindings for <tt>?x</tt> and <tt>?y</tt>. The <tt>not</tt> clause will then filter these by removing all frames in which the binding for <tt>?x</tt> satisfies the restriction that <tt>?x</tt> is a computer programmer.@footnote{There is a subtle difference between this filter implementation of <tt>not</tt> and the usual meaning of <tt>not</tt> in mathematical logic. See section <a href="4-4-logic.content.html">4.4.3</a>.}
+<p> the first clause will generate frames with bindings for <tt>?x</tt> and <tt>?y</tt>. The <tt>not</tt> clause will then filter these by removing all frames in which the binding for <tt>?x</tt> satisfies the restriction that <tt>?x</tt> is a computer programmer.@footnote{There is a subtle difference between this filter implementation of <tt>not</tt> and the usual meaning of <tt>not</tt> in mathematical logic. See section <a href="4-4-logic.html">4.4.3</a>.}
 
 <p> The <tt>lisp-value</tt> special form is implemented as a similar filter on frame streams. We use each frame in the stream to instantiate any variables in the pattern, then apply the Lisp predicate. We remove from the input stream all frames for which the predicate fails.
 
@@ -1205,7 +1205,7 @@ The <tt>married</tt> rule is also applicable, so the interpreter again evaluates
 
 <h4> Problems with <tt>not</tt> </h4>
 
-<p> Another quirk in the query system concerns <tt>not</tt>. Given the data base of section <a href="4-4-logic.content.html">4.4.1</a>, consider the following two queries:
+<p> Another quirk in the query system concerns <tt>not</tt>. Given the data base of section <a href="4-4-logic.html">4.4.1</a>, consider the following two queries:
 
 <div id="">
 (and (supervisor ?x ?y)
@@ -1222,10 +1222,10 @@ C.prompt();
 
 <p> The trouble is that our implementation of <tt>not</tt> really is meant to serve as a filter on values for the variables. If a <tt>not</tt> clause is processed with a frame in which some of the variables remain unbound (as does <tt>?x</tt> in the example above), the system will produce unexpected results. Similar problems occur with the use of <tt>lisp-value</tt>---the Lisp predicate can't work if some of its arguments are unbound. See Exercise 4-77.
 
-<p> There is also a much more serious way in which the <tt>not</tt> of the query language differs from the <tt>not</tt> of mathematical logic. In logic, we interpret the statement ``not P'' to mean that P is not true. In the query system, however, ``not P'' means that P is not deducible from the knowledge in the data base. For example, given the personnel data base of section <a href="4-4-logic.content.html">4.4.1</a>, the system would happily deduce all sorts of <tt>not</tt> statements, such as that Ben Bitdiddle is not a baseball fan, that it is not raining outside, and that 2 + 2 is not 4.@footnote{Consider the query <tt>(not (baseball-fan (Bitdiddle Ben)))</tt>. The system finds that <tt>(baseball-fan (Bitdiddle Ben))</tt> is not in the data base, so the empty frame does not satisfy the pattern and is not filtered out of the initial stream of frames. The result of the query is thus the empty frame, which is used to instantiate the input query to produce <tt>(not (baseball-fan (Bitdiddle Ben)))</tt>.} In other words, the <tt>not</tt> of logic programming languages reflects the so-called <tt>closed world assumption</tt> that all relevant information has been included in the data base.@footnote{A discussion and justification of this treatment of <tt>not</tt> can be found in the article by Clark (1978).}
+<p> There is also a much more serious way in which the <tt>not</tt> of the query language differs from the <tt>not</tt> of mathematical logic. In logic, we interpret the statement ``not P'' to mean that P is not true. In the query system, however, ``not P'' means that P is not deducible from the knowledge in the data base. For example, given the personnel data base of section <a href="4-4-logic.html">4.4.1</a>, the system would happily deduce all sorts of <tt>not</tt> statements, such as that Ben Bitdiddle is not a baseball fan, that it is not raining outside, and that 2 + 2 is not 4.@footnote{Consider the query <tt>(not (baseball-fan (Bitdiddle Ben)))</tt>. The system finds that <tt>(baseball-fan (Bitdiddle Ben))</tt> is not in the data base, so the empty frame does not satisfy the pattern and is not filtered out of the initial stream of frames. The result of the query is thus the empty frame, which is used to instantiate the input query to produce <tt>(not (baseball-fan (Bitdiddle Ben)))</tt>.} In other words, the <tt>not</tt> of logic programming languages reflects the so-called <tt>closed world assumption</tt> that all relevant information has been included in the data base.@footnote{A discussion and justification of this treatment of <tt>not</tt> can be found in the article by Clark (1978).}
 
 <div class="exercise">
-<p> <b>Exercise 4.64:</b> Louis Reasoner mistakenly deletes the <tt>outranked-by</tt> rule (section <a href="4-4-logic.content.html">4.4.1</a>) from the data base. When he realizes this, he quickly reinstalls it. Unfortunately, he makes a slight change in the rule, and types it in as
+<p> <b>Exercise 4.64:</b> Louis Reasoner mistakenly deletes the <tt>outranked-by</tt> rule (section <a href="4-4-logic.html">4.4.1</a>) from the data base. When he realizes this, he quickly reinstalls it. Unfortunately, he makes a slight change in the rule, and types it in as
 
 <div id="">
 (rule (outranked-by ?staff-person ?boss)
@@ -1250,7 +1250,7 @@ C.prompt();
 </div>
 
 <div class="exercise">
-<p> <b>Exercise 4.65:</b> Cy D. Fect, looking forward to the day when he will rise in the organization, gives a query to find all the wheels (using the <tt>wheel</tt> rule of section <a href="4-4-logic.content.html">4.4.1</a>):
+<p> <b>Exercise 4.65:</b> Cy D. Fect, looking forward to the day when he will rise in the organization, gives a query to find all the wheels (using the <tt>wheel</tt> rule of section <a href="4-4-logic.html">4.4.1</a>):
 
 <div id="">
 (wheel ?who)
@@ -1304,7 +1304,7 @@ C.prompt();
 </div>
 
 <div class="exercise">
-<p> <b>Exercise 4.67:</b> Devise a way to install a loop detector in the query system so as to avoid the kinds of simple loops illustrated in the text and in Exercise 4-64. The general idea is that the system should maintain some sort of history of its current chain of deductions and should not begin processing a query that it is already working on. Describe what kind of information (patterns and frames) is included in this history, and how the check should be made. (After you study the details of the query-system implementation in section <a href="4-4-logic.content.html">4.4.4</a>, you may want to modify the system to include your loop detector.)
+<p> <b>Exercise 4.67:</b> Devise a way to install a loop detector in the query system so as to avoid the kinds of simple loops illustrated in the text and in Exercise 4-64. The general idea is that the system should maintain some sort of history of its current chain of deductions and should not begin processing a query that it is already working on. Describe what kind of information (patterns and frames) is included in this history, and how the check should be made. (After you study the details of the query-system implementation in section <a href="4-4-logic.html">4.4.4</a>, you may want to modify the system to include your loop detector.)
 </div>
 
 <div class="exercise">
@@ -1318,7 +1318,7 @@ C.prompt();
 <a name="%_sec_4.4.4" />
 <h3> 4.4.4 Implementing the Query System </h3>
 
-Section <a href="4-4-logic.content.html">4.4.2</a> described how the query system works. Now we fill in the
+Section <a href="4-4-logic.html">4.4.2</a> described how the query system works. Now we fill in the
 details by presenting a complete implementation of the system.
 
 <h4> The Driver Loop and Instantiation </h4>
@@ -1354,9 +1354,9 @@ details by presenting a complete implementation of the system.
 C.prompt();
 </script>
 
-<p> Here, as in the other evaluators in this chapter, we use an abstract syntax for the expressions of the query language. The implementation of the expression syntax, including the predicate <tt>assertion-to-be-added?</tt> and the selector <tt>add-assertion-body</tt>, is given in section <a href="4-4-logic.content.html">4.4.4</a>-7. <tt>Add-rule-or-assertion!</tt> is defined in section <a href="4-4-logic.content.html">4.4.4</a>-5.
+<p> Here, as in the other evaluators in this chapter, we use an abstract syntax for the expressions of the query language. The implementation of the expression syntax, including the predicate <tt>assertion-to-be-added?</tt> and the selector <tt>add-assertion-body</tt>, is given in section <a href="4-4-logic.html">4.4.4</a>-7. <tt>Add-rule-or-assertion!</tt> is defined in section <a href="4-4-logic.html">4.4.4</a>-5.
 
-<p> Before doing any processing on an input expression, the driver loop transforms it syntactically into a form that makes the processing more efficient. This involves changing the representation of pattern variables. When the query is instantiated, any variables that remain unbound are transformed back to the input representation before being printed. These transformations are performed by the two procedures <tt>query-syntax-process</tt> and <tt>contract-question-mark</tt> (section <a href="4-4-logic.content.html">4.4.4</a>-7).
+<p> Before doing any processing on an input expression, the driver loop transforms it syntactically into a form that makes the processing more efficient. This involves changing the representation of pattern variables. When the query is instantiated, any variables that remain unbound are transformed back to the input representation before being printed. These transformations are performed by the two procedures <tt>query-syntax-process</tt> and <tt>contract-question-mark</tt> (section <a href="4-4-logic.html">4.4.4</a>-7).
 
 <p> To instantiate an expression, we copy it, replacing any variables in the expression by their values in a given frame. The values are themselves instantiated, since they could contain variables (for example, if <tt>?x</tt> in <tt>exp</tt> is bound to <tt>?y</tt> as the result of unification and <tt>?y</tt> is in turn bound to 5). The action to take if a variable cannot be instantiated is given by a procedural argument to <tt>instantiate</tt>.
 
@@ -1377,7 +1377,7 @@ C.prompt();
 C.prompt();
 </script>
 
-<p> The procedures that manipulate bindings are defined in section <a href="4-4-logic.content.html">4.4.4</a>-8.
+<p> The procedures that manipulate bindings are defined in section <a href="4-4-logic.html">4.4.4</a>-8.
 
 <h4> The Evaluator </h4>
 
@@ -1394,7 +1394,7 @@ C.prompt();
 C.prompt();
 </script>
 
-<p> <tt>Type</tt> and <tt>contents</tt>, defined in section <a href="4-4-logic.content.html">4.4.4</a>-7, implement the abstract syntax of the special forms.
+<p> <tt>Type</tt> and <tt>contents</tt>, defined in section <a href="4-4-logic.html">4.4.4</a>-7, implement the abstract syntax of the special forms.
 
 <h4> Simple queries </h4>
 
@@ -1413,7 +1413,7 @@ C.prompt();
 C.prompt();
 </script>
 
-<p> For each frame in the input stream, we use <tt>find-assertions</tt> (section <a href="4-4-logic.content.html">4.4.4</a>-3) to match the pattern against all assertions in the data base, producing a stream of extended frames, and we use <tt>apply-rules</tt> (section <a href="4-4-logic.content.html">4.4.4</a>-4) to apply all possible rules, producing another stream of extended frames. These two streams are combined (using <tt>stream-append-delayed</tt>, section <a href="4-4-logic.content.html">4.4.4</a>-6) to make a stream of all the ways that the given pattern can be satisfied consistent with the original frame (see Exercise 4-71). The streams for the individual input frames are combined using <tt>stream-flatmap</tt> (section <a href="4-4-logic.content.html">4.4.4</a>-6) to form one large stream of all the ways that any of the frames in the original input stream can be extended to produce a match with the given pattern.
+<p> For each frame in the input stream, we use <tt>find-assertions</tt> (section <a href="4-4-logic.html">4.4.4</a>-3) to match the pattern against all assertions in the data base, producing a stream of extended frames, and we use <tt>apply-rules</tt> (section <a href="4-4-logic.html">4.4.4</a>-4) to apply all possible rules, producing another stream of extended frames. These two streams are combined (using <tt>stream-append-delayed</tt>, section <a href="4-4-logic.html">4.4.4</a>-6) to make a stream of all the ways that the given pattern can be satisfied consistent with the original frame (see Exercise 4-71). The streams for the individual input frames are combined using <tt>stream-flatmap</tt> (section <a href="4-4-logic.html">4.4.4</a>-6) to form one large stream of all the ways that any of the frames in the original input stream can be extended to produce a match with the given pattern.
 
 <h4> Compound queries </h4>
 
@@ -1443,7 +1443,7 @@ C.prompt();
 
 <p> sets up <tt>qeval</tt> to dispatch to <tt>conjoin</tt> when an <tt>and</tt> form is encountered.
 
-<p> <tt>Or</tt> queries are handled similarly, as shown in Figure 4-6. The output streams for the various disjuncts of the <tt>or</tt> are computed separately and merged using the <tt>interleave-delayed</tt> procedure from section <a href="4-4-logic.content.html">4.4.4</a>-6. (See Exercise 4-71 and Exercise 4-72.)
+<p> <tt>Or</tt> queries are handled similarly, as shown in Figure 4-6. The output streams for the various disjuncts of the <tt>or</tt> are computed separately and merged using the <tt>interleave-delayed</tt> procedure from section <a href="4-4-logic.html">4.4.4</a>-6. (See Exercise 4-71 and Exercise 4-72.)
 
 <div id="">
 (define (disjoin disjuncts frame-stream)
@@ -1460,11 +1460,11 @@ C.prompt();
 C.prompt();
 </script>
 
-<p> The predicates and selectors for the syntax of conjuncts and disjuncts are given in section <a href="4-4-logic.content.html">4.4.4</a>-7.
+<p> The predicates and selectors for the syntax of conjuncts and disjuncts are given in section <a href="4-4-logic.html">4.4.4</a>-7.
 
 <h4> Filters </h4>
 
-<p> <tt>Not</tt> is handled by the method outlined in section <a href="4-4-logic.content.html">4.4.2</a>. We attempt to extend each frame in the input stream to satisfy the query being negated, and we include a given frame in the output stream only if it cannot be extended.
+<p> <tt>Not</tt> is handled by the method outlined in section <a href="4-4-logic.html">4.4.2</a>. We attempt to extend each frame in the input stream to satisfy the query being negated, and we include a given frame in the output stream only if it cannot be extended.
 
 <div id="">
 (define (negate operands frame-stream)
@@ -1515,7 +1515,7 @@ C.prompt();
 C.prompt();
 </script>
 
-<p> The <tt>always-true</tt> special form provides for a query that is always satisfied. It ignores its contents (normally empty) and simply passes through all the frames in the input stream. <tt>Always-true</tt> is used by the <tt>rule-body</tt> selector (section <a href="4-4-logic.content.html">4.4.4</a>-7) to provide bodies for rules that were defined without bodies (that is, rules whose conclusions are always satisfied).
+<p> The <tt>always-true</tt> special form provides for a query that is always satisfied. It ignores its contents (normally empty) and simply passes through all the frames in the input stream. <tt>Always-true</tt> is used by the <tt>rule-body</tt> selector (section <a href="4-4-logic.html">4.4.4</a>-7) to provide bodies for rules that were defined without bodies (that is, rules whose conclusions are always satisfied).
 
 <div id="">
 (define (always-true ignore frame-stream) frame-stream)
@@ -1526,11 +1526,11 @@ C.prompt();
 C.prompt();
 </script>
 
-<p> The selectors that define the syntax of <tt>not</tt> and <tt>lisp-value</tt> are given in section <a href="4-4-logic.content.html">4.4.4</a>-7.
+<p> The selectors that define the syntax of <tt>not</tt> and <tt>lisp-value</tt> are given in section <a href="4-4-logic.html">4.4.4</a>-7.
 
 <h4> Finding Assertions by Pattern Matching </h4>
 
-<p> <tt>Find-assertions</tt>, called by <tt>simple-query</tt> (section <a href="4-4-logic.content.html">4.4.4</a>-2), takes as input a pattern and a frame. It returns a stream of frames, each extending the given one by a data-base match of the given pattern. It uses <tt>fetch-assertions</tt> (section <a href="4-4-logic.content.html">4.4.4</a>-5) to get a stream of all the assertions in the data base that should be checked for a match against the pattern and the frame. The reason for <tt>fetch-assertions</tt> here is that we can often apply simple tests that will eliminate many of the entries in the data base from the pool of candidates for a successful match. The system would still work if we eliminated <tt>fetch-assertions</tt> and simply checked a stream of all assertions in the data base, but the computation would be less efficient because we would need to make many more calls to the matcher.
+<p> <tt>Find-assertions</tt>, called by <tt>simple-query</tt> (section <a href="4-4-logic.html">4.4.4</a>-2), takes as input a pattern and a frame. It returns a stream of frames, each extending the given one by a data-base match of the given pattern. It uses <tt>fetch-assertions</tt> (section <a href="4-4-logic.html">4.4.4</a>-5) to get a stream of all the assertions in the data base that should be checked for a match against the pattern and the frame. The reason for <tt>fetch-assertions</tt> here is that we can often apply simple tests that will eliminate many of the entries in the data base from the pool of candidates for a successful match. The system would still work if we eliminated <tt>fetch-assertions</tt> and simply checked a stream of all assertions in the data base, but the computation would be less efficient because we would need to make many more calls to the matcher.
 
 <div id="">
 (define (find-assertions pattern frame)
@@ -1588,9 +1588,9 @@ C.prompt();
 C.prompt();
 </script>
 
-<p> If there is no binding for the variable in the frame, we simply add the binding of the variable to the data. Otherwise we match, in the frame, the data against the value of the variable in the frame. If the stored value contains only constants, as it must if it was stored during pattern matching by <tt>extend-if-consistent</tt>, then the match simply tests whether the stored and new values are the same. If so, it returns the unmodified frame; if not, it returns a failure indication. The stored value may, however, contain pattern variables if it was stored during unification (see section <a href="4-4-logic.content.html">4.4.4</a>-4). The recursive match of the stored pattern against the new data will add or check bindings for the variables in this pattern. For example, suppose we have a frame in which <tt>?x</tt> is bound to <tt>(f ?y)</tt> and <tt>?y</tt> is unbound, and we wish to augment this frame by a binding of <tt>?x</tt> to <tt>(f b)</tt>. We look up <tt>?x</tt> and find that it is bound to <tt>(f ?y)</tt>. This leads us to match <tt>(f ?y)</tt> against the proposed new value <tt>(f b)</tt> in the same frame. Eventually this match extends the frame by adding a binding of <tt>?y</tt> to <tt>b</tt>. <tt>?X</tt> remains bound to <tt>(f ?y)</tt>. We never modify a stored binding and we never store more than one binding for a given variable.
+<p> If there is no binding for the variable in the frame, we simply add the binding of the variable to the data. Otherwise we match, in the frame, the data against the value of the variable in the frame. If the stored value contains only constants, as it must if it was stored during pattern matching by <tt>extend-if-consistent</tt>, then the match simply tests whether the stored and new values are the same. If so, it returns the unmodified frame; if not, it returns a failure indication. The stored value may, however, contain pattern variables if it was stored during unification (see section <a href="4-4-logic.html">4.4.4</a>-4). The recursive match of the stored pattern against the new data will add or check bindings for the variables in this pattern. For example, suppose we have a frame in which <tt>?x</tt> is bound to <tt>(f ?y)</tt> and <tt>?y</tt> is unbound, and we wish to augment this frame by a binding of <tt>?x</tt> to <tt>(f b)</tt>. We look up <tt>?x</tt> and find that it is bound to <tt>(f ?y)</tt>. This leads us to match <tt>(f ?y)</tt> against the proposed new value <tt>(f b)</tt> in the same frame. Eventually this match extends the frame by adding a binding of <tt>?y</tt> to <tt>b</tt>. <tt>?X</tt> remains bound to <tt>(f ?y)</tt>. We never modify a stored binding and we never store more than one binding for a given variable.
 
-<p> The procedures used by <tt>extend-if-consistent</tt> to manipulate bindings are defined in section <a href="4-4-logic.content.html">4.4.4</a>-8.
+<p> The procedures used by <tt>extend-if-consistent</tt> to manipulate bindings are defined in section <a href="4-4-logic.html">4.4.4</a>-8.
 
 <h4> Patterns with dotted tails </h4>
 
@@ -1602,7 +1602,7 @@ C.prompt();
 
 <h4> Rules and Unification </h4>
 
-<p> <tt>Apply-rules</tt> is the rule analog of <tt>find-assertions</tt> (section <a href="4-4-logic.content.html">4.4.4</a>-3). It takes as input a pattern and a frame, and it forms a stream of extension frames by applying rules from the data base. <tt>Stream-flatmap</tt> maps <tt>apply-a-rule</tt> down the stream of possibly applicable rules (selected by <tt>fetch-rules</tt>, section <a href="4-4-logic.content.html">4.4.4</a>-5) and combines the resulting streams of frames.
+<p> <tt>Apply-rules</tt> is the rule analog of <tt>find-assertions</tt> (section <a href="4-4-logic.html">4.4.4</a>-3). It takes as input a pattern and a frame, and it forms a stream of extension frames by applying rules from the data base. <tt>Stream-flatmap</tt> maps <tt>apply-a-rule</tt> down the stream of possibly applicable rules (selected by <tt>fetch-rules</tt>, section <a href="4-4-logic.html">4.4.4</a>-5) and combines the resulting streams of frames.
 
 <div id="">
 (define (apply-rules pattern frame)
@@ -1614,7 +1614,7 @@ C.prompt();
 C.prompt();
 </script>
 
-<p> <tt>Apply-a-rule</tt> applies rules using the method outlined in section <a href="4-4-logic.content.html">4.4.2</a>. It first augments its argument frame by unifying the rule conclusion with the pattern in the given frame. If this succeeds, it evaluates the rule body in this new frame.
+<p> <tt>Apply-a-rule</tt> applies rules using the method outlined in section <a href="4-4-logic.html">4.4.2</a>. It first augments its argument frame by unifying the rule conclusion with the pattern in the given frame. If this succeeds, it evaluates the rule body in this new frame.
 
 <p> Before any of this happens, however, the program renames all the variables in the rule with unique new names. The reason for this is to prevent the variables for different rule applications from becoming confused with each other. For instance, if two rules both use a variable named <tt>?x</tt>, then each one may add a binding for <tt>?x</tt> to the frame when it is applied. These two <tt>?x</tt>'s have nothing to do with each other, and we should not be fooled into thinking that the two bindings must be consistent. Rather than rename variables, we could devise a more clever environment structure; however, the renaming approach we have chosen here is the most straightforward, even if not the most efficient. (See Exercise 4-79.)  Here is the <tt>apply-a-rule</tt> procedure:
 
@@ -1634,9 +1634,9 @@ C.prompt();
 C.prompt();
 </script>
 
-<p> The selectors <tt>rule-body</tt> and <tt>conclusion</tt> that extract parts of a rule are defined in section <a href="4-4-logic.content.html">4.4.4</a>-7.
+<p> The selectors <tt>rule-body</tt> and <tt>conclusion</tt> that extract parts of a rule are defined in section <a href="4-4-logic.html">4.4.4</a>-7.
 
-<p> We generate unique variable names by associating a unique identifier (such as a number) with each rule application and combining this identifier with the original variable names. For example, if the rule-application identifier is 7, we might change each <tt>?x</tt> in the rule to <tt>?x-7</tt> and each <tt>?y</tt> in the rule to <tt>?y-7</tt>. (<tt>Make-new-variable</tt> and <tt>new-rule-application-id</tt> are included with the syntax procedures in section <a href="4-4-logic.content.html">4.4.4</a>-7.)
+<p> We generate unique variable names by associating a unique identifier (such as a number) with each rule application and combining this identifier with the original variable names. For example, if the rule-application identifier is 7, we might change each <tt>?x</tt> in the rule to <tt>?x-7</tt> and each <tt>?y</tt> in the rule to <tt>?y-7</tt>. (<tt>Make-new-variable</tt> and <tt>new-rule-application-id</tt> are included with the syntax procedures in section <a href="4-4-logic.html">4.4.4</a>-7.)
 
 <div id="">
 (define (rename-variables-in rule)
@@ -1883,7 +1883,7 @@ C.prompt();
 </script>
 
 <div class="exercise">
-<p> <b>Exercise 4.70:</b> What is the purpose of the <tt>let</tt> bindings in the procedures <tt>add-assertion!</tt> and <tt>add-rule!</tt> ?  What would be wrong with the following implementation of <tt>add-assertion!</tt> ?  Hint: Recall the definition of the infinite stream of ones in section <a href="3-5-streams.content.html">3.5.2</a>: <tt>(define ones (cons-stream 1 ones))</tt>.
+<p> <b>Exercise 4.70:</b> What is the purpose of the <tt>let</tt> bindings in the procedures <tt>add-assertion!</tt> and <tt>add-rule!</tt> ?  What would be wrong with the following implementation of <tt>add-assertion!</tt> ?  Hint: Recall the definition of the infinite stream of ones in section <a href="3-5-streams.html">3.5.2</a>: <tt>(define ones (cons-stream 1 ones))</tt>.
 
 <div id="">
 (define (add-assertion! assertion)
@@ -1902,7 +1902,7 @@ C.prompt();
 <p> The query system uses a few stream operations that were not presented in Chapter 3.
 
 <tt>Stream-append-delayed</tt> and <tt>interleave-delayed</tt> are just like
-<tt>stream-append</tt> and <tt>interleave</tt> (section <a href="3-5-streams.content.html">3.5.3</a>), except that
+<tt>stream-append</tt> and <tt>interleave</tt> (section <a href="3-5-streams.html">3.5.3</a>), except that
 they take a delayed argument (like the <tt>integral</tt> procedure in section
 3-5-4). This postpones looping in some cases (see Exercise 4-71).
 
@@ -1926,7 +1926,7 @@ they take a delayed argument (like the <tt>integral</tt> procedure in section
 C.prompt();
 </script>
 
-<p> <tt>Stream-flatmap</tt>, which is used throughout the query evaluator to map a procedure over a stream of frames and combine the resulting streams of frames, is the stream analog of the <tt>flatmap</tt> procedure introduced for ordinary lists in section <a href="2-2-closure.content.html">2.2.3</a>. Unlike ordinary <tt>flatmap</tt>, however, we accumulate the streams with an interleaving process, rather than simply appending them (see Exercise 4-72 and Exercise 4-73).
+<p> <tt>Stream-flatmap</tt>, which is used throughout the query evaluator to map a procedure over a stream of frames and combine the resulting streams of frames, is the stream analog of the <tt>flatmap</tt> procedure introduced for ordinary lists in section <a href="2-2-closure.html">2.2.3</a>. Unlike ordinary <tt>flatmap</tt>, however, we accumulate the streams with an interleaving process, rather than simply appending them (see Exercise 4-72 and Exercise 4-73).
 
 <div id="">
 (define (stream-flatmap proc s)
@@ -1955,7 +1955,7 @@ C.prompt();
 
 <h4> Query Syntax Procedures </h4>
 
-<p> <tt>Type</tt> and <tt>contents</tt>, used by <tt>qeval</tt> (section <a href="4-4-logic.content.html">4.4.4</a>-2), specify that a special form is identified by the symbol in its <tt>car</tt>. They are the same as the <tt>type-tag</tt> and <tt>contents</tt> procedures in section <a href="2-4-representation.content.html">2.4.2</a>, except for the error message.
+<p> <tt>Type</tt> and <tt>contents</tt>, used by <tt>qeval</tt> (section <a href="4-4-logic.html">4.4.4</a>-2), specify that a special form is identified by the symbol in its <tt>car</tt>. They are the same as the <tt>type-tag</tt> and <tt>contents</tt> procedures in section <a href="2-4-representation.html">2.4.2</a>, except for the error message.
 
 <div id="">
 (define (type exp)
@@ -1972,7 +1972,7 @@ C.prompt();
 C.prompt();
 </script>
 
-<p> The following procedures, used by <tt>query-driver-loop</tt> (in section <a href="4-4-logic.content.html">4.4.4</a>-1), specify that rules and assertions are added to the data base by expressions of the form <tt>(assert! <rule-or-assertion</tt>>):
+<p> The following procedures, used by <tt>query-driver-loop</tt> (in section <a href="4-4-logic.html">4.4.4</a>-1), specify that rules and assertions are added to the data base by expressions of the form <tt>(assert! <rule-or-assertion</tt>>):
 
 <div id="">
 (define (assertion-to-be-added? exp)
@@ -1985,7 +1985,7 @@ C.prompt();
 C.prompt();
 </script>
 
-<p> Here are the syntax definitions for the <tt>and</tt>, <tt>or</tt>, <tt>not</tt>, and <tt>lisp-value</tt> special forms (section <a href="4-4-logic.content.html">4.4.4</a>-2):
+<p> Here are the syntax definitions for the <tt>and</tt>, <tt>or</tt>, <tt>not</tt>, and <tt>lisp-value</tt> special forms (section <a href="4-4-logic.html">4.4.4</a>-2):
 
 <div id="">
 (define (empty-conjunction? exps) (null? exps))
@@ -2022,7 +2022,7 @@ C.prompt();
 C.prompt();
 </script>
 
-<p> <tt>Query-driver-loop</tt> (section <a href="4-4-logic.content.html">4.4.4</a>-1) calls <tt>query-syntax-process</tt> to transform pattern variables in the expression, which have the form <tt>?symbol</tt>, into the internal format <tt>(? symbol)</tt>. That is to say, a pattern such as <tt>(job ?x ?y)</tt> is actually represented internally by the system as <tt>(job (? x) (? y))</tt>. This increases the efficiency of query processing, since it means that the system can check to see if an expression is a pattern variable by checking whether the <tt>car</tt> of the expression is the symbol <tt>?</tt>, rather than having to extract characters from the symbol. The syntax transformation is accomplished by the following procedure:@footnote{Most Lisp systems give the user the ability to modify the ordinary <tt>read</tt> procedure to perform such transformations by defining <tt>reader macro characters</tt> . Quoted expressions are already handled in this way: The reader automatically translates <tt>'expression</tt> into <tt>(quote expression)</tt> before the evaluator sees it. We could arrange for <tt>?expression</tt> to be transformed into <tt>(? expression)</tt> in the same way; however, for the sake of clarity we have included the transformation procedure here explicitly.
+<p> <tt>Query-driver-loop</tt> (section <a href="4-4-logic.html">4.4.4</a>-1) calls <tt>query-syntax-process</tt> to transform pattern variables in the expression, which have the form <tt>?symbol</tt>, into the internal format <tt>(? symbol)</tt>. That is to say, a pattern such as <tt>(job ?x ?y)</tt> is actually represented internally by the system as <tt>(job (? x) (? y))</tt>. This increases the efficiency of query processing, since it means that the system can check to see if an expression is a pattern variable by checking whether the <tt>car</tt> of the expression is the symbol <tt>?</tt>, rather than having to extract characters from the symbol. The syntax transformation is accomplished by the following procedure:@footnote{Most Lisp systems give the user the ability to modify the ordinary <tt>read</tt> procedure to perform such transformations by defining <tt>reader macro characters</tt> . Quoted expressions are already handled in this way: The reader automatically translates <tt>'expression</tt> into <tt>(quote expression)</tt> before the evaluator sees it. We could arrange for <tt>?expression</tt> to be transformed into <tt>(? expression)</tt> in the same way; however, for the sake of clarity we have included the transformation procedure here explicitly.
 
 <p> <tt>Expand-question-mark</tt> and <tt>contract-question-mark</tt> use several procedures with <tt>string</tt> in their names. These are Scheme primitives.}
 
@@ -2049,7 +2049,7 @@ C.prompt();
 C.prompt();
 </script>
 
-<p> Once the variables are transformed in this way, the variables in a pattern are lists starting with <tt>?</tt>, and the constant symbols (which need to be recognized for data-base indexing, section <a href="4-4-logic.content.html">4.4.4</a>-5) are just the symbols.
+<p> Once the variables are transformed in this way, the variables in a pattern are lists starting with <tt>?</tt>, and the constant symbols (which need to be recognized for data-base indexing, section <a href="4-4-logic.html">4.4.4</a>-5) are just the symbols.
 
 <div id="">
 (define (var? exp)
@@ -2061,7 +2061,7 @@ C.prompt();
 C.prompt();
 </script>
 
-<p> Unique variables are constructed during rule application (in section <a href="4-4-logic.content.html">4.4.4</a>-4) by means of the following procedures. The unique identifier for a rule application is a number, which is incremented each time a rule is applied.
+<p> Unique variables are constructed during rule application (in section <a href="4-4-logic.html">4.4.4</a>-4) by means of the following procedures. The unique identifier for a rule application is a number, which is incremented each time a rule is applied.
 
 <div id="">
 (define rule-counter 0)
@@ -2118,7 +2118,7 @@ C.prompt();
 </script>
 
 <div class="exercise">
-<p> <b>Exercise 4.71:</b> Louis Reasoner wonders why the <tt>simple-query</tt> and <tt>disjoin</tt> procedures (section <a href="4-4-logic.content.html">4.4.4</a>-2) are implemented using explicit <tt>delay</tt> operations, rather than being defined as follows:
+<p> <b>Exercise 4.71:</b> Louis Reasoner wonders why the <tt>simple-query</tt> and <tt>disjoin</tt> procedures (section <a href="4-4-logic.html">4.4.4</a>-2) are implemented using explicit <tt>delay</tt> operations, rather than being defined as follows:
 
 <div id="">
 (define (simple-query query-pattern frame-stream)
@@ -2143,7 +2143,7 @@ C.prompt();
 </div>
 
 <div class="exercise">
-<p> <b>Exercise 4.72:</b> Why do <tt>disjoin</tt> and <tt>stream-flatmap</tt> interleave the streams rather than simply append them? Give examples that illustrate why interleaving works better. (Hint: Why did we use <tt>interleave</tt> in section <a href="3-5-streams.content.html">3.5.3</a>?)
+<p> <b>Exercise 4.72:</b> Why do <tt>disjoin</tt> and <tt>stream-flatmap</tt> interleave the streams rather than simply append them? Give examples that illustrate why interleaving works better. (Hint: Why did we use <tt>interleave</tt> in section <a href="3-5-streams.html">3.5.3</a>?)
 </div>
 
 <div class="exercise">
@@ -2250,7 +2250,7 @@ C.prompt();
 </div>
 
 <div class="exercise">
-<p> <b>Exercise 4.77:</b> In section <a href="4-4-logic.content.html">4.4.3</a> we saw that <tt>not</tt> and <tt>lisp-value</tt> can cause the query language to give ``wrong'' answers if these filtering operations are applied to frames in which variables are unbound. Devise a way to fix this shortcoming. One idea is to perform the filtering in a ``delayed'' manner by appending to the frame a ``promise'' to filter that is fulfilled only when enough variables have been bound to make the operation possible. We could wait to perform filtering until all other operations have been performed. However, for efficiency's sake, we would like to perform filtering as soon as possible so as to cut down on the number of intermediate frames generated.
+<p> <b>Exercise 4.77:</b> In section <a href="4-4-logic.html">4.4.3</a> we saw that <tt>not</tt> and <tt>lisp-value</tt> can cause the query language to give ``wrong'' answers if these filtering operations are applied to frames in which variables are unbound. Devise a way to fix this shortcoming. One idea is to perform the filtering in a ``delayed'' manner by appending to the frame a ``promise'' to filter that is fulfilled only when enough variables have been bound to make the operation possible. We could wait to perform filtering until all other operations have been performed. However, for efficiency's sake, we would like to perform filtering as soon as possible so as to cut down on the number of intermediate frames generated.
 </div>
 
 <div class="exercise">
