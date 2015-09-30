@@ -99,7 +99,7 @@ C.prompt("scheme-define-new-withdraw");
 
 <p> What we have done here is use <tt>let</tt> to establish an environment with a local variable <tt>balance</tt>, bound to the initial value 100. Within this local environment, we use <tt>lambda</tt> to create a procedure that takes <tt>amount</tt> as an argument and behaves like our previous <tt>withdraw</tt> procedure. This procedure &ndash; returned as the result of evaluating the <tt>let</tt> expression &ndash; is <tt>new-withdraw</tt>, which behaves in precisely the same way as <tt>withdraw</tt> but whose variable <tt>balance</tt> is not accessible by any other procedure.<a name="footnote_link_3-4" class="footnote_link" href="#footnote_3-4">4</a>
 
-<p> Combining <tt>set!</tt> with local variables is the general programming technique we will use for constructing computational objects with local state. Unfortunately, using this technique raises a serious problem: When we first introduced procedures, we also introduced the substitution model of evaluation (section <a href="1-1-elements.content.html">1.1.5</a>) to provide an interpretation of what procedure application means. We said that applying a procedure should be interpreted as evaluating the body of the procedure with the formal parameters replaced by their values. The trouble is that, as soon as we introduce assignment into our language, substitution is no longer an adequate model of procedure application. (We will see why this is so in section <a href="3-1-assignment.content.html">3.1.3</a>.)  As a consequence, we technically have at this point no way to understand why the <tt>new-withdraw</tt> procedure behaves as claimed above. In order to really understand a procedure such as <tt>new-withdraw</tt>, we will need to develop a new model of procedure application. In section <a href="3-2-environment.html">3.2</a> we will introduce such a model, together with an explanation of <tt>set!</tt> and local variables. First, however, we examine some variations on the theme established by <tt>new-withdraw</tt>.
+<p> Combining <tt>set!</tt> with local variables is the general programming technique we will use for constructing computational objects with local state. Unfortunately, using this technique raises a serious problem: When we first introduced procedures, we also introduced the substitution model of evaluation (section <a href="1-1-elements.html">1.1.5</a>) to provide an interpretation of what procedure application means. We said that applying a procedure should be interpreted as evaluating the body of the procedure with the formal parameters replaced by their values. The trouble is that, as soon as we introduce assignment into our language, substitution is no longer an adequate model of procedure application. (We will see why this is so in section <a href="3-1-assignment.html">3.1.3</a>.)  As a consequence, we technically have at this point no way to understand why the <tt>new-withdraw</tt> procedure behaves as claimed above. In order to really understand a procedure such as <tt>new-withdraw</tt>, we will need to develop a new model of procedure application. In section <a href="3-2-environment.html">3.2</a> we will introduce such a model, together with an explanation of <tt>set!</tt> and local variables. First, however, we examine some variations on the theme established by <tt>new-withdraw</tt>.
 
 <p> The following procedure, <tt>make-withdraw</tt>, creates ``withdrawal processors.''  The formal parameter <tt>balance</tt> in <tt>make-withdraw</tt> specifies the initial amount of money in the account.<a name="footnote_link_3-5" class="footnote_link" href="#footnote_3-5">5</a>
 
@@ -155,7 +155,7 @@ C.prompt("scheme-define-W1-W2", ["scheme-define-make-withdraw"]);
 C.prompt("scheme-define-make-account");
 </script>
 
-<p> Each call to <tt>make-account</tt> sets up an environment with a local state variable <tt>balance</tt>. Within this environment, <tt>make-account</tt> defines procedures <tt>deposit</tt> and <tt>withdraw</tt> that access <tt>balance</tt> and an additional procedure <tt>dispatch</tt> that takes a ``message'' as input and returns one of the two local procedures. The <tt>dispatch</tt> procedure itself is returned as the value that represents the bank-account object. This is precisely the <tt>message-passing</tt> style of programming that we saw in section <a href="2-4-representation.content.html">2.4.3</a>, although here we are using it in conjunction with the ability to modify local variables.
+<p> Each call to <tt>make-account</tt> sets up an environment with a local state variable <tt>balance</tt>. Within this environment, <tt>make-account</tt> defines procedures <tt>deposit</tt> and <tt>withdraw</tt> that access <tt>balance</tt> and an additional procedure <tt>dispatch</tt> that takes a ``message'' as input and returns one of the two local procedures. The <tt>dispatch</tt> procedure itself is returned as the value that represents the bank-account object. This is precisely the <tt>message-passing</tt> style of programming that we saw in section <a href="2-4-representation.html">2.4.3</a>, although here we are using it in conjunction with the ability to modify local variables.
 
 <p> <tt>make-account</tt> can be used as follows:
 
@@ -365,7 +365,7 @@ C.prompt("scheme-define-monte-carlo-with-rand", ["scheme-hidden-define-rand-upda
 
 <p> Implement Monte Carlo integration as a procedure <tt>estimate-integral</tt> that takes as arguments a predicate <tt>P</tt>, upper and lower bounds <tt>x1</tt>, <tt>x2</tt>, <tt>y1</tt>, and <tt>y2</tt> for the rectangle, and the number of trials to perform in order to produce the estimate. Your procedure should use the same <tt>monte-carlo</tt> procedure that was used above to estimate [pi]. Use your <tt>estimate-integral</tt> to produce an estimate of [pi] by measuring the area of a unit circle.
 
-<p> You will find it useful to have a procedure that returns a number chosen at random from a given range. The following <tt>random-in-range</tt> procedure implements this in terms of the <tt>random</tt> procedure used in section <a href="1-2-procedures.content.html">1.2.6</a>, which returns a nonnegative number less than its input.<a name="footnote_link_3-8" class="footnote_link" href="#footnote_3-8">8</a>
+<p> You will find it useful to have a procedure that returns a number chosen at random from a given range. The following <tt>random-in-range</tt> procedure implements this in terms of the <tt>random</tt> procedure used in section <a href="1-2-procedures.html">1.2.6</a>, which returns a nonnegative number less than its input.<a name="footnote_link_3-8" class="footnote_link" href="#footnote_3-8">8</a>
 
 <div id="scheme-define-random-in-range">
 (define (random-in-range low high)
@@ -385,11 +385,11 @@ C.prompt("scheme-define-random-in-range");
 <a name="%_sec_3.1.3" />
 <h3> 3.1.3 The Costs of Introducing Assignment </h3>
 
-<p> As we have seen, the <tt>set!</tt> operation enables us to model objects that have local state. However, this advantage comes at a price. Our programming language can no longer be interpreted in terms of the substitution model of procedure application that we introduced in section <a href="1-1-elements.content.html">1.1.5</a>. Moreover, no simple model with ``nice'' mathematical properties can be an adequate framework for dealing with objects and assignment in programming languages.
+<p> As we have seen, the <tt>set!</tt> operation enables us to model objects that have local state. However, this advantage comes at a price. Our programming language can no longer be interpreted in terms of the substitution model of procedure application that we introduced in section <a href="1-1-elements.html">1.1.5</a>. Moreover, no simple model with ``nice'' mathematical properties can be an adequate framework for dealing with objects and assignment in programming languages.
 
 <p> So long as we do not use assignments, two evaluations of the same procedure with the same arguments will produce the same result, so that procedures can be viewed as computing mathematical functions. Programming without any use of assignments, as we did throughout the first two chapters of this book, is accordingly known as <tt>functional programming</tt> .
 
-<p> To understand how assignment complicates matters, consider a simplified version of the <tt>make-withdraw</tt> procedure of section <a href="3-1-assignment.content.html">3.1.1</a> that does not bother to check for an insufficient amount:
+<p> To understand how assignment complicates matters, consider a simplified version of the <tt>make-withdraw</tt> procedure of section <a href="3-1-assignment.html">3.1.1</a> that does not bother to check for an insufficient amount:
 
 <div id="scheme-define-make-simplified-withdraw">
 (define (make-simplified-withdraw balance)
@@ -565,7 +565,7 @@ C.prompt("scheme-define-peter-as-paul-acc", ["scheme-define-make-account"]);
 
 <h4> Pitfalls of imperative programming </h4>
 
-<p> In contrast to functional programming, programming that makes extensive use of assignment is known as <tt>imperative programming</tt> . In addition to raising complications about computational models, programs written in imperative style are susceptible to bugs that cannot occur in functional programs. For example, recall the iterative factorial program from section <a href="1-2-procedures.content.html">1.2.1</a>:
+<p> In contrast to functional programming, programming that makes extensive use of assignment is known as <tt>imperative programming</tt> . In addition to raising complications about computational models, programs written in imperative style are susceptible to bugs that cannot occur in functional programs. For example, recall the iterative factorial program from section <a href="1-2-procedures.html">1.2.1</a>:
 
 <div id="scheme-define-factorial">
 (define (factorial n)
@@ -629,13 +629,13 @@ C.prompt("scheme-define-paul-acc-joint");
 <p>
 
 <div class="exercise">
-<p> <b>Exercise 3.8:</b> When we defined the evaluation model in section <a href="1-1-elements.content.html">1.1.3</a>, we said that the first step in evaluating an expression is to evaluate its subexpressions. But we never specified the order in which the subexpressions should be evaluated (e.g., left to right or right to left). When we introduce assignment, the order in which the arguments to a procedure are evaluated can make a difference to the result. Define a simple procedure <tt>f</tt> such that evaluating <tt>(+ (f 0) (f 1))</tt> will return 0 if the arguments to <tt>+</tt> are evaluated from left to right but will return 1 if the arguments are evaluated from right to left.
+<p> <b>Exercise 3.8:</b> When we defined the evaluation model in section <a href="1-1-elements.html">1.1.3</a>, we said that the first step in evaluating an expression is to evaluate its subexpressions. But we never specified the order in which the subexpressions should be evaluated (e.g., left to right or right to left). When we introduce assignment, the order in which the arguments to a procedure are evaluated can make a difference to the result. Define a simple procedure <tt>f</tt> such that evaluating <tt>(+ (f 0) (f 1))</tt> will return 0 if the arguments to <tt>+</tt> are evaluated from left to right but will return 1 if the arguments are evaluated from right to left.
 </div>
 @@
 
 {{footnotes}}
 <div id="footnote_3-1" class="footnote">
-<p><a href="#footnote_link_3-1" class="footnote_backlink">1</a> Actually, this is not quite true. One exception was the random-number generator in section <a href="1-2-procedures.html#%_sec_1.2.6">1.2.6</a>. Another exception involved the operation/type tables we introduced in section <a href="2-4-representation.content.html#%_sec_2.4.3">2.4.3</a>, where the values of two calls to get with the same arguments depended on intervening calls to put. On the other hand, until we introduce assignment, we have no way to create such procedures ourselves.
+<p><a href="#footnote_link_3-1" class="footnote_backlink">1</a> Actually, this is not quite true. One exception was the random-number generator in section <a href="1-2-procedures.html#%_sec_1.2.6">1.2.6</a>. Another exception involved the operation/type tables we introduced in section <a href="2-4-representation.html#%_sec_2.4.3">2.4.3</a>, where the values of two calls to get with the same arguments depended on intervening calls to put. On the other hand, until we introduce assignment, we have no way to create such procedures ourselves.
 </div>
 
 <div id="footnote_3-2" class="footnote">
