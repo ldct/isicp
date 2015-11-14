@@ -736,7 +736,7 @@ C.editor_of["scheme-let-close"].setOption("onBlur", function(){
 </li>
 
 <li>
-<p> The variables' values are computed outside the <tt>let.</tt> This matters when the expressions that provide the values for the local variables depend upon variables having the same names as the local variables themselves. For example, if the value of <tt>x</tt> is 2, the expression
+<p> The variables' values are computed outside the <tt>let</tt>. This matters when the expressions that provide the values for the local variables depend upon variables having the same names as the local variables themselves. For example, if the value of <tt>x</tt> is 2, the expression
 
 <div id="scheme-let-shadow-prelude">
 (define x 2)
@@ -760,11 +760,11 @@ C.editor_of["scheme-let-shadow"].setOption("onBlur", function(){
 });
 </script>
 
-<p> will have the value <span id="scheme-let-shadow-output" class="output"></span> because, inside the body of the <tt>let, x</tt> will be 3 and <tt>y</tt> will be 4 (which is the outer <tt>x</tt> plus 2).
+<p> will have the value <span id="scheme-let-shadow-output" class="output"></span> because, inside the body of the <tt>let</tt>, <tt>x</tt> will be 3 and <tt>y</tt> will be 4 (which is the outer <tt>x</tt> plus 2).
 </li>
 </ul>
 
-<p> Sometimes we can use internal definitions to get the same effect as with <tt>let.</tt>  For example, we could have defined the procedure <tt>f</tt> above as
+<p> Sometimes we can use internal definitions to get the same effect as with <tt>let</tt>.  For example, we could have defined the procedure <tt>f</tt> above as
 
 <div id="scheme-define-f-close-define">
 (define (f x y)
