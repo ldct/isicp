@@ -75,6 +75,7 @@ li {
 .exercise {
   background-color: #D8E5E8;
   padding: 1.5em;
+  box-shadow: 0px 4px 5px lightgray;
 }
 
 /*ticks and crosses*/
