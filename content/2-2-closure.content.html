@@ -21,7 +21,9 @@ C.hidden_prompt("scheme-define-square");
 
 <h2> Hierarchical Data and the Closure Property </h2>
 
-<p> As we have seen, pairs provide a primitive ``glue'' that we can use to construct compound data objects. Figure 2-2 shows a standard way to visualize a pair---in this case, the pair formed by <tt>(cons 1 2)</tt>. In this representation, which is called <tt>box-and-pointer notation</tt>  , each object is shown as a <tt>pointer</tt>  to a box. The box for a primitive object contains a representation of the object. For example, the box for a number contains a numeral. The box for a pair is actually a double box, the left part containing (a pointer to) the <tt>car</tt> of the pair and the right part containing the <tt>cdr</tt>.
+<hr>
+
+<p> As we have seen, pairs provide a primitive "glue" that we can use to construct compound data objects. Figure 2-2 shows a standard way to visualize a pair---in this case, the pair formed by <tt>(cons 1 2)</tt>. In this representation, which is called <tt>box-and-pointer notation</tt>  , each object is shown as a <tt>pointer</tt>  to a box. The box for a primitive object contains a representation of the object. For example, the box for a number contains a numeral. The box for a pair is actually a double box, the left part containing (a pointer to) the <tt>car</tt> of the pair and the right part containing the <tt>cdr</tt>.
 
 <p> <img class='center' src='http://mitpress.mit.edu/sicp/full-text/book/ch2-Z-G-11.gif'>
 
@@ -144,11 +146,11 @@ C.prompt("scheme-cons-10-one-through-four", ["scheme-define-one-through-four"]);
 C.prompt("scheme-cons-5-one-through-four", ["scheme-define-one-through-four"]);
 </script>
 
-<p> The value of <tt>nil</tt>, used to terminate the chain of pairs, can be thought of as a sequence of no elements, the <tt>empty list</tt>  . The word <tt>nil</tt>  is a contraction of the Latin word <em>nihil</em>, which means ``nothing.''<a name="footnote_link_2-10" class="footnote_link" href="#footnote_2-10">10</a>
+<p> The value of <tt>nil</tt>, used to terminate the chain of pairs, can be thought of as a sequence of no elements, the <tt>empty list</tt>  . The word <tt>nil</tt>  is a contraction of the Latin word <em>nihil</em>, which means "nothing".<a name="footnote_link_2-10" class="footnote_link" href="#footnote_2-10">10</a>
 
 <h4> List operations </h4>
 
-<p> The use of pairs to represent sequences of elements as lists is accompanied by conventional programming techniques for manipulating lists by successively ``<tt>cdr</tt>ing down'' the lists. For example, the procedure <tt>list-ref</tt> takes as arguments a list and a number n and returns the nth item of the list. It is customary to number the elements of the list beginning with 0. The method for computing <tt>list-ref</tt> is the following:
+<p> The use of pairs to represent sequences of elements as lists is accompanied by conventional programming techniques for manipulating lists by successively "<tt>cdr</tt>ing down" the lists. For example, the procedure <tt>list-ref</tt> takes as arguments a list and a number n and returns the nth item of the list. It is customary to number the elements of the list beginning with 0. The method for computing <tt>list-ref</tt> is the following:
 
 <ul>
 
@@ -248,7 +250,7 @@ C.prompt("scheme-length-odds", ["scheme-define-length", "scheme-define-odds"]);
 C.prompt("scheme-define-length-iterative");
 </script>
 
-<p> Another conventional programming technique is to ``<tt>cons</tt> up'' an answer list while <tt>cdr</tt>ing down a list, as in the procedure <tt>append</tt>, which takes two lists as arguments and combines their elements to make a new list:
+<p> Another conventional programming technique is to "<tt>cons</tt> up" an answer list while <tt>cdr</tt>ing down a list, as in the procedure <tt>append</tt>, which takes two lists as arguments and combines their elements to make a new list:
 
 <div id="scheme-append-squares-odds">
 (append squares odds)
@@ -561,14 +563,21 @@ C.prompt("scheme-define-map");
 
 <p>
 
-<div id="scheme-test-map">
+<div id="scheme-map-abs">
 (map abs (list -10 2.5 -11.6 17))
+</div>
+<script>
+C.prompt("scheme-map-abs", ["scheme-define-map"]);
+</script>
 
+<p>
+
+<div id="scheme-map-square">
 (map (lambda (x) (* x x))
      (list 1 2 3 4))
 </div>
 <script>
-C.prompt("scheme-test-map", ["scheme-define-map"]);
+C.prompt("scheme-map-square", ["scheme-define-map"]);
 </script>
 
 <p> Now we can give a new definition of <tt>scale-list</tt> in terms of <tt>map</tt>:
@@ -1529,19 +1538,19 @@ C.prompt("scheme-define-even-fibs");
 <p> Despite the fact that these two procedures are structurally very different, a more abstract description of the two computations reveals a great deal of similarity. The first program
 
 <ul>
-<li>
+<li> <p>
 enumerates the leaves of a tree;
 </li>
 
-<li>
+<li> <p>
 filters them, selecting the odd ones;
 </li>
 
-<li>
+<li> <p>
 squares each of the selected ones; and
 </li>
 
-<li>
+<li> <p>
 accumulates the results using <tt>+</tt>, starting with 0.
 </li>
 </ul>
@@ -1549,35 +1558,35 @@ accumulates the results using <tt>+</tt>, starting with 0.
 <p> The second program
 
 <ul>
-<li>
+<li> <p>
 enumerates the integers from 0 to n;
 </li>
 
-<li>
+<li> <p>
 computes the Fibonacci number for each integer;
 </li>
 
-<li>
+<li> <p>
 filters them, selecting the even ones; and
 </li>
 
-<li>
+<li> <p>
 accumulates the results using <tt>cons</tt>,  starting with the
 empty list.
 </li>
 </ul>
 
-<p> A signal-processing engineer would find it natural to conceptualize these processes in terms of signals flowing through a cascade of stages, each of which implements part of the program plan, as shown in Figure 2-7. In <tt>sum-odd-squares</tt>, we begin with an <tt>enumerator</tt> , which generates a ``signal'' consisting of the leaves of a given tree. This signal is passed through a <tt>filter</tt> , which eliminates all but the odd elements. The resulting signal is in turn passed through a <tt>map</tt> , which is a ``transducer'' that applies the <tt>square</tt> procedure to each element. The output of the map is then fed to an <tt>accumulator</tt> , which combines the elements using <tt>+</tt>, starting from an initial 0. The plan for <tt>even-fibs</tt> is analogous.
+<p> A signal-processing engineer would find it natural to conceptualize these processes in terms of signals flowing through a cascade of stages, each of which implements part of the program plan, as shown in Figure 2-7. In <tt>sum-odd-squares</tt>, we begin with an <tt>enumerator</tt> , which generates a "signal" consisting of the leaves of a given tree. This signal is passed through a <tt>filter</tt> , which eliminates all but the odd elements. The resulting signal is in turn passed through a <tt>map</tt> , which is a "transducer" that applies the <tt>square</tt> procedure to each element. The output of the map is then fed to an <tt>accumulator</tt> , which combines the elements using <tt>+</tt>, starting from an initial 0. The plan for <tt>even-fibs</tt> is analogous.
 
 <p> <img class='center' src='http://mitpress.mit.edu/sicp/full-text/book/ch2-Z-G-17.gif'>
 
 <p style="text-align:center"> <b>Figure 2.7:</b> The signal-flow plans for the procedures <tt>sum-odd-squares</tt> (top) and <tt>even-fibs</tt> (bottom) reveal the commonality between the two programs.
 
-<p> Unfortunately, the two procedure definitions above fail to exhibit this signal-flow structure. For instance, if we examine the <tt>sum-odd-squares</tt>procedure, we find that the enumeration is implemented partly by the<tt>null?</tt> and <tt>pair?</tt> tests and partly by the tree-recursive structureof the procedure. Similarly, the accumulation is found partly in the tests and partly in the addition used in the recursion. In general, there are no distinct parts of either procedure that correspond to the elements in the signal-flow description. Our two procedures decompose the computations in a different way, spreading the enumeration over the program and mingling it with the <tt>map</tt>, the <tt>filter</tt>, and the <tt>accumulation</tt>. If we could organize our programs to make the signal-flow structure manifest in the procedures we write, this would increase the conceptual clarity of the resulting code.
+<p> Unfortunately, the two procedure definitions above fail to exhibit this signal-flow structure. For instance, if we examine the <tt>sum-odd-squares</tt> procedure, we find that the enumeration is implemented partly by the<tt>null?</tt> and <tt>pair?</tt> tests and partly by the tree-recursive structureof the procedure. Similarly, the accumulation is found partly in the tests and partly in the addition used in the recursion. In general, there are no distinct parts of either procedure that correspond to the elements in the signal-flow description. Our two procedures decompose the computations in a different way, spreading the enumeration over the program and mingling it with the <tt>map</tt>, the <tt>filter</tt>, and the <tt>accumulation</tt>. If we could organize our programs to make the signal-flow structure manifest in the procedures we write, this would increase the conceptual clarity of the resulting code.
 
 <h4> Sequence Operations </h4>
 
-<p> The key to organizing programs so as to more clearly reflect the signal-flow structure is to concentrate on the ``signals'' that flow from one stage in the process to the next. If we represent these signals as lists, then we can use list operations to implement the processing at each of the stages. For instance, we can implement the mapping stages of the signal-flow diagrams using the <tt>map</tt> procedure from section <a href="2-2-closure.html">2.2.1</a>:
+<p> The key to organizing programs so as to more clearly reflect the signal-flow structure is to concentrate on the "signals" that flow from one stage in the process to the next. If we represent these signals as lists, then we can use list operations to implement the processing at each of the stages. For instance, we can implement the mapping stages of the signal-flow diagrams using the <tt>map</tt> procedure from section <a href="2-2-closure.html">2.2.1</a>:
 
 <div id="scheme-map-square-1-to-5">
 (map square (list 1 2 3 4 5))
@@ -2323,7 +2332,7 @@ C.prompt("scheme-define-remove", ["scheme-define-filter"]);
 
 <div class="exercise">
 
-<p> <b>Exercise 2.42:</b> The ``eight-queens puzzle'' asks how to place eight queens on a chessboard so that no queen is in check from any other (i.e., no two queens are in the same row, column, or diagonal).
+<p> <b>Exercise 2.42:</b> The "eight-queens puzzle" asks how to place eight queens on a chessboard so that no queen is in check from any other (i.e., no two queens are in the same row, column, or diagonal).
 
 <p> <img class='center' src='http://mitpress.mit.edu/sicp/full-text/book/ch2-Z-G-23.gif'>
 
@@ -2378,6 +2387,8 @@ C.no_output_frozen_prompt("scheme-louise-queens-flatmap");
 
 <a name="%_sec_2.2.4" />
 <h3> 2.2.4 Example: A Picture Language </h3>
+
+<p> TODO: eventually I hope to implement this picture language in javascript. However it is not done yet.
 
 <p> This section presents a simple language for drawing pictures that illustrates the power of data abstraction and closure, and also exploits higher-order procedures in an essential way. The language is designed to make it easy to experiment with patterns such as the ones in Figure 2-9, which are composed of repeated elements that are shifted and scaled.<a name="footnote_link_2-22" class="footnote_link" href="#footnote_2-22">22</a> In this language, the data objects being combined are represented as procedures rather than as list structure. Just as <tt>cons</tt>, which satisfies the closure property, allowed us to easily build arbitrarily complicated list structure, the operations in this language, which also satisfy the closure property, allow us to easily build arbitrarily complicated patterns.
 
@@ -2714,7 +2725,7 @@ The painter that draws the outline of the designated frame.
 </li>
 
 <li>
-The painter that draws an ``X'' by connecting opposite corners of the frame.
+The painter that draws an "X" by connecting opposite corners of the frame.
 </li>
 
 <li>
@@ -2869,11 +2880,11 @@ Modify the version of <tt>square-limit</tt> that uses <tt>square-of-four</tt> so
 {{footnotes}}
 
 <div id="footnote_2-6" class="footnote">
-<p> <a href="#footnote_link_2-6" class="footnote_backlink">6</a> The use of the word ``closure'' here comes from abstract algebra, where a set of elements is said to be closed under an operation if applying the operation to elements in the set produces an element that is again an element of the set. The Lisp community also (unfortunately) uses the word ``closure'' to describe a totally unrelated concept: A closure is an implementation technique for representing procedures with free variables. We do not use the word ``closure'' in this second sense in this book.
+<p> <a href="#footnote_link_2-6" class="footnote_backlink">6</a> The use of the word "closure" here comes from abstract algebra, where a set of elements is said to be closed under an operation if applying the operation to elements in the set produces an element that is again an element of the set. The Lisp community also (unfortunately) uses the word "closure" to describe a totally unrelated concept: A closure is an implementation technique for representing procedures with free variables. We do not use the word "closure" in this second sense in this book.
 </div>
 
 <div id="footnote_2-7" class="footnote">
-<p> <a href="#footnote_link_2-7" class="footnote_backlink">7</a> The notion that a means of combination should satisfy closure is a straightforward idea. Unfortunately, the data combiners provided in many popular programming languages do not satisfy closure, or make closure cumbersome to exploit. In Fortran or Basic, one typically combines data elements by assembling them into arrays---but one cannot form arrays whose elements are themselves arrays. Pascal and C admit structures whose elements are structures. However, this requires that the programmer manipulate pointers explicitly, and adhere to the restriction that each field of a structure can contain only elements of a prespecified form. Unlike Lisp with its pairs, these languages have no built-in general-purpose glue that makes it easy to manipulate compound data in a uniform way. This limitation lies behind Alan Perlis's comment in his foreword to this book: ``In Pascal the plethora of declarable data structures induces a specialization within functions that inhibits and penalizes casual cooperation. It is better to have 100 functions operate on one data structure than to have 10 functions operate on 10 data structures.''
+<p> <a href="#footnote_link_2-7" class="footnote_backlink">7</a> The notion that a means of combination should satisfy closure is a straightforward idea. Unfortunately, the data combiners provided in many popular programming languages do not satisfy closure, or make closure cumbersome to exploit. In Fortran or Basic, one typically combines data elements by assembling them into arrays---but one cannot form arrays whose elements are themselves arrays. Pascal and C admit structures whose elements are structures. However, this requires that the programmer manipulate pointers explicitly, and adhere to the restriction that each field of a structure can contain only elements of a prespecified form. Unlike Lisp with its pairs, these languages have no built-in general-purpose glue that makes it easy to manipulate compound data in a uniform way. This limitation lies behind Alan Perlis's comment in his foreword to this book: "In Pascal the plethora of declarable data structures induces a specialization within functions that inhibits and penalizes casual cooperation. It is better to have 100 functions operate on one data structure than to have 10 functions operate on 10 data structures."
 </div>
 
 <div id="footnote_2-8" class="footnote">
@@ -2947,7 +2958,7 @@ C.prompt("scheme-demonstrate-map");
 </div>
 
 <div id="footnote_2-19" class='footnote'>
-<p> <a href="#footnote_link_2-19" class="footnote_backlink">19</a> We're representing a pair here as a list of two elements rather than as a Lisp pair. Thus, the ``pair'' (i,j) is represented as (list i j), not (cons i j).
+<p> <a href="#footnote_link_2-19" class="footnote_backlink">19</a> We're representing a pair here as a list of two elements rather than as a Lisp pair. Thus, the "pair" (i,j) is represented as (list i j), not (cons i j).
 </div>
 
 <div id="footnote_2-20" class='footnote'>
@@ -2959,14 +2970,14 @@ C.prompt("scheme-demonstrate-map");
 </div>
 
 <div id="footnote_2-22" class='footnote'>
-<p> <a href="#footnote_link_2-22" class="footnote_backlink">22</a> The picture language is based on the language Peter Henderson created to construct images like M.C. Escher's ``Square Limit'' woodcut (see Henderson 1982). The woodcut incorporates a repeated scaled pattern, similar to the arrangements drawn using the square-limit procedure in this section.
+<p> <a href="#footnote_link_2-22" class="footnote_backlink">22</a> The picture language is based on the language Peter Henderson created to construct images like M.C. Escher's "Square Limit" woodcut (see Henderson 1982). The woodcut incorporates a repeated scaled pattern, similar to the arrangements drawn using the square-limit procedure in this section.
 </div>
 
 
 <div id="footnote_2-23" class='footnote'>
-<p> <a href="#footnote_link_2-23" class="footnote_backlink">23</a> William Barton Rogers (1804-1882) was the founder and first president of MIT. A geologist and talented teacher, he taught at William and Mary College and at the University of Virginia. In 1859 he moved to Boston, where he had more time for research, worked on a plan for establishing a ``polytechnic institute,'' and served as Massachusetts's first State Inspector of Gas Meters.
+<p> <a href="#footnote_link_2-23" class="footnote_backlink">23</a> William Barton Rogers (1804-1882) was the founder and first president of MIT. A geologist and talented teacher, he taught at William and Mary College and at the University of Virginia. In 1859 he moved to Boston, where he had more time for research, worked on a plan for establishing a "polytechnic institute", and served as Massachusetts's first State Inspector of Gas Meters.
 
-<p> When MIT was established in 1861, Rogers was elected its first president. Rogers espoused an ideal of ``useful learning'' that was different from the university education of the time, with its overemphasis on the classics, which, as he wrote, ``stand in the way of the broader, higher and more practical instruction and discipline of the natural and social sciences.'' This education was likewise to be different from narrow trade-school education. In Rogers's words:
+<p> When MIT was established in 1861, Rogers was elected its first president. Rogers espoused an ideal of "useful learning" that was different from the university education of the time, with its overemphasis on the classics, which, as he wrote, "stand in the way of the broader, higher and more practical instruction and discipline of the natural and social sciences." This education was likewise to be different from narrow trade-school education. In Rogers's words:
 
 <p> The world-enforced distinction between the practical and the scientific worker is utterly futile, and the whole experience of modern times has demonstrated its utter worthlessness.
 
@@ -2974,9 +2985,9 @@ C.prompt("scheme-demonstrate-map");
 
 <p> Rogers collapsed and died while addressing MIT's graduating class at the commencement exercises of 1882. Runkle quoted Rogers's last words in a memorial address delivered that same year:
 
-<blockquote> ``As I stand here today and see what the Institute is, ... I call to mind the beginnings of science. I remember one hundred and fifty years ago Stephen Hales published a pamphlet on the subject of illuminating gas, in which he stated that his researches had demonstrated that 128 grains of bituminous coal -- ''
+<blockquote> As I stand here today and see what the Institute is, ... I call to mind the beginnings of science. I remember one hundred and fifty years ago Stephen Hales published a pamphlet on the subject of illuminating gas, in which he stated that his researches had demonstrated that 128 grains of bituminous coal --
 
-``Bituminous coal,'' these were his last words on earth. Here he bent forward, as if consulting some notes on the table before him, then slowly regaining an erect position, threw up his hands, and was translated from the scene of his earthly labors and triumphs to ``the tomorrow of death,'' where the mysteries of life are solved, and the disembodied spirit finds unending satisfaction in contemplating the new and still unfathomable mysteries of the infinite future.
+"Bituminous coal," these were his last words on earth. Here he bent forward, as if consulting some notes on the table before him, then slowly regaining an erect position, threw up his hands, and was translated from the scene of his earthly labors and triumphs to "the tomorrow of death", where the mysteries of life are solved, and the disembodied spirit finds unending satisfaction in contemplating the new and still unfathomable mysteries of the infinite future.
 </blockquote>
 
 <p> In the words of Francis A. Walker (MIT's third president):

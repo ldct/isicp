@@ -12,6 +12,8 @@
 <br> <br>
 <h2> Multiple Representations for Abstract Data </h2>
 
+<hr>
+
 <p> We have introduced data abstraction, a methodology for structuring systems in such a way that much of a program can be specified independent of the choices involved in implementing the data objects that the program manipulates. For example, we saw in section <a href="2-1-data.html">2.1.1</a> how to separate the task of designing a program that uses rational numbers from the task of implementing rational numbers in terms of the computer language's primitive mechanisms for constructing compound data. The key idea was to erect an abstraction barrier -- in this case, the selectors and constructors for rational numbers (<tt>make-rat</tt>, <tt>numer</tt>, <tt>denom</tt>)---that isolates the way rational numbers are used from their underlying representation in terms of list structure. A similar abstraction barrier isolates the details of the procedures that perform rational arithmetic (<tt>add-rat</tt>, <tt>sub-rat</tt>, <tt>mul-rat</tt>, and <tt>div-rat</tt>) from the ``higher-level'' procedures that use rational numbers. The resulting program has the structure shown in Figure 2-1.
 
 <p> These data-abstraction barriers are powerful tools for controlling complexity. By isolating the underlying representations of data objects, we can divide the task of designing a large program into smaller tasks that can be performed separately. But this kind of data abstraction is not yet powerful enough, because it may not always make sense to speak of ``the underlying representation'' for a data object.

@@ -11,6 +11,8 @@
 <br> <br>
 <h2> Assignment and Local State </h2>
 
+<hr>
+
 <p> We ordinarily view the world as populated by independent objects, each of which has a state that changes over time. An object is said to "have state" if its behavior is influenced by its history. A bank account, for example, has state in that the answer to the question "Can I withdraw $100?"  depends upon the history of deposit and withdrawal transactions. We can characterize an object's state by one or more <tt>state variables</tt> , which among them maintain enough information about history to determine the object's current behavior. In a simple banking system, we could characterize the state of an account by a current balance rather than by remembering the entire history of account transactions.
 
 <p> In a system composed of many objects, the objects are rarely completely independent. Each may influence the states of others through interactions, which serve to couple the state variables of one object to those of other objects. Indeed, the view that a system is composed of separate objects is most useful when the state variables of the system can be grouped into closely coupled subsystems that are only loosely coupled to other subsystems.
@@ -183,7 +185,7 @@ C.prompt("scheme-define-acc-2", ["scheme-define-make-account"]);
 <p> will produce a completely separate account object, which maintains its own local <tt>balance</tt>.
 
 <div class="exercise">
-<b>Exercise 3.1:</b> An <tt>accumulator</tt> is a procedure that is called repeatedly with a single numeric argument and accumulates its arguments into a sum. Each time it is called, it returns the currently accumulated sum. Write a procedure <tt>make-accumulator</tt> that generates accumulators, each maintaining an independent sum. The input to <tt>make-accumulator</tt> should specify the initial value of the sum; for example
+<p> <b>Exercise 3.1:</b> An <tt>accumulator</tt> is a procedure that is called repeatedly with a single numeric argument and accumulates its arguments into a sum. Each time it is called, it returns the currently accumulated sum. Write a procedure <tt>make-accumulator</tt> that generates accumulators, each maintaining an independent sum. The input to <tt>make-accumulator</tt> should specify the initial value of the sum; for example
 
 <div id="scheme-define-make-accumulator">
 (define A (make-accumulator 5))
@@ -424,14 +426,26 @@ C.prompt("scheme-define-make-decrementer");
 
 <p> <tt>make-decrementer</tt> returns a procedure that subtracts its input from a designated amount <tt>balance</tt>, but there is no accumulated effect over successive calls, as with <tt>make-simplified-withdraw</tt>:
 
+
 <div id="scheme-test-decrementer">
 (define D (make-decrementer 25))
-
-(D 20)
-(D 10)
 </div>
 <script>
 C.prompt("scheme-test-decrementer", ["scheme-define-make-decrementer"]);
+</script>
+
+<div id="scheme-test-decrementer-D-20">
+(D 20)
+</div>
+<script>
+C.prompt("scheme-test-decrementer-D-20", ["scheme-test-decrementer"]);
+</script>
+
+<div id="scheme-test-decrementer-D-10">
+(D 10)
+</div>
+<script>
+C.prompt("scheme-test-decrementer-D-10", ["scheme-test-decrementer"]);
 </script>
 
 <p> We can use the substitution model to explain how <tt>make-decrementer</tt> works. For instance, let us analyze the evaluation of the expression

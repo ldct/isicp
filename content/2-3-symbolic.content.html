@@ -12,6 +12,8 @@
 <br> <br>
 <h2> Symbolic Data </h2>
 
+<hr>
+
 <p> All the compound data objects we have used so far were constructed ultimately from numbers. In this section we extend the representational capability of our language by introducing the ability to work with arbitrary symbols as data.
 
 <a name="%_sec_2.3.1" />
@@ -835,7 +837,7 @@ C.prompt("scheme-define-lookup");
 <p> Of course, there are better ways to represent large sets than as unordered lists. Information-retrieval systems in which records have to be ``randomly accessed'' are typically implemented by a tree-based method, such as the binary-tree representation discussed previously. In designing such a system the methodology of data abstraction can be a great help. The designer can create an initial implementation using a simple, straightforward representation such as unordered lists. This will be unsuitable for the eventual system, but it can be useful in providing a ``quick and dirty'' data base with which to test the rest of the system. Later on, the data representation can be modified to be more sophisticated. If the data base is accessed in terms of abstract selectors and constructors, this change in representation will not require any changes to the rest of the system.
 
 <div class="exercise">
-<b>Exercise 2.66:</b> Implement the <tt>lookup</tt>
+<p> <b>Exercise 2.66:</b> Implement the <tt>lookup</tt>
 procedure for the case where the set of records is structured as a binary tree,
 ordered by the numerical values of the keys.
 </div>
