@@ -153,7 +153,7 @@ C.prompt("scheme-memq-apple-apple-sauce-apple-pear", ["scheme-define-memq"]);
 (memq 'red '(red shoes blue socks))
 </div>
 <script>
-C.prompt("scheme-ex-interpret-quotes");
+C.no_output_frozen_prompt("scheme-ex-interpret-quotes");
 </script>
 </div>
 
@@ -533,7 +533,7 @@ by adding a new clause to the <tt>deriv</tt> program and defining appropriate pr
 (deriv '(* x y (+ x 3)) 'x)
 </div>
 <script>
-C.prompt("scheme-ex-test-deriv-sum");
+C.no_output_frozen_prompt("scheme-ex-test-deriv-sum");
 </script>
 
 <p> Try to do this by changing only the representation for sums and products, without changing the <tt>deriv</tt> procedure at all. For example, the <tt>addend</tt> of a sum would be the first term, and the <tt>augend</tt> would be the sum of the rest of the terms.
@@ -896,7 +896,7 @@ B 100 D 1011  F 1101  H 1111
 
 <h4> Generating Huffman trees </h4>
 
-<p> Given an ``alphabet'' of symbols and their relative frequencies, how do we construct the ``best'' code?  (In other words, which tree will encode messages with the fewest bits?)  Huffman gave an algorithm for doing this and showed that the resulting code is indeed the best variable-length code for messages where the relative frequency of the symbols matches the frequencies with which the code was constructed. We will not prove this optimality of Huffman codes here, but we will show how Huffman trees are constructed.<a name="footnote_link_2-42" class="footnote_link" href="#footnote_2-42">42</a>
+<p> Given an "alphabet" of symbols and their relative frequencies, how do we construct the "best" code?  (In other words, which tree will encode messages with the fewest bits?)  Huffman gave an algorithm for doing this and showed that the resulting code is indeed the best variable-length code for messages where the relative frequency of the symbols matches the frequencies with which the code was constructed. We will not prove this optimality of Huffman codes here, but we will show how Huffman trees are constructed.<a name="footnote_link_2-42" class="footnote_link" href="#footnote_2-42">42</a>
 
 <p> The algorithm for generating a Huffman tree is very simple. The idea is to arrange the tree so that the symbols with the lowest frequency appear farthest away from the root. Begin with the set of leaf nodes, containing symbols and their frequencies, as determined by the initial data from which the code is to be constructed. Now find two leaves with the lowest weights and merge them to produce a node that has these two nodes as its left and right branches. The weight of the new node is the sum of the two weights. Remove the two leaves from the original set and replace them by this new node. Now continue this process. At each step, merge two nodes with the smallest weights, removing them from the set and replacing them with a node that has these two as its left and right branches. The process stops when there is only one node left, which is the root of the entire tree. Here is how the Huffman tree of Figure 2-18 was generated:
 
@@ -1046,7 +1046,7 @@ C.prompt("scheme-define-make-leaf-set");
 (define sample-message '(0 1 1 0 0 1 0 1 0 1 1 1 0))
 </div>
 <script>
-C.prompt("scheme-define-sample-tree");
+C.no_output_frozen_prompt("scheme-define-sample-tree");
 </script>
 
 <p> Use the <tt>decode</tt> procedure to decode the message, and give the result.
@@ -1065,7 +1065,7 @@ C.prompt("scheme-define-sample-tree");
               (encode (cdr message) tree))))
 </div>
 <script>
-C.prompt("scheme-define-encode");
+C.no_output_frozen_prompt("scheme-define-encode");
 </script>
 
 <p> <tt>encode-symbol</tt> is a procedure, which you must write, that returns the list of bits that encodes a given symbol according to a given tree. You should design <tt>encode-symbol</tt> so that it signals an error if the symbol is not in the tree at all. Test your procedure by encoding the result you obtained in Exercise 2-67 with the sample tree and seeing whether it is the same as the original sample message.
@@ -1081,7 +1081,7 @@ C.prompt("scheme-define-encode");
   (successive-merge (make-leaf-set pairs)))
 </div>
 <script>
-C.prompt("scheme-define-generate-huffman-tree");
+C.no_output_frozen_prompt("scheme-define-generate-huffman-tree");
 </script>
 
 <p> <tt>make-leaf-set</tt> is the procedure given above that transforms the list of pairs into an ordered set of leaves. <tt>Successive-merge</tt> is the procedure you must write, using <tt>make-code-tree</tt> to successively merge the smallest-weight elements of the set until there is only one element left, which is the desired Huffman tree. (This procedure is slightly tricky, but not really complicated. If you find yourself designing a complex procedure, then you are almost certainly doing something wrong. You can take significant advantage of the fact that we are using an ordered set representation.)
@@ -1090,7 +1090,7 @@ C.prompt("scheme-define-generate-huffman-tree");
 <p>
 
 <div class="exercise">
-<p> <b>Exercise 2.70:</b> The following eight-symbol alphabet with associated relative frequencies was designed to efficiently encode the lyrics of 1950s rock songs. (Note that the ``symbols'' of an ``alphabet'' need not be individual letters.)
+<p> <b>Exercise 2.70:</b> The following eight-symbol alphabet with associated relative frequencies was designed to efficiently encode the lyrics of 1950s rock songs. (Note that the "symbols" of an "alphabet" need not be individual letters.)
 
 <pre>
 A     2 NA   16
