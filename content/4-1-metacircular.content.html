@@ -27,8 +27,7 @@ the model has two basic parts:
 </li>
 </ul>
 
-<p> These two rules describe the essence of the evaluation process, a basic cycle in which expressions to be evaluated in environments are reduced to procedures to be applied to arguments, which in turn are reduced to new expressions to be evaluated in new environments, and so on, until we get down to symbols, whose values are looked up in the environment, and to primitive procedures, which are applied directly (see Figure 4-1).<a name="footnote_link_1-4" class="footnote_link" href="#footnote_1-4">4</a> This evaluation cycle will be embodied by the interplay between the two
-critical procedures in the evaluator, <tt>eval</tt> and <tt>apply</tt>, which are
+<p> These two rules describe the essence of the evaluation process, a basic cycle in which expressions to be evaluated in environments are reduced to procedures to be applied to arguments, which in turn are reduced to new expressions to be evaluated in new environments, and so on, until we get down to symbols, whose values are looked up in the environment, and to primitive procedures, which are applied directly (see Figure 4-1).<a name="footnote_link_1-4" class="footnote_link" href="#footnote_1-4">4</a> This evaluation cycle will be embodied by the interplay between the two critical procedures in the evaluator, <tt>eval</tt> and <tt>apply</tt>, which are
 described in section <a href="4-1-metacircular.html">4.1.1</a> (see Figure 4-1).
 
 <p> The implementation of the evaluator will depend upon procedures that define the <em>syntax</em> of the expressions to be evaluated. We will use data abstraction to make the evaluator independent of the representation of the language. For example, rather than committing to a choice that an assignment is to be represented by a list beginning with the symbol <tt>set!</tt> we use an abstract predicate <tt>assignment?</tt> to test for an assignment, and we use abstract selectors <tt>assignment-variable</tt> and <tt>assignment-value</tt> to access the parts of an assignment. Implementation of expressions will be described in detail in section <a href="4-1-metacircular.html">4.1.2</a>. There are also operations, described in section <a href="4-1-metacircular.html">4.1.3</a>, that specify the representation of procedures and environments. For example, <tt>make-procedure</tt> constructs compound procedures, <tt>lookup-variable-value</tt> accesses the values of variables, and <tt>apply-primitive-procedure</tt> applies a primitive procedure to a given list of arguments.
@@ -529,78 +528,42 @@ C.no_output_frozen_prompt("scheme-ex-cond-post-desugar");
 C.prompt("scheme-define-cond-p");
 </script>
 
-<p> Expressions (such as <tt>cond</tt>) that we choose to implement as syntactic
-transformations are called <tt>derived expressions</tt>. <tt>Let</tt>
-expressions are also derived expressions (see Exercise
-4-6).<a name="footnote_link_1-13" class="footnote_link" href="#footnote_1-13">4</a>
+<p> Expressions (such as <tt>cond</tt>) that we choose to implement as syntactic transformations are called <tt>derived expressions</tt>. <tt>Let</tt> expressions are also derived expressions (see Exercise 4-6).<a name="footnote_link_1-13" class="footnote_link" href="#footnote_1-13">4</a>
 
 <div class="exercise">
-<p> <b>Exercise 4.2:</b> Louis Reasoner plans to reorder the
-<tt>cond</tt> clauses in <tt>eval</tt> so that the clause for procedure
-applications appears before the clause for assignments. He argues that this
-will make the interpreter more efficient: Since programs usually contain more
-applications than assignments, definitions, and so on, his modified <tt>eval</tt>
-will usually check fewer clauses than the original <tt>eval</tt> before
-identifying the type of an expression.
+<p> <b>Exercise 4.2:</b> Louis Reasoner plans to reorder the <tt>cond</tt> clauses in <tt>eval</tt> so that the clause for procedure applications appears before the clause for assignments. He argues that this will make the interpreter more efficient: Since programs usually contain more applications than assignments, definitions, and so on, his modified <tt>eval</tt> will usually check fewer clauses than the original <tt>eval</tt> before identifying the type of an expression.
 
 <ul>
 <li>
-<p> What is wrong with Louis's plan?  (Hint: What will Louis's evaluator do with
-the expression <tt>(define x 3)</tt>?)
+<p> What is wrong with Louis's plan?  (Hint: What will Louis's evaluator do with the expression <tt>(define x 3)</tt>?)
 
 <li>
-<p> Louis is upset that his plan didn't work. He is willing to go to any lengths
-to make his evaluator recognize procedure applications before it checks for
-most other kinds of expressions. Help him by changing the syntax of the
-evaluated language so that procedure applications start with <tt>call</tt>. For
-example, instead of <tt>(factorial 3)</tt> we will now have to write <tt>(call
-factorial 3)</tt> and instead of <tt>(+ 1 2)</tt> we will have to write <tt>(call +
-1 2)</tt>.
+<p> Louis is upset that his plan didn't work. He is willing to go to any lengths to make his evaluator recognize procedure applications before it checks for most other kinds of expressions. Help him by changing the syntax of the evaluated language so that procedure applications start with <tt>call</tt>. For example, instead of <tt>(factorial 3)</tt> we will now have to write <tt>(call factorial 3)</tt> and instead of <tt>(+ 1 2)</tt> we will have to write <tt>(call + 1 2)</tt>.
 
 </ul>
 </div>
 
 <div class="exercise">
-<p> <b>Exercise 4.3:</b> Rewrite <tt>eval</tt> so that the
-dispatch is done in data-directed style. Compare this with the data-directed
-differentiation procedure of Exercise 2-73. (You may use the <tt>car</tt>
-of a compound expression as the type of the expression, as is appropriate for
-the syntax implemented in this section.)
+<p> <b>Exercise 4.3:</b> Rewrite <tt>eval</tt> so that the dispatch is done in data-directed style. Compare this with the data-directed differentiation procedure of Exercise 2-73. (You may use the <tt>car</tt> of a compound expression as the type of the expression, as is appropriate for the syntax implemented in this section.)
 </div>
 
 <div class="exercise">
-<p> <b>Exercise 4.4:</b> Recall the definitions of the
-special forms <tt>and</tt> and <tt>or</tt> from Chapter 1:
+<p> <b>Exercise 4.4:</b> Recall the definitions of the special forms <tt>and</tt> and <tt>or</tt> from Chapter 1:
 
 <ul>
 
 <li>
-<p> <tt>and</tt>: The expressions are evaluated from left to right. If any
-expression evaluates to false, false is returned; any remaining expressions are
-not evaluated. If all the expressions evaluate to true values, the value of
-the last expression is returned. If there are no expressions then true is
-returned.
+<p> <tt>and</tt>: The expressions are evaluated from left to right. If any expression evaluates to false, false is returned; any remaining expressions are not evaluated. If all the expressions evaluate to true values, the value of the last expression is returned. If there are no expressions then true is returned.
 
 <li>
-<p> <tt>or</tt>: The expressions are evaluated from left to right. If any expression
-evaluates to a true value, that value is returned; any remaining expressions
-are not evaluated. If all expressions evaluate to false, or if there are no
-expressions, then false is returned.
-
+<p> <tt>or</tt>: The expressions are evaluated from left to right. If any expression evaluates to a true value, that value is returned; any remaining expressions are not evaluated. If all expressions evaluate to false, or if there are no expressions, then false is returned.
 </ul>
 
-<p> Install <tt>and</tt> and <tt>or</tt> as new special forms for the evaluator by
-defining appropriate syntax procedures and evaluation procedures
-<tt>eval-and</tt> and <tt>eval-or</tt>. Alternatively, show how to implement
-<tt>and</tt> and <tt>or</tt> as derived expressions.
+<p> Install <tt>and</tt> and <tt>or</tt> as new special forms for the evaluator by defining appropriate syntax procedures and evaluation procedures <tt>eval-and</tt> and <tt>eval-or</tt>. Alternatively, show how to implement <tt>and</tt> and <tt>or</tt> as derived expressions.
 </div>
 
 <div class="exercise">
-<p> <b>Exercise 4.5:</b> Scheme allows an additional syntax
-for <tt>cond</tt> clauses, (test => recipient)}. If
-<test> evaluates to a true value, then <recipient> is evaluated.
-Its value must be a procedure of one argument; this procedure is then invoked
-on the value of the <test>, and the result is returned as the value of
+<p> <b>Exercise 4.5:</b> Scheme allows an additional syntax for <tt>cond</tt> clauses, (test => recipient)}. If <test> evaluates to a true value, then <recipient> is evaluated. Its value must be a procedure of one argument; this procedure is then invoked on the value of the <test>, and the result is returned as the value of
 the <tt>cond</tt> expression. For example
 
 <div id="">
@@ -615,8 +578,7 @@ C.prompt();
 </div>
 
 <div class="exercise">
-<p> <b>Exercise 4.6:</b> <tt>Let</tt> expressions are derived
-expressions, because
+<p> <b>Exercise 4.6:</b> <tt>Let</tt> expressions are derived expressions, because
 
 <div id="">
 (let ((<var_1> <exp_1>) ... (<var_n> <exp_n>))
@@ -640,17 +602,11 @@ C.prompt();
 C.prompt();
 </script>
 
-<p> Implement a syntactic transformation <tt>let->combination</tt> that reduces
-evaluating <tt>let</tt> expressions to evaluating combinations of the type shown
-above, and add the appropriate clause to <tt>eval</tt> to handle <tt>let</tt>
-expressions.
+<p> Implement a syntactic transformation <tt>let->combination</tt> that reduces evaluating <tt>let</tt> expressions to evaluating combinations of the type shown above, and add the appropriate clause to <tt>eval</tt> to handle <tt>let</tt> expressions.
 </div>
 
 <div class="exercise">
-<p> <b>Exercise 4.7:</b> <tt>Let*</tt> is similar to
-<tt>let</tt>, except that the bindings of the <tt>let</tt> variables are performed
-sequentially from left to right, and each binding is made in an environment in
-which all of the preceding bindings are visible. For example
+<p> <b>Exercise 4.7:</b> <tt>Let*</tt> is similar to <tt>let</tt>, except that the bindings of the <tt>let</tt> variables are performed sequentially from left to right, and each binding is made in an environment in which all of the preceding bindings are visible. For example
 
 <div id="">
 (let* ((x 3)
@@ -663,11 +619,7 @@ C.prompt();
 </script>
 
 
-<p> returns 39. Explain how a <tt>let*</tt> expression can be rewritten as a set of
-nested <tt>let</tt> expressions, and write a procedure <tt>let*->nested-lets</tt>
-that performs this transformation. If we have already implemented <tt>let</tt>
-(Exercise 4-6) and we want to extend the evaluator to handle <tt>let*</tt>,
-is it sufficient to add a clause to <tt>eval</tt> whose action is
+<p> returns 39. Explain how a <tt>let*</tt> expression can be rewritten as a set of nested <tt>let</tt> expressions, and write a procedure <tt>let*->nested-lets</tt> that performs this transformation. If we have already implemented <tt>let</tt> (Exercise 4-6) and we want to extend the evaluator to handle <tt>let*</tt>, is it sufficient to add a clause to <tt>eval</tt> whose action is
 
 <div id="">
 (eval (let*->nested-lets exp) env)
@@ -691,12 +643,7 @@ of <tt>let</tt> that has the form
 C.prompt();
 </script>
 
-<p> The <bindings> and <body> are just as in ordinary <tt>let</tt>,
-except that <var> is bound within <body> to a procedure whose body
-is <body> and whose parameters are the variables in the <bindings>.
-Thus, one can repeatedly execute the <body> by invoking the procedure
-named <var>. For example, the iterative Fibonacci procedure (section
-1-2-2) can be rewritten using named <tt>let</tt> as follows:
+<p> The <bindings> and <body> are just as in ordinary <tt>let</tt>, except that <var> is bound within <body> to a procedure whose body is <body> and whose parameters are the variables in the <bindings>. Thus, one can repeatedly execute the <body> by invoking the procedure named <var>. For example, the iterative Fibonacci procedure (section 1-2-2) can be rewritten using named <tt>let</tt> as follows:
 
 <div id="">
 (define (fib n)
@@ -716,36 +663,22 @@ C.prompt();
 </div>
 
 <div class="exercise">
-<p> <b>Exercise 4.9:</b> Many languages support a variety of
-iteration constructs, such as <tt>do</tt>, <tt>for</tt>, <tt>while</tt>, and
-<tt>until</tt>. In Scheme, iterative processes can be expressed in terms of
-ordinary procedure calls, so special iteration constructs provide no essential
-gain in computational power. On the other hand, such constructs are often
-convenient. Design some iteration constructs, give examples of their use, and
+<p> <b>Exercise 4.9:</b> Many languages support a variety of iteration constructs, such as <tt>do</tt>, <tt>for</tt>, <tt>while</tt>, and <tt>until</tt>. In Scheme, iterative processes can be expressed in terms of ordinary procedure calls, so special iteration constructs provide no essential gain in computational power. On the other hand, such constructs are often convenient. Design some iteration constructs, give examples of their use, and
 show how to implement them as derived expressions.
 </div>
 
 <div class="exercise">
-<b>Exercise 4.10:</b> By using data abstraction, we
-were able to write an <tt>eval</tt> procedure that is independent of the
-particular syntax of the language to be evaluated. To illustrate this, design
-and implement a new syntax for Scheme by modifying the procedures in this
-section, without changing <tt>eval</tt> or <tt>apply</tt>.
+<b>Exercise 4.10:</b> By using data abstraction, we were able to write an <tt>eval</tt> procedure that is independent of the particular syntax of the language to be evaluated. To illustrate this, design and implement a new syntax for Scheme by modifying the procedures in this section, without changing <tt>eval</tt> or <tt>apply</tt>.
 </div>
 
 <a name="%_sec_4.1.3" />
 <h3> 4.1.3 Evaluator Data Structures </h3>
 
-<p> In addition to defining the external syntax of expressions, the evaluator
-implementation must also define the data structures that the evaluator
-manipulates internally, as part of the execution of a program, such as the
-representation of procedures and environments and the representation of true
-and false.
+<p> In addition to defining the external syntax of expressions, the evaluator implementation must also define the data structures that the evaluator manipulates internally, as part of the execution of a program, such as the representation of procedures and environments and the representation of true and false.
 
 <h4> Testing of predicates </h4>
 
-<p> For conditionals, we accept anything to be true that is not the explicit
-<tt>false</tt> object.
+<p> For conditionals, we accept anything to be true that is not the explicit <tt>false</tt> object.
 
 <div id="">
 (define (true? x)
@@ -760,8 +693,7 @@ C.prompt();
 
 <h4> Representing procedures </h4>
 
-<p> To handle primitives, we assume that we have available the following
-procedures:
+<p> To handle primitives, we assume that we have available the following procedures:
 
 <ul>
 
