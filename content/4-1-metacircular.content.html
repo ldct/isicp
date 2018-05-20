@@ -41,7 +41,7 @@ described in section <a href="4-1-metacircular.html">4.1.1</a> (see Figure 4-1).
 <p style="text-align:center"> <b>Figure 4.1:</b> The <tt>eval</tt>-<tt>apply</tt> cycle
 exposes the essence of a computer language.
 
-The evaluation process can be described as the interplay between two procedures: <tt>eval</tt> and <tt>apply</tt>.
+<p> The evaluation process can be described as the interplay between two procedures: <tt>eval</tt> and <tt>apply</tt>.
 
 <h4> Eval </h4>
 
@@ -52,8 +52,7 @@ The evaluation process can be described as the interplay between two procedures:
 
 <ul>
 <li>
-<p> For self-evaluating expressions, such as numbers, <tt>eval</tt> returns the
-expression itself.
+<p> For self-evaluating expressions, such as numbers, <tt>eval</tt> returns the expression itself.
 </li>
 
 <li>
@@ -95,10 +94,7 @@ An assignment to (or a definition of) a variable must recursively call <tt>eval<
 
 <ul>
 <li>
-<p> For a procedure application, <tt>eval</tt> must recursively evaluate the operator
-part and the operands of the combination. The resulting procedure and
-arguments are passed to <tt>apply</tt>, which handles the actual procedure
-application.
+<p> For a procedure application, <tt>eval</tt> must recursively evaluate the operator part and the operands of the combination. The resulting procedure and arguments are passed to <tt>apply</tt>, which handles the actual procedure application.
 </li>
 </ul>
 
@@ -233,17 +229,9 @@ C.prompt("scheme-eval-definition");
 assignment or a definition.<a name="footnote_link_1-8" class="footnote_link" href="#footnote_1-8">8</a>
 
 <div class="exercise">
-<p> <b>Exercise 4.1:</b> Notice that we cannot tell whether
-the metacircular evaluator evaluates operands from left to right or from right
-to left. Its evaluation order is inherited from the underlying Lisp: If the
-arguments to <tt>cons</tt> in <tt>list-of-values</tt> are evaluated from left to
-right, then <tt>list-of-values</tt> will evaluate operands from left to right;
-and if the arguments to <tt>cons</tt> are evaluated from right to left, then
-<tt>list-of-values</tt> will evaluate operands from right to left.
+<p> <b>Exercise 4.1:</b> Notice that we cannot tell whether the metacircular evaluator evaluates operands from left to right or from right to left. Its evaluation order is inherited from the underlying Lisp: If the arguments to <tt>cons</tt> in <tt>list-of-values</tt> are evaluated from left to right, then <tt>list-of-values</tt> will evaluate operands from left to right; and if the arguments to <tt>cons</tt> are evaluated from right to left, then <tt>list-of-values</tt> will evaluate operands from right to left.
 
-Write a version of <tt>list-of-values</tt> that evaluates operands from left to
-right regardless of the order of evaluation in the underlying Lisp. Also write
-a version of <tt>list-of-values</tt> that evaluates operands from right to left.
+Write a version of <tt>list-of-values</tt> that evaluates operands from left to right regardless of the order of evaluation in the underlying Lisp. Also write a version of <tt>list-of-values</tt> that evaluates operands from right to left.
 </div>
 
 <a name="%_sec_4.1.2" />
@@ -291,8 +279,7 @@ C.prompt("scheme-variable-p");
 C.prompt("scheme-quoted-p");
 </script>
 
-<p> <tt>Quoted?</tt> is defined in terms of the procedure <tt>tagged-list?</tt>, which
-identifies lists beginning with a designated symbol:
+<p> <tt>Quoted?</tt> is defined in terms of the procedure <tt>tagged-list?</tt>, which identifies lists beginning with a designated symbol:
 
 <div id="scheme-tagged-list-p">
 (define (tagged-list? exp tag)
@@ -2047,7 +2034,7 @@ expressions?
 </div>
 
 <p>
-    
+
 <div class="exercise">
 <p> <b>Exercise 4.24:</b> Design and carry out some
 experiments to compare the speed of the original metacircular evaluator with
